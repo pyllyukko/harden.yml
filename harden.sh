@@ -166,7 +166,8 @@ declare -r GPG_KEYRING="trustedkeys.gpg"
 #declare -r ETC_PATCH_VERSION="13.37-20120413"
 declare -r ETC_PATCH_VERSION="14.0-20120929"
 declare -r ETC_PATCH_FILE="harden_etc-${ETC_PATCH_VERSION}.patch"
-declare -r APACHE_PATCH_VERSION="2.2.17-20110507"
+#declare -r APACHE_PATCH_VERSION="2.2.17-20110507"
+declare -r APACHE_PATCH_VERSION="2.4.3-20120929-1"
 declare -r APACHE_PATCH_FILE="harden_apache-${APACHE_PATCH_VERSION}.patch"
 declare -r APACHE_PATCH_MODULES_X86_64_FILE="harden_apache-2.2.17-modules-x86_64-20110330.patch"
 declare -r APACHE_PATCH_MODULES_X86_FILE="harden_apache-2.2.17-modules-x86-20110424.patch"
@@ -418,7 +419,7 @@ function import_pgp_keys() {
   for URL in ${PGP_URLS[*]}
   do
     # after importing these keys, we can verify slackware packages with gpgv
-    /usr/bin/wget "${URL}" --output-document=- | gpg --keyring "${GPG_KEYRING}" --no-default-keyring --import -
+    /usr/bin/wget --tries=5 "${URL}" --output-document=- | gpg --keyring "${GPG_KEYRING}" --no-default-keyring --import -
   done
   # keys with key ID
   for PGP_KEY in ${PGP_KEYS[*]}
