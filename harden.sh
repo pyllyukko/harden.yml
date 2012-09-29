@@ -1244,6 +1244,13 @@ function miscellaneous_settings() {
     /usr/sbin/update-ca-certificates -v
   fi
 
+  grep -q "^blacklist ipv6$" /etc/modprobe.d/blacklist.conf 2>/dev/null
+  if [ ${?} -ne 0 ]
+  then
+    echo "# Disable IPv6" 1>>/etc/modprobe.d/blacklist.conf
+    echo "blacklist ipv6" 1>>/etc/modprobe.d/blacklist.conf
+  fi
+
   # disable killing of X with Ctrl+Alt+Backspace
   if [ -d /etc/X11/xorg.conf.d ]
   then
@@ -1591,6 +1598,13 @@ function usage() {
 	    available patches:
 	      ssh
 	      etc
+	        the etc patch assumes that you have at least the following packages installed:
+		  network-scripts
+		  sysvinit-scripts
+		  etc
+		  shadow
+		  logrotate
+		  sysklogd
 	      apache
 	      apache-x86_64 (choose this if you have installed slackware64)
 	      sendmail
