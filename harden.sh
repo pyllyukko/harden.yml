@@ -162,8 +162,9 @@ SERVICES_WHITELIST=(
 #)
 declare -r GPG_KEYRING="trustedkeys.gpg"
 #declare -r ETC_PATCH_VERSION="13.37-20110429-1"
-declare -r ETC_PATCH_VERSION="13.37-20110801"
+#declare -r ETC_PATCH_VERSION="13.37-20110801"
 #declare -r ETC_PATCH_VERSION="13.37-20120413"
+declare -r ETC_PATCH_VERSION="14.0-20120929"
 declare -r ETC_PATCH_FILE="harden_etc-${ETC_PATCH_VERSION}.patch"
 declare -r APACHE_PATCH_VERSION="2.2.17-20110507"
 declare -r APACHE_PATCH_FILE="harden_apache-${APACHE_PATCH_VERSION}.patch"
@@ -171,7 +172,8 @@ declare -r APACHE_PATCH_MODULES_X86_64_FILE="harden_apache-2.2.17-modules-x86_64
 declare -r APACHE_PATCH_MODULES_X86_FILE="harden_apache-2.2.17-modules-x86-20110424.patch"
 #declare -r SSH_PATCH_FILE="ssh_harden-20110517-3.patch"
 #declare -r SSH_PATCH_FILE="ssh_harden-20110616.patch"
-declare -r SSH_PATCH_FILE="ssh_harden-20120413.patch"
+#declare -r SSH_PATCH_FILE="ssh_harden-20120413.patch"
+declare -r SSH_PATCH_FILE="ssh_harden-20120929-1.patch"
 declare -r SENDMAIL_PATCH_FILE="sendmail_harden-20110918-1.patch"
 declare -r SLACKWARE_VERSION=`sed 's/^.*[[:space:]]\([0-9]\+\.[0-9]\+\).*$/\1/' /etc/slackware-version 2>/dev/null`
 # these are not declared as integers cause then the ${ ... :-DEFAULT } syntax won't work(?!)
