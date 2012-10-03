@@ -2,7 +2,7 @@
 ################################################################################
 # file:		harden.sh
 # created:	25-09-2010
-# modified:	2012 Sep 29
+# modified:	2012 Oct 03
 #
 # TODO:
 #   - guides to read:
@@ -422,6 +422,8 @@ function import_pgp_keys() {
     /usr/bin/wget --tries=5 "${URL}" --output-document=- | gpg --keyring "${GPG_KEYRING}" --no-default-keyring --import -
   done
   # keys with key ID
+  # set is to avoid "./harden.sh: line 427: PGP_KEYSERVERS[${PGP_KEY}]: unbound variable"
+  set +u
   for PGP_KEY in ${PGP_KEYS[*]}
   do
     if [ -n "${PGP_KEYSERVERS[${PGP_KEY}]}" ]
@@ -432,6 +434,7 @@ function import_pgp_keys() {
     fi
     /usr/bin/gpg --keyserver "hkp://${KEYSERVER}" --keyring "${GPG_KEYRING}" --no-default-keyring --recv-keys "${PGP_KEY}"
   done
+  set -u
   return 0
 } # import_pgp_keys()
 ################################################################################
@@ -647,7 +650,8 @@ function check_and_patch() {
   }
   #pushd "${1}" || return 1
 
-  if [ "${4}" = "reverse" ]
+  set +u
+  if [ -n "${4}" -a "${4}" = "reverse" ]
   then
     # this is the best i came up with to detect if the patch is already applied/reversed before actually applying/reversing it.
     # patch seems to return 0 in every case, so we'll have to use grep here.
@@ -675,6 +679,7 @@ function check_and_patch() {
     /usr/bin/patch -d "${DIR_TO_PATCH}" -t -p${P} -i "${PATCH_FILE}"
     RET=${?}
   fi
+  set -u
   return ${RET}
 }
 ################################################################################
@@ -1067,6 +1072,7 @@ function file_permissions() {
   }
 
   # sudo: /etc/sudoers is mode 0640, should be 0440
+  # visudo -c says: "/etc/sudoers: bad permissions, should be mode 0440"
   /usr/bin/chmod -c 0440 /etc/sudoers
 
   # there can be SO many log files under /var/log, so i think this is the safest bet.
@@ -1163,6 +1169,9 @@ function miscellaneous_settings() {
   # NOTES:
   #   - it is recommended to run file_permissions() after this function
   #     this function might create some files that don't have secure file permissions
+  #
+  # TODO:
+  #   - tcp_diag module to rc.modules
 
   create_ftpusers
 
