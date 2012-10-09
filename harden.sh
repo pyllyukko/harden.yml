@@ -543,6 +543,10 @@ function user_accounts() {
   #  /usr/sbin/groupdel		news
   #fi
 
+  # change the defaults. this will update /etc/default/useradd. see
+  # http://tldp.org/HOWTO/Shadow-Password-HOWTO-7.html#ss7.1
+  useradd -D -e 365 -f 0
+
   echo "${FUNCNAME}(): modifying/hardening current user accounts"
 
   # CIS 8.1 Block System Accounts (modified)
