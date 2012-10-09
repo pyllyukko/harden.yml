@@ -2,7 +2,7 @@
 ################################################################################
 # file:		harden.sh
 # created:	25-09-2010
-# modified:	2012 Oct 03
+# modified:	2012 Oct 09
 #
 # TODO:
 #   - guides to read:
@@ -39,6 +39,7 @@
 #   - ssh_keyscan.sh
 #   - http://www.gnupg.org/documentation/manuals/gnupg/addgnupghome.html#addgnupghome
 #   - /usr/bin/ch{mod,own} -> from PATH. since Debian has them under /bin
+#   - add CCE references
 #
 # NOTES:
 #   - i designed this so it can be run multiple times (with maybe the exception of disabling services)
@@ -263,6 +264,7 @@ declare -ra PGP_URLS=(
 #   - DDC6C0AD - https://www.torproject.org/torbutton/
 #   - C52175E2 - http://releases.mozilla.org/pub/mozilla.org/firefox/releases/3.6.28/KEY
 #   - 1FC730C1 - Bitcoin
+#   - 73647CFF - Nico Golde (Debian Advisories)
 declare -ra PGP_KEYS=(
   "CEA0A321"
   "61355B9E"
@@ -279,6 +281,7 @@ declare -ra PGP_KEYS=(
   "DDC6C0AD"
   "C52175E2"
   "1FC730C1"
+  "73647CFF"
 )
 # if there is a recommended/suggested server for a key
 declare -rA PGP_KEYSERVERS=(
@@ -836,7 +839,7 @@ function file_permissions() {
   ##############################################################################
   #
   # NOTE: Nessus plugin 21745 triggers, if /var/log/packages is not readable
-  /usr/bin/chmod -c o-w		packages removed_packages removed_scripts scripts setup
+  /usr/bin/chmod -c o-w		packages   removed_packages   removed_scripts   scripts   setup
   /usr/bin/chmod -c o-rwx	packages/* removed_packages/* removed_scripts/* scripts/* setup/*
 
   ##############################################################################
@@ -852,8 +855,8 @@ function file_permissions() {
   /usr/bin/chmod -c g-wx httpd/* cups/* iptraf/* nfsd/* samba/* sa/* uucp/*
 
   #   Slackware package management
-  /usr/bin/chmod -c g-w packages removed_packages removed_scripts scripts setup
-  /usr/bin/chmod -c g-wx packages/* removed_packages/* removed_scripts/* scripts/* setup/*
+  /usr/bin/chmod -c g-w		packages   removed_packages   removed_scripts   scripts   setup
+  /usr/bin/chmod -c g-wx	packages/* removed_packages/* removed_scripts/* scripts/* setup/*
 
   ##############################################################################
   # Permissions for owner
@@ -885,10 +888,15 @@ function file_permissions() {
   # -rw-r----- root/shadow     498 2009-03-08 22:01 etc/shadow.new
   # ...if we go changing that, xlock for instance goes bananas.
   # modified accordingly.
+  #
+  # then again, if there is no xlock or xscreensaver binaries in the system,
+  # the perms could be root:root 0600.
+  #
+  # 9.10.2012: added gshadow to the list
   /usr/bin/chown -c root:root	/etc/passwd /etc/group
   /usr/bin/chmod -c 644		/etc/passwd /etc/group
-  /usr/bin/chown -c root:shadow	/etc/shadow
-  /usr/bin/chmod -c 440		/etc/shadow
+  /usr/bin/chown -c root:shadow	/etc/shadow /etc/gshadow
+  /usr/bin/chmod -c 440		/etc/shadow /etc/gshadow
 
   # CIS 7.3 Create ftpusers Files
   /usr/bin/chown -c root:root	/etc/ftpusers
@@ -915,6 +923,7 @@ function file_permissions() {
 
   # CIS 7.9 Set LILO Password
   # - also suggested in system-hardening-10.2.txt
+  # - also Tiger [boot01]
   /usr/bin/chown -c root:root	/etc/lilo.conf
   /usr/bin/chmod -c 600		/etc/lilo.conf
 
@@ -1005,8 +1014,9 @@ function file_permissions() {
   /usr/bin/chmod -c u-s		/usr/bin/chfn
   /usr/bin/chmod -c u-s		/usr/bin/chsh
   /usr/bin/chmod -c u-s		/usr/bin/crontab
-  /usr/bin/chmod -c u-s		/usr/bin/gpasswd
-  /usr/bin/chmod -c u-s		/usr/bin/newgrp
+  # NOTE: 9.10.2012: these could actually be needed.
+  #/usr/bin/chmod -c u-s		/usr/bin/gpasswd
+  #/usr/bin/chmod -c u-s		/usr/bin/newgrp
 
   # SSH-KEYSIGN(8):
   # ssh-keysign is disabled by default and can only be enabled in the global client
@@ -1086,7 +1096,8 @@ function file_permissions() {
   # is with 700 permissions.
   /usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -exec /usr/bin/chmod -c 700 '{}' \;
 
-  /usr/bin/find /var/log -type f -name 'wtmp*' -exec /usr/bin/chmod -c 660 '{}' \;
+  #/usr/bin/find /var/log -type f -name 'wtmp*' -exec /usr/bin/chmod -c 660 '{}' \;
+  chmod -c 660 /var/log/wtmp
 
   return 0
 } # file_permissions()
