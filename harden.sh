@@ -2,7 +2,7 @@
 ################################################################################
 # file:		harden.sh
 # created:	25-09-2010
-# modified:	2012 Oct 09
+# modified:	2012 Oct 10
 #
 # TODO:
 #   - guides to read:
@@ -1011,6 +1011,12 @@ function file_permissions() {
 
   # "Remove the SUID or SGID bit from the following files"
   #
+  # Slackware 14.0 default permissions:
+  #   -rwsr-sr-x daemon/daemon 40616 2010-07-28 15:20 usr/bin/at
+  #   -rws--x--x root/root     47199 2012-09-13 20:12 usr/bin/chfn
+  #   -rws--x--x root/root     47197 2012-09-13 20:12 usr/bin/chsh
+  #   -rws--x--x root/root     10096 2012-09-07 15:24 usr/bin/crontab
+  #
   # NOTE: see CVE-2011-0721 for an example of why.
   #
   # NOTE: you can find all SUID/SGID binaries with "find / -type f \( -perm -04000 -o -perm -02000 \)"
@@ -1045,45 +1051,55 @@ function file_permissions() {
   #/usr/bin/chmod -c u-s	/usr/bin/pkexec
 
   # SSA:2011-101-01:
-  [ -u /usr/sbin/faillog -o \
-    -u /usr/sbin/lastlog ] && {
+  if [ -u /usr/sbin/faillog -o \
+    -u /usr/sbin/lastlog ]
+  then
     echo "${FUNCNAME}(): notice: you seem to be missing a security patch for SSA:2011-101-01"
     /usr/bin/chmod -c u-s	/usr/sbin/faillog
     /usr/bin/chmod -c u-s	/usr/sbin/lastlog
-  }
+  fi
 
   # the process accounting log file:
-  [ -f /var/log/pacct ] && /usr/bin/chmod -c 600 /var/log/pacct
+  if [ -f /var/log/pacct ]
+    /usr/bin/chmod -c 600 /var/log/pacct
+  fi
 
   # adjust the www permissions, so that regular users can't read
   # your database credentials from some php file etc. also so that
   # apache can't write there, in case of some web app vulns.
-  [ -d "/var/www" ] && {
-    /usr/bin/chown -cR root:apache /var/www
-    find /var/www -type d -exec /usr/bin/chmod -c 750 '{}' \;
-    find /var/www -type f -exec /usr/bin/chmod -c 640 '{}' \;
-  }
+  if [ -d "${WWWROOT}" ]
+  then
+    /usr/bin/chown -cR root:apache ${WWWROOT}
+    #find ${WWWROOT} -type d -exec /usr/bin/chmod -c 750 '{}' \;
+    #find ${WWWROOT} -type f -exec /usr/bin/chmod -c 640 '{}' \;
+
+    # some dirs might need to be writable by apache, so we'll just do this:
+    find ${WWWROOT} -exec /usr/bin/chmod -c o-rwx '{}' \;
+  fi
 
   # man 5 limits:
   # "It should be owned by root and readable by root account only."
-  [ -f "/etc/limits" ] && {
+  if [ -f "/etc/limits" ]
+  then
     /usr/bin/chown -c root:root	/etc/limits
     /usr/bin/chmod -c 600	/etc/limits
-  }
+  fi
 
   # man 5 audisp-remote.conf:
   # "Note that the key file must be owned by root and mode 0400."
-  [ -f "/etc/audisp/audisp-remote.key" ] && {
+  if [ -f "/etc/audisp/audisp-remote.key" ]
+  then
     /usr/bin/chown -c root:root	/etc/audisp/audisp-remote.key
     /usr/bin/chmod -c 400	/etc/audisp/audisp-remote.key
-  }
+  fi
 
   # man 5 auditd.conf:
   # "Note that the key file must be owned by root and mode 0400."
-  [ -f "/etc/audit/audit.key" ] && {
+  if [ -f "/etc/audit/audit.key" ]
+  then
     /usr/bin/chown -c root:root	/etc/audit/audit.key
     /usr/bin/chmod -c 400	/etc/audit/audit.key
-  }
+  fi
 
   # sudo: /etc/sudoers is mode 0640, should be 0440
   # visudo -c says: "/etc/sudoers: bad permissions, should be mode 0440"
