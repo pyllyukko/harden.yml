@@ -922,6 +922,7 @@ function file_permissions() {
   /usr/bin/chmod -cR go-rwx	/var/spool/cron
 
   # CIS 7.8 Restrict Root Logins To System Console
+  # also Nessus cert_unix_checklist.audit "Permission and ownership check /etc/securetty"
   /usr/bin/chown -c root:root	/etc/securetty
   /usr/bin/chmod -c 400		/etc/securetty
 
@@ -1043,9 +1044,12 @@ function file_permissions() {
   # end of system-hardening-10.2.txt
   ##############################################################################
 
+
+
   # CUSTOM STUFF BELOW
 
   # more SUID binaries:
+  # notice that the uucp package is removed with remove_packages()
   /usr/bin/chmod -c u-s	/usr/bin/cu
   /usr/bin/chmod -c u-s	/usr/bin/uucp
   #/usr/bin/chmod -c u-s	/usr/bin/pkexec
@@ -1207,7 +1211,9 @@ function miscellaneous_settings() {
   create_ftpusers
 
   # CIS 7.4 Prevent X Server From Listening On Port 6000/tcp (kinda the same)
-  [ -f "/usr/bin/startx" ] && sed -i 's/^defaultserverargs=""$/defaultserverargs="-nolisten tcp"/' /usr/bin/startx
+  if [ -f "/usr/bin/startx" ]
+    sed -i 's/^defaultserverargs=""$/defaultserverargs="-nolisten tcp"/' /usr/bin/startx
+  fi
 
   # CIS 7.5 Restrict at/cron To Authorized Users
   #
@@ -1245,7 +1251,11 @@ function miscellaneous_settings() {
 
   # Account processing is turned on by /etc/rc.d/rc.M.  However, the log file
   # doesn't exist.
-  [ ! -f /var/log/pacct ] && touch /var/log/pacct
+  if [ ! -f /var/log/pacct ]
+    touch /var/log/pacct
+    chgrp -c adm /var/log/pacct
+    chmod -c 640 /var/log/pacct
+  fi
   # "Don't allow anyone to use at."
   #
   # AT.ALLOW(5): "If the file /etc/at.allow exists, only usernames mentioned in it are allowed to use at."
@@ -1254,10 +1264,11 @@ function miscellaneous_settings() {
   #
   # Slackware's at package creates /etc/at.deny by default, which has blacklisted users. so we're switching
   # from blacklist to (empty) whitelist.
-  [ -s "/etc/at.deny" -a ! -f "/etc/at.allow" ] && {
+  if [ -s "/etc/at.deny" -a ! -f "/etc/at.allow" ]
+  then
     /usr/bin/rm -v	/etc/at.deny
     /usr/bin/touch	/etc/at.allow
-  }
+  fi
 
   set_failure_limits
 
