@@ -819,72 +819,72 @@ function file_permissions() {
   /usr/bin/chown -c root:root	/etc/sysctl.conf
   /usr/bin/chmod -c 0600	/etc/sysctl.conf
 
-  # CIS 5.3 Confirm Permissions On System Log Files (modified)
-  # NOTE: apache -> httpd
-  pushd /var/log
-  ##############################################################################
-  # Permissions for other log files in /var/log
-  ##############################################################################
-  # NOTE: according to tiger, the permissions of wtmp should be 664
-  /usr/bin/chmod -c o-rwx btmp cron* debug* dmesg faillog lastlog maillog* messages* secure* spooler* syslog* wtmp xferlog
+  ## CIS 5.3 Confirm Permissions On System Log Files (modified)
+  ## NOTE: apache -> httpd
+  #pushd /var/log
+  ###############################################################################
+  ## Permissions for other log files in /var/log
+  ###############################################################################
+  ## NOTE: according to tiger, the permissions of wtmp should be 664
+  #/usr/bin/chmod -c o-rwx btmp cron* debug* dmesg faillog lastlog maillog* messages* secure* spooler* syslog* wtmp xferlog
 
-  ##############################################################################
-  #   directories in /var/log
-  ##############################################################################
-  /usr/bin/chmod -c o-w httpd cups iptraf nfsd samba sa uucp
+  ###############################################################################
+  ##   directories in /var/log
+  ###############################################################################
+  #/usr/bin/chmod -c o-w httpd cups iptraf nfsd samba sa uucp
 
-  ##############################################################################
-  #   contents of directories in /var/log
-  ##############################################################################
-  /usr/bin/chmod -c o-rwx httpd/* cups/* iptraf/* nfsd/* samba/* sa/* uucp/*
+  ###############################################################################
+  ##   contents of directories in /var/log
+  ###############################################################################
+  #/usr/bin/chmod -c o-rwx httpd/* cups/* iptraf/* nfsd/* samba/* sa/* uucp/*
 
-  ##############################################################################
-  #   Slackware package management
-  ##############################################################################
-  #
-  # NOTE: Nessus plugin 21745 triggers, if /var/log/packages is not readable
-  /usr/bin/chmod -c o-w		packages   removed_packages   removed_scripts   scripts   setup
-  /usr/bin/chmod -c o-rwx	packages/* removed_packages/* removed_scripts/* scripts/* setup/*
+  ###############################################################################
+  ##   Slackware package management
+  ###############################################################################
+  ##
+  ## NOTE: Nessus plugin 21745 triggers, if /var/log/packages is not readable
+  #/usr/bin/chmod -c o-w		packages   removed_packages   removed_scripts   scripts   setup
+  #/usr/bin/chmod -c o-rwx	packages/* removed_packages/* removed_scripts/* scripts/* setup/*
 
-  ##############################################################################
-  # Permissions for group log files in /var/log
-  ##############################################################################
-  # NOTE: removed wtmp from here, it is group (utmp) writable by default and there might be a good reason for that.
-  /usr/bin/chmod -c g-wx btmp cron* debug* dmesg faillog lastlog maillog* messages* secure* spooler* syslog* xferlog
+  ###############################################################################
+  ## Permissions for group log files in /var/log
+  ###############################################################################
+  ## NOTE: removed wtmp from here, it is group (utmp) writable by default and there might be a good reason for that.
+  #/usr/bin/chmod -c g-wx btmp cron* debug* dmesg faillog lastlog maillog* messages* secure* spooler* syslog* xferlog
 
-  #   directories in /var/log
-  /usr/bin/chmod -c g-w httpd cups iptraf nfsd samba sa uucp
+  ##   directories in /var/log
+  #/usr/bin/chmod -c g-w httpd cups iptraf nfsd samba sa uucp
 
-  #   contents of directories in /var/log
-  /usr/bin/chmod -c g-wx httpd/* cups/* iptraf/* nfsd/* samba/* sa/* uucp/*
+  ##   contents of directories in /var/log
+  #/usr/bin/chmod -c g-wx httpd/* cups/* iptraf/* nfsd/* samba/* sa/* uucp/*
 
-  #   Slackware package management
-  /usr/bin/chmod -c g-w		packages   removed_packages   removed_scripts   scripts   setup
-  /usr/bin/chmod -c g-wx	packages/* removed_packages/* removed_scripts/* scripts/* setup/*
+  ##   Slackware package management
+  #/usr/bin/chmod -c g-w		packages   removed_packages   removed_scripts   scripts   setup
+  #/usr/bin/chmod -c g-wx	packages/* removed_packages/* removed_scripts/* scripts/* setup/*
 
-  ##############################################################################
-  # Permissions for owner
-  ##############################################################################
-  #   log files in /var/log
-  /usr/bin/chmod u-x btmp cron* debug* dmesg faillog lastlog maillog* messages* secure* spooler* syslog* wtmp xferlog
-  #   contents of directories in /var/log
-  # NOTE: disabled, these directories might contain subdirectories so u-x doesn't make sense.
-  #/usr/bin/chmod u-x httpd/* cups/* iptraf/* nfsd/* samba/* sa/* uucp/*
+  ###############################################################################
+  ## Permissions for owner
+  ###############################################################################
+  ##   log files in /var/log
+  #/usr/bin/chmod u-x btmp cron* debug* dmesg faillog lastlog maillog* messages* secure* spooler* syslog* wtmp xferlog
+  ##   contents of directories in /var/log
+  ## NOTE: disabled, these directories might contain subdirectories so u-x doesn't make sense.
+  ##/usr/bin/chmod u-x httpd/* cups/* iptraf/* nfsd/* samba/* sa/* uucp/*
 
-  #   Slackware package management
-  # NOTE: disabled, these directories might contain subdirectories so u-x doesn't make sense.
-  #/usr/bin/chmod u-x packages/* removed_packages/* removed_scripts/* scripts/* setup/*
+  ##   Slackware package management
+  ## NOTE: disabled, these directories might contain subdirectories so u-x doesn't make sense.
+  ##/usr/bin/chmod u-x packages/* removed_packages/* removed_scripts/* scripts/* setup/*
 
-  # Change ownership
-  # NOTE: disabled, the ownerships should be correct.
-  #/usr/bin/chown -cR root:root .
-  #/usr/bin/chown -c uucp uucp
-  #/usr/bin/chgrp -c uucp uucp/*
-  #/usr/bin/chgrp -c utmp wtmpq
+  ## Change ownership
+  ## NOTE: disabled, the ownerships should be correct.
+  ##/usr/bin/chown -cR root:root .
+  ##/usr/bin/chown -c uucp uucp
+  ##/usr/bin/chgrp -c uucp uucp/*
+  ##/usr/bin/chgrp -c utmp wtmpq
 
-  popd
+  #popd
 
-  # END OF CIS 5.3
+  ## END OF CIS 5.3
 
   # CIS 6.3 Verify passwd, shadow, and group File Permissions (modified)
 
@@ -987,17 +987,22 @@ function file_permissions() {
   # wtmp offers simply too much detail over so long period of time.
   #
   # NOTE: in slackware 13.1 /var/adm is a symbolic link to /var/log
-  /usr/bin/chown -c root:utmp	/var/adm/wtmp
-  # rotated files... of course this should be done in logrotate.conf.
-  /usr/bin/chown -c root:root	/var/adm/wtmp[.-]*
+  #/usr/bin/chown -c root:utmp	/var/adm/wtmp
+  #/usr/bin/chown -c root:root	/var/adm/wtmp[.-]*
 
   # CIS 5.3 handles the permissions, this file shouldn't be readable by all users. it contains sensitive information.
-  #/usr/bin/chmod -c 0644	/var/adm/wtmp
-  /usr/bin/chmod -c 0600	/var/adm/wtmp[.-]*
+  # NOTE: 10.10.2012: CIS 5.3 commented out
+  # rotated files... of course this should be done in logrotate.conf.
+  /usr/bin/chmod -c o-rwx	/var/adm/wtmp
+  # make the rotated wtmp files group adm readable
+  /usr/bin/chgrp -c root	/var/adm/wtmp[.-]*
+  /usr/bin/chmod -c 0640	/var/adm/wtmp[.-]*
 
   # Nessus CIS_Apache_v2_1.audit "1.19 Updating Ownership and Permissions."
   # ...wtf?
   #/usr/bin/chmod -c 0044 /etc/httpd
+
+
 
   ##############################################################################
   # from system-hardening-10.2.txt:
@@ -1109,19 +1114,27 @@ function file_permissions() {
   # visudo -c says: "/etc/sudoers: bad permissions, should be mode 0440"
   /usr/bin/chmod -c 0440 /etc/sudoers
 
+  # wpa_supplicant conf might include pre-shared keys or private key passphrases.
+  chmod -c 600 /etc/wpa_supplicant.conf
+
   # there can be SO many log files under /var/log, so i think this is the safest bet.
   # any idea if there's some log files that should be world-readable? for instance Xorg.n.log?
   #
   # NOTE: wtmp has special ownership/permissions which are handled by the etc package (.new)
   #       and logrotate
-  /usr/bin/find /var/log -type f -maxdepth 1 \! -name 'wtmp*' -exec /usr/bin/chmod -c 600 '{}' \;
+  # NOTE: ideally, all the permissions of the files should be handled by syslog/logrotate/etc...
+  #
+  #/usr/bin/find /var/log -type f -maxdepth 1 \! -name 'wtmp*' -exec /usr/bin/chmod -c 600 '{}' \;
   # we define mindepth here, so /var/log itself doesn't get chmodded. if there are some logs files
   # that need to be written by some other user (for instance tor), it doesn't work if /var/log
   # is with 700 permissions.
-  /usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -exec /usr/bin/chmod -c 700 '{}' \;
+  /usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -group root -exec /usr/bin/chgrp -c adm '{}' \;
+  /usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -group adm -exec /usr/bin/chmod -c 750 '{}' \;
+  /usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -exec /usr/bin/chmod -c o-rwx '{}' \;
+  #/usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -exec /usr/bin/chmod -c 700 '{}' \;
 
   #/usr/bin/find /var/log -type f -name 'wtmp*' -exec /usr/bin/chmod -c 660 '{}' \;
-  chmod -c 660 /var/log/wtmp
+  #chmod -c 660 /var/log/wtmp
 
   return 0
 } # file_permissions()
