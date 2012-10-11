@@ -145,6 +145,7 @@ SERVICES_WHITELIST=(
   /etc/rc.d/rc.syslog
   "${SA_RC}"
   /etc/rc.d/rc.udev
+  /etc/rc.d/rc.ntpd
 )
 #declare -ra LOG_FILES=(
 #  btmp
@@ -638,7 +639,8 @@ function restart_services() {
 
   [ -f /etc/sysctl.conf ] &&		/sbin/sysctl -p /etc/sysctl.conf
   [ -x /etc/rc.d/rc.syslog ] &&		/etc/rc.d/rc.syslog	restart
-  [ -x /etc/rc.d/rc.firewall ] &&	/etc/rc.d/rc.firewall	restart
+  # TODO: this might kill your SSH connection
+  #[ -x /etc/rc.d/rc.firewall ] &&	/etc/rc.d/rc.firewall	restart
 
   # TODO: enable after making the ssh patch
   #[ -x /etc/rc.d/rc.sshd ] &&		/etc/rc.d/rc.sshd	restart
@@ -967,9 +969,10 @@ function file_permissions() {
   # Version 3.0.0 (CIS_Apache_HTTP_Server_Benchmark_v3.0.0)
   ##############################################################################
 
-  # CIS 1.3.6 Core Dump Directory Security (Level 1, Scorable)
-  /usr/bin/chown -c root:apache	/var/log/httpd
-  /usr/bin/chmod -c o-rwx	/var/log/httpd
+  # CIS 1.3.6 Core Dump Directory Security (Level 1, Scorable) (modified)
+  #/usr/bin/chown -c root:apache	/var/log/httpd
+  /usr/bin/chown -c root:adm	/var/log/httpd
+  /usr/bin/chmod -c 750		/var/log/httpd
 
   ##############################################################################
   # from Nessus cert_unix_checklist.audit (Cert UNIX Security Checklist v2.0)
