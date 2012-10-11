@@ -1327,6 +1327,7 @@ function miscellaneous_settings() {
     /usr/sbin/update-ca-certificates -v
   fi
 
+  # TODO: slackware 14.0 has some changes regarding this.
   grep -q "^blacklist ipv6$" /etc/modprobe.d/blacklist.conf 2>/dev/null
   if [ ${?} -ne 0 ]
   then
