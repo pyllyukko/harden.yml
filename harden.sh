@@ -591,7 +591,20 @@ function user_accounts() {
 
   user_home_directories_permissions
 
+
   # CUSTOM
+
+  #
+  # See GPASSWD(1): "Notes about group passwords"
+  #
+  # remove daemon from adm group, since we use adm group for log reading.
+  # default members in Slack14.0:
+  #   adm:x:4:root,adm,daemon
+  #usermod -G daemon daemon
+  gpasswd -d daemon adm
+
+  # restrict adm group
+  #gpasswd -R adm
 
   # this should create the missing entries to /etc/gshadow
   if [ -x /usr/sbin/grpck ]
