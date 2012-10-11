@@ -2,7 +2,7 @@
 ################################################################################
 # file:		harden.sh
 # created:	25-09-2010
-# modified:	2012 Oct 10
+# modified:	2012 Oct 11
 #
 # TODO:
 #   - guides to read:
@@ -1070,6 +1070,7 @@ function file_permissions() {
 
   # the process accounting log file:
   if [ -f /var/log/pacct ]
+  then
     /usr/bin/chmod -c 600 /var/log/pacct
   fi
 
@@ -1225,6 +1226,7 @@ function miscellaneous_settings() {
 
   # CIS 7.4 Prevent X Server From Listening On Port 6000/tcp (kinda the same)
   if [ -f "/usr/bin/startx" ]
+  then
     sed -i 's/^defaultserverargs=""$/defaultserverargs="-nolisten tcp"/' /usr/bin/startx
   fi
 
@@ -1265,6 +1267,7 @@ function miscellaneous_settings() {
   # Account processing is turned on by /etc/rc.d/rc.M.  However, the log file
   # doesn't exist.
   if [ ! -f /var/log/pacct ]
+  then
     touch /var/log/pacct
     chgrp -c adm /var/log/pacct
     chmod -c 640 /var/log/pacct
