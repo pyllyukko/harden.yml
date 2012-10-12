@@ -2,7 +2,7 @@
 ################################################################################
 # file:		harden.sh
 # created:	25-09-2010
-# modified:	2012 Oct 11
+# modified:	2012 Oct 12
 #
 # TODO:
 #   - guides to read:
@@ -63,7 +63,7 @@
 # what does it do:
 #
 #   - harden user accounts
-#     - properly locks down system accounts
+#     - properly locks down system accounts (0 - SYS_UID_MAX && !root)
 #     - sets restrictions for normal users
 #       - sets the maximum number of processes available to a single user (ulimit -u)
 #       - sets the maximum size of core files created (ulimit -c)
@@ -73,11 +73,18 @@
 #       - also removes "unnecessary" shells
 #     - creates an option to use restricted bash (rbash)
 #   - removes unnecessary services
-#     - xinetd
+#     - xinetd (/etc/inetd.conf)
 #     - goes through /etc/rc.d/rc.* and disables plenty of those
 #   - enables additional security related services
 #     - system accounting
 #     - firewall (rc.firewall)
+#     - through rc.local:
+#       - logoutd
+#   - enables TCP wrappers
+#   - writes /etc/ftpusers
+#   - adds a bunch of PGP keys to your trustedkeys.gpg keyring, so you can
+#     verify downloaded software
+#   - hardens mount options (creates /etc/fstab.new)
 #
 ################################################################################
 if [ ${BASH_VERSINFO[0]} -ne 4 ]
@@ -132,6 +139,7 @@ SERVICES_WHITELIST=(
   /etc/rc.d/rc.acpid
   /etc/rc.d/rc.firewall
   /etc/rc.d/rc.font
+  /etc/rc.d/rc.loop
   /etc/rc.d/rc.inet1
   /etc/rc.d/rc.inet2
   /etc/rc.d/rc.keymap
@@ -146,6 +154,10 @@ SERVICES_WHITELIST=(
   "${SA_RC}"
   /etc/rc.d/rc.udev
   /etc/rc.d/rc.ntpd
+  # SBo:
+  /etc/rc.d/rc.clamav
+  /etc/rc.d/rc.snort
+  /etc/rc.d/rc.auditd
 )
 #declare -ra LOG_FILES=(
 #  btmp
@@ -1733,6 +1745,7 @@ do
       remove_shells
       import_pgp_keys
       check_and_patch /etc "${ETC_PATCH_FILE}" 1 && ETC_CHANGED=1
+      check_and_patch /etc/ssh "${SSH_PATCH_FILE}" 1
 
       # this should be run after patching etc,
       # there might be new rc scripts.
