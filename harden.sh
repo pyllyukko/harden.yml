@@ -1676,6 +1676,13 @@ EOF
 function patch_sendmail() {
   # $1 = [reverse]
 
+  local REV=""
+
+  if [ ${#} -eq 1 ]
+  then
+    REV="${1}"
+  fi
+
   if [ ! -d "/etc/mail" ]
   then
     echo "${FUNCNAME}(): error: sendmail config dir not found!" 1>&2
@@ -1690,7 +1697,7 @@ function patch_sendmail() {
     return 1
   fi
 
-  check_and_patch /usr/share/sendmail "${SENDMAIL_PATCH_FILE}" 1 "${1}" || {
+  check_and_patch /usr/share/sendmail "${SENDMAIL_PATCH_FILE}" 1 "${REV}" || {
     echo "${FUNCNAME}(): error!" 1>&2
     return 1
   }
