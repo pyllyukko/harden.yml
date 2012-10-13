@@ -838,9 +838,9 @@ function harden_fstab() {
 	print
       else
 	# slackware format
-        #printf "%-16s %-16s %-11s %-16s %-3s %s\n", $1, $2, $3, $4, $5, $6
+        printf "%-16s %-16s %-11s %-16s %-3s %s\n", $1, $2, $3, $4, $5, $6
 	# debian format
-        printf "%-15s %-15s %-7s %-15s %-7s %s\n", $1, $2, $3, $4, $5, $6
+        #printf "%-15s %-15s %-7s %-15s %-7s %s\n", $1, $2, $3, $4, $5, $6
     }' /etc/fstab 1>/etc/fstab.new
 
   if [ -f /etc/fstab.new ]
