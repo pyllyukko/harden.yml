@@ -1091,7 +1091,20 @@ function file_permissions() {
   /usr/bin/chmod -c ug-s	/usr/bin/at
   /usr/bin/chmod -c u-s		/usr/bin/chfn
   /usr/bin/chmod -c u-s		/usr/bin/chsh
-  /usr/bin/chmod -c u-s		/usr/bin/crontab
+
+  # somewhere along the lines of CIS 7.5 Restrict at/cron To Authorized Users
+  #
+  # the dcron's README describes that the use should be limited by a
+  # designated group (CRONTAB_GROUP) as follows:
+  #   -rwx------  0 root   root    32232 Jan  6 18:58 /usr/local/sbin/crond
+  #   -rwsr-x---  0 root   wheel   15288 Jan  6 18:58 /usr/local/bin/crontab
+  # NOTE: alien uses the wheel group here: http://alien.slackbook.org/dokuwiki/doku.php?id=linux:admin
+  /usr/bin/chmod -c 700		/usr/sbin/crond
+  chgrp -c wheel		/usr/bin/crontab
+  chmod -c 4710			/usr/bin/crontab
+  # this line disables cron from everyone else but root:
+  #/usr/bin/chmod -c u-s		/usr/bin/crontab
+
   # NOTE: 9.10.2012: these could actually be needed.
   #/usr/bin/chmod -c u-s		/usr/bin/gpasswd
   #/usr/bin/chmod -c u-s		/usr/bin/newgrp
