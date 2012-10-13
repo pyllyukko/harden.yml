@@ -2,7 +2,7 @@
 ################################################################################
 # file:		harden.sh
 # created:	25-09-2010
-# modified:	2012 Oct 12
+# modified:	2012 Oct 13
 #
 # TODO:
 #   - guides to read:
@@ -215,6 +215,11 @@ declare -r APACHE_PATCH_MODULES_X86_FILE="harden_apache-2.2.17-modules-x86-20110
 #declare -r SSH_PATCH_FILE="ssh_harden-20120413.patch"
 declare -r SSH_PATCH_FILE="ssh_harden-20120929-1.patch"
 declare -r SENDMAIL_PATCH_FILE="sendmail_harden-20110918-1.patch"
+declare -r SUDOERS_PATCH_VERSION="1.8.5p2-20121013-1"
+declare -r SUDOERS_PATCH_FILE="sudoers-${SUDOERS_PATCH_VERSION}.patch"
+
+# /PATCHES
+
 declare -r SLACKWARE_VERSION=`sed 's/^.*[[:space:]]\([0-9]\+\.[0-9]\+\).*$/\1/' /etc/slackware-version 2>/dev/null`
 # these are not declared as integers cause then the ${ ... :-DEFAULT } syntax won't work(?!)
 declare -r UID_MIN=`awk '/^UID_MIN/{print$2}' /etc/login.defs 2>/dev/null`
@@ -1734,15 +1739,16 @@ function usage() {
 	      ssh
 	      etc
 	        the etc patch assumes that you have at least the following packages installed:
-		  network-scripts
-		  sysvinit-scripts
-		  etc
-		  shadow
-		  logrotate
-		  sysklogd
+	          network-scripts
+	          sysvinit-scripts
+	          etc
+	          shadow
+	          logrotate
+	          sysklogd
 	      apache
 	      apache-x86_64 (choose this if you have installed slackware64)
 	      sendmail
+	      sudoers
 
 	  -q	"quick harden" - just some generic stuff that should work on any system
 	  -r	remove unnecessary shells
@@ -1781,6 +1787,7 @@ do
       remove_shells
       import_pgp_keys
       check_and_patch /etc "${ETC_PATCH_FILE}" 1 && ETC_CHANGED=1
+      check_and_patch /etc "${SUDOERS_PATCH_FILE}" 1
       check_and_patch /etc/ssh "${SSH_PATCH_FILE}" 1
 
       # this should be run after patching etc,
