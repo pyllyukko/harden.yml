@@ -1711,9 +1711,10 @@ function patch_sendmail() {
     popd
     return 1
   }
-  [ ! -f "/etc/mail/sendmail.cf.bak" ] && {
+  if [ ! -f "/etc/mail/sendmail.cf.bak" ]
+  then
     cp -v /etc/mail/sendmail.cf /etc/mail/sendmail.cf.bak
-  }
+  fi
   cp -v "./${SENDMAIL_CONF_PREFIX}.cf" /etc/mail/sendmail.cf
   popd
 
@@ -1722,9 +1723,10 @@ function patch_sendmail() {
   sed -i 's/^smtp\tThis is sendmail version \$v$/smtp\tThis is sendmail/' /etc/mail/helpfile
 
   # if sendmail is running, restart it
-  [ -f "/var/run/sendmail.pid" -a -x "/etc/rc.d/rc.sendmail" ] && {
+  if [ -f "/var/run/sendmail.pid" -a -x "/etc/rc.d/rc.sendmail" ]
+  then
     /etc/rc.d/rc.sendmail restart
-  }
+  fi
 
   return 0
 } # patch_sendmail()
