@@ -1394,13 +1394,14 @@ function miscellaneous_settings() {
     /usr/sbin/update-ca-certificates -v
   fi
 
-  # TODO: slackware 14.0 has some changes regarding this.
-  grep -q "^blacklist ipv6$" /etc/modprobe.d/blacklist.conf 2>/dev/null
-  if [ ${?} -ne 0 ]
-  then
-    echo "# Disable IPv6" 1>>/etc/modprobe.d/blacklist.conf
-    echo "blacklist ipv6" 1>>/etc/modprobe.d/blacklist.conf
-  fi
+  # NOTE: according to slack14.0 CHANGES_AND_HINTS.TXT, blacklist.conf is a
+  #       "stale" file.
+  #grep -q "^blacklist ipv6$" /etc/modprobe.d/blacklist.conf 2>/dev/null
+  #if [ ${?} -ne 0 ]
+  #then
+  #  echo "# Disable IPv6" 1>>/etc/modprobe.d/blacklist.conf
+  #  echo "blacklist ipv6" 1>>/etc/modprobe.d/blacklist.conf
+  #fi
 
   # disable killing of X with Ctrl+Alt+Backspace
   if [ -d /etc/X11/xorg.conf.d ]
