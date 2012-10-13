@@ -26,6 +26,7 @@
 #     - umask in /etc/profile & /etc/limits
 #     * create suauth
 #     * ftpusers
+#     - what else?
 #   - immutable flags (chattr)
 #   - some variables to read only?
 #     - from rbash: SHELL, PATH, ENV, or BASH_ENV
@@ -44,6 +45,8 @@
 # NOTES:
 #   - i designed this so it can be run multiple times (with maybe the exception of disabling services)
 #   - i tried to write as many comments that i've could about what this script does and also mark the reason.
+#   - it is best to run this script on a fresh slackware installation for best results
+#   - rebooting the system after running this is highly recommended, since many startup scripts are modified.
 #
 # what i've used for reference:
 #   - CIS Slackware Linux Benchmark v1.1
@@ -72,6 +75,11 @@
 #     - restricts the number of available shells
 #       - also removes "unnecessary" shells
 #     - creates an option to use restricted bash (rbash)
+#     - creates .bash_logout to skel with few cleanups
+#     - restricts logins
+#       - /etc/login.access
+#       - /etc/porttime
+#       - /etc/limits
 #   - removes unnecessary services
 #     - xinetd (/etc/inetd.conf)
 #     - goes through /etc/rc.d/rc.* and disables plenty of those
@@ -80,11 +88,25 @@
 #     - firewall (rc.firewall)
 #     - through rc.local:
 #       - logoutd
-#   - enables TCP wrappers
+#   - network:
+#     - enables TCP wrappers
+#     - creates rc.firewall
+#     - IP stack hardening through sysctl.conf
 #   - writes /etc/ftpusers
 #   - adds a bunch of PGP keys to your trustedkeys.gpg keyring, so you can
 #     verify downloaded software
 #   - hardens mount options (creates /etc/fstab.new)
+#   - hardens file permissions
+#     - restricts the use of cron by removing the SUID bit from /usr/bin/crontab
+#     - removes world-readibility from /var/www
+#     - removes world-readibility from home directories
+#     - removes a bunch of SUID/SGID bits
+#       - at
+#       - chfn + chsh
+#       - uucp package
+#       - floppy package (/usr/bin/fdmount)
+#       - ssh-keysign
+#     - ...
 #
 ################################################################################
 if [ ${BASH_VERSINFO[0]} -ne 4 ]
@@ -175,6 +197,9 @@ SERVICES_WHITELIST=(
 #  xferlog
 #)
 declare -r GPG_KEYRING="trustedkeys.gpg"
+
+# PATCHES
+
 #declare -r ETC_PATCH_VERSION="13.37-20110429-1"
 #declare -r ETC_PATCH_VERSION="13.37-20110801"
 #declare -r ETC_PATCH_VERSION="13.37-20120413"
@@ -992,6 +1017,10 @@ function file_permissions() {
   ##############################################################################
 
   # NOTE: netgroup comes with yptools
+  # NOTE:
+  #   login.defs might need to be readable:
+  #     groupmems[7511]: cannot open login definitions /etc/login.defs [Permission denied]
+  #     newgrp[4912]: cannot open login definitions /etc/login.defs [Permission denied]
   for FILE in \
     "/etc/hosts.equiv" \
     "${INETDCONF}" \
@@ -1087,6 +1116,10 @@ function file_permissions() {
   /usr/bin/chmod -c u-s	/usr/bin/uucp
   #/usr/bin/chmod -c u-s	/usr/bin/pkexec
 
+  # from GROUPMEMS(8): "The groupmems executable should be in mode 2770 as user root and in group groups."
+  # since we don't allow users to use it, make it 750.
+  #chmod -c 750 /usr/sbin/groupmems
+
   # SSA:2011-101-01:
   if [ -u /usr/sbin/faillog -o \
     -u /usr/sbin/lastlog ]
@@ -1107,6 +1140,7 @@ function file_permissions() {
   # apache can't write there, in case of some web app vulns.
   if [ -d "${WWWROOT}" ]
   then
+    # TODO: dokuwiki creates files which are apache:apache, should we ignore those?
     /usr/bin/chown -cR root:apache ${WWWROOT}
     #find ${WWWROOT} -type d -exec /usr/bin/chmod -c 750 '{}' \;
     #find ${WWWROOT} -type f -exec /usr/bin/chmod -c 640 '{}' \;
@@ -1443,6 +1477,8 @@ function configure_apache() {
   # TODO: under construction!!!
   #   - apply the patch file. also we need arch detection cause httpd.conf has
   #     lib vs. lib64
+  #   - should the modules be disabled with sed, so we don't need different
+  #     patches for x86 and x86_64?
   #
   # NOTES:
   #   - /var/www ownership and permissions are hardened from file_permissions()
