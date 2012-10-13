@@ -1483,6 +1483,11 @@ function remove_shells() {
     popd
   fi
 
+  if [ ! -d /usr/local/rbin ]
+  then
+    mkdir -m 755 -pv /usr/local/rbin
+  fi
+
   # add rbash to shells
   grep -q "^/bin/rbash$" /etc/shells || {
     echo "adding rbash to shells"
