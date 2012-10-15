@@ -2,7 +2,7 @@
 ################################################################################
 # file:		harden.sh
 # created:	25-09-2010
-# modified:	2012 Oct 13
+# modified:	2012 Oct 16
 #
 # TODO:
 #   - guides to read:
@@ -648,6 +648,12 @@ function user_accounts() {
 
   # restrict adm group
   #gpasswd -R adm
+
+  echo "creating groups for grsecurity"
+  groupadd -g 1001 grsec_proc
+  groupadd -g 1005 grsec_tpe
+  groupadd -g 1006 grsec_symlinkown
+  groupadd -g 1007 grsec_audit
 
   # this should create the missing entries to /etc/gshadow
   if [ -x /usr/sbin/grpck ]
