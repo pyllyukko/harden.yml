@@ -1878,6 +1878,9 @@ do
 	"sendmail")
           patch_sendmail
 	;;
+        "sudoers")
+          check_and_patch /etc	"${SUDOERS_PATCH_FILE}"	1
+        ;;
 	*) echo "error: unknown patch \`${OPTARG}'!" 1>&2 ;;
       esac
     ;;
@@ -1892,6 +1895,9 @@ do
 	"etc") check_and_patch /etc "${ETC_PATCH_FILE}" 1 reverse && ETC_CHANGED=1	;;
         "apache"*) echo "apache patch reversing not yet implemented!"			;;
         "sendmail") patch_sendmail reverse						;;
+        "sudoers")
+          check_and_patch /etc	"${SUDOERS_PATCH_FILE}"	1 reverse
+        ;;
 	*)     echo "error: unknown patch \`${OPTARG}'!" 1>&2				;;
       esac
     ;;
