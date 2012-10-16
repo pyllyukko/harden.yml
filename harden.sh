@@ -588,9 +588,16 @@ function user_accounts() {
   #  /usr/sbin/groupdel		news
   #fi
 
-  # change the defaults. this will update /etc/default/useradd. see
-  # http://tldp.org/HOWTO/Shadow-Password-HOWTO-7.html#ss7.1
-  useradd -D -e 365 -f 0
+  # change the defaults. this will update /etc/default/useradd.
+  # this makes it so, that when a password of a user expires, the account is
+  # locked and the user cannot login anymore.
+  #
+  # WARNING: you don't want to set the EXPIRE (-e), since it's an absolute
+  # date, and not relative. it's too easy to create accounts that are already
+  # locked.
+  #
+  # see http://tldp.org/HOWTO/Shadow-Password-HOWTO-7.html#ss7.1
+  useradd -D -f 0
 
   echo "${FUNCNAME}(): modifying/hardening current user accounts"
 
