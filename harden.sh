@@ -1340,9 +1340,18 @@ function miscellaneous_settings() {
   create_ftpusers
 
   # CIS 7.4 Prevent X Server From Listening On Port 6000/tcp (kinda the same)
-  if [ -f "/usr/bin/startx" ]
+  #if [ -f "/usr/bin/startx" ]
+  #then
+  #  sed -i 's/^defaultserverargs=""$/defaultserverargs="-nolisten tcp"/' /usr/bin/startx
+  #fi
+  if [ -d /etc/X11/xinit -a ! -f /etc/X11/xinit/xserverrc ]
   then
-    sed -i 's/^defaultserverargs=""$/defaultserverargs="-nolisten tcp"/' /usr/bin/startx
+    # from http://docs.slackware.com/howtos:security:basic_security#x_-nolisten_tcp
+    cat 0<<-EOF 1>/etc/X11/xinit/xserverrc
+	#!/bin/sh
+
+	exec /usr/bin/X -nolisten tcp
+EOF
   fi
 
   # CIS 7.5 Restrict at/cron To Authorized Users
