@@ -1230,6 +1230,9 @@ function file_permissions() {
   # wpa_supplicant conf might include pre-shared keys or private key passphrases.
   chmod -c 600 /etc/wpa_supplicant.conf
 
+  # snmptrapd.conf might have SNMP credentials
+  chmod -c 600 /etc/snmp/snmptrapd.conf
+
   # there can be SO many log files under /var/log, so i think this is the safest bet.
   # any idea if there's some log files that should be world-readable? for instance Xorg.n.log?
   #
