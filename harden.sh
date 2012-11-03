@@ -1635,6 +1635,8 @@ function disable_unnecessary_services() {
 
   # CIS 1.4 Enable System Accounting
   /usr/bin/chmod -c 700 "${SA_RC}"
+  # make it store the data a bit longer =)
+  sed -i 's/^\(HISTORY=\).*$/HISTORY=99999/' /etc/sysstat/sysstat
 
   # CIS 2.2 Configure TCP Wrappers and Firewall to Limit Access (applied)
   #
