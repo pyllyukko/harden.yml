@@ -2,7 +2,7 @@
 ################################################################################
 # file:		harden.sh
 # created:	25-09-2010
-# modified:	2012 Oct 16
+# modified:	2012 Nov 03
 #
 # TODO:
 #   - guides to read:
@@ -12,6 +12,8 @@
 #     - http://linuxgazette.net/issue91/kruk.html
 #     - https://www.sans.org/score/unixchecklist.php
 #     - maybe some tips from http://www.debian.org/doc/user-manuals#securing
+#     - http://www.symantec.com/connect/articles/restricting-unix-users
+#     - https://wiki.archlinux.org/index.php/Security
 #   - logrotate
 #     -> done?
 #   - create .preharden backups (only once?)
@@ -72,10 +74,12 @@
 #       - sets the maximum size of core files created (ulimit -c)
 #       - sets a session timeout (TMOUT) in certain conditions
 #       - sets a maximum number of failed login attempts (faillog)
-#     - restricts the number of available shells
-#       - also removes "unnecessary" shells
-#     - creates an option to use restricted bash (rbash)
-#     - creates .bash_logout to skel with few cleanups
+#     - configures shells (packages and /etc/shells)
+#       - creates an option to use restricted bash (rbash)
+#       - restricts the number of available shells
+#       - removes "unnecessary" shells
+#       - sets "restricted bash" as the default shell for newly created users
+#       - creates .bash_logout to skel with few cleanups
 #     - restricts logins
 #       - /etc/login.access
 #       - /etc/porttime
@@ -83,11 +87,15 @@
 #   - removes unnecessary services
 #     - xinetd (/etc/inetd.conf)
 #     - goes through /etc/rc.d/rc.* and disables plenty of those
+#   - removes unnecessary / potentially dangerous packages
 #   - enables additional security related services
-#     - system accounting
 #     - firewall (rc.firewall)
 #     - through rc.local:
 #       - logoutd
+#       - icmpinfo
+#     - monitoring:
+#       - system accounting
+#       - process accounting
 #   - network:
 #     - enables TCP wrappers
 #     - creates rc.firewall
