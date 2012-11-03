@@ -791,6 +791,16 @@ function remove_packages() {
 ################################################################################
 function harden_fstab() {
   # related info: http://wiki.centos.org/HowTos/OS_Protection#head-7e30c59c22152e9808c2e0b95ceec1382456d35c
+  #
+  # TODO (from shred man page):
+  #   In the particular case of ext3 file systems, the above disclaimer
+  #   Applies (and `shred' is thus of limited effectiveness) only in
+  #   `data=journal' mode, which journals file data in addition to just
+  #   Metadata. In both the `data=ordered' (default) and `data=writeback'
+  #   Modes, `shred' works as usual.  Ext3 journaling modes can be changed by
+  #   Adding the `data=something' option to the mount options for a
+  #   Particular file system in the `/etc/fstab' file, as documented in the
+  #   Mount man page (man mount).
 
   if [ ! -w /etc ]
   then
