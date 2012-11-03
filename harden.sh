@@ -437,24 +437,24 @@ function disable_inetd_services() {
 } # disable_inetd_services()
 ################################################################################
 function create_environment_for_restricted_shell () {
-  # TODO: NOT IN USE. UNDER CONSTRUCTION.
   local PRG
 
   if [ ! -d "${RBINDIR}" ]
   then
     mkdir -pv "${RBINDIR}"
   fi
-  chown -c root:root "${RBINDIR}"
-  chmod -c 755 "${RBINDIR}"
+  chown -c root:root	"${RBINDIR}"
+  chmod -c 755		"${RBINDIR}"
 
   #rm -v "${RBINDIR}/"*
 
   pushd "${RBINDIR}" || return 1
 
-  for PRG in passwd id ls
+  for PRG in /usr/bin/passwd /bin/id /bin/ls /usr/bin/printenv
   do
     ln -s /usr/bin/${PRG}
   done
+  ln -s /usr/bin/vim rvim
 
   popd
 
@@ -1501,20 +1501,24 @@ function remove_shells() {
   then
     echo "${FUNCNAME}(): creating rbash link for restricted bash"
     pushd /bin
-    ln -sv bash rbash
+    ln -sv bash rbash && useradd -D -s /bin/rbash
     popd
+  elif [ -h /bin/rbash ]
+  then
+    useradd -D -s /bin/rbash
   fi
 
-  if [ ! -d /usr/local/rbin ]
-  then
-    mkdir -m 755 -pv /usr/local/rbin
-  fi
+  create_environment_for_restricted_shell
 
   # add rbash to shells
-  grep -q "^/bin/rbash$" /etc/shells || {
-    echo "adding rbash to shells"
-    echo "/bin/rbash" 1>>/etc/shells
-  }
+  # NOTE: restricted shells shouldn't be listed in /etc/shells!!!
+  # see man pages su & chsh, plus chsh.c for reasons why...
+  #
+  # also, see http://bugs.debian.org/cgi-bin/bugreport.cgi?bug=424672
+  #grep -q "^/bin/rbash$" /etc/shells || {
+  #  echo "adding rbash to shells"
+  #  echo "/bin/rbash" 1>>/etc/shells
+  #}
 
   return 0
 } # remove_shells()
