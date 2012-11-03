@@ -294,7 +294,8 @@ declare -ra PGP_URLS=(
 # other PGP keys:
 #   - CEA0A321 - James Lee <egypt@metasploit.com>
 #                (metasploit project signing key)
-#   - 61355B9E - HD Moore
+#   x 61355B9E - HD Moore (revoked) (not fetched)
+#   - 060798CB - HD Moore (2011-10-06) (latest?)
 #   - 28988BF5 - Roger from torproject
 #                https://www.torproject.org/docs/verifying-signatures.html.en
 #   - 19F78451 - -- || --
@@ -315,7 +316,7 @@ declare -ra PGP_URLS=(
 #   - 73647CFF - Nico Golde (Debian Advisories)
 declare -ra PGP_KEYS=(
   "CEA0A321"
-  "61355B9E"
+  "060798CB"
   "28988BF5"
   "19F78451"
   "6980F8B0"
