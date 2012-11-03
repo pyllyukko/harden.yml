@@ -1364,6 +1364,18 @@ EOF
   #
   # TODO: what's the truth behind dcrond and cron.*?
   #
+  # "Don't allow anyone to use at."
+  #
+  # AT.ALLOW(5) & AT(1): "If the file /etc/at.allow exists, only usernames mentioned in it are allowed to use at."
+  #
+  # Slackware's at package creates /etc/at.deny by default, which has blacklisted users. so we're switching
+  # from blacklist to (empty) whitelist.
+  if [ -s "/etc/at.deny" -a ! -f "/etc/at.allow" ]
+  then
+    /usr/bin/rm -v	/etc/at.deny
+    /usr/bin/touch	/etc/at.allow
+  fi
+
   #rm -fv /etc/cron.deny /etc/at.deny
   #[ ! -f "/etc/cron.allow" ] &&	echo root 1> /etc/cron.allow
   #[ ! -f "/etc/at.allow" ] &&	echo root 1> /etc/at.allow
@@ -1395,19 +1407,6 @@ EOF
     touch /var/log/pacct
     chgrp -c adm /var/log/pacct
     chmod -c 640 /var/log/pacct
-  fi
-  # "Don't allow anyone to use at."
-  #
-  # AT.ALLOW(5): "If the file /etc/at.allow exists, only usernames mentioned in it are allowed to use at."
-  #
-  # this is also part of CIS 7.5 "Restrict at/cron To Authorized Users"
-  #
-  # Slackware's at package creates /etc/at.deny by default, which has blacklisted users. so we're switching
-  # from blacklist to (empty) whitelist.
-  if [ -s "/etc/at.deny" -a ! -f "/etc/at.allow" ]
-  then
-    /usr/bin/rm -v	/etc/at.deny
-    /usr/bin/touch	/etc/at.allow
   fi
 
   set_failure_limits
