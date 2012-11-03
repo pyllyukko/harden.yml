@@ -188,6 +188,7 @@ SERVICES_WHITELIST=(
   /etc/rc.d/rc.clamav
   /etc/rc.d/rc.snort
   /etc/rc.d/rc.auditd
+  /etc/rc.d/rc.mcelog
 )
 #declare -ra LOG_FILES=(
 #  btmp
