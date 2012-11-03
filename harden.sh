@@ -233,6 +233,7 @@ declare -r SENDMAIL_CF_DIR="/usr/share/sendmail/cf/cf"
 declare -r SENDMAIL_CONF_PREFIX="sendmail-slackware"
 declare -r RBINDIR="/usr/local/rbin"
 declare -r INETDCONF="/etc/inetd.conf"
+auditPATH='/etc/audit'
 
 # NOLOGIN(8): "It is intended as a replacement shell field for accounts that have been disabled."
 # Slackware default location:
@@ -1141,7 +1142,10 @@ function file_permissions() {
   # end of system-hardening-10.2.txt
   ##############################################################################
 
-
+  # from CIS RHEL guide (11.1 Configure and enable the auditd and sysstat services, if possible)
+  chown -c root:root	$auditPATH/audit.rules
+  chmod -c 0600		$auditPATH/audit.rules
+  chmod -c 0600		$auditPATH/auditd.conf
 
   # CUSTOM STUFF BELOW
 
