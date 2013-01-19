@@ -1191,7 +1191,7 @@ function file_permissions() {
 
   # SSA:2011-101-01:
   if [ -u /usr/sbin/faillog -o \
-    -u /usr/sbin/lastlog ]
+       -u /usr/sbin/lastlog ]
   then
     echo "${FUNCNAME}(): notice: you seem to be missing a security patch for SSA:2011-101-01"
     /usr/bin/chmod -c u-s	/usr/sbin/faillog
