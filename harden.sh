@@ -2,7 +2,7 @@
 ################################################################################
 # file:		harden.sh
 # created:	25-09-2010
-# modified:	2012 Nov 03
+# modified:	2013 Jan 19
 #
 # TODO:
 #   - guides to read:
@@ -184,11 +184,11 @@ SERVICES_WHITELIST=(
   "${SA_RC}"
   /etc/rc.d/rc.udev
   /etc/rc.d/rc.ntpd
+  /etc/rc.d/rc.mcelog
   # SBo:
   /etc/rc.d/rc.clamav
   /etc/rc.d/rc.snort
   /etc/rc.d/rc.auditd
-  /etc/rc.d/rc.mcelog
 )
 #declare -ra LOG_FILES=(
 #  btmp
