@@ -276,6 +276,7 @@ INETD_SERVICES+=(pop3 imap2 netbios-ssn netbios-ns)
 #   - http://wiki.clamav.net/bin/view/Main/FAQ#How_do_I_verify_the_integrity_of
 #   - http://www.wangafu.net/~nickm/ 8D29319A - Nick Mathewson (libevent)
 #   - http://www.truecrypt.org/docs/?s=digital-signatures
+#   - https://tails.boum.org/download/index.en.html#verify
 declare -ra PGP_URLS=(
   "http://www.slackware.com/gpg-key"
   "http://slackbuilds.org/GPG-KEY"
@@ -290,6 +291,7 @@ declare -ra PGP_URLS=(
   "http://www.clamav.net/gpg/tkojm.gpg"
   "http://www.wangafu.net/~nickm/public_key.asc"
   "https://www.truecrypt.org/download/TrueCrypt-Foundation-Public-Key.asc"
+  "https://tails.boum.org/tails-signing.key"
 )
 
 # other PGP keys:
@@ -315,6 +317,8 @@ declare -ra PGP_URLS=(
 #   - C52175E2 - http://releases.mozilla.org/pub/mozilla.org/firefox/releases/3.6.28/KEY
 #   - 1FC730C1 - Bitcoin
 #   - 73647CFF - Nico Golde (Debian Advisories)
+#   - 86FF9C48 - Damien Miller (Personal Key) <djm@mindrot.org> (OpenSSH)
+#   - 2007B954 - metasploit?
 declare -ra PGP_KEYS=(
   "CEA0A321"
   "060798CB"
@@ -332,6 +336,8 @@ declare -ra PGP_KEYS=(
   "C52175E2"
   "1FC730C1"
   "73647CFF"
+  "86FF9C48"
+  "2007B954"
 )
 # if there is a recommended/suggested server for a key
 declare -rA PGP_KEYSERVERS=(
@@ -466,6 +472,18 @@ function import_pgp_keys() {
   local URL
   local KEYSERVER
   local PGP_KEY
+
+  # TODO: GPG:
+  #     finger wk ,at' g10code.com | gpg --import
+  #
+  #   or using a keyserver like
+  #
+  #     gpg --recv-key 4F25E3B6
+  #
+  #   The distribution key 1CE0C630 is signed by the well known keys
+  #   1E42B367.  If you get an key expired message, you should retrieve a
+  #   fresh copy as the expiration date might have been prolonged.
+
 
   echo "${FUNCNAME}(): importing PGP keys"
   # keys with URL
