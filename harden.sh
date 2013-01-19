@@ -209,7 +209,8 @@ declare -r GPG_KEYRING="trustedkeys.gpg"
 
 # PATCHES
 
-declare -r ETC_PATCH_VERSION="14.0-20121013-1"
+#declare -r ETC_PATCH_VERSION="14.0-20121013-1"
+declare -r ETC_PATCH_VERSION="14.0-20121108"
 declare -r ETC_PATCH_FILE="harden_etc-${ETC_PATCH_VERSION}.patch"
 declare -r APACHE_PATCH_VERSION="2.4.3-20120929-1"
 declare -r APACHE_PATCH_FILE="harden_apache-${APACHE_PATCH_VERSION}.patch"
