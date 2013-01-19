@@ -1331,19 +1331,14 @@ function set_failure_limits() {
   # from system-hardening-10.2.txt (modified)
   # the UID_MIN and UID_MAX values are from /etc/login.defs
   # disables user accounts after 10 failed logins
+  #
   # TODO: periodic
   # TODO: how do we reset this after successful login?
   # NOTE: Debian has this under /usr/bin
 
-  #if [ ! -x /usr/sbin/faillog ]
-  #then
-  #  echo "error: /usr/sbin/faillog not available!" 1>&2
-  #  return 1
-  #fi
-
   echo "${FUNCNAME}(): setting the maximum number of login failures for UIDs ${UID_MIN:-1000}-${UID_MAX:-60000} to ${FAILURE_LIMIT:-10}"
 
-  #/usr/sbin/faillog -u ${UID_MIN:-1000}-${UID_MAX:-60000} -m ${FAILURE_LIMIT:-10}
+  # NOTE: from FAILLOG(8): "The maximum failure count should always be 0 for root to prevent a denial of services attack against the system."
   faillog -u ${UID_MIN:-1000}-${UID_MAX:-60000} -m ${FAILURE_LIMIT:-10}
   return ${?}
 } # set_failure_limits
