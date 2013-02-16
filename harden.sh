@@ -711,6 +711,26 @@ function user_accounts() {
   return 0
 } # user_accounts()
 ################################################################################
+function create_additional_user_accounts_NOT_IN_USE() {
+
+  groupadd -g 206 -r privoxy
+  useradd  -u 206 -g privoxy -e 1970-01-02 -d /dev/null -s ${DENY_SHELL} -r privoxy
+
+  # this is also used by metasploit
+  groupadd -g 209 -r postgres
+  useradd  -u 209 -e 1970-01-02 -g 209 -s ${DENY_SHELL} -d /var/lib/pgsql -r postgres
+
+  groupadd -g 210 -r clamav
+  useradd  -u 210 -e 1970-01-02 -d /var/lib/clamav -s ${DENY_SHELL} -g clamav -r clamav
+
+  groupadd -g 220 -r tor
+  useradd  -u 220 -g 220 -e 1970-01-02 -c "The Onion Router" -d /var/lib/tor -s ${DENY_SHELL} tor
+
+  groupadd -g 234 -r kismet
+
+  return
+} # create_additional_user_accounts()
+################################################################################
 function restart_services() {
   # stuff that needs to be restarted or loaded after patching etc
   #
