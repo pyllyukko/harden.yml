@@ -1484,6 +1484,9 @@ EOF
     /usr/sbin/update-ca-certificates -v
   fi
 
+  # make installpkg store the MD5 checksums
+  sed -i 's/^\(MD5SUM\)=0$/\1=1/' /sbin/installpkg
+
   # NOTE: according to slack14.0 CHANGES_AND_HINTS.TXT, blacklist.conf is a
   #       "stale" file.
   #grep -q "^blacklist ipv6$" /etc/modprobe.d/blacklist.conf 2>/dev/null
