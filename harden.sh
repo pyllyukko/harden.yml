@@ -2,7 +2,7 @@
 ################################################################################
 # file:		harden.sh
 # created:	25-09-2010
-# modified:	2013 Feb 06
+# modified:	2013 Jun 18
 #
 # TODO:
 #   - guides to read:
@@ -296,10 +296,16 @@ declare -ra PGP_URLS=(
 )
 
 # other PGP keys:
+#
+#   metasploit keys:
+
 #   - CEA0A321 - James Lee <egypt@metasploit.com>
 #                (metasploit project signing key)
 #   x 61355B9E - HD Moore (revoked) (not fetched)
 #   - 060798CB - HD Moore (2011-10-06) (latest?)
+#   - 2007B954 - metasploit (18.6.2013)
+#
+#
 #   - 28988BF5 - Roger from torproject
 #                https://www.torproject.org/docs/verifying-signatures.html.en
 #   - 19F78451 - -- || --
@@ -319,10 +325,14 @@ declare -ra PGP_URLS=(
 #   - 1FC730C1 - Bitcoin
 #   - 73647CFF - Nico Golde (Debian Advisories)
 #   - 86FF9C48 - Damien Miller (Personal Key) <djm@mindrot.org> (OpenSSH)
-#   - 2007B954 - metasploit?
+#   - 77F95F95 - Werner Koch <wk@gnupg.org> (gnupg-announce@gnupg.org)
+#   - 54FC8640 - Debian security advisory
+#   - C52175E2 - Mozilla Software Releases <releases@mozilla.org>
 declare -ra PGP_KEYS=(
-  "CEA0A321"
-  "060798CB"
+  #"CEA0A321"
+  #"060798CB"
+  "2007B954"
+
   "28988BF5"
   "19F78451"
   "6980F8B0"
@@ -338,7 +348,9 @@ declare -ra PGP_KEYS=(
   "1FC730C1"
   "73647CFF"
   "86FF9C48"
-  "2007B954"
+  "77F95F95"
+  "54FC8640"
+  "C52175E2"
 )
 # if there is a recommended/suggested server for a key
 declare -rA PGP_KEYSERVERS=(
