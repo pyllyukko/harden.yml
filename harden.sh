@@ -1304,6 +1304,9 @@ function file_permissions() {
   #/usr/bin/find /var/log -type f -name 'wtmp*' -exec /usr/bin/chmod -c 660 '{}' \;
   #chmod -c 660 /var/log/wtmp
 
+  # DEBIAN SPECIFIC
+  chmod -c 600 /etc/network/interfaces
+
   return 0
 } # file_permissions()
 ################################################################################
