@@ -736,6 +736,11 @@ function create_additional_user_accounts_NOT_IN_USE() {
   groupadd -g 210 -r clamav
   useradd  -u 210 -e 1970-01-02 -d /var/lib/clamav -s ${DENY_SHELL} -g clamav -r clamav
 
+  # ntop 212
+
+  #groupadd -g 213 -r nagios
+  #useradd -u 213 -d /dev/null -s /bin/false -g nagios nagios
+
   groupadd -g 220 -r tor
   useradd  -u 220 -g 220 -e 1970-01-02 -c "The Onion Router" -d /var/lib/tor -s ${DENY_SHELL} tor
 
