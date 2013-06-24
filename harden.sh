@@ -2,7 +2,7 @@
 ################################################################################
 # file:		harden.sh
 # created:	25-09-2010
-# modified:	2013 Jun 18
+# modified:	2013 Jun 22
 #
 # TODO:
 #   - guides to read:
@@ -103,18 +103,19 @@
 #   - writes /etc/ftpusers
 #   - adds a bunch of PGP keys to your trustedkeys.gpg keyring, so you can
 #     verify downloaded software
-#   - hardens mount options (creates /etc/fstab.new)
-#   - hardens file permissions
-#     - restricts the use of cron by removing the SUID bit from /usr/bin/crontab
-#     - removes world-readibility from /var/www
-#     - removes world-readibility from home directories
-#     - removes a bunch of SUID/SGID bits
-#       - at
-#       - chfn + chsh
-#       - uucp package
-#       - floppy package (/usr/bin/fdmount)
-#       - ssh-keysign
-#     - ...
+#   - file system:
+#     - hardens file permissions
+#       - restricts the use of cron by removing the SUID bit from /usr/bin/crontab
+#       - removes world-readibility from /var/www
+#       - removes world-readibility from home directories
+#       - removes a bunch of SUID/SGID bits
+#         - at
+#         - chfn + chsh
+#         - uucp package
+#         - floppy package (/usr/bin/fdmount)
+#         - ssh-keysign
+#       - ...
+#     - hardens mount options (creates /etc/fstab.new)
 #
 ################################################################################
 if [ ${BASH_VERSINFO[0]} -ne 4 ]
