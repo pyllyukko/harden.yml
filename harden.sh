@@ -329,6 +329,7 @@ declare -ra PGP_URLS=(
 #   - 77F95F95 - Werner Koch <wk@gnupg.org> (gnupg-announce@gnupg.org)
 #   - 54FC8640 - Debian security advisory
 #   - C52175E2 - Mozilla Software Releases <releases@mozilla.org>
+#   - 14595A1A - Renaud Deraison (Nessus)
 declare -ra PGP_KEYS=(
   #"CEA0A321"
   #"060798CB"
@@ -352,6 +353,7 @@ declare -ra PGP_KEYS=(
   "77F95F95"
   "54FC8640"
   "C52175E2"
+  "14595A1A"
 )
 # if there is a recommended/suggested server for a key
 declare -rA PGP_KEYSERVERS=(
