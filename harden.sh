@@ -1315,6 +1315,13 @@ function file_permissions() {
   # DEBIAN SPECIFIC
   chmod -c 600 /etc/network/interfaces
 
+  # if you have nagios installed. also this is because of grsec's TPE:
+  if [ -d /usr/libexec/nagios ]
+  then
+    chown -c root:nagios /usr/libexec/nagios
+    chmod -c 750 /usr/libexec/nagios
+  fi
+
   return 0
 } # file_permissions()
 ################################################################################
