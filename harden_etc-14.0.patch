@@ -609,7 +609,7 @@ index 0000000..f34ec75
 +console:root:Al0000-2400
 +console:*:
 diff --git a/profile b/profile
-index cc30081..a2ef245 100644
+index cc30081..c1d3ede 100644
 --- a/profile
 +++ b/profile
 @@ -7,6 +7,21 @@ export MANPATH=/usr/local/man:/usr/man
@@ -634,7 +634,7 @@ index cc30081..a2ef245 100644
  
  # If the user doesn't have a .inputrc, use the one in /etc.
  if [ ! -r "$HOME/.inputrc" ]; then
-@@ -14,16 +29,29 @@ if [ ! -r "$HOME/.inputrc" ]; then
+@@ -14,16 +29,35 @@ if [ ! -r "$HOME/.inputrc" ]; then
  fi
  
  # Set the default system $PATH:
@@ -655,6 +655,12 @@ index cc30081..a2ef245 100644
    fi
 +  # this satisfies tiger alert [root003w] ("Root user has message capability turned on.")
 +  /usr/bin/mesg n
++else
++  # against fork bombs
++  # https://secure.wikimedia.org/wikipedia/en/wiki/Fork_bomb#Prevention
++  # the limit is 200 to avoid "sudo: unable to execute /bin/bash: Resource
++  # temporarily unavailable" etc. with grsec kernels
++  ulimit -u 200
 +fi
 +
 +# if UID = 0 or local terminal, set the session expiration.
@@ -666,7 +672,7 @@ index cc30081..a2ef245 100644
  fi
  
  # I had problems with the backspace key using 'eval tset' instead of 'TERM=',
-@@ -54,14 +82,14 @@ elif [ "$SHELL" = "/bin/zsh" ]; then
+@@ -54,14 +88,14 @@ elif [ "$SHELL" = "/bin/zsh" ]; then
  elif [ "$SHELL" = "/bin/ash" ]; then
   PS1='$ '
  else
@@ -684,7 +690,7 @@ index cc30081..a2ef245 100644
  
  # Notify user of incoming mail.  This can be overridden in the user's
  # local startup file (~/.bash.login or whatever, depending on the shell)
-@@ -78,7 +106,64 @@ done
+@@ -78,7 +112,64 @@ done
  unset profile_script
  
  # For non-root users, add the current directory to the search path:
@@ -699,7 +705,7 @@ index cc30081..a2ef245 100644
 +
 +# against fork bombs
 +# https://secure.wikimedia.org/wikipedia/en/wiki/Fork_bomb#Prevention
-+ulimit -u 100
++#ulimit -u 100
 +
 +# from NSA's rhel5-guide (2.3.5.5 Implement Inactivity Time-out for Login Shells)
 +#TMOUT=900
