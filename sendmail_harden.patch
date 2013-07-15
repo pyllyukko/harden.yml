@@ -1,0 +1,27 @@
+diff --git a/cf/cf/sendmail-slackware.mc b/cf/cf/sendmail-slackware.mc
+index 4fd4620..0171df0 100644
+--- a/cf/cf/sendmail-slackware.mc
++++ b/cf/cf/sendmail-slackware.mc
+@@ -14,7 +14,8 @@ VERSIONID(`default setup for Slackware Linux')dnl
+ OSTYPE(`linux')dnl
+ dnl# These settings help protect against people verifying email addresses
+ dnl# at your site in order to send you email that you probably don't want:
+-define(`confPRIVACY_FLAGS', `authwarnings,novrfy,noexpn,restrictqrun')dnl
++define(`confPRIVACY_FLAGS', `authwarnings,novrfy,noexpn,restrictqrun,goaway')dnl
++define(`confSMTP_LOGIN_MSG', `$j Sendmail; $b')dnl
+ dnl# Uncomment the line below to send outgoing mail through an external server:
+ dnl define(`SMART_HOST',`mailserver.example.com')
+ dnl# No timeout for ident:
+@@ -32,6 +33,7 @@ FEATURE(`blacklist_recipients')dnl
+ FEATURE(`local_procmail',`',`procmail -t -Y -a $h -d $u')dnl
+ FEATURE(`always_add_domain')dnl
+ FEATURE(`redirect')dnl
++FEATURE(`no_default_msa')dnl
+ dnl# Turn this feature on if you don't always have DNS, or enjoy junk mail:
+ dnl FEATURE(`accept_unresolvable_domains')dnl
+ EXPOSED_USER(`root')dnl
+@@ -40,3 +42,4 @@ LOCAL_DOMAIN(`localhost.localdomain')dnl
+ MAILER(local)dnl
+ MAILER(smtp)dnl
+ MAILER(procmail)dnl
++DAEMON_OPTIONS(`Port=smtp, Name=MTA, Addr=127.0.0.1')dnl
