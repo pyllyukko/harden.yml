@@ -210,17 +210,15 @@ declare -r GPG_KEYRING="trustedkeys.gpg"
 
 # PATCHES
 
-#declare -r ETC_PATCH_VERSION="14.0-20121013-1"
-#declare -r ETC_PATCH_VERSION="14.0-20121108"
-declare -r ETC_PATCH_VERSION="14.0-20130130"
+declare -r ETC_PATCH_VERSION="14.0"
 declare -r ETC_PATCH_FILE="harden_etc-${ETC_PATCH_VERSION}.patch"
-declare -r APACHE_PATCH_VERSION="2.4.3-20120929-1"
-declare -r APACHE_PATCH_FILE="harden_apache-${APACHE_PATCH_VERSION}.patch"
-declare -r APACHE_PATCH_MODULES_X86_64_FILE="harden_apache-2.2.17-modules-x86_64-20110330.patch"
-declare -r APACHE_PATCH_MODULES_X86_FILE="harden_apache-2.2.17-modules-x86-20110424.patch"
-declare -r SSH_PATCH_FILE="ssh_harden-20120929-1.patch"
-declare -r SENDMAIL_PATCH_FILE="sendmail_harden-20110918-1.patch"
-declare -r SUDOERS_PATCH_VERSION="1.8.5p2-20121013-1"
+#declare -r APACHE_PATCH_VERSION="2.4.3-20120929-1"
+#declare -r APACHE_PATCH_FILE="harden_apache-${APACHE_PATCH_VERSION}.patch"
+#declare -r APACHE_PATCH_MODULES_X86_64_FILE="harden_apache-2.2.17-modules-x86_64-20110330.patch"
+#declare -r APACHE_PATCH_MODULES_X86_FILE="harden_apache-2.2.17-modules-x86-20110424.patch"
+declare -r SSH_PATCH_FILE="ssh_harden.patch"
+declare -r SENDMAIL_PATCH_FILE="sendmail_harden.patch"
+declare -r SUDOERS_PATCH_VERSION="1.8.5p2"
 declare -r SUDOERS_PATCH_FILE="sudoers-${SUDOERS_PATCH_VERSION}.patch"
 
 # /PATCHES
