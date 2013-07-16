@@ -17,50 +17,6 @@ index 0000000..09356ad
 +# Generate a daily summary of process accounting at 23:53
 +53 23 * * * /usr/lib/sa/sa2 -A
 +
-diff --git a/cron.daily/sarchive.sh b/cron.daily/sarchive.sh
-new file mode 100644
-index 0000000..444db89
---- /dev/null
-+++ b/cron.daily/sarchive.sh
-@@ -0,0 +1,38 @@
-+#!/bin/bash
-+################################################################################
-+# file:		sarchive.sh
-+# created:	03-12-2011
-+# modified:	2012 Oct 10
-+################################################################################
-+[ ${BASH_VERSINFO[0]} -ne 4 ] && {
-+  echo -e "error: bash version != 4, this script might not work properly!" 1>&2
-+  echo    "       you can bypass this check by commenting out lines $[${LINENO}-2]-$[${LINENO}+2]." 1>&2
-+  exit 1
-+}
-+DAY=`date -d yesterday +%d`
-+MONTH=`date -d yesterday +%m`
-+YEAR=`date -d yesterday +%Y`
-+SARCHIVE_DIR="/var/log/sarchive"
-+
-+# create the directory if it doesn't exist already
-+if [ ! -d "${SARCHIVE_DIR}" ]
-+then
-+  mkdir -pv "${SARCHIVE_DIR}"
-+  chown -c root:adm  "${SARCHIVE_DIR}"
-+  chmod -c 750 "${SARCHIVE_DIR}"
-+fi
-+
-+# copy yesterday's file to sarchive dir, if it doesn't exist
-+if [ ! -f "${SARCHIVE_DIR}/sar-${YEAR}${MONTH}${DAY}" -a \
-+     -f "/var/log/sa/sar${DAY}" ]
-+then
-+  cp -v /var/log/sa/sar${DAY} "${SARCHIVE_DIR}/sar-${YEAR}${MONTH}${DAY}"
-+fi
-+
-+if [ ! -f "${SARCHIVE_DIR}/sa-${YEAR}${MONTH}${DAY}" -a \
-+     -f "/var/log/sa/sa${DAY}" ]
-+then
-+  cp -v /var/log/sa/sa${DAY} "${SARCHIVE_DIR}/sa-${YEAR}${MONTH}${DAY}"
-+fi
-+
-+exit 0
 diff --git a/cron.daily/update_rkhunter.sh b/cron.daily/update_rkhunter.sh
 new file mode 100644
 index 0000000..617a3a5
