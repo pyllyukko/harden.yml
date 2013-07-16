@@ -3,7 +3,7 @@ harden.sh
 
 This is a script and a set of patch files to harden your Slackware Linux installation.
 
-Why i made this
+Why I made this
 ---------------
 
 * No Bastille for Slackware
