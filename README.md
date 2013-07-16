@@ -113,7 +113,7 @@ TODO
 References
 ----------
 
-* [http://benchmarks.cisecurity.org/downloads/browse/index.cfm?category=benchmarks.os.linux.slackware][1]
+* [CIS Slackware Linux 10.2 Benchmark v1.1.0][1]
 * [Slackware System Hardening][2] by Jeffrey Denton
 
 
