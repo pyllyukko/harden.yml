@@ -1,7 +1,7 @@
 harden.sh
 =========
 
-This is a script and a set of patch files to harden your Slackware Linux installation.
+This is a script and a set of patch files to [harden](https://en.wikipedia.org/wiki/Hardening_%28computing%29) your [Slackware Linux](http://www.slackware.com/) installation.
 
 Why I made this
 ---------------
@@ -75,7 +75,7 @@ What does it do?
 * Removes unnecessary services
   * xinetd (/etc/inetd.conf)
   * Goes through /etc/rc.d/rc.* and disables plenty of those
-* X11 -nolisten tcp
+* [X11 -nolisten tcp](http://docs.slackware.com/howtos:security:basic_security#x_-nolisten_tcp)
 * Enables a bunch of useful services
   * rc.firewall
   * Through rc.local:
@@ -145,7 +145,7 @@ What does it do?
   * uucp
   * floppy
 * Sets *dmesg_restrict*
-* Make installpkg store the MD5 checksums
+* Make *installpkg* store the MD5 checksums
 
 #### Physical security related
 
@@ -180,25 +180,31 @@ Notes
 
 There is a bunch of security related software that you can find at [SBo](http://slackbuilds.org/). You could consider installing these for additional security.
 
-* [Tiger](http://slackbuilds.org/repository/14.0/system/tiger/)
-* [Aide](http://slackbuilds.org/repository/14.0/system/aide/)
-* [rkhunter](http://slackbuilds.org/repository/14.0/system/rkhunter/)
-* [audit](http://slackbuilds.org/repository/14.0/system/audit/)
-* [arpwatch](http://slackbuilds.org/repository/14.0/network/arpwatch/)
-* [ClamAV](http://slackbuilds.org/repository/14.0/system/clamav/)
-* [chkrootkit](http://slackbuilds.org/repository/14.0/system/chkrootkit/)
-* [p0f](http://slackbuilds.org/repository/14.0/network/p0f/)
+* [HIDS](https://en.wikipedia.org/wiki/Host-based_intrusion_detection_system):
+  * [Tiger](http://slackbuilds.org/repository/14.0/system/tiger/)
+  * [Aide](http://slackbuilds.org/repository/14.0/system/aide/)
+  * [rkhunter](http://slackbuilds.org/repository/14.0/system/rkhunter/)
+  * [audit](http://slackbuilds.org/repository/14.0/system/audit/)
+  * [chkrootkit](http://slackbuilds.org/repository/14.0/system/chkrootkit/)
+* Network related:
+  * [arpwatch](http://slackbuilds.org/repository/14.0/network/arpwatch/)
+  * [p0f](http://slackbuilds.org/repository/14.0/network/p0f/)
+* Antivirus:
+  * [ClamAV](http://slackbuilds.org/repository/14.0/system/clamav/)
 
 And from other sources than SBo:
 * [logwatch](http://slackware.com/~alien/slackbuilds/logwatch/)
 
+You should also consider running [grsecurity](https://grsecurity.net/).
+
 TODO
 ----
 
-* Immutable flags with chattr on certain files
+* Immutable flags with *chattr* on certain files
 * Checksums for log files
 * X hardening
 * Debian support
+* Some chroot stuff?
 
 References
 ----------
@@ -209,6 +215,7 @@ These are quite old documents, but most of the stuff still applies.
 
 * [CIS Slackware Linux 10.2 Benchmark v1.1.0][1]
 * [Slackware System Hardening][2] by Jeffrey Denton
+* http://docs.slackware.com/howtos:security:basic_security
 
 ### Other docs
 
