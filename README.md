@@ -41,14 +41,15 @@ What does it do?
   * /etc/limits
   * /etc/login.defs
     * Disallow logins if home dir does not exist
+  * SSH *AllowGroups users*
 * Sets useradd defaults
   * INACTIVE days to lock accounts after the password expires
   * rbash as default shell
-* Configures a bit better password policy (login.defs)
+* Configures a bit better password policy (*login.defs*)
 * Changes the hashing mechanism to SHA512 and more crypt rounds
 * Disallow the use of at
-* Removes user daemon from group adm (as we will take use of the adm group)
-* Fix gshadow with grpck
+* Removes user daemon from group *adm* (as we will take use of the *adm* group)
+* Fix gshadow with *grpck*
 
 ### Configures services
 
@@ -63,7 +64,7 @@ What does it do?
     * icmpinfo
   * Process accounting (acct)
   * System accounting (sysstat)
-  * SBo related (if installed):
+  * [SBo](http://slackbuilds.org/) related (if installed):
     * Snort
     * arpwatch
     * Tor
@@ -118,7 +119,7 @@ What does it do?
 #### Physical security related
 
 * Sets the authorized_default to USB devices
-* Enables SAK and disables the other magic SysRq stuff
+* Enables [SAK](https://en.wikipedia.org/wiki/Secure_attention_key) and disables the other [magic SysRq stuff](https://www.kernel.org/doc/Documentation/sysrq.txt)
 * Session timeout (TMOUT)
 * X11:
   * DontZap
@@ -127,21 +128,31 @@ What does it do?
 
 * Makes default log files group adm readable (as in Debian)
 * Use shred to remove rotated log files
+* Log rotation for process accounting (pacct), since these files **will** grow huge
 
 Notes
 -----
 
 ### Other security software
 
-There is a bunch of security related software that you can find at SBo. You could consider installing these for additional security.
+There is a bunch of security related software that you can find at [SBo](http://slackbuilds.org/). You could consider installing these for additional security.
 
 * [Tiger](http://slackbuilds.org/repository/14.0/system/tiger/)
-* ...
+* [Aide](http://slackbuilds.org/repository/14.0/system/aide/)
+* [rkhunter](http://slackbuilds.org/repository/14.0/system/rkhunter/)
+* [audit](http://slackbuilds.org/repository/14.0/system/audit/)
+* [arpwatch](http://slackbuilds.org/repository/14.0/network/arpwatch/)
+* [ClamAV](http://slackbuilds.org/repository/14.0/system/clamav/)
+* [chkrootkit](http://slackbuilds.org/repository/14.0/system/chkrootkit/)
+* [p0f](http://slackbuilds.org/repository/14.0/network/p0f/)
+
+And from other sources than SBo:
+* [logwatch](http://slackware.com/~alien/slackbuilds/logwatch/)
 
 TODO
 ----
 
-* immutable flags with chattr on certain files
+* Immutable flags with chattr on certain files
 * Checksums for log files
 * X hardening
 
