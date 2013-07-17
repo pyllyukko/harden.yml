@@ -97,9 +97,18 @@ What does it do?
 
 #### Hardens few specific services
 
-  * SSH
-  * Sendmail
-  * sudo
+* SSH
+* Sendmail
+  * Listen only on localhost by default
+  * Disable the [MSA](https://en.wikipedia.org/wiki/Mail_submission_agent)
+  * Don't show the version on the banner
+* sudo
+  * Don't cache the password (timestamp_timeout)
+  * Always require password with *sudo -l* (listpw)
+  * noexec as default
+  * Require root's password instead of user's
+  * Send alerts on most errors
+  * Additional logging to */var/log/sudo.log*
 
 ### File system related
 
@@ -157,7 +166,9 @@ What does it do?
 * You can use the *adm* group to view log files, so you don't need to be *root* to do that. Just add a user to the *adm* group, or configure *sudo* as follows:
 
         ADMINS ALL=(:adm) NOPASSWD: /bin/cat
-* ...
+* View bad logins with sudo:
+
+        ADMINS ALL=(:adm) NOPASSWD: /usr/bin/lastb
 
 Notes
 -----
