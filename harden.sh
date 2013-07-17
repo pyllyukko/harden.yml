@@ -2,7 +2,6 @@
 ################################################################################
 # file:		harden.sh
 # created:	25-09-2010
-# modified:	2013 Jun 22
 #
 # TODO:
 #   - guides to read:
@@ -656,6 +655,11 @@ function user_accounts() {
       ${MyUID} -le ${SYS_UID_MAX:-999} -a \
       ${NAME} != 'root' ]
     then
+      crontab -l -u "${NAME}" 2>&1 | grep -q "^no crontab for"
+      if [ ${PIPESTATUS[1]} -ne 0 ]
+      then
+        echo "${FUNCNAME}(): WARNING: the user \`${NAME}' has some cronjobs! should it be so?" 1>&2
+      fi
       /usr/sbin/usermod -e 1970-01-02 -L -s "${DENY_SHELL}" "${NAME}"
     fi
   done
