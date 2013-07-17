@@ -14,7 +14,7 @@ Why I made this
 What does it do?
 ----------------
 
-DISCLAIMER: This is not a complete list.
+**DISCLAIMER**: This is not a complete list.
 
 ### Harden user accounts
 
@@ -46,6 +46,7 @@ DISCLAIMER: This is not a complete list.
   * rbash as default shell
 * Configures a bit better password policy (login.defs)
 * Changes the hashing mechanism to SHA512 and more crypt rounds
+* Disallow the use of at
 * Removes user daemon from group adm (as we will take use of the adm group)
 * Fix gshadow with grpck
 
@@ -54,6 +55,7 @@ DISCLAIMER: This is not a complete list.
 * Removes unnecessary services
   * xinetd (/etc/inetd.conf)
   * Goes through /etc/rc.d/rc.* and disables plenty of those
+* X11 -nolisten tcp
 * Enables a bunch of useful services
   * rc.firewall
   * Through rc.local:
@@ -61,11 +63,23 @@ DISCLAIMER: This is not a complete list.
     * icmpinfo
   * Process accounting (acct)
   * System accounting (sysstat)
+  * SBo related (if installed):
+    * Snort
+    * arpwatch
+    * Tor
+    * Privoxy
+    * auditd
+    * Nagios
+    * Apcupsd
+    * ClamAV
+    * Mrtg
+    * p0f
 
 #### Hardens few specific services
 
   * SSH
   * Sendmail
+  * sudo
 
 ### File system related
 
@@ -98,17 +112,38 @@ DISCLAIMER: This is not a complete list.
 * shutdown.allow and /sbin/shutdown -a
 * Clear /tmp on boot
 * Removes unnecessary / potentially dangerous packages
+* Sets dmesg_restrict
+* Make installpkg store the MD5 checksums
+
+#### Physical security related
+
+* Sets the authorized_default to USB devices
+* Enables SAK and disables the other magic SysRq stuff
+* Session timeout (TMOUT)
+* X11:
+  * DontZap
 
 #### Logging
 
 * Makes default log files group adm readable (as in Debian)
 * Use shred to remove rotated log files
 
+Notes
+-----
+
+### Other security software
+
+There is a bunch of security related software that you can find at SBo. You could consider installing these for additional security.
+
+* [Tiger](http://slackbuilds.org/repository/14.0/system/tiger/)
+* ...
+
 TODO
 ----
 
-* chattr certain files
+* immutable flags with chattr on certain files
 * Checksums for log files
+* X hardening
 
 References
 ----------
