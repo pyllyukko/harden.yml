@@ -155,6 +155,7 @@ What does it do?
 #### Principle of least privilege
 
 * You can use the *adm* group to view log files, so you don't need to be *root* to do that. Just add a user to the *adm* group, or configure *sudo* as follows:
+
         <ADMINS ALL=(:adm) NOPASSWD: /bin/cat>
 
 Notes
