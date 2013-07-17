@@ -278,7 +278,7 @@ index 078e3f8..9574929 100644
 ++:root users:LOCAL
 +-:ALL:ALL
 diff --git a/login.defs b/login.defs
-index e52f91a..a277e03 100644
+index e52f91a..587608b 100644
 --- a/login.defs
 +++ b/login.defs
 @@ -6,8 +6,9 @@
@@ -367,6 +367,15 @@ index e52f91a..a277e03 100644
  
  #
  # If "yes", the user must be listed as a member of the first gid 0 group
+@@ -208,7 +213,7 @@ PASS_WARN_AGE	7
+ # to uid 0 accounts.  If the group doesn't exist or is empty, no one
+ # will be able to "su" to uid 0.
+ #
+-SU_WHEEL_ONLY	no
++SU_WHEEL_ONLY	yes
+ 
+ #
+ # If compiled with cracklib support, where are the dictionaries
 @@ -264,6 +269,7 @@ PASS_ALWAYS_WARN	yes
  # Require password before chfn/chsh can make any changes.
  #

@@ -135,6 +135,7 @@ What does it do?
 * Restrict the use of su (prefer sudo instead)
   * /etc/suauth
   * /etc/porttime
+  * /etc/login.defs: SU_WHEEL_ONLY
 * Modifies crontab behaviour a bit
   * Users in the wheel group are able to create cronjobs (as described in /usr/doc/dcron-4.5/README)
 * Imports a bunch of PGP keys for file/package verification
