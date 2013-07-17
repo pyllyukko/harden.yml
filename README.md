@@ -76,24 +76,26 @@ What does it do?
   * xinetd (/etc/inetd.conf)
   * Goes through /etc/rc.d/rc.* and disables plenty of those
 * [X11 -nolisten tcp](http://docs.slackware.com/howtos:security:basic_security#x_-nolisten_tcp)
-* Enables a bunch of useful services
-  * rc.firewall
-  * Through rc.local:
-    * logoutd
-    * icmpinfo
-  * Process accounting (acct)
-  * System accounting (sysstat)
-  * [SBo](http://slackbuilds.org/) related (if installed):
-    * Snort
-    * arpwatch
-    * Tor
-    * Privoxy
-    * auditd
-    * Nagios
-    * Apcupsd
-    * ClamAV
-    * Mrtg
-    * p0f
+
+#### Enable some security and auditing related services
+
+* rc.firewall
+* Through rc.local:
+  * logoutd
+  * icmpinfo
+* Process accounting (acct)
+* System accounting (sysstat)
+* [SBo](http://slackbuilds.org/) related (if installed):
+  * Snort
+  * arpwatch
+  * Tor
+  * Privoxy
+  * auditd
+  * Nagios
+  * Apcupsd
+  * ClamAV
+  * Mrtg
+  * p0f
 
 #### Hardens few specific services
 
@@ -137,7 +139,7 @@ What does it do?
   * /etc/porttime
   * /etc/login.defs: SU_WHEEL_ONLY
 * Modifies crontab behaviour a bit
-  * Users in the wheel group are able to create cronjobs (as described in /usr/doc/dcron-4.5/README)
+  * Users in the *wheel* group are able to create cronjobs (as described in /usr/doc/dcron-4.5/README)
 * Imports a bunch of PGP keys for file/package verification
 * shutdown.allow and /sbin/shutdown -a
 * Clear /tmp on boot
@@ -173,6 +175,7 @@ What does it do?
 * View bad logins with sudo:
 
         ADMINS ALL=(:adm) NOPASSWD: /usr/bin/lastb
+* Remove *floppy* and *scanner* from CONSOLE_GROUPS
 
 Notes
 -----
@@ -198,6 +201,7 @@ There is a bunch of security related software that you can find at [SBo](http://
 
 And from other sources than SBo:
 * [logwatch](http://slackware.com/~alien/slackbuilds/logwatch/)
+* [checksec.sh](http://www.trapkit.de/tools/checksec.html)
 
 You should also consider running [grsecurity](https://grsecurity.net/).
 
@@ -209,17 +213,20 @@ TODO
 * X hardening
 * Debian support
 * Some chroot stuff?
+* User quotas
 
 References
 ----------
 
 ### Hardening guides
 
-These are quite old documents, but most of the stuff still applies.
+Some of these documents are quite old, but most of the stuff still applies.
 
 * [CIS Slackware Linux 10.2 Benchmark v1.1.0][1]
 * [Slackware System Hardening][2] by Jeffrey Denton
 * http://docs.slackware.com/howtos:security:basic_security
+* http://alien.slackbook.org/dokuwiki/doku.php?id=linux:admin#security_issues
+* https://en.wikipedia.org/wiki/Fork_bomb#Prevention
 
 ### Other docs
 
