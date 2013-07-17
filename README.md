@@ -45,7 +45,7 @@ What does it do?
 * Sets useradd defaults
   * INACTIVE days to lock accounts after the password expires
   * rbash as default shell
-* Configures a bit better password policy (_login.defs_)
+* Configures a bit better password policy to _login.defs_
 * Changes the hashing mechanism to SHA512 and more crypt rounds
 * Disallow the use of *at*
 * Removes user daemon from group *adm* (as we will take use of the *adm* group)
