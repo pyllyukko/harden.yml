@@ -137,7 +137,7 @@ What does it do?
 
 #### Physical security related
 
-* Sets the authorized_default to USB devices
+* Sets the [authorized_default](https://www.kernel.org/doc/Documentation/usb/authorization.txt) to USB devices
 * Enables [SAK](https://en.wikipedia.org/wiki/Secure_attention_key) and disables the other [magic SysRq stuff](https://www.kernel.org/doc/Documentation/sysrq.txt)
 * Session timeout (TMOUT)
 * X11:
