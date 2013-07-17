@@ -11,6 +11,25 @@ Why I made this
 * For learning
 * For minimizing the effort needed to tweak fresh installations
 
+How does it work?
+-----------------
+
+The script is divided (well kinda) into dynamic and static changes. The static changes are applied with patch files and the dynamic modifications happen usually with certain commands.
+
+### Static changes
+
+The generic etc patch assumes that you have at least the following packages installed:
+
+* network-scripts
+* sysvinit-scripts
+* etc
+* shadow
+* logrotate
+* sysklogd
+
+Then there's separate patch files for different services/daemons. See [the services section](harden.sh#hardens-few-specific-services) for more information.
+
+
 What does it do?
 ----------------
 
@@ -18,7 +37,7 @@ What does it do?
 
 ### Harden user accounts
 
-* Properly locks down system accounts (0 - SYS_UID_MAX && !root)
+* Properly locks down system accounts (0 - *SYS_UID_MAX* && !root)
   * Lock the user's password
   * Sets shell to /sbin/nologin
   * Expire the account
@@ -132,6 +151,9 @@ What does it do?
 
 Notes
 -----
+
+* Rebooting the system after running this is highly recommended, since many startup scripts are modified
+* The script is quite verbose, so you might want to record it with *script*
 
 ### Other security software
 
