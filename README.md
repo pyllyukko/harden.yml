@@ -132,7 +132,7 @@ What does it do?
 * shutdown.allow and /sbin/shutdown -a
 * Clear /tmp on boot
 * Removes unnecessary / potentially dangerous packages
-* Sets dmesg_restrict
+* Sets *dmesg_restrict*
 * Make installpkg store the MD5 checksums
 
 #### Physical security related
@@ -145,8 +145,8 @@ What does it do?
 
 #### Logging
 
-* Makes default log files group adm readable (as in Debian)
-* Use shred to remove rotated log files
+* Makes default log files group *adm* readable (as in Debian)
+* Use *shred* to remove rotated log files
 * Log rotation for process accounting (pacct), since these files **will** grow huge
 
 Notes
@@ -181,9 +181,17 @@ TODO
 References
 ----------
 
+### Hardening guides
+
+These are quite old documents, but most of the stuff still applies.
+
 * [CIS Slackware Linux 10.2 Benchmark v1.1.0][1]
 * [Slackware System Hardening][2] by Jeffrey Denton
 
+### Other docs
+
+* [Linux Standard Base Core Specification 4.1](http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/book1.html)
+  * [Chapter 21. Users & Groups](http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/usernames.html)
 
 [1]: http://benchmarks.cisecurity.org/downloads/browse/index.cfm?category=benchmarks.os.linux.slackware
 [2]: http://dentonj.freeshell.org/system-hardening-10.2.txt
