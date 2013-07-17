@@ -27,7 +27,7 @@ The generic etc patch assumes that you have at least the following packages inst
 * logrotate
 * sysklogd
 
-Then there's separate patch files for different services/daemons. See [the services section](harden.sh#hardens-few-specific-services) for more information.
+Then there's separate patch files for different services/daemons. See [the services section](https://github.com/pyllyukko/harden.sh#hardens-few-specific-services) for more information.
 
 
 What does it do?
