@@ -161,6 +161,9 @@ What does it do?
 * Makes default log files group *adm* readable (as in Debian)
 * Use *shred* to remove rotated log files
 * Log rotation for process accounting (pacct), since these files **will** grow huge
+* Enables the use of *xconsole* (or makes it possible). You can use it with:
+
+        ADMINS ALL=(:adm) NOPASSWD: /usr/bin/xconsole
 
 #### Principle of least privilege
 
