@@ -111,7 +111,7 @@ What does it do?
   * floppy package (/usr/bin/fdmount)
   * ssh-keysign
 * Sets more strict permissions on certain files that might contain secrets or other sensitive information
-  * btmp, utmp, wtmp
+  * btmp & wtmp
   * Removes world-readibility from /var/www
   * Removes world-readibility from home directories
 
@@ -132,6 +132,9 @@ What does it do?
 * shutdown.allow and /sbin/shutdown -a
 * Clear /tmp on boot
 * Removes unnecessary / potentially dangerous packages
+  * netkit-rsh
+  * uucp
+  * floppy
 * Sets *dmesg_restrict*
 * Make installpkg store the MD5 checksums
 
@@ -148,6 +151,11 @@ What does it do?
 * Makes default log files group *adm* readable (as in Debian)
 * Use *shred* to remove rotated log files
 * Log rotation for process accounting (pacct), since these files **will** grow huge
+
+#### Principle of least privilege
+
+* You can use the *adm* group to view log files, so you don't need to be *root* to do that. Just add a user to the *adm* group, or configure *sudo* as follows:
+        <ADMINS ALL=(:adm) NOPASSWD: /bin/cat>
 
 Notes
 -----
@@ -177,6 +185,7 @@ TODO
 * Immutable flags with chattr on certain files
 * Checksums for log files
 * X hardening
+* Debian support
 
 References
 ----------
