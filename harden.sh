@@ -1772,15 +1772,69 @@ function quick_harden() {
 	
 	# got the idea from:
 	# https://secure.wikimedia.org/wikibooks/en/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#Larger_entropy_pools
-	kernel.random.poolsize = 8192
+	#kernel.random.poolsize = 8192
+	
+	# set this to 1, if you don't want the system to reply to ICMP ECHO requests:
+	net.ipv4.icmp_echo_ignore_all = 0
 	
 	# 0 - disable sysrq completely
 	# 4 - enable control of keyboard (SAK, unraw)
-	# see sysrq.txt from kernel's documentation for details.
+	#
+	# links:
+	#   - http://www.debian.org/doc/manuals/securing-debian-howto/ch4.en.html#s-restrict-sysrq
+	#   - http://tldp.org/HOWTO/Remote-Serial-Console-HOWTO/security-sysrq.html
+	#   - kernel.org/doc/Documentation/sysrq.txt
+	#   - en.wikipedia.org/wiki/Magic_SysRq_key
 	kernel.sysrq = 4
 	
 	# see Restrict unprivileged access to the kernel syslog (CONFIG_SECURITY_DMESG_RESTRICT) in kernel
 	kernel.dmesg_restrict = 1
+	
+	# if the client doesn't want to talk to us... :)
+	net.ipv4.tcp_synack_retries = 0
+	
+	# TODO: shared_media?!?
+	# https://tools.ietf.org/html/rfc1620
+	
+	# https://www.cert.fi/haavoittuvuudet/2013/haavoittuvuus-2013-071.html
+	kernel.perf_event_paranoid = 2
+	
+	# grsecurity
+	kernel.grsecurity.linking_restrictions = 1
+	kernel.grsecurity.deter_bruteforce = 1
+	kernel.grsecurity.fifo_restrictions = 1
+	kernel.grsecurity.ptrace_readexec = 1
+	kernel.grsecurity.consistent_setxid = 1
+	kernel.grsecurity.rwxmap_logging = 1
+	kernel.grsecurity.signal_logging = 1
+	kernel.grsecurity.forkfail_logging = 1
+	kernel.grsecurity.timechange_logging = 1
+	kernel.grsecurity.chroot_deny_shmat = 1
+	kernel.grsecurity.chroot_deny_unix = 1
+	kernel.grsecurity.chroot_deny_mount = 1
+	kernel.grsecurity.chroot_deny_fchdir = 1
+	kernel.grsecurity.chroot_deny_chroot = 1
+	kernel.grsecurity.chroot_deny_pivot = 1
+	kernel.grsecurity.chroot_enforce_chdir = 1
+	kernel.grsecurity.chroot_deny_chmod = 1
+	kernel.grsecurity.chroot_deny_mknod = 1
+	kernel.grsecurity.chroot_restrict_nice = 1
+	kernel.grsecurity.chroot_caps = 1
+	kernel.grsecurity.chroot_deny_sysctl = 1
+	kernel.grsecurity.tpe = 1
+	kernel.grsecurity.tpe_gid = 1005
+	kernel.grsecurity.tpe_invert = 1
+	kernel.grsecurity.tpe_restrict_all = 1
+	kernel.grsecurity.audit_mount = 1
+	kernel.grsecurity.dmesg = 1
+	kernel.grsecurity.chroot_findtask = 1
+	kernel.grsecurity.resource_logging = 1
+	kernel.grsecurity.audit_ptrace = 1
+	kernel.grsecurity.harden_ptrace = 1
+	kernel.grsecurity.romount_protect = 0
+	
+	# lock it
+	kernel.grsecurity.grsec_lock = 1
 EOF
 
   echo "ALL:ALL:DENY" >>/etc/suauth
