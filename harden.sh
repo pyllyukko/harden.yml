@@ -37,7 +37,6 @@
 #   - how do we reset faillogs after successful login?
 #   - add install_additional_software()
 #   - Shadow suite S/Key support (/usr/doc/shadow-4.1.4.3/README)
-#   - separate sudo into it's own patch!!!
 #   - ssh_keyscan.sh
 #   - http://www.gnupg.org/documentation/manuals/gnupg/addgnupghome.html#addgnupghome
 #   - /usr/bin/ch{mod,own} -> from PATH. since Debian has them under /bin
@@ -1943,7 +1942,6 @@ do
       # this should be run after patching etc,
       # there might be new rc scripts.
       disable_unnecessary_services
-      #disable_inetd_services
 
       miscellaneous_settings
 
