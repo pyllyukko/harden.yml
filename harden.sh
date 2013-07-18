@@ -225,6 +225,9 @@ declare -r SLACKWARE_VERSION=`sed 's/^.*[[:space:]]\([0-9]\+\.[0-9]\+\).*$/\1/' 
 # these are not declared as integers cause then the ${ ... :-DEFAULT } syntax won't work(?!)
 declare -r UID_MIN=`awk '/^UID_MIN/{print$2}' /etc/login.defs 2>/dev/null`
 declare -r UID_MAX=`awk '/^UID_MAX/{print$2}' /etc/login.defs 2>/dev/null`
+declare -r PASS_MIN_DAYS=$( awk '/^PASS_MIN_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
+declare -r PASS_MAX_DAYS=$( awk '/^PASS_MAX_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
+declare -r PASS_WARN_AGE=$( awk '/^PASS_WARN_AGE/{print$2}' /etc/login.defs 2>/dev/null )
 declare -r SYS_UID_MAX=`awk '/^SYS_UID_MAX/{print$2}' /etc/login.defs 2>/dev/null`
 declare -r WWWROOT="/var/www"
 declare -i ETC_CHANGED=0
@@ -532,6 +535,7 @@ function user_accounts() {
 
   local -i GRPCK_RET
   local MyUID
+  local uid
   local NAME
   local USERID
   local USER_HOME_DIR
@@ -660,6 +664,16 @@ function user_accounts() {
         echo "${FUNCNAME}(): WARNING: the user \`${NAME}' has some cronjobs! should it be so?" 1>&2
       fi
       /usr/sbin/usermod -e 1970-01-02 -L -s "${DENY_SHELL}" "${NAME}"
+    fi
+  done
+
+  # CIS 8.3 Set Account Expiration Parameters On Active Accounts
+  for NAME in `cut -d: -f1 /etc/passwd`
+  do
+    uid=`id -u $NAME`
+    if [ $uid -ge ${UID_MIN:-1000} -a $uid != 65534 ]
+    then
+      chage -m ${PASS_MIN_DAYS:-1} -M ${PASS_MAX_DAYS:-365} -W ${PASS_WARN_AGE:-30} $NAME
     fi
   done
 
