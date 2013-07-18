@@ -226,6 +226,7 @@ Some of these documents are quite old, but most of the stuff still applies.
 * [Slackware System Hardening][2] by Jeffrey Denton
 * http://docs.slackware.com/howtos:security:basic_security
 * http://alien.slackbook.org/dokuwiki/doku.php?id=linux:admin#security_issues
+* http://slackwiki.com/Basic_Security_Fixes
 * https://en.wikipedia.org/wiki/Fork_bomb#Prevention
 
 ### Other docs
