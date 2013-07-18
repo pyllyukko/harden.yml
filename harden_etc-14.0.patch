@@ -551,10 +551,10 @@ index 0000000..9d63ba2
 +}
 diff --git a/porttime b/porttime
 new file mode 100644
-index 0000000..f34ec75
+index 0000000..70f4aaa
 --- /dev/null
 +++ b/porttime
-@@ -0,0 +1,18 @@
+@@ -0,0 +1,30 @@
 +### for login
 +#/dev/tty1,/dev/tty2,/dev/tty3,/dev/tty4,/dev/tty5,/dev/tty6:root,someuser:Al0000-2400
 +### for logoutd
@@ -571,8 +571,20 @@ index 0000000..f34ec75
 +#    */
 +SU:*:
 +
-+console:root:Al0000-2400
-+console:*:
++# don't use these. don't work.
++#console:root:Al0000-2400
++#console:*:
++
++# root login is always allowed
++/dev/tty1,/dev/tty2,/dev/tty3,/dev/tty4,/dev/tty5,/dev/tty6:root:Al0000-2400
++
++# allow logins on non-working hours:
++#/dev/tty1,/dev/tty2,/dev/tty3,/dev/tty4,/dev/tty5,/dev/tty6:someuser:Wk1700-0900,SaSu0000-2400
++# for logoutd:
++#tty1,tty2,tty3,tty4,tty5,tty6:someuser:Wk1700-0900,SaSu0000-2400
++
++# deny everything else
++/dev/tty1,/dev/tty2,/dev/tty3,/dev/tty4,/dev/tty5,/dev/tty6:*:
 diff --git a/profile b/profile
 index cc30081..c1d3ede 100644
 --- a/profile
