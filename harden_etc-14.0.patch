@@ -508,6 +508,21 @@ index 27b03e1..e414254 100644
 +    create 0640 root adm
 +}
 +
+diff --git a/logrotate.d/bootlogd b/logrotate.d/bootlogd
+new file mode 100644
+index 0000000..505f942
+--- /dev/null
++++ b/logrotate.d/bootlogd
+@@ -0,0 +1,9 @@
++# https://www.linuxquestions.org/questions/slackware-14/how-to-activate-bootlogd-918962/
++# logrotate configuration for default bootlogd log 
++
++/var/log/boot { 
++    monthly 
++    rotate 5 
++    notifempty 
++    missingok 
++}
 diff --git a/logrotate.d/msfupdate b/logrotate.d/msfupdate
 new file mode 100644
 index 0000000..8e69c35
@@ -828,10 +843,24 @@ index 63cb880..bb17ff0 100755
  # Slackware-Mini-Quota-HOWTO:
  # To really activate quotas, you'll need to add 'usrquota' and/or 'grpquota' to
 diff --git a/rc.d/rc.S b/rc.d/rc.S
-index 97ff7be..a4736db 100755
+index 97ff7be..d35032e 100755
 --- a/rc.d/rc.S
 +++ b/rc.d/rc.S
-@@ -344,6 +344,7 @@ rm -f /var/run/* /var/run/*/* /var/run/*/*/* /etc/nologin \
+@@ -5,6 +5,13 @@
+ # Mostly written by:  Patrick J. Volkerding, <volkerdi@slackware.com>
+ #
+ 
++# https://www.linuxquestions.org/questions/slackware-14/how-to-activate-bootlogd-918962/
++if [ -x /sbin/bootlogd ]; then
++    echo 'Starting bootlogd'
++    /sbin/bootlogd
++    echo 'Bootlogd started (this is the first boot message that appears in /var/log/boot).'
++fi
++
+ PATH=/sbin:/usr/sbin:/bin:/usr/bin
+ 
+ # Try to mount /proc:
+@@ -344,6 +351,7 @@ rm -f /var/run/* /var/run/*/* /var/run/*/*/* /etc/nologin \
    /tmp/.Xauth* 1> /dev/null 2> /dev/null
    ( cd /var/log/setup/tmp && rm -rf * )
    ( cd /tmp && rm -rf kde-[a-zA-Z]* ksocket-[a-zA-Z]* hsperfdata_[a-zA-Z]* plugtmp* )

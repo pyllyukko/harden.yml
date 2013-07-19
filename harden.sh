@@ -1569,6 +1569,21 @@ EOF
     true
   }
 
+  # https://www.linuxquestions.org/questions/slackware-14/how-to-activate-bootlogd-918962/
+  if [ ! -f /var/log/boot ]
+  then
+    touch /var/log/boot
+    chown -c root:adm	/var/log/boot
+    chmod -c 644	/var/log/boot
+  fi
+
+  # Debian specific
+  # http://wiki.debian.org/bootlogd
+  if [ -f /etc/debian_version ]
+  then
+    echo "BOOTLOGD_ENABLE=yes" 1>>/etc/default/bootlogd
+  fi
+
   return 0
 } # miscellaneous settings()
 ################################################################################
