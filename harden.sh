@@ -474,7 +474,7 @@ function create_environment_for_restricted_shell () {
 
   for PRG in /usr/bin/passwd /bin/id /bin/ls /usr/bin/printenv
   do
-    ln -s /usr/bin/${PRG}
+    ln -s ${PRG}
   done
   ln -s /usr/bin/vim rvim
 
