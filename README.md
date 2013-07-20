@@ -166,6 +166,7 @@ What does it do?
 * Enables the use of *xconsole* (or makes it possible). You can use it with:
 
         ADMINS ALL=(:adm) NOPASSWD: /usr/bin/xconsole
+* Enables bootlogd
 
 #### Principle of least privilege
 

@@ -435,17 +435,18 @@ index e52f91a..587608b 100644
 +CREATE_HOME     yes
  
 diff --git a/logrotate.conf b/logrotate.conf
-index 27b03e1..e414254 100644
+index 27b03e1..a47af73 100644
 --- a/logrotate.conf
 +++ b/logrotate.conf
-@@ -12,34 +12,49 @@
+@@ -12,34 +12,50 @@
  # rotate log files weekly:
  weekly
  
 -# keep 4 weeks worth of backlogs:
 -rotate 4
-+# keep 8 weeks worth of backlogs:
-+rotate 8
++# keep 1/2 years worth of backlogs:
++# value from system-hardening-10.2.txt
++rotate 26
  
  # create new (empty) log files after rotating old ones:
 -create
@@ -496,7 +497,7 @@ index 27b03e1..e414254 100644
  }
  
  # Note that /var/log/lastlog is not rotated.  This is intentional, and it should
-@@ -48,3 +63,11 @@ include /etc/logrotate.d
+@@ -48,3 +64,20 @@ include /etc/logrotate.d
  
  # system-specific logs may be also be configured below:
  
@@ -505,6 +506,15 @@ index 27b03e1..e414254 100644
 +# it here instead of logrotate.d/syslog.
 +/var/log/sulog {
 +    monthly
++    notifempty
++    create 0640 root adm
++}
++
++# sudo.log is a separate log file that is configured with the logfile options
++# in sudoers.
++/var/log/sudo.log {
++    monthly
++    notifempty
 +    create 0640 root adm
 +}
 +
@@ -1542,15 +1552,16 @@ index 0000000..782b27d
 +# lock it
 +kernel.grsecurity.grsec_lock = 1
 diff --git a/syslog.conf b/syslog.conf
-index 15bc5ee..5bf3bbc 100644
+index 15bc5ee..a50d779 100644
 --- a/syslog.conf
 +++ b/syslog.conf
-@@ -7,6 +7,25 @@
+@@ -7,6 +7,26 @@
  # Be advised this will cause a performation loss if you're using
  # programs that do heavy logging.
  
 +# local0 is used by dhcpcd
 +# local2 is used by chat & br2684ctl
++# local4 is used by apcupsd
 +# local6 is used by freshclam
 +# local7 is used by Apache's "ErrorLog syslog"
 +#        or psad.
@@ -1571,7 +1582,7 @@ index 15bc5ee..5bf3bbc 100644
  # Uncomment this to see kernel messages on the console.
  #kern.*							/dev/console
  
-@@ -14,11 +33,15 @@
+@@ -14,11 +34,15 @@
  # Exclude authpriv, cron, mail, and news.  These are logged elsewhere.
  *.info;*.!warn;\
  	authpriv.none;cron.none;mail.none;news.none	-/var/log/messages
@@ -1587,7 +1598,7 @@ index 15bc5ee..5bf3bbc 100644
  
  # Debugging information is logged here.
  *.=debug						-/var/log/debug
-@@ -38,6 +61,12 @@ mail.*							-/var/log/maillog
+@@ -38,6 +62,12 @@ mail.*							-/var/log/maillog
  # This log is for news and uucp errors:
  uucp,news.crit						-/var/log/spooler
  
