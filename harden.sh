@@ -2016,7 +2016,7 @@ do
       # NOTES on ordering:
       #   - disabled_unnecessary_services AFTER patch_etc (rc.firewall for instance)
 
-      configure_apache
+      #configure_apache
       user_accounts
       remove_packages
       remove_shells
