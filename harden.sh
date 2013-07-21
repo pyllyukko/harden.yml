@@ -741,17 +741,19 @@ function user_accounts() {
   return 0
 } # user_accounts()
 ################################################################################
-function create_additional_user_accounts_NOT_IN_USE() {
+function create_additional_user_accounts() {
+  # see http://slackbuilds.org/uid_gid.txt
 
   groupadd -g 206 -r privoxy
-  useradd  -u 206 -g privoxy -e 1970-01-02 -d /dev/null -s ${DENY_SHELL} -r privoxy
+  useradd  -u 206 -g privoxy -e 1970-01-02 -M -d /dev/null -s ${DENY_SHELL} -r privoxy
 
   # this is also used by metasploit
   groupadd -g 209 -r postgres
-  useradd  -u 209 -e 1970-01-02 -g 209 -s ${DENY_SHELL} -d /var/lib/pgsql -r postgres
+  useradd  -u 209 -e 1970-01-02 -g 209 -s ${DENY_SHELL} -M -d /var/lib/pgsql -r postgres
 
+  # http://slackbuilds.org/repository/14.0/system/clamav/
   groupadd -g 210 -r clamav
-  useradd  -u 210 -e 1970-01-02 -d /var/lib/clamav -s ${DENY_SHELL} -g clamav -r clamav
+  useradd  -u 210 -e 1970-01-02 -M -d /var/lib/clamav -s ${DENY_SHELL} -g clamav -r clamav
 
   # ntop 212
 
@@ -759,7 +761,7 @@ function create_additional_user_accounts_NOT_IN_USE() {
   #useradd -u 213 -d /dev/null -s /bin/false -g nagios nagios
 
   groupadd -g 220 -r tor
-  useradd  -u 220 -g 220 -e 1970-01-02 -c "The Onion Router" -d /var/lib/tor -s ${DENY_SHELL} tor
+  useradd  -u 220 -g 220 -e 1970-01-02 -c "The Onion Router" -M -d /var/lib/tor -s ${DENY_SHELL} tor
 
   groupadd -g 234 -r kismet
 
@@ -1986,6 +1988,7 @@ function usage() {
 	  -r	remove unnecessary shells
 	  -s	disable unnecessary services (also enables few recommended ones)
 	  -u	harden user accounts
+	  -U	create additional user accounts (SBo related)
 
 	functions:
 
@@ -2002,7 +2005,7 @@ then
   echo -e "warning: you should probably be root to run this script\n" 1>&2
 fi
 
-while getopts "aAdfFghilmMp:P:qrsu" OPTION
+while getopts "aAdfFghilmMp:P:qrsuU" OPTION
 do
   case "${OPTION}" in
     "a") configure_apache		;;
@@ -2106,6 +2109,7 @@ do
       set_failure_limits
       create_ftpusers
     ;;
+    "U") create_additional_user_accounts ;;
   esac
 done
 
