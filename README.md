@@ -207,8 +207,8 @@ And from other sources than SBo:
 * [checksec.sh](http://www.trapkit.de/tools/checksec.html)
 
 You should also consider running [grsecurity](https://grsecurity.net/). Here's few links to get you started:
-* [https://github.com/pyllyukko/grsec_confnbuild](My packaging scripts)
-* [http://sourceforge.net/projects/slackpax/](SlackPaX) (haven't tried this personally)
+* [My packaging scripts](https://github.com/pyllyukko/grsec_confnbuild)
+* [SlackPaX](http://sourceforge.net/projects/slackpax/) (haven't tried this personally)
 
 ### Bugs discovered during the making :)
 
