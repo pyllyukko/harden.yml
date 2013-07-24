@@ -199,12 +199,16 @@ There is a bunch of security related software that you can find at [SBo](http://
   * [p0f](http://slackbuilds.org/repository/14.0/network/p0f/)
 * Antivirus:
   * [ClamAV](http://slackbuilds.org/repository/14.0/system/clamav/)
+* Other:
+  * [vlock](http://slackbuilds.org/repository/14.0/system/vlock/)
 
 And from other sources than SBo:
 * [logwatch](http://slackware.com/~alien/slackbuilds/logwatch/)
 * [checksec.sh](http://www.trapkit.de/tools/checksec.html)
 
-You should also consider running [grsecurity](https://grsecurity.net/).
+You should also consider running [grsecurity](https://grsecurity.net/). Here's few links to get you started:
+* [https://github.com/pyllyukko/grsec_confnbuild](My packaging scripts)
+* [http://sourceforge.net/projects/slackpax/](SlackPaX) (haven't tried this personally)
 
 ### Bugs discovered during the making :)
 
@@ -221,6 +225,7 @@ TODO
 * Debian support
 * Some chroot stuff?
 * User quotas
+* Static ARP cache
 
 References
 ----------
