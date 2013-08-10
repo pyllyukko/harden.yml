@@ -435,7 +435,7 @@ index e52f91a..587608b 100644
 +CREATE_HOME     yes
  
 diff --git a/logrotate.conf b/logrotate.conf
-index 27b03e1..a47af73 100644
+index 27b03e1..fe4ae0e 100644
 --- a/logrotate.conf
 +++ b/logrotate.conf
 @@ -12,34 +12,50 @@
@@ -497,27 +497,6 @@ index 27b03e1..a47af73 100644
  }
  
  # Note that /var/log/lastlog is not rotated.  This is intentional, and it should
-@@ -48,3 +64,20 @@ include /etc/logrotate.d
- 
- # system-specific logs may be also be configured below:
- 
-+# Rotate /var/log/sulog:
-+# sulog is a separate log file that is not created by syslog, hence we process
-+# it here instead of logrotate.d/syslog.
-+/var/log/sulog {
-+    monthly
-+    notifempty
-+    create 0640 root adm
-+}
-+
-+# sudo.log is a separate log file that is configured with the logfile options
-+# in sudoers.
-+/var/log/sudo.log {
-+    monthly
-+    notifempty
-+    create 0640 root adm
-+}
-+
 diff --git a/logrotate.d/bootlogd b/logrotate.d/bootlogd
 new file mode 100644
 index 0000000..505f942
@@ -573,6 +552,33 @@ index 0000000..9d63ba2
 +  postrotate
 +    /sbin/accton /var/log/pacct
 +  endscript
++}
+diff --git a/logrotate.d/sudo b/logrotate.d/sudo
+new file mode 100644
+index 0000000..69611ca
+--- /dev/null
++++ b/logrotate.d/sudo
+@@ -0,0 +1,7 @@
++# sudo.log is a separate log file that is configured with the logfile options
++# in sudoers.
++/var/log/sudo.log {
++    monthly
++    notifempty
++    create 0640 root adm
++}
+diff --git a/logrotate.d/sulog b/logrotate.d/sulog
+new file mode 100644
+index 0000000..b21ee23
+--- /dev/null
++++ b/logrotate.d/sulog
+@@ -0,0 +1,8 @@
++# Rotate /var/log/sulog:
++# sulog is a separate log file that is not created by syslog, hence we process
++# it here instead of logrotate.d/syslog.
++/var/log/sulog {
++    monthly
++    notifempty
++    create 0640 root adm
 +}
 diff --git a/porttime b/porttime
 new file mode 100644
