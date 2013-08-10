@@ -210,6 +210,8 @@ And from other sources than SBo:
 You should also consider running [grsecurity](https://grsecurity.net/). Here's few links to get you started:
 * [My packaging scripts](https://github.com/pyllyukko/grsec_confnbuild)
 * [SlackPaX](http://sourceforge.net/projects/slackpax/) (haven't tried this personally)
+* [gradm SlackBuild](http://slackbuilds.org/repository/14.0/system/gradm/)
+* [paxctl SlackBuild](http://slackbuilds.org/repository/14.0/system/paxctl/)
 
 ### Bugs discovered during the making :)
 
