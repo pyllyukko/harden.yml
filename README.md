@@ -205,6 +205,7 @@ There is a bunch of security related software that you can find at [SBo](http://
 And from other sources than SBo:
 * [logwatch](http://slackware.com/~alien/slackbuilds/logwatch/)
 * [checksec.sh](http://www.trapkit.de/tools/checksec.html)
+* [psad](http://www.cipherdyne.org/psad/)
 
 You should also consider running [grsecurity](https://grsecurity.net/). Here's few links to get you started:
 * [My packaging scripts](https://github.com/pyllyukko/grsec_confnbuild)
