@@ -1,0 +1,119 @@
+#!/bin/bash
+################################################################################
+# created:	20-07-2013
+################################################################################
+if [ ${BASH_VERSINFO[0]} -ne 4 ]
+then
+  echo -e "error: bash version != 4, this script might not work properly!" 1>&2
+  echo    "       you can bypass this check by commenting out lines $[${LINENO}-2]-$[${LINENO}+2]." 1>&2
+  exit 1
+fi
+export LANG=en_US
+# http://tldp.org/LDP/Bash-Beginners-Guide/html/sect_04_03.html
+export LC_ALL=C
+# Treat unset variables as an error when substituting.
+set -u
+for PROGRAM in \
+  awk \
+  cat \
+  cp \
+  date \
+  gawk \
+  grep \
+  ln \
+  mkdir \
+  mktemp \
+  mv \
+  rm \
+  sed \
+  shred \
+  patch \
+  stat
+do
+  if ! hash "${PROGRAM}" 2>/dev/null
+  then
+    printf "error: command not found in PATH: %s\n" "${PROGRAM}" >&2
+    exit 1
+  fi
+done
+unset PROGRAM
+
+if [ -d tmp ]
+then
+  rm -rf tmp
+fi
+
+mkdir -v tmp
+
+for PKG in \
+  'a/etc-14.0-i486-1.txz' \
+  'n/network-scripts-14.00-noarch-3.txz' \
+  'a/sysvinit-scripts-2.0-noarch-13.txz' \
+  'a/shadow-4.1.4.3-i486-7.txz' \
+  'a/logrotate-3.8.2-i486-1.txz' \
+  'a/sysklogd-1.5-i486-1.txz' \
+  'ap/sudo-1.8.5p2-i486-1.txz' \
+  'n/sendmail-cf-8.14.5-noarch-3.txz' \
+  'n/openssh-6.1p1-i486-1.txz'
+do
+  PKG_BASEN=$( basename "${PKG}" )
+  if [ ! -f "${PKG_BASEN}" ]
+  then
+    wget ftp://ftp.slackware.com/pub/slackware/slackware-14.0/slackware/${PKG}
+  fi
+  if [ ! -f "${PKG_BASEN}.asc" ]
+  then
+    wget ftp://ftp.slackware.com/pub/slackware/slackware-14.0/slackware/${PKG}.asc
+  fi
+
+  gpgv ${PKG_BASEN}.asc
+  if [ ${?} -ne 0 ]
+  then
+    echo "WARNING: package verification failed! aborting!" 1>&2
+    exit 1
+  fi
+
+  pushd tmp
+  /sbin/explodepkg ../${PKG_BASEN}
+  popd
+done
+
+pushd tmp/etc
+
+for CONF in $( find . -name '*.new' )
+do
+  mv -v "${CONF}" "${CONF%.new}"
+  true
+done
+
+patch -p1 -t --dry-run 0<../../../harden_etc-14.0.patch
+if [ ${?} -ne 0 ]
+then
+  echo "WARNING: something wrong!" 1>&2
+fi
+echo -n $'\n'
+
+patch -p1 -t --dry-run 0<../../../sudoers-1.8.5p2.patch
+if [ ${?} -ne 0 ]
+then
+  echo "WARNING: something wrong!" 1>&2
+fi
+echo -n $'\n'
+
+pushd ssh
+patch -p1 -t --dry-run 0<../../../../ssh_harden.patch
+if [ ${?} -ne 0 ]
+then
+  echo "WARNING: something wrong!" 1>&2
+fi
+popd
+
+popd
+echo -n $'\n'
+pushd tmp/usr/share/sendmail
+patch -p1 -t --dry-run 0<../../../../../sendmail_harden.patch
+if [ ${?} -ne 0 ]
+then
+  echo "WARNING: something wrong!" 1>&2
+fi
+popd
