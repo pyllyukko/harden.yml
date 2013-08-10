@@ -220,6 +220,7 @@ You should also consider running [grsecurity](https://grsecurity.net/). Here's f
 * [SSA:2011-101-01](http://www.slackware.com/security/viewer.php?l=slackware-security&y=2011&m=slackware-security.380749)
 * http://www.sudo.ws/repos/sudo/rev/5b964ea43474
 * http://anonscm.debian.org/viewvc/pkg-shadow?view=revision&revision=3558
+* http://sourceforge.net/p/logwatch/bugs/19/
 
 TODO
 ----
