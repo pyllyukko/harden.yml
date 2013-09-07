@@ -105,7 +105,7 @@ What does it do?
   * Disable the [MSA](https://en.wikipedia.org/wiki/Mail_submission_agent)
   * Don't show the version on the banner
 * sudo
-  * Don't cache the password (timestamp_timeout)
+  * Don't cache the password (timestamp_timeout) (should also mitigate against [CVE-2013-1775](http://www.sudo.ws/sudo/alerts/epoch_ticket.html))
   * Always require password with *sudo -l* (listpw)
   * noexec as default
   * Require root's password instead of user's
