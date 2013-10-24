@@ -741,6 +741,25 @@ function user_accounts() {
   return 0
 } # user_accounts()
 ################################################################################
+function lock_account() {
+  if [ -z "${1}" ]
+  then
+    echo "${FUNCNAME}(): error!" 1>&2
+    return 1
+  fi
+  id -u "${1}" &>/dev/null
+  if [ ${?} -ne 0 ]
+  then
+    echo "${FUNCNAME}(): no such user!" 1>&2
+    return 1
+  fi
+  /usr/sbin/usermod -e 1970-01-02 -L -s "${DENY_SHELL}" "${1}"
+  /usr/bin/crontab -d -u "${1}"
+  killall -s SIGKILL -u "${1}" -v
+
+  return 0
+} # lock_account()
+################################################################################
 function create_additional_user_accounts() {
   # see http://slackbuilds.org/uid_gid.txt
 
@@ -1950,19 +1969,20 @@ function usage() {
 
 	options:
 
-	  -a	apache
-	  -A	all
-	  -d	default hardening (misc_settings() & file_permissions())
+	  -a		apache
+	  -A		all
+	  -d		default hardening (misc_settings() & file_permissions())
 
-	  -f	file permissions
-	  -F	create/update /etc/ftpusers
-	  -g	import Slackware, SBo & other PGP keys to trustedkeys.gpg keyring
-	        (you might also want to run this as a regular user)
-	  -h	this help
-	  -i	disable inetd services
-	  -l	set failure limits (faillog) (default value: ${FAILURE_LIMIT:-10})
-	  -m	miscellaneous (TODO: remove this? default handles all this)
-	  -M	fstab hardening (nodev, nosuid & noexec stuff)
+	  -f		file permissions
+	  -F		create/update /etc/ftpusers
+	  -g		import Slackware, SBo & other PGP keys to trustedkeys.gpg keyring
+	        	(you might also want to run this as a regular user)
+	  -h		this help
+	  -i		disable inetd services
+	  -l		set failure limits (faillog) (default value: ${FAILURE_LIMIT:-10})
+	  -L user	lock account 'user'
+	  -m		miscellaneous (TODO: remove this? default handles all this)
+	  -M		fstab hardening (nodev, nosuid & noexec stuff)
 
 	  patching:
 
@@ -2005,7 +2025,7 @@ then
   echo -e "warning: you should probably be root to run this script\n" 1>&2
 fi
 
-while getopts "aAdfFghilmMp:P:qrsuU" OPTION
+while getopts "aAdfFghilL:mMp:P:qrsuU" OPTION
 do
   case "${OPTION}" in
     "a") configure_apache		;;
@@ -2054,6 +2074,7 @@ do
     ;;
     "i") disable_inetd_services		;;
     "l") set_failure_limits		;;
+    "L") lock_account "${OPTARG}"	;;
     "m")
       # TODO: remove?
       miscellaneous_settings
