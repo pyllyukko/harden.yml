@@ -756,6 +756,7 @@ function lock_account() {
   /usr/sbin/usermod -e 1970-01-02 -L -s "${DENY_SHELL}" "${1}"
   /usr/bin/crontab -d -u "${1}"
   killall -s SIGKILL -u "${1}" -v
+  gpasswd -d "${1}" users
 
   return 0
 } # lock_account()
