@@ -329,6 +329,7 @@ declare -ra PGP_URLS=(
 #   - 54FC8640 - Debian security advisory
 #   - C52175E2 - Mozilla Software Releases <releases@mozilla.org>
 #   - 14595A1A - Renaud Deraison (Nessus)
+#   - 15A0A4BC - Mozilla Software Releases <releases@mozilla.org>
 declare -ra PGP_KEYS=(
   #"CEA0A321"
   #"060798CB"
@@ -353,6 +354,7 @@ declare -ra PGP_KEYS=(
   "54FC8640"
   "C52175E2"
   "14595A1A"
+  "15A0A4BC"
 )
 # if there is a recommended/suggested server for a key
 declare -rA PGP_KEYSERVERS=(
