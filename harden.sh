@@ -474,11 +474,11 @@ function create_environment_for_restricted_shell () {
 
   pushd "${RBINDIR}" || return 1
 
-  for PRG in /usr/bin/passwd /bin/id /bin/ls /usr/bin/printenv
+  for PRG in /usr/bin/passwd /usr/bin/chage /bin/id /bin/ls /usr/bin/printenv /usr/bin/uptime /bin/uname
   do
-    ln -s ${PRG}
+    ln -sv ${PRG}
   done
-  ln -s /usr/bin/vim rvim
+  ln -sv /usr/bin/vim rvim
 
   popd
 
