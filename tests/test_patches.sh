@@ -37,6 +37,7 @@ do
   fi
 done
 unset PROGRAM
+JUST_EXPLODE=0
 
 if [ -d tmp ]
 then
@@ -85,6 +86,11 @@ do
   mv -v "${CONF}" "${CONF%.new}"
   true
 done
+
+if (( ${JUST_EXPLODE} ))
+then
+  exit 0
+fi
 
 patch -p1 -t --dry-run 0<../../../harden_etc-14.0.patch
 if [ ${?} -ne 0 ]
