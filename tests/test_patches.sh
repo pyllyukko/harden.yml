@@ -46,24 +46,24 @@ fi
 mkdir -v tmp
 
 for PKG in \
-  'a/etc-14.0-i486-1.txz' \
-  'n/network-scripts-14.00-noarch-3.txz' \
-  'a/sysvinit-scripts-2.0-noarch-13.txz' \
-  'a/shadow-4.1.4.3-i486-7.txz' \
-  'a/logrotate-3.8.2-i486-1.txz' \
-  'a/sysklogd-1.5-i486-1.txz' \
-  'ap/sudo-1.8.5p2-i486-1.txz' \
-  'n/sendmail-cf-8.14.5-noarch-3.txz' \
-  'n/openssh-6.1p1-i486-1.txz'
+  'a/etc-14.1-i486-2.txz' \
+  'n/network-scripts-14.1-noarch-2.txz' \
+  'a/sysvinit-scripts-2.0-noarch-17.txz' \
+  'a/shadow-4.1.5.1-i486-2.txz' \
+  'a/logrotate-3.8.6-i486-1.txz' \
+  'a/sysklogd-1.5-i486-2.txz' \
+  'ap/sudo-1.8.6p8-i486-1.txz' \
+  'n/sendmail-cf-8.14.7-noarch-1.txz' \
+  'n/openssh-6.3p1-i486-1.txz'
 do
   PKG_BASEN=$( basename "${PKG}" )
   if [ ! -f "${PKG_BASEN}" ]
   then
-    wget ftp://ftp.slackware.com/pub/slackware/slackware-14.0/slackware/${PKG}
+    wget ftp://ftp.slackware.com/pub/slackware/slackware-14.1/slackware/${PKG}
   fi
   if [ ! -f "${PKG_BASEN}.asc" ]
   then
-    wget ftp://ftp.slackware.com/pub/slackware/slackware-14.0/slackware/${PKG}.asc
+    wget ftp://ftp.slackware.com/pub/slackware/slackware-14.1/slackware/${PKG}.asc
   fi
 
   gpgv ${PKG_BASEN}.asc
