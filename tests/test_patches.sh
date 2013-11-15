@@ -92,7 +92,7 @@ then
   exit 0
 fi
 
-patch -p1 -t --dry-run 0<../../../harden_etc-14.0.patch
+patch -p1 -t --dry-run 0<../../../harden_etc-14.1.patch
 if [ ${?} -ne 0 ]
 then
   echo "WARNING: something wrong!" 1>&2

@@ -1,0 +1,1617 @@
+diff --git a/cron.d/rsync_slackware_patches b/cron.d/rsync_slackware_patches
+new file mode 100644
+index 0000000..fc1597d
+--- /dev/null
++++ b/cron.d/rsync_slackware_patches
+@@ -0,0 +1 @@
++#33 5 * * * SLACKTREE=/mnt/lacie/slackware test -x /usr/local/sbin/rsync_slackware_patches.sh && /usr/local/sbin/rsync_slackware_patches.sh -q -r 14.0 -a x86
+diff --git a/cron.d/sysstat b/cron.d/sysstat
+new file mode 100644
+index 0000000..09356ad
+--- /dev/null
++++ b/cron.d/sysstat
+@@ -0,0 +1,6 @@
++# Run system activity accounting tool every 10 minutes
++*/10 * * * * /usr/lib/sa/sa1 -S DISK 1 1
++# 0 * * * * /usr/lib/sa/sa1 -S DISK 600 6 &
++# Generate a daily summary of process accounting at 23:53
++53 23 * * * /usr/lib/sa/sa2 -A
++
+diff --git a/cron.daily/update_rkhunter.sh b/cron.daily/update_rkhunter.sh
+new file mode 100644
+index 0000000..617a3a5
+--- /dev/null
++++ b/cron.daily/update_rkhunter.sh
+@@ -0,0 +1,5 @@
++#!/bin/sh
++[ ! -x /usr/bin/rkhunter ] && exit 1
++/usr/bin/rkhunter --update --nocolors
++exit ${?}
++
+diff --git a/cron.hourly/rkhunter.sh b/cron.hourly/rkhunter.sh
+new file mode 100644
+index 0000000..ae15504
+--- /dev/null
++++ b/cron.hourly/rkhunter.sh
+@@ -0,0 +1,38 @@
++#!/bin/bash
++################################################################################
++# file:
++# created:	04-11-2011
++# modified:	2012 Oct 11
++#
++# make sure to run rkhunter --propupd --hash SHA512 before putting this into
++# cron
++#
++# the configuration of rkhunter logging should be: APPEND_LOG=0 &
++# COPY_LOG_ON_ERROR=1. otherwise running this script from cron will produce a
++# lot of log to the disk.
++
++# TODO:
++#   - mail alerts
++#     - we could use --check and pipe + mail the output
++#     - we could mail the log file (append needs to be off)
++#   - if all went well, should we update the propd?
++#     - --hash SHA512
++################################################################################
++declare -i RKHUNTER_RET
++if [ -x /usr/bin/rkhunter ]
++then
++  /usr/bin/rkhunter --nocolors --update
++  #  --no-mail-on-warning \
++  #  --no-verbose-logging \
++  /bin/nice -n 19 /usr/bin/rkhunter \
++    --cronjob \
++    --hash SHA512 \
++    --nocolors \
++    --pkgmgr NONE \
++    --report-warnings-only \
++    --syslog
++  RKHUNTER_RET=${?}
++  echo "rkhunter exited with ${RKHUNTER_RET}"
++fi
++
++exit
+diff --git a/cron.weekly/log_checksums.sh b/cron.weekly/log_checksums.sh
+new file mode 100644
+index 0000000..b10a01d
+--- /dev/null
++++ b/cron.weekly/log_checksums.sh
+@@ -0,0 +1,46 @@
++#!/bin/bash
++################################################################################
++# file:
++# created:	23-07-2012
++# modified:	2012 Jul 23
++# TODO: ADD CREATED WITH BASH_VERSION and bash version detection
++################################################################################
++if [ ${BASH_VERSINFO[0]} -ne 4 ]
++then
++  echo -e "error: bash version != 4, this script might not work properly!" 1>&2
++  echo    "       you can bypass this check by commenting out lines $[${LINENO}-2]-$[${LINENO}+2]." 1>&2
++  exit 1
++fi
++# Treat unset variables as an error when substituting.
++set -u
++for PROGRAM in \
++  awk \
++  cat \
++  cp \
++  date \
++  gawk \
++  grep \
++  ln \
++  mkdir \
++  mv \
++  rm \
++  sed \
++  shred \
++  sha512sum \
++  stat
++do
++  if ! hash "${PROGRAM}" 2>/dev/null
++  then
++    printf "error: command not found in PATH: %s\n" "${PROGRAM}" >&2
++    exit 1
++  fi
++done
++unset PROGRAM
++
++declare -r TODATE=$( date +%Y%m%d )
++
++umask 077
++
++pushd /var/log
++sha512sum *-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9] 1>"/var/log/CHECKSUMS-${TODATE}.sha512"
++
+diff --git a/host.conf b/host.conf
+index a659e91..3b1781b 100644
+--- a/host.conf
++++ b/host.conf
+@@ -1,2 +1,21 @@
+-order hosts, bind
++# for cert_unix_checklist.audit, there is no space after comma.
++order hosts,bind
++
++# If set to on, the resolv+ library will return all valid addresses for a host
++# that appears in the /etc/hosts file, instead of only the first.
+ multi on
++
++# from system-hardening-10.2.txt:
++
++# If set to on, the resolv+ library will attempt to prevent hostname spoofing
++# to enhance the security of rlogin and rsh.
++nospoof on
++
++# If this option is set to on and the nospoof option is also set, resolv+ will
++# log a warning of the error via the syslog facility.
++spoofalert on
++
++# If this option is set to warn, resolv+ will attempt to prevent hostname
++# spoofing to enhance the security and log a warning of the error via the
++# syslog facility.
++spoof warn
+diff --git a/hosts.allow b/hosts.allow
+index d375b5f..2ee5d91 100644
+--- a/hosts.allow
++++ b/hosts.allow
+@@ -9,4 +9,7 @@
+ #
+ #
+ 
++# example line:
++#sshd:	192.168.0.8:	spawn /usr/bin/logger -t "tcp_wrapper" "granted saddr=%a daddr=%A client_info=%c daemon=%d client_hostinfo=%h server_hostinfo=%H client_hostname=%n server_hostname=%N pid=%p server_info=%s"
++
+ # End of hosts.allow.
+diff --git a/hosts.deny b/hosts.deny
+index c0db7e9..cc33004 100644
+--- a/hosts.deny
++++ b/hosts.deny
+@@ -9,4 +9,9 @@
+ #
+ #
+ 
++# NOTE: do not use the %u parameter (client_username), this tries to do a ident lookup.
++
++# ALL should also catch PARANOID. see man 5 hosts_access.
++ALL:	ALL EXCEPT localhost:	spawn /usr/bin/logger -t "tcp_wrapper" "denied saddr=%a daddr=%A client_info=%c daemon=%d client_hostinfo=%h server_hostinfo=%H client_hostname=%n server_hostname=%N pid=%p server_info=%s"
++
+ # End of hosts.deny.
+diff --git a/hosts.equiv b/hosts.equiv
+index cb371ea..7938659 100644
+--- a/hosts.equiv
++++ b/hosts.equiv
+@@ -9,6 +9,4 @@
+ #
+ #
+ 
+-localhost
+-
+ # End of hosts.equiv.
+diff --git a/inittab b/inittab
+index ba6fe79..d0a8079 100644
+--- a/inittab
++++ b/inittab
+@@ -34,7 +34,8 @@ su:1S:wait:/etc/rc.d/rc.K
+ rc:2345:wait:/etc/rc.d/rc.M
+ 
+ # What to do at the "Three Finger Salute".
+-ca::ctrlaltdel:/sbin/shutdown -t5 -r now
++# ...as suggested in system-hardening-10.2.txt
++ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a
+ 
+ # Runlevel 0 halts the system.
+ l0:0:wait:/etc/rc.d/rc.0
+@@ -49,12 +50,12 @@ pf::powerfail:/sbin/genpowerfail start
+ pg::powerokwait:/sbin/genpowerfail stop
+ 
+ # These are the standard console login getties in multiuser mode:
+-c1:12345:respawn:/sbin/agetty --noclear 38400 tty1 linux
+-c2:12345:respawn:/sbin/agetty 38400 tty2 linux
+-c3:12345:respawn:/sbin/agetty 38400 tty3 linux
+-c4:12345:respawn:/sbin/agetty 38400 tty4 linux
+-c5:12345:respawn:/sbin/agetty 38400 tty5 linux
+-c6:12345:respawn:/sbin/agetty 38400 tty6 linux
++c1:12345:respawn:/sbin/agetty -i --nohostname --noclear 38400 tty1 linux
++c2:12345:respawn:/sbin/agetty -i --nohostname 38400 tty2 linux
++c3:12345:respawn:/sbin/agetty -i --nohostname 38400 tty3 linux
++c4:12345:respawn:/sbin/agetty -i --nohostname 38400 tty4 linux
++c5:12345:respawn:/sbin/agetty -i --nohostname 38400 tty5 linux
++c6:12345:respawn:/sbin/agetty -i --nohostname 38400 tty6 linux
+ 
+ # Local serial lines:
+ #s1:12345:respawn:/sbin/agetty -L ttyS0 9600 vt100
+diff --git a/issue b/issue
+index acec0a3..72244e7 100644
+--- a/issue
++++ b/issue
+@@ -1,3 +1,3 @@
+ 
+-Welcome to \s \r (\l)
++Welcome to \s (\l)
+ 
+diff --git a/limits b/limits
+new file mode 100644
+index 0000000..bee3d11
+--- /dev/null
++++ b/limits
+@@ -0,0 +1,26 @@
++# /etc/limits
++#
++# from LIMITS(5):
++#
++#   "By default no quota is imposed on 'root'. In fact, there is no way to
++#    impose limits via this procedure to root-equiv accounts (accounts with UID
++#    0)."
++#
++# from shadow-4.1.4.3/libmisc/limits.c:
++#
++#   /* The limits file have the following format:
++#    * - '#' (comment) chars only as first chars on a line;
++#    * - username must start on first column
++#    * A better (smarter) checking should be done --cristiang */
++#
++#   /* a valid line should have a username, then spaces,
++#    * then limits
++#    * we allow the format:
++#    * username    L2  D2048  R4096
++#    * where spaces={' ',\t}. Also, we reject invalid limits.
++#    * Imposing a limit should be done with care, so a wrong
++#    * entry means no care anyway :-). A '-' as a limits
++#    * strings means no limits --cristiang */
++
++# make sure your shadow has this fixed: http://anonscm.debian.org/viewvc/pkg-shadow/upstream/trunk/libmisc/limits.c?annotate=3558&pathrev=3558#l476
++* K077L0
+diff --git a/login.access b/login.access
+index 078e3f8..9574929 100644
+--- a/login.access
++++ b/login.access
+@@ -52,3 +52,10 @@
+ #
+ # All other accounts are allowed to login from anywhere.
+ #
++##############################################################################
++#
++# from system-hardening-10.2.txt:
++# Only root can login locally. This does not affect logging in via ssh.
++#
+++:root users:LOCAL
++-:ALL:ALL
+diff --git a/login.defs b/login.defs
+index e52f91a..587608b 100644
+--- a/login.defs
++++ b/login.defs
+@@ -6,8 +6,9 @@
+ 
+ #
+ # Delay in seconds before being allowed another attempt after a login failure
++# (value taken from system-hardening-10.2.txt)
+ #
+-FAIL_DELAY		3
++FAIL_DELAY		20
+ 
+ #
+ # Enable logging and display of /var/log/faillog login failure info.
+@@ -21,8 +22,9 @@ LOG_UNKFAIL_ENAB	no
+ 
+ #
+ # Enable logging of successful logins
++# (value taken from system-hardening-10.2.txt)
+ #
+-LOG_OK_LOGINS		no
++LOG_OK_LOGINS		yes
+ 
+ #
+ # Enable logging and display of /var/log/lastlog login time info.
+@@ -70,7 +72,7 @@ CONSOLE		/etc/securetty
+ #
+ # If defined, all su activity is logged to this file.
+ #
+-#SULOG_FILE	/var/log/sulog
++SULOG_FILE	/var/log/sulog
+ 
+ #
+ # If defined, ":" delimited list of "message of the day" files to
+@@ -125,14 +127,17 @@ MAIL_DIR	/var/spool/mail
+ # user's name or shell are found in the file.  If not a full pathname, then
+ # hushed mode will be enabled if the file exists in the user's home directory.
+ #
+-HUSHLOGIN_FILE	.hushlogin
++# disabled, as suggested by system-hardening-10.2.txt
++#
++#HUSHLOGIN_FILE	.hushlogin
+ #HUSHLOGIN_FILE	/etc/hushlogins
+ 
+ #
+ # If defined, either a TZ environment parameter spec or the
+ # fully-rooted pathname of a file containing such a spec.
++# (value taken from tzselect utility)
+ #
+-#ENV_TZ		TZ=CST6CDT
++ENV_TZ		TZ=Europe/Helsinki
+ #ENV_TZ		/etc/tzname
+ 
+ #
+@@ -147,8 +152,8 @@ ENV_HZ		HZ=100
+ # *REQUIRED*  The default PATH settings, for superuser and normal users.
+ #
+ # (they are minimal, add the rest in the shell startup files)
+-ENV_SUPATH     PATH=/usr/local/sbin:/usr/local/bin:/sbin:/usr/sbin:/bin:/usr/bin
+-ENV_PATH       PATH=/usr/local/bin:/bin:/usr/bin
++ENV_SUPATH     PATH=/sbin:/usr/sbin:/bin:/usr/bin
++ENV_PATH       PATH=/bin:/usr/bin
+ 
+ #
+ # Terminal permissions
+@@ -187,7 +192,7 @@ KILLCHAR	025
+ # 022 is the default value, but 027, or even 077, could be considered
+ # better for privacy. There is no One True Answer here: each sysadmin
+ # must make up her mind.
+-UMASK		022
++UMASK		077
+ 
+ #
+ # Password aging controls:
+@@ -197,10 +202,10 @@ UMASK		022
+ #	PASS_MIN_LEN	Minimum acceptable password length.
+ #	PASS_WARN_AGE	Number of days warning given before a password expires.
+ #
+-PASS_MAX_DAYS	99999
+-PASS_MIN_DAYS	0
+-PASS_MIN_LEN	5
+-PASS_WARN_AGE	7
++PASS_MAX_DAYS	365
++PASS_MIN_DAYS	1
++PASS_MIN_LEN	8
++PASS_WARN_AGE	30
+ 
+ #
+ # If "yes", the user must be listed as a member of the first gid 0 group
+@@ -208,7 +213,7 @@ PASS_WARN_AGE	7
+ # to uid 0 accounts.  If the group doesn't exist or is empty, no one
+ # will be able to "su" to uid 0.
+ #
+-SU_WHEEL_ONLY	no
++SU_WHEEL_ONLY	yes
+ 
+ #
+ # If compiled with cracklib support, where are the dictionaries
+@@ -264,6 +269,7 @@ PASS_ALWAYS_WARN	yes
+ # Require password before chfn/chsh can make any changes.
+ #
+ CHFN_AUTH		yes
++CHSH_AUTH		yes
+ 
+ #
+ # Which fields may be changed by regular users using chfn - use
+@@ -271,7 +277,7 @@ CHFN_AUTH		yes
+ # phone, home phone).  If not defined, no changes are allowed.
+ # For backward compatibility, "yes" = "rwh" and "no" = "frwh".
+ # 
+-CHFN_RESTRICT		frwh
++#CHFN_RESTRICT		rwh
+ 
+ #
+ # Password prompt (%s will be replaced by user name).
+@@ -300,7 +306,7 @@ CHFN_RESTRICT		frwh
+ # If set to DES, DES-based algorithm will be used for encrypting password (default)
+ # Overrides the MD5_CRYPT_ENAB option
+ #
+-ENCRYPT_METHOD SHA256
++ENCRYPT_METHOD SHA512
+ 
+ #
+ # Only works if ENCRYPT_METHOD is set to SHA256 or SHA512.
+@@ -315,7 +321,7 @@ ENCRYPT_METHOD SHA256
+ # If only one of the MIN or MAX values is set, then this value will be used.
+ # If MIN > MAX, the highest value will be used.
+ #
+-# SHA_CRYPT_MIN_ROUNDS 5000
++SHA_CRYPT_MIN_ROUNDS 500000
+ # SHA_CRYPT_MAX_ROUNDS 5000
+ 
+ #
+@@ -338,13 +344,13 @@ ENCRYPT_METHOD SHA256
+ # when the user is added with adduser or useradd, or by editing
+ # /etc/group directly, preferably using "vigr"
+ #
+-CONSOLE_GROUPS         floppy:audio:cdrom:video:lp:scanner
++CONSOLE_GROUPS         audio:cdrom:video:lp
+ 
+ #
+ # Should login be allowed if we can't cd to the home directory?
+ # Default in no.
+ #
+-DEFAULT_HOME	yes
++DEFAULT_HOME	no
+ 
+ #
+ # If this file exists and is readable, login environment will be
+@@ -385,5 +391,5 @@ USERGROUPS_ENAB yes
+ # This option is overridden with the -M or -m flags on the useradd command
+ # line.
+ #
+-#CREATE_HOME     yes
++CREATE_HOME     yes
+ 
+diff --git a/logrotate.conf b/logrotate.conf
+index 27b03e1..fe4ae0e 100644
+--- a/logrotate.conf
++++ b/logrotate.conf
+@@ -12,34 +12,50 @@
+ # rotate log files weekly:
+ weekly
+ 
+-# keep 4 weeks worth of backlogs:
+-rotate 4
++# keep 1/2 years worth of backlogs:
++# value from system-hardening-10.2.txt
++rotate 26
+ 
+ # create new (empty) log files after rotating old ones:
+-create
++create 0640 root adm
+ 
+ # uncomment if you want to use the date as a suffix of the rotated file
+-#dateext
++dateext
+ 
+ # uncomment this if you want your log files compressed:
+ #compress
+ 
++# Delete  log files using shred -u instead of unlink().
++shred
++shredcycles 5
++
+ # some packages install log rotation information in this directory:
+ include /etc/logrotate.d
+ 
+ # Rotate /var/log/wtmp:
+ /var/log/wtmp {
+     monthly
+-    create 0664 root utmp
+-	minsize 1M
++    # wtmp reveals information such as the source host from where some user logged in,
++    # this is something that every user doesn't need to know.
++    create 0660 root utmp
++	minsize 5M
+     rotate 1
++    # after rotating, there is no need for the utmp account to have any
++    # permissions for this.
++    #
++    # make it group adm readable
++    postrotate
++      /usr/bin/chgrp adm /var/log/wtmp[.-]*
++      /usr/bin/chmod 640 /var/log/wtmp[.-]*
++    endscript
+ }
+ 
+ # Rotate /var/log/btmp:
+ /var/log/btmp {
+     monthly
+-    create 0600 root root
+-    rotate 1
++    minsize 5M
++    create 0640 root adm
++    rotate 2
+ }
+ 
+ # Note that /var/log/lastlog is not rotated.  This is intentional, and it should
+diff --git a/logrotate.d/bootlogd b/logrotate.d/bootlogd
+new file mode 100644
+index 0000000..505f942
+--- /dev/null
++++ b/logrotate.d/bootlogd
+@@ -0,0 +1,9 @@
++# https://www.linuxquestions.org/questions/slackware-14/how-to-activate-bootlogd-918962/
++# logrotate configuration for default bootlogd log 
++
++/var/log/boot { 
++    monthly 
++    rotate 5 
++    notifempty 
++    missingok 
++}
+diff --git a/logrotate.d/msfupdate b/logrotate.d/msfupdate
+new file mode 100644
+index 0000000..8e69c35
+--- /dev/null
++++ b/logrotate.d/msfupdate
+@@ -0,0 +1,10 @@
++/var/log/msfupdate.log {
++  daily
++  rotate 5
++  compress
++  delaycompress
++  missingok
++  notifempty
++  create 0644 root root
++}
++
+diff --git a/logrotate.d/pacct b/logrotate.d/pacct
+new file mode 100644
+index 0000000..9d63ba2
+--- /dev/null
++++ b/logrotate.d/pacct
+@@ -0,0 +1,19 @@
++/var/log/pacct {
++  yearly
++  rotate 10
++  dateext
++  size 1G
++  shred
++  notifempty
++  nocompress
++  create 0640 root adm
++  nomail
++
++  prerotate
++    /sbin/accton off
++  endscript
++
++  postrotate
++    /sbin/accton /var/log/pacct
++  endscript
++}
+diff --git a/logrotate.d/sudo b/logrotate.d/sudo
+new file mode 100644
+index 0000000..69611ca
+--- /dev/null
++++ b/logrotate.d/sudo
+@@ -0,0 +1,7 @@
++# sudo.log is a separate log file that is configured with the logfile options
++# in sudoers.
++/var/log/sudo.log {
++    monthly
++    notifempty
++    create 0640 root adm
++}
+diff --git a/logrotate.d/sulog b/logrotate.d/sulog
+new file mode 100644
+index 0000000..b21ee23
+--- /dev/null
++++ b/logrotate.d/sulog
+@@ -0,0 +1,8 @@
++# Rotate /var/log/sulog:
++# sulog is a separate log file that is not created by syslog, hence we process
++# it here instead of logrotate.d/syslog.
++/var/log/sulog {
++    monthly
++    notifempty
++    create 0640 root adm
++}
+diff --git a/porttime b/porttime
+new file mode 100644
+index 0000000..70f4aaa
+--- /dev/null
++++ b/porttime
+@@ -0,0 +1,30 @@
++### for login
++#/dev/tty1,/dev/tty2,/dev/tty3,/dev/tty4,/dev/tty5,/dev/tty6:root,someuser:Al0000-2400
++### for logoutd
++#tty1,tty2,tty3,tty4,tty5,tty6:root,someuser:Al0000-2400
++#pts/0,pts/1,pts/2,pts/3,pts/4,pts/5,pts/6,pts/7:someuser:Al0000-2400
++#*:*:
++
++# from su.c:
++#   /*
++#    * Check to see if the account permits "su". root gets to ignore any
++#    * restricted accounts, but normal users can't become a user if
++#    * there is a "SU" entry in the /etc/porttime file denying access to
++#    * the account.
++#    */
++SU:*:
++
++# don't use these. don't work.
++#console:root:Al0000-2400
++#console:*:
++
++# root login is always allowed
++/dev/tty1,/dev/tty2,/dev/tty3,/dev/tty4,/dev/tty5,/dev/tty6:root:Al0000-2400
++
++# allow logins on non-working hours:
++#/dev/tty1,/dev/tty2,/dev/tty3,/dev/tty4,/dev/tty5,/dev/tty6:someuser:Wk1700-0900,SaSu0000-2400
++# for logoutd:
++#tty1,tty2,tty3,tty4,tty5,tty6:someuser:Wk1700-0900,SaSu0000-2400
++
++# deny everything else
++/dev/tty1,/dev/tty2,/dev/tty3,/dev/tty4,/dev/tty5,/dev/tty6:*:
+diff --git a/profile b/profile
+index 8c5df4d..903299c 100644
+--- a/profile
++++ b/profile
+@@ -7,6 +7,21 @@ export MANPATH=/usr/local/man:/usr/man
+ export HOSTNAME="`cat /etc/HOSTNAME`"
+ export LESSOPEN="|lesspipe.sh %s"
+ export LESS="-M"
++export LESSHISTFILE="/dev/null"
++export EDITOR="/usr/bin/vim"
++export VISUAL="${EDITOR}"
++# from system-hardening-10.2.txt (Secure less)
++# see man 1 less for details
++export LESSSECURE=1
++# custom stuff below
++export TMPDIR=/tmp
++export HOSTFILE=/etc/hosts
++# by default, tar includes the user and group names in addition to UID/GID to
++# created archives. this might be an information you don't want to share when
++# creating and distributing archives.
++#
++# https://www.gnu.org/software/tar/manual/html_section/Attributes.html
++export TAR_OPTIONS="--numeric-owner"
+ 
+ # If the user doesn't have a .inputrc, use the one in /etc.
+ if [ ! -r "$HOME/.inputrc" ]; then
+@@ -14,16 +29,35 @@ if [ ! -r "$HOME/.inputrc" ]; then
+ fi
+ 
+ # Set the default system $PATH:
+-PATH="/usr/local/bin:/usr/bin:/bin:/usr/games"
++PATH="/usr/bin:/bin"
+ 
+ # For root users, ensure that /usr/local/sbin, /usr/sbin, and /sbin are in
+ # the $PATH.  Some means of connection don't add these by default (sshd comes
+ # to mind).
++
++# this should conform with CIS Slackware Linux Benchmark v1.1
++# 8.6 No '.' or Group/World-Writable Directory In Root's $PATH
+ if [ "`id -u`" = "0" ]; then
+   echo $PATH | grep /usr/local/sbin 1> /dev/null 2> /dev/null
+   if [ ! $? = 0 ]; then
+-    PATH=/usr/local/sbin:/usr/sbin:/sbin:$PATH
++    PATH=/usr/sbin:/sbin:$PATH
+   fi
++  # this satisfies tiger alert [root003w] ("Root user has message capability turned on.")
++  /usr/bin/mesg n
++else
++  # against fork bombs
++  # https://secure.wikimedia.org/wikipedia/en/wiki/Fork_bomb#Prevention
++  # the limit is 200 to avoid "sudo: unable to execute /bin/bash: Resource
++  # temporarily unavailable" etc. with grsec kernels
++  ulimit -u 200
++fi
++
++# if UID = 0 or local terminal, set the session expiration.
++if [ "`id -u`" = "0" ] || [[ "`/bin/tty`" =~ ^/dev/tty[0-9]+$ ]]
++then
++  # Logout if a root terminal is not being used (system-hardening-10.2.txt)
++  # see more details from http://www.gnu.org/software/bash/manual/bashref.html#Bash-Variables or man 1 bash
++  export TMOUT=1200
+ fi
+ 
+ # I had problems with the backspace key using 'eval tset' instead of 'TERM=',
+@@ -54,14 +88,14 @@ elif [ "$SHELL" = "/bin/zsh" ]; then
+ elif [ "$SHELL" = "/bin/ash" ]; then
+  PS1='$ '
+ else
++ # TODO: /usr/doc/Linux-HOWTOs/Xterm-Title
+  PS1='\u@\h:\w\$ '
+ fi
+ PS2='> '
+ export PATH DISPLAY LESS TERM PS1 PS2
+ 
+-# Default umask.  A umask of 022 prevents new files from being created group
+-# and world writable.
+-umask 022
++# Default umask.
++umask 077
+ 
+ # Notify user of incoming mail.  This can be overridden in the user's
+ # local startup file (~/.bash.login or whatever, depending on the shell)
+@@ -77,3 +111,64 @@ for profile_script in /etc/profile.d/*.sh ; do
+ done
+ unset profile_script
+ 
++# CIS 8.11 Disable Core Dumps
++ulimit -Hc 0
++
++# against fork bombs
++# https://secure.wikimedia.org/wikipedia/en/wiki/Fork_bomb#Prevention
++#ulimit -u 100
++
++# from NSA's rhel5-guide (2.3.5.5 Implement Inactivity Time-out for Login Shells)
++#TMOUT=900
++#readonly TMOUT
++#export TMOUT
++
++if [ -n "${SSH_CONNECTION}" ]
++then
++  # try not to echo the username to mitigate shoulder surfing.
++  export LS_OPTIONS="${LS_OPTIONS} -n "
++  /usr/bin/biff n
++  # print the SSH key fingerprint so that possible MITM attacks could be
++  # detected. even though it's already too late.
++  if [ -x /usr/bin/ssh-keygen ]
++  then
++    for keytype in rsa ecdsa
++    do
++      /usr/bin/ssh-keygen -v -lf /etc/ssh/ssh_host_${keytype}_key.pub
++    done
++  fi
++fi
++
++# see http://pen-testing.sans.org/blog/2012/06/06/escaping-restricted-linux-shells#comments
++typeset -r HISTFILE
++#
++# TODO: this could be in BASHOPTS
++shopt -s checkjobs
++# TODO: find out about this...
++#shopt -s mailwarn
++
++# this needs to come after the /etc/profile.d stuff to properly restrict PATH
++# and to avoid unnecessary error messages.
++if [ "$SHELL" = "/bin/rbash" ]
++then
++  export PATH="/usr/local/rbin"
++  typeset -r HISTFILE
++  typeset -r LESSSECURE
++  # not entirely sure if these kind of IFS hacks still exists, but better safe than sorry.
++  # see http://linuxshellaccount.blogspot.fi/2008/05/restricted-accounts-and-vim-tricks-in.html
++  # also http://www.securityfocus.com/bid/454/exploit/ - old school =)
++  #
++  # also http://www.tldp.org/HOWTO/Secure-Programs-HOWTO/environment-variables.html#ENV-VARS-DANGEROUS
++  typeset -r IFS
++  # rbash takes care of SHELL, PATH, ENV, and BASH_ENV
++
++  # override the one set at /etc/profile.d/coreutils-dircolors.sh, since that
++  # uses /bin/ls.
++  alias ls='ls $LS_OPTIONS'
++
++  # activate the restrictions before user's configuration is being read.
++  set -r
++  # let the user know this is a restricted environment.
++  shopt restricted_shell
++fi
++
+diff --git a/profile.d/autologout.csh b/profile.d/autologout.csh
+new file mode 100644
+index 0000000..d7b28e3
+--- /dev/null
++++ b/profile.d/autologout.csh
+@@ -0,0 +1 @@
++set -r autologout 15
+diff --git a/profile.d/awk_sandboxing.sh b/profile.d/awk_sandboxing.sh
+new file mode 100644
+index 0000000..c96860c
+--- /dev/null
++++ b/profile.d/awk_sandboxing.sh
+@@ -0,0 +1,17 @@
++#!/bin/bash
++################################################################################
++# file:		awk_sandboxing.sh
++# created:	16-10-2011
++# modified:	2011 Oct 16
++################################################################################
++[ ${BASH_VERSINFO[0]} -ne 4 ] && {
++  echo -e "error: bash version != 4, this script might not work properly!" 1>&2
++  echo    "       you can bypass this check by commenting out lines $[${LINENO}-2]-$[${LINENO}+2]." 1>&2
++}
++
++AWK_VERSION=`awk 'BEGIN{split(PROCINFO["version"],versinfo,".");print versinfo[1]}'`
++if [ ${AWK_VERSION} -eq 4 ]
++then
++  alias awk='/bin/gawk --sandbox'
++fi
++unset AWK_VERSION
+diff --git a/profile.d/tmout.sh b/profile.d/tmout.sh
+new file mode 100644
+index 0000000..94c5a1a
+--- /dev/null
++++ b/profile.d/tmout.sh
+@@ -0,0 +1,3 @@
++TMOUT=900
++readonly TMOUT
++export TMOUT
+diff --git a/rc.d/rc.6 b/rc.d/rc.6
+index 8288128..2c3a633 100755
+--- a/rc.d/rc.6
++++ b/rc.d/rc.6
+@@ -10,6 +10,13 @@
+ # Modified by:  Patrick J. Volkerding, <volkerdi@slackware.com>
+ #
+ 
++# https://www.linuxquestions.org/questions/slackware-14/how-to-activate-bootlogd-918962/
++if [ -x /sbin/bootlogd ]; then
++    echo 'Starting bootlogd'
++    /sbin/bootlogd -s
++    echo 'Bootlogd started (this is the first boot message that appears in /var/log/boot).'
++fi
++
+ # Set the path.
+ PATH=/sbin:/etc:/bin:/usr/bin
+ 
+@@ -213,6 +220,13 @@ echo "Turning off swap."
+ echo "Unmounting local file systems."
+ /bin/umount -v -a -t no,proc,sysfs
+ 
++# from UMOUNT(8): "-a ... (With umount version 2.7 and later: the proc filesystem  is  not unmounted.)"
++echo "Unmounting proc and sysfs file systems."
++for FS in "/proc" "/sys"
++do
++  /bin/umount -v "${FS}"
++done
++
+ echo "Remounting root filesystem read-only."
+ /bin/mount -v -n -o remount,ro /
+ 
+diff --git a/rc.d/rc.M b/rc.d/rc.M
+index d9b3fed..7e35d96 100755
+--- a/rc.d/rc.M
++++ b/rc.d/rc.M
+@@ -46,6 +46,8 @@ else
+ fi
+ # Save the contents of 'dmesg':
+ /bin/dmesg -s 65536 > /var/log/dmesg
++/usr/bin/chgrp adm /var/log/dmesg
++/usr/bin/chmod 640 /var/log/dmesg
+ 
+ # Initialize PCMCIA devices:
+ #
+@@ -125,6 +127,7 @@ fi
+ # Remove stale locks and junk files (must be done after mount -a!)
+ /bin/rm -f /var/lock/* /var/spool/uucp/LCK..* /tmp/.X*lock /tmp/core /core 2> /dev/null
+ /bin/rm -rf /var/spool/cron/cron.?????? 2> /dev/null
++/bin/rm -rf /tmp/* 2> /dev/null
+ 
+ # Remove stale hunt sockets so the game can start.
+ if [ -r /tmp/hunt -o -r /tmp/hunt.stats ]; then
+@@ -272,10 +275,11 @@ if [ -x /usr/sbin/crond ]; then
+   /usr/sbin/crond -l notice
+ fi
+ 
++# this should support CIS 7.5 Restrict at/cron To Authorized Users
+ # Start atd (manages jobs scheduled with 'at'):
+-if [ -x /usr/sbin/atd ]; then
+-  /usr/sbin/atd -b 15 -l 1
+-fi
++#if [ -x /usr/sbin/atd ]; then
++#  /usr/sbin/atd -b 15 -l 1
++#fi
+ 
+ # Slackware-Mini-Quota-HOWTO:
+ # To really activate quotas, you'll need to add 'usrquota' and/or 'grpquota' to
+diff --git a/rc.d/rc.S b/rc.d/rc.S
+index 7b152e9..33d4b8a 100755
+--- a/rc.d/rc.S
++++ b/rc.d/rc.S
+@@ -5,6 +5,13 @@
+ # Mostly written by:  Patrick J. Volkerding, <volkerdi@slackware.com>
+ #
+ 
++# https://www.linuxquestions.org/questions/slackware-14/how-to-activate-bootlogd-918962/
++if [ -x /sbin/bootlogd ]; then
++    echo 'Starting bootlogd'
++    /sbin/bootlogd
++    echo 'Bootlogd started (this is the first boot message that appears in /var/log/boot).'
++fi
++
+ PATH=/sbin:/usr/sbin:/bin:/usr/bin
+ 
+ # Try to mount /proc:
+@@ -361,6 +368,7 @@ rm -f /var/run/* /var/run/*/* /var/run/*/*/* /etc/nologin \
+   /tmp/.Xauth* 1> /dev/null 2> /dev/null
+   ( cd /var/log/setup/tmp && rm -rf * )
+   ( cd /tmp && rm -rf kde-[a-zA-Z]* ksocket-[a-zA-Z]* hsperfdata_[a-zA-Z]* plugtmp* )
++  ( cd /tmp && rm -rf * )
+ 
+ # Create /tmp/{.ICE-unix,.X11-unix} if they are not present:
+ if [ ! -e /tmp/.ICE-unix ]; then
+diff --git a/rc.d/rc.firewall b/rc.d/rc.firewall
+new file mode 100644
+index 0000000..7221aed
+--- /dev/null
++++ b/rc.d/rc.firewall
+@@ -0,0 +1,247 @@
++#!/bin/sh
++################################################################################
++# rc.firewall                                                                  #
++# modified:	2012 Oct 19
++################################################################################
++declare -r LOG_PRIORITY="debug"
++declare -r INT_IF="eth0"
++declare -r INT_NET="192.168.0.0/24"
++declare -r STATE_FILE="/var/state/iptables.state"
++# THROW, NAT & XRESOLVE?!?                                                     #
++# not in the list for a purpose: LOCAL                                         #
++declare -ra ADDRESS_TYPES=(
++  UNSPEC	# an unspecified address (i.e. 0.0.0.0)
++#  UNICAST	# an unicast address
++  BROADCAST	# a broadcast address
++  ANYCAST	# an anycast packet
++  MULTICAST	# a multicast address
++  BLACKHOLE	# a blackhole address
++  UNREACHABLE	# an unreachable address
++  PROHIBIT	# a prohibited address
++)
++#declare -r EXT="eth1"
++umask 077
++################################################################################
++function log_and_reject() {
++  # $1 = log-prefix
++  # $2 = reject with
++  # $3 -> = iptables parameters
++  # log-level == priority in syslog                                            #
++  [ ${#} -lt 3 ] && {
++    echo "${FUNCNAME}(): error!"
++    return 1
++  }
++  local LOG_PREFIX="${1}"
++  local REJECT_WITH="${2}"
++  shift 2
++  #echo "${FUNCNAME}(): DEBUG: parameters: ${*}"
++  iptables \
++    ${*} \
++    --jump      LOG \
++    --log-prefix        "${LOG_PREFIX}: " \
++    --log-level         "${LOG_PRIORITY}" \
++    --log-tcp-sequence \
++    --log-tcp-options \
++    --log-ip-options
++  iptables ${*} --jump REJECT --reject-with "${REJECT_WITH}"
++  return 0
++} # log_and_reject()
++################################################################################
++function log_and_drop() {
++  # $1 = log-prefix
++  # $2 -> = iptables parameters
++  [ ${#} -lt 3 ] && {
++    echo "${FUNCNAME}(): error!"
++    return 1
++  }
++  local LOG_PREFIX="${1}"
++  shift 1
++  #echo "${FUNCNAME}(): DEBUG: parameters: ${*}"
++  ##############################################################################
++  # LOG AND DROP INVALID PACKETS                                               #
++  ##############################################################################
++  # Michael_Rash_OSCON_2007.pdf:                                               #
++  #                                                                            #
++  # Iptables Logging Args                                                      #
++  # When building iptables LOG rules:                                          #
++  #                                                                            #
++  # Use ­­log­ip­options                                                       #
++  # Use ­­log­tcp­sequence                                                     #
++  # Use ­­log­tcp­options                                                      #
++  #                                                                            #
++  # More attacks can be detected, and operating                                #
++  # systems can be passively fingerprinted                                     #
++  ##############################################################################
++  iptables \
++    ${*} \
++    --jump	LOG \
++    --log-prefix	"${LOG_PREFIX}: " \
++    --log-level		"${LOG_PRIORITY}" \
++    --log-tcp-sequence \
++    --log-tcp-options \
++    --log-ip-options
++  iptables ${*} --jump DROP
++  return 0
++} # log_and_drop()
++################################################################################
++function set_default_policies() {
++  local CHAIN
++
++  echo "[+] rc.firewall ${FUNCNAME}(): setting the default policies"
++
++  # Turn off IPv4 packet forwarding support.
++  if [ -x /etc/rc.d/rc.ip_forward ]
++  then
++    echo "[+] rc.firewall ${FUNCNAME}(): disabling IP forwarding..."
++    . /etc/rc.d/rc.ip_forward stop
++  fi
++
++  #echo 1 1>/proc/sys/net/ipv4/tcp_syncookies
++
++  ##############################################################################
++  # default policies                                                           #
++  ##############################################################################
++  iptables --table filter --policy INPUT   ACCEPT
++  iptables --table filter --policy FORWARD DROP
++  iptables --table filter --policy OUTPUT  ACCEPT
++
++  # drop policy for IPv6
++  echo "[+] rc.firewall ${FUNCNAME}(): disabling IPv6 traffic..."
++  for CHAIN in INPUT OUTPUT FORWARD
++  do
++    /usr/sbin/ip6tables -P "${CHAIN}" DROP
++  done
++
++  # TODO: localhost? nmap book page 263?
++
++  return 0
++} # set_default_policies()
++################################################################################
++function log_odd_address_types() {
++  ##############################################################################
++  # you never know what might be lurking behind the next corner...             #
++  # ...so we log these just to make sure                                       #
++  ##############################################################################
++  local ADDRTYPE
++  for ADDRTYPE in ${ADDRESS_TYPES[*]}
++  do
++    # TODO: should some of these be --src-type?
++    log_and_drop "DROP dst addrtype ${ADDRTYPE}" -A INPUT -m addrtype --dst-type "${ADDRTYPE}"
++    log_and_drop "DROP src addrtype ${ADDRTYPE}" -A INPUT -m addrtype --src-type "${ADDRTYPE}"
++  done
++  return 0    
++} # log_odd_address_types()
++################################################################################
++function start() {
++  echo "[+] rc.firewall ${FUNCNAME}()"
++
++  set_default_policies
++
++  ###### INPUT chain ######
++
++  echo "[+] rc.firewall ${FUNCNAME}(): setting up INPUT chain..."
++
++  ##############################################################################
++  # invalid packets                                                            #
++  ##############################################################################
++  log_and_drop "DROP INVALID" --table filter --append INPUT --match state --state INVALID
++
++  ### anti-spoofing rules
++  #log_and_drop "SPOOFED PKT" -A INPUT -i "${INT_IF}" ! -s "${INT_NET}"
++
++  ##############################################################################
++  # reject icmp timestamp requests for a cleaner nessus report=)               #
++  ##############################################################################
++  log_and_reject "REJECT ICMP Timestamp req" "icmp-admin-prohibited" -A INPUT -p icmp --icmp-type timestamp-request
++
++  log_odd_address_types
++
++  ##############################################################################
++  # drop SSDP packets                                                          #
++  ##############################################################################
++  log_and_drop "DROP SSDP" -t filter -A INPUT -d 239.255.255.250 -p udp -m udp --dport 1900
++
++  return 0
++} # start()
++################################################################################
++function stop() {
++  local    TABLE
++  local -a TABLES=(`cat /proc/net/ip_tables_names 2>/dev/null`)
++  for TABLE in ${TABLES[*]}
++  do
++    echo "[+] rc.firewall ${FUNCNAME}(): flushing rules from table ${TABLE}"
++    iptables --table "${TABLE}" --flush
++  done
++  # "There must be no  references  to  the chain" ... so we run this last
++  echo "[+] rc.firewall ${FUNCNAME}(): deleting (possible) user-defined chains"
++  iptables -X
++  return ${?}
++} # stop()
++################################################################################
++function status() {
++  local    TABLE
++  local -a TABLES=(`cat /proc/net/ip_tables_names 2>/dev/null`)
++  #echo "forwarding:"
++  #sysctl net.ipv4.conf 2>/dev/null | awk -F'.' '/forwarding = 1$/{printf "  %s\n",$4}'
++  for TABLE in ${TABLES[*]}
++  do
++    echo "table ${TABLE}:"
++    iptables -t "${TABLE}" -n -v -L
++  done
++  return 0
++} # status()
++################################################################################
++function usage() {
++  cat 0<<-EOF
++	usage: ${0} start|stop|restart|status
++EOF
++  return ${?}
++} # usage()
++################################################################################
++function load_state() {
++  local -i RET=0
++  echo "${0##*/}: ${FUNCNAME}()"
++  logger -t "${0##*/}" "${FUNCNAME}()"
++  ##############################################################################
++  # if the state file doesn't exist or is not readable, we fall back to        #
++  # initializing the firewall "from scratch"                                   #
++  ##############################################################################
++  if [ ! -f "${STATE_FILE}" -o ! -r "${STATE_FILE}" ]
++  then
++    echo "${FUNCNAME}(): error!" 1>&2
++    /usr/bin/logger -t "${0##*/}" "${FUNCNAME}(): failed"
++    return 1
++  fi
++  /usr/sbin/iptables-restore -c 0<"${STATE_FILE}"
++  RET=${?}
++  /usr/bin/logger -t "${0##*/}" "${FUNCNAME}(): restored firewall rules from state file with status ${RET}"
++  rm -v -f "${STATE_FILE}"
++  /usr/bin/logger -t "${0##*/}" "${FUNCNAME}(): state file removed"
++  return ${RET}
++} # load_state()
++################################################################################
++function save_state() {
++  # this function is invoked from stop() or by directly running rc.firewall save
++  local -i RET=0
++  echo "${0##*/}: ${FUNCNAME}()"
++  /usr/sbin/iptables-save -c 1>"${STATE_FILE}"
++  RET=${?}
++  # if there is some problem saving the state, assume it's useless and remove it.
++  if [ ${RET} -ne 0 ]
++  then
++    /usr/bin/rm -v "${STATE_FILE}"
++  fi
++  /usr/bin/logger -t "${0##*/}" "${FUNCNAME}(): state saved with status ${RET}"
++  return ${RET}
++} # save_state()
++################################################################################
++case "${1}" in
++  "start") start ;;
++  "stop")  stop  ;;
++  "restart"|"reload")
++    stop
++    start
++  ;;
++  "status") status ;;
++esac
++exit 0
+diff --git a/rc.d/rc.inet1.conf b/rc.d/rc.inet1.conf
+index 85a8041..6de5e61 100644
+--- a/rc.d/rc.inet1.conf
++++ b/rc.d/rc.inet1.conf
+@@ -18,6 +18,8 @@ IPADDR[0]=""
+ NETMASK[0]=""
+ USE_DHCP[0]=""
+ DHCP_HOSTNAME[0]=""
++#DHCP_KEEPRESOLV[0]="yes"
++DHCP_KEEPNTP[0]="yes"
+ 
+ # Config information for eth1:
+ IPADDR[1]=""
+@@ -43,7 +45,7 @@ GATEWAY=""
+ # Change this to "yes" for debugging output to stdout.  Unfortunately,
+ # /sbin/hotplug seems to disable stdout so you'll only see debugging output
+ # when rc.inet1 is called directly.
+-DEBUG_ETH_UP="no"
++DEBUG_ETH_UP="yes"
+ 
+ # Example of how to configure a bridge:
+ # Note the added "BRNICS" variable which contains a space-separated list
+diff --git a/rc.d/rc.local b/rc.d/rc.local
+index 65b358b..a73c721 100755
+--- a/rc.d/rc.local
++++ b/rc.d/rc.local
+@@ -7,3 +7,117 @@
+ # make an /etc/rc.d/rc.local_shutdown script and put those
+ # commands in there.
+ 
++# from SAK.txt (Secure Attention Key)
++#echo "control alt keycode 101 = SAK" | /bin/loadkeys
++
++if [ -x /etc/rc.d/rc.mdadm ]
++then
++  /etc/rc.d/rc.mdadm start
++fi
++
++# CIS SN.3 Enable TCP SYN Cookie Protection
++echo 1 > /proc/sys/net/ipv4/tcp_syncookies
++
++# start sysstat
++if [ -x /etc/rc.d/rc.sysstat ]
++then
++  /etc/rc.d/rc.sysstat start
++fi
++
++# Log icmp packets to syslog
++if [ -x /usr/sbin/icmpinfo ]
++then
++  echo "Starting ICMP logging:  icmpinfo -v -s -n -p -l"
++  /usr/sbin/icmpinfo -v -s -n -p -l
++fi
++
++# Enforce login time restrictions set in /etc/porttime
++if [ -x /usr/sbin/logoutd -a -f /etc/porttime ]
++then
++  echo "Starting logoutd:  /usr/sbin/logoutd"
++  /usr/sbin/logoutd
++fi
++
++# as suggested in http://slackbuilds.org/slackbuilds/13.37/network/snort/README.SLACKWARE
++if [ -x /etc/rc.d/rc.snort ]; then
++  IFACE=eth1 /etc/rc.d/rc.snort start
++fi
++
++# start arpwatch
++if [ -x /etc/rc.d/rc.arpwatch ]; then
++  /etc/rc.d/rc.arpwatch start eth0
++fi
++
++# start Tor
++#if [ -x /etc/rc.d/rc.tor-chroot ]
++#then
++#  /etc/rc.d/rc.tor-chroot start
++#elif [ -x /etc/rc.d/rc.tor ]
++#then
++#  /etc/rc.d/rc.tor start
++#fi
++if [ -x /etc/rc.d/rc.tor ]; then
++  /etc/rc.d/rc.tor start
++fi
++
++# start privoxy
++if [ -x /etc/rc.d/rc.privoxy ]; then
++  /etc/rc.d/rc.privoxy start
++fi
++
++# start auditd
++# http://slackbuilds.org/repository/13.37/system/audit/
++if [ -x /etc/rc.d/rc.auditd ]; then
++  /etc/rc.d/rc.auditd start
++fi
++
++# start snmptrapd
++if [ -x /usr/sbin/snmptrapd -a -f /etc/snmp/snmptrapd.conf ]
++then
++  echo "Starting SNMP trap daemon:  /usr/sbin/snmptrapd -c /etc/snmp/snmptrapd.conf -Ls d"
++  /usr/sbin/snmptrapd -c /etc/snmp/snmptrapd.conf -Ls d
++fi
++
++# http://slackbuilds.org/slackbuilds/13.37/network/nagios/README.SLACKWARE
++# Start nagios:
++if [ -x /etc/rc.d/rc.nagios ]; then
++  echo "Starting nagios..."
++  /etc/rc.d/rc.nagios start
++fi
++
++# http://slackbuilds.org/slackbuilds/14.0/system/apcupsd/README.SLACKWARE
++if [ -x /etc/rc.d/rc.apcupsd ]; then
++  /etc/rc.d/rc.apcupsd start
++fi
++
++# http://slackbuilds.org/slackbuilds/13.37/system/clamav/README.SLACKWARE
++# Starting ClamAV daemons
++if [ -x /etc/rc.d/rc.clamav ]; then
++  /etc/rc.d/rc.clamav start
++fi
++
++# http://slackbuilds.org/slackbuilds/13.37/network/framework/README.SLACKWARE
++# Start Metasploit Framework PostgreSQL
++if [ -x /etc/rc.d/rc.framework-postgres ]; then
++  /etc/rc.d/rc.framework-postgres start
++fi
++
++# start MRTG
++if [ -x /etc/rc.d/rc.mrtg ]
++then
++  /etc/rc.d/rc.mrtg start
++fi
++
++# start p0f
++if [ -x /etc/rc.d/rc.p0f ]
++then
++  /etc/rc.d/rc.p0f start
++fi
++
++# lock down USB
++# http://www.irongeek.com/i.php?page=security/plug-and-prey-malicious-usb-devices#3.2_Locking_down_Linux_using_UDEV
++# https://www.kernel.org/doc/Documentation/usb/authorization.txt
++for host in /sys/bus/usb/devices/usb*
++do
++  echo 0 > ${host}/authorized_default
++done
+diff --git a/rc.d/rc.local_shutdown b/rc.d/rc.local_shutdown
+new file mode 100644
+index 0000000..e6b5ebc
+--- /dev/null
++++ b/rc.d/rc.local_shutdown
+@@ -0,0 +1,77 @@
++#!/bin/sh
++#
++# /etc/rc.d/rc.local_shutdown
++#
++
++# stop firewall
++if [ -x /etc/rc.d/rc.firewall ]
++then
++  /etc/rc.d/rc.firewall stop
++fi
++
++# stop sysstat
++if [ -x /etc/rc.d/rc.sysstat ]
++then
++  # this doesn't actually do anything, but some day it might and it doesnt'
++  # hurt to have it here.
++  /etc/rc.d/rc.sysstat stop
++fi
++
++# stop icmpinfo
++if [ -x /usr/sbin/icmpinfo ]
++then
++  /usr/sbin/icmpinfo -k
++fi
++
++# stop snort
++if [ -x /etc/rc.d/rc.snort ]; then
++  /etc/rc.d/rc.snort stop
++fi
++
++# stop arpwatch
++if [ -x /etc/rc.d/rc.arpwatch ]; then
++  /etc/rc.d/rc.arpwatch stop eth0
++fi
++
++# stop Tor
++if [ -x /etc/rc.d/rc.tor ]; then
++  /etc/rc.d/rc.tor stop
++fi
++
++# stop privoxy
++if [ -x /etc/rc.d/rc.privoxy ]; then
++  /etc/rc.d/rc.privoxy stop
++fi
++
++# stop auditd
++if [ -x /etc/rc.d/rc.auditd ]; then
++  /etc/rc.d/rc.auditd stop
++fi
++
++# http://slackbuilds.org/slackbuilds/13.37/network/nagios/README.SLACKWARE
++# Stop nagios:
++if [ -x /etc/rc.d/rc.nagios ]; then
++  echo "Stopping nagios..."
++  /etc/rc.d/rc.nagios stop
++fi
++
++# stop Apcupsd
++if [ -x /etc/rc.d/rc.apcupsd ]; then
++  /etc/rc.d/rc.apcupsd stop
++fi
++
++# Stop ClamAV daemons
++if [ -x /etc/rc.d/rc.clamav ]; then
++  /etc/rc.d/rc.clamav stop
++fi
++
++# Stop Metasploit Framework PostgreSQL
++if [ -x /etc/rc.d/rc.framework-postgres ]; then
++  /etc/rc.d/rc.framework-postgres stop
++fi
++
++# stop MRTG
++if [ -x /etc/rc.d/rc.mrtg ]
++then
++  /etc/rc.d/rc.mrtg stop
++fi
+diff --git a/rc.d/rc.syslog b/rc.d/rc.syslog
+index 46208fa..e8ba416 100755
+--- a/rc.d/rc.syslog
++++ b/rc.d/rc.syslog
+@@ -3,7 +3,22 @@
+ #
+ # Written for Slackware Linux by Patrick J. Volkerding <volkerdi@slackware.com>.
+ 
++create_xconsole() {
++  # this function creates the xconsole named pipe.
++
++  XCONSOLE=/dev/xconsole
++  if [ ! -p "${XCONSOLE}" ]
++  then
++    mkfifo -m 640 "${XCONSOLE}"
++  fi
++  chown -c root:adm "${XCONSOLE}"
++  
++  return
++}
++
+ syslogd_start() {
++  umask 077
++  create_xconsole
+   if [ -x /usr/sbin/syslogd -a -x /usr/sbin/klogd ]; then
+     echo -n "Starting sysklogd daemons:  "
+     echo -n "/usr/sbin/syslogd "
+diff --git a/shutdown.allow b/shutdown.allow
+new file mode 100644
+index 0000000..6ce6c0f
+--- /dev/null
++++ b/shutdown.allow
+@@ -0,0 +1,6 @@
++#
++# shutdown.allow
++#
++#
++
++# End of shutdown.allow.
+diff --git a/skel/.bash_logout b/skel/.bash_logout
+new file mode 100644
+index 0000000..92e5200
+--- /dev/null
++++ b/skel/.bash_logout
+@@ -0,0 +1,4 @@
++/usr/bin/clear
++/usr/bin/sudo -k
++/usr/bin/ssh-agent -k 2>/dev/null
++history -c
+diff --git a/skel/.vimrc b/skel/.vimrc
+new file mode 100644
+index 0000000..f953740
+--- /dev/null
++++ b/skel/.vimrc
+@@ -0,0 +1,2 @@
++" http://vimdoc.sourceforge.net/htmldoc/editing.html#backup
++set nobackup
+diff --git a/suauth b/suauth
+new file mode 100644
+index 0000000..a867586
+--- /dev/null
++++ b/suauth
+@@ -0,0 +1,7 @@
++# from CIS Slackware Linux Benchmark v1.1
++# 8.13 Limit Access To The Root Account From su
++#root:ALL:DENY
++
++# other examples:
++ALL:ALL:DENY
++#root:ALL EXCEPT GROUP wheel:DENY
+diff --git a/sysctl.conf b/sysctl.conf
+new file mode 100644
+index 0000000..782b27d
+--- /dev/null
++++ b/sysctl.conf
+@@ -0,0 +1,103 @@
++# Following 11 lines added by CISecurity Benchmark sec 4.1
++net.ipv4.tcp_max_syn_backlog = 4096
++net.ipv4.tcp_syncookies=1
++net.ipv4.conf.all.rp_filter = 1
++net.ipv4.conf.all.accept_source_route = 0
++net.ipv4.conf.all.accept_redirects = 0
++net.ipv4.conf.all.secure_redirects = 0
++net.ipv4.conf.default.rp_filter = 1
++net.ipv4.conf.default.accept_source_route = 0
++net.ipv4.conf.default.accept_redirects = 0
++net.ipv4.conf.default.secure_redirects = 0
++net.ipv4.icmp_echo_ignore_broadcasts = 1
++
++# Following 3 lines added by CISecurity Benchmark sec 4.2
++net.ipv4.ip_forward = 0
++net.ipv4.conf.all.send_redirects = 0
++net.ipv4.conf.default.send_redirects = 0
++
++# following lines are from system-hardening-10.2.txt
++
++# Enable/Disable log spoofed, source routed,redirect packets
++net.ipv4.conf.all.log_martians = 1
++net.ipv4.conf.default.log_martians = 1
++
++# custom
++
++# use address space randomization
++#
++# -plus-
++#
++# Randomizing heap placement makes heap exploits harder, but it
++# also breaks ancient binaries (including anything libc5 based).
++#
++kernel.randomize_va_space = 2
++
++# "Any process which has changed privilege levels or is execute only will not be dumped"
++fs.suid_dumpable = 0
++
++# got the idea from:
++# https://secure.wikimedia.org/wikibooks/en/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#Larger_entropy_pools
++#kernel.random.poolsize = 8192
++
++# set this to 1, if you don't want the system to reply to ICMP ECHO requests:
++net.ipv4.icmp_echo_ignore_all = 0
++
++# 0 - disable sysrq completely
++# 4 - enable control of keyboard (SAK, unraw)
++#
++# links:
++#   - http://www.debian.org/doc/manuals/securing-debian-howto/ch4.en.html#s-restrict-sysrq
++#   - http://tldp.org/HOWTO/Remote-Serial-Console-HOWTO/security-sysrq.html
++#   - kernel.org/doc/Documentation/sysrq.txt
++#   - en.wikipedia.org/wiki/Magic_SysRq_key
++kernel.sysrq = 4
++
++# see Restrict unprivileged access to the kernel syslog (CONFIG_SECURITY_DMESG_RESTRICT) in kernel
++kernel.dmesg_restrict = 1
++
++# if the client doesn't want to talk to us... :)
++net.ipv4.tcp_synack_retries = 0
++
++# TODO: shared_media?!?
++# https://tools.ietf.org/html/rfc1620
++
++# https://www.cert.fi/haavoittuvuudet/2013/haavoittuvuus-2013-071.html
++kernel.perf_event_paranoid = 2
++
++# grsecurity
++kernel.grsecurity.linking_restrictions = 1
++kernel.grsecurity.deter_bruteforce = 1
++kernel.grsecurity.fifo_restrictions = 1
++kernel.grsecurity.ptrace_readexec = 1
++kernel.grsecurity.consistent_setxid = 1
++kernel.grsecurity.rwxmap_logging = 1
++kernel.grsecurity.signal_logging = 1
++kernel.grsecurity.forkfail_logging = 1
++kernel.grsecurity.timechange_logging = 1
++kernel.grsecurity.chroot_deny_shmat = 1
++kernel.grsecurity.chroot_deny_unix = 1
++kernel.grsecurity.chroot_deny_mount = 1
++kernel.grsecurity.chroot_deny_fchdir = 1
++kernel.grsecurity.chroot_deny_chroot = 1
++kernel.grsecurity.chroot_deny_pivot = 1
++kernel.grsecurity.chroot_enforce_chdir = 1
++kernel.grsecurity.chroot_deny_chmod = 1
++kernel.grsecurity.chroot_deny_mknod = 1
++kernel.grsecurity.chroot_restrict_nice = 1
++kernel.grsecurity.chroot_caps = 1
++kernel.grsecurity.chroot_deny_sysctl = 1
++kernel.grsecurity.tpe = 1
++kernel.grsecurity.tpe_gid = 1005
++kernel.grsecurity.tpe_invert = 1
++kernel.grsecurity.tpe_restrict_all = 1
++kernel.grsecurity.audit_mount = 1
++kernel.grsecurity.dmesg = 1
++kernel.grsecurity.chroot_findtask = 1
++kernel.grsecurity.resource_logging = 1
++kernel.grsecurity.audit_ptrace = 1
++kernel.grsecurity.harden_ptrace = 1
++kernel.grsecurity.romount_protect = 0
++
++# lock it
++kernel.grsecurity.grsec_lock = 1
+diff --git a/syslog.conf b/syslog.conf
+index 15bc5ee..a50d779 100644
+--- a/syslog.conf
++++ b/syslog.conf
+@@ -7,6 +7,26 @@
+ # Be advised this will cause a performation loss if you're using
+ # programs that do heavy logging.
+ 
++# local0 is used by dhcpcd
++# local2 is used by chat & br2684ctl
++# local4 is used by apcupsd
++# local6 is used by freshclam
++# local7 is used by Apache's "ErrorLog syslog"
++#        or psad.
++#local0.*						-/var/log/local0
++#local1.*						-/var/log/local1
++#local2.*						-/var/log/local2
++#local3.*						-/var/log/local3
++#local4.*						-/var/log/local4
++#local5.*						-/var/log/local5
++#local6.*						-/var/log/local6
++#local7.*						-/var/log/local7
++
++# log everything but the kern.debug to tty8. iptables should use the debug.
++# trust me on this one, i learned it the hard way during a DDoS attack;)
++*.*;\
++	kern.!=debug					/dev/tty8
++
+ # Uncomment this to see kernel messages on the console.
+ #kern.*							/dev/console
+ 
+@@ -14,11 +34,15 @@
+ # Exclude authpriv, cron, mail, and news.  These are logged elsewhere.
+ *.info;*.!warn;\
+ 	authpriv.none;cron.none;mail.none;news.none	-/var/log/messages
++#	local0.none;local1.none;local2.none;local3.none;\
++#	local4.none;local5.none;local6.none;local7.none	-/var/log/messages
+ 
+ # Log anything 'warn' or higher.
+ # Exclude authpriv, cron, mail, and news.  These are logged elsewhere.
+ *.warn;\
+ 	authpriv.none;cron.none;mail.none;news.none	-/var/log/syslog
++#	local0.none;local1.none;local2.none;local3.none;\
++#	local4.none;local5.none;local6.none;local7.none	-/var/log/syslog
+ 
+ # Debugging information is logged here.
+ *.=debug						-/var/log/debug
+@@ -38,6 +62,12 @@ mail.*							-/var/log/maillog
+ # This log is for news and uucp errors:
+ uucp,news.crit						-/var/log/spooler
+ 
++# Send alerts directly to the user's terminals
++# (from system-hardening-10.2.txt)
++# kern.alert is suppressed because grsec "denied resource overstep by requesting" etc.
++*.=alert;authpriv.none;kern.!=alert			root
++*.=alert;authpriv.none					|/dev/xconsole
++
+ # Uncomment these if you'd like INN to keep logs on everything.
+ # You won't need this if you don't run INN (the InterNetNews daemon).
+ #news.=crit					-/var/log/news/news.crit
