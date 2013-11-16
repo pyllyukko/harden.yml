@@ -2046,7 +2046,7 @@ do
       import_pgp_keys
       check_and_patch /etc	"${ETC_PATCH_FILE}"	1 && ETC_CHANGED=1
       check_and_patch /etc	"${SUDOERS_PATCH_FILE}"	1
-      check_and_patch /etc	"${SSH_PATCH_FILE}"	2
+      check_and_patch /etc	"${SSH_PATCH_FILE}"	1
 
       # this should be run after patching etc,
       # there might be new rc scripts.
@@ -2087,7 +2087,7 @@ do
       case "${OPTARG}" in
 	"ssh")
 	  # CIS 1.3 Configure SSH
-	  check_and_patch /etc/ssh "${SSH_PATCH_FILE}" 1 && \
+	  check_and_patch /etc "${SSH_PATCH_FILE}" 1 && \
             [ -f "/var/run/sshd.pid" -a -x "/etc/rc.d/rc.sshd" ] && \
 	      /etc/rc.d/rc.sshd restart
 	;;
@@ -2112,7 +2112,7 @@ do
       # reverse a patch
       case "${OPTARG}" in
 	"ssh")
-	  check_and_patch /etc/ssh "${SSH_PATCH_FILE}" 1 reverse && \
+	  check_and_patch /etc "${SSH_PATCH_FILE}" 1 reverse && \
 	    [ -f "/var/run/sshd.pid" -a -x "/etc/rc.d/rc.sshd" ] && \
 	      /etc/rc.d/rc.sshd restart
 	;;
