@@ -63,10 +63,10 @@ index bb40819..47d936b 100644
 +  VerifyHostKeyDNS yes
 +  HashKnownHosts yes
 diff --git a/ssh/sshd_config b/ssh/sshd_config
-index 22b9b26..2c24dac 100644
+index 22b9b26..24a0d41 100644
 --- a/ssh/sshd_config
 +++ b/ssh/sshd_config
-@@ -10,20 +10,31 @@
+@@ -10,20 +10,32 @@
  # possible, but leave them commented.  Uncommented options override the
  # default value.
  
@@ -82,6 +82,7 @@ index 22b9b26..2c24dac 100644
 +#   http://www.kb.cert.org/vuls/id/958563
 +#   https://tools.ietf.org/html/rfc4344
 +Ciphers aes256-ctr
++MACs hmac-sha2-256-etm@openssh.com,hmac-sha2-512-etm@openssh.com,hmac-sha2-256,hmac-sha2-512
 +
 +Port 22
 +AddressFamily inet
@@ -103,7 +104,7 @@ index 22b9b26..2c24dac 100644
  
  # Lifetime and size of ephemeral version 1 server key
  #KeyRegenerationInterval 1h
-@@ -34,19 +45,19 @@
+@@ -34,19 +46,19 @@
  
  # Logging
  # obsoletes QuietMode and FascistLogging
@@ -129,7 +130,7 @@ index 22b9b26..2c24dac 100644
  
  # The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
  # but this is overridden so installations will only check .ssh/authorized_keys
-@@ -58,18 +69,18 @@ AuthorizedKeysFile	.ssh/authorized_keys
+@@ -58,18 +70,18 @@ AuthorizedKeysFile	.ssh/authorized_keys
  #AuthorizedKeysCommandUser nobody
  
  # For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
@@ -152,7 +153,7 @@ index 22b9b26..2c24dac 100644
  
  # Change to no to disable s/key passwords
  #ChallengeResponseAuthentication yes
-@@ -84,6 +95,8 @@ AuthorizedKeysFile	.ssh/authorized_keys
+@@ -84,6 +96,8 @@ AuthorizedKeysFile	.ssh/authorized_keys
  #GSSAPIAuthentication no
  #GSSAPICleanupCredentials yes
  
@@ -161,7 +162,7 @@ index 22b9b26..2c24dac 100644
  # Set this to 'yes' to enable PAM authentication, account processing, 
  # and session processing. If this is enabled, PAM authentication will 
  # be allowed through the ChallengeResponseAuthentication and
-@@ -101,17 +114,17 @@ AuthorizedKeysFile	.ssh/authorized_keys
+@@ -101,17 +115,17 @@ AuthorizedKeysFile	.ssh/authorized_keys
  #X11Forwarding no
  #X11DisplayOffset 10
  #X11UseLocalhost yes
