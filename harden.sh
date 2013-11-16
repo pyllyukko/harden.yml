@@ -214,7 +214,7 @@ declare -r ETC_PATCH_FILE="harden_etc-${ETC_PATCH_VERSION}.patch"
 #declare -r APACHE_PATCH_FILE="harden_apache-${APACHE_PATCH_VERSION}.patch"
 #declare -r APACHE_PATCH_MODULES_X86_64_FILE="harden_apache-2.2.17-modules-x86_64-20110330.patch"
 #declare -r APACHE_PATCH_MODULES_X86_FILE="harden_apache-2.2.17-modules-x86-20110424.patch"
-declare -r SSH_PATCH_FILE="ssh_harden.patch"
+declare -r SSH_PATCH_FILE="ssh_harden-6.3p1.patch"
 declare -r SENDMAIL_PATCH_FILE="sendmail_harden.patch"
 declare -r SUDOERS_PATCH_VERSION="1.8.5p2"
 declare -r SUDOERS_PATCH_FILE="sudoers-${SUDOERS_PATCH_VERSION}.patch"
@@ -2046,7 +2046,7 @@ do
       import_pgp_keys
       check_and_patch /etc	"${ETC_PATCH_FILE}"	1 && ETC_CHANGED=1
       check_and_patch /etc	"${SUDOERS_PATCH_FILE}"	1
-      check_and_patch /etc/ssh	"${SSH_PATCH_FILE}"	1
+      check_and_patch /etc	"${SSH_PATCH_FILE}"	1
 
       # this should be run after patching etc,
       # there might be new rc scripts.
