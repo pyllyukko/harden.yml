@@ -1,0 +1,187 @@
+diff --git a/rc.d/rc.sshd b/rc.d/rc.sshd
+index cb2dfa4..f2d5733 100755
+--- a/rc.d/rc.sshd
++++ b/rc.d/rc.sshd
+@@ -3,17 +3,17 @@
+ 
+ sshd_start() {
+   # Create host keys if needed.
+-  if [ ! -r /etc/ssh/ssh_host_key ]; then
+-    /usr/bin/ssh-keygen -t rsa1 -f /etc/ssh/ssh_host_key -N '' 
+-  fi
+-  if [ ! -f /etc/ssh/ssh_host_dsa_key ]; then
+-    /usr/bin/ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key -N ''
+-  fi
++  #if [ ! -r /etc/ssh/ssh_host_key ]; then
++  #  /usr/bin/ssh-keygen -t rsa1 -f /etc/ssh/ssh_host_key -N '' 
++  #fi
++  #if [ ! -f /etc/ssh/ssh_host_dsa_key ]; then
++  #  /usr/bin/ssh-keygen -t dsa -f /etc/ssh/ssh_host_dsa_key -N ''
++  #fi
+   if [ ! -f /etc/ssh/ssh_host_rsa_key ]; then
+-    /usr/bin/ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ''
++    /usr/bin/ssh-keygen -t rsa -b 8192 -f /etc/ssh/ssh_host_rsa_key -N ''
+   fi
+   if [ ! -f /etc/ssh/ssh_host_ecdsa_key ]; then
+-    /usr/bin/ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
++    /usr/bin/ssh-keygen -t ecdsa -b 521 -f /etc/ssh/ssh_host_ecdsa_key -N ''
+   fi
+   /usr/sbin/sshd
+ }
+diff --git a/ssh/ssh_config b/ssh/ssh_config
+index bb40819..47d936b 100644
+--- a/ssh/ssh_config
++++ b/ssh/ssh_config
+@@ -17,7 +17,7 @@
+ # list of available options, their meanings and defaults, please see the
+ # ssh_config(5) man page.
+ 
+-# Host *
++Host *
+ #   ForwardAgent no
+ #   ForwardX11 no
+ #   RhostsRSAAuthentication no
+@@ -35,14 +35,17 @@
+ #   IdentityFile ~/.ssh/id_rsa
+ #   IdentityFile ~/.ssh/id_dsa
+ #   Port 22
+-#   Protocol 2,1
++  Protocol 2
+ #   Cipher 3des
+-#   Ciphers aes128-ctr,aes192-ctr,aes256-ctr,arcfour256,arcfour128,aes128-cbc,3des-cbc
++  Ciphers aes256-ctr
+ #   MACs hmac-md5,hmac-sha1,umac-64@openssh.com,hmac-ripemd160
+ #   EscapeChar ~
+ #   Tunnel no
+ #   TunnelDevice any:any
+ #   PermitLocalCommand no
+-#   VisualHostKey no
++  VisualHostKey yes
+ #   ProxyCommand ssh -q -W %h:%p gateway.example.com
+ #   RekeyLimit 1G 1h
++  LogLevel VERBOSE
++  VerifyHostKeyDNS yes
++  HashKnownHosts yes
+diff --git a/ssh/sshd_config b/ssh/sshd_config
+index 22b9b26..2c24dac 100644
+--- a/ssh/sshd_config
++++ b/ssh/sshd_config
+@@ -10,20 +10,31 @@
+ # possible, but leave them commented.  Uncommented options override the
+ # default value.
+ 
+-#Port 22
+-#AddressFamily any
++# as suggested in the NSA guide (3.5.2.2 Limit Users' SSH Access)
++#AllowUsers
++AllowGroups users
++
++# as suggested in the NSA guide (3.5.2.10 Use Only Approved Ciphers in Counter Mode)
++#
++# more info:
++#   http://www.kb.cert.org/vuls/id/958563
++#   https://tools.ietf.org/html/rfc4344
++Ciphers aes256-ctr
++
++Port 22
++AddressFamily inet
+ #ListenAddress 0.0.0.0
+ #ListenAddress ::
+ 
+ # The default requires explicit activation of protocol 1
+-#Protocol 2
++Protocol 2
+ 
+ # HostKey for protocol version 1
+ #HostKey /etc/ssh/ssh_host_key
+ # HostKeys for protocol version 2
+-#HostKey /etc/ssh/ssh_host_rsa_key
++HostKey /etc/ssh/ssh_host_rsa_key
+ #HostKey /etc/ssh/ssh_host_dsa_key
+-#HostKey /etc/ssh/ssh_host_ecdsa_key
++HostKey /etc/ssh/ssh_host_ecdsa_key
+ 
+ # Lifetime and size of ephemeral version 1 server key
+ #KeyRegenerationInterval 1h
+@@ -34,19 +45,19 @@
+ 
+ # Logging
+ # obsoletes QuietMode and FascistLogging
+-#SyslogFacility AUTH
+-#LogLevel INFO
++SyslogFacility AUTH
++LogLevel VERBOSE
+ 
+ # Authentication:
+ 
+ #LoginGraceTime 2m
+-#PermitRootLogin yes
+-#StrictModes yes
+-#MaxAuthTries 6
++PermitRootLogin no
++StrictModes yes
++MaxAuthTries 6
+ #MaxSessions 10
+ 
+ #RSAAuthentication yes
+-#PubkeyAuthentication yes
++PubkeyAuthentication yes
+ 
+ # The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
+ # but this is overridden so installations will only check .ssh/authorized_keys
+@@ -58,18 +69,18 @@ AuthorizedKeysFile	.ssh/authorized_keys
+ #AuthorizedKeysCommandUser nobody
+ 
+ # For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
+-#RhostsRSAAuthentication no
++RhostsRSAAuthentication no
+ # similar for protocol version 2
+-#HostbasedAuthentication no
++HostbasedAuthentication no
+ # Change to yes if you don't trust ~/.ssh/known_hosts for
+ # RhostsRSAAuthentication and HostbasedAuthentication
+ #IgnoreUserKnownHosts no
+ # Don't read the user's ~/.rhosts and ~/.shosts files
+-#IgnoreRhosts yes
++IgnoreRhosts yes
+ 
+ # To disable tunneled clear text passwords, change to no here!
+ #PasswordAuthentication yes
+-#PermitEmptyPasswords no
++PermitEmptyPasswords no
+ 
+ # Change to no to disable s/key passwords
+ #ChallengeResponseAuthentication yes
+@@ -84,6 +95,8 @@ AuthorizedKeysFile	.ssh/authorized_keys
+ #GSSAPIAuthentication no
+ #GSSAPICleanupCredentials yes
+ 
++KbdInteractiveAuthentication no
++
+ # Set this to 'yes' to enable PAM authentication, account processing, 
+ # and session processing. If this is enabled, PAM authentication will 
+ # be allowed through the ChallengeResponseAuthentication and
+@@ -101,17 +114,17 @@ AuthorizedKeysFile	.ssh/authorized_keys
+ #X11Forwarding no
+ #X11DisplayOffset 10
+ #X11UseLocalhost yes
+-#PrintMotd yes
+-#PrintLastLog yes
+-#TCPKeepAlive yes
+-#UseLogin no
++PrintMotd yes
++PrintLastLog yes
++TCPKeepAlive yes
++UseLogin no
+ UsePrivilegeSeparation sandbox		# Default for new installations.
+-#PermitUserEnvironment no
++PermitUserEnvironment no
+ #Compression delayed
+ #ClientAliveInterval 0
+ #ClientAliveCountMax 3
+ #UseDNS yes
+-#PidFile /var/run/sshd.pid
++PidFile /var/run/sshd.pid
+ #MaxStartups 10:30:100
+ #PermitTunnel no
+ #ChrootDirectory none
