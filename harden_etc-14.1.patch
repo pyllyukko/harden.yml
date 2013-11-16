@@ -1,10 +1,3 @@
-diff --git a/cron.d/rsync_slackware_patches b/cron.d/rsync_slackware_patches
-new file mode 100644
-index 0000000..fc1597d
---- /dev/null
-+++ b/cron.d/rsync_slackware_patches
-@@ -0,0 +1 @@
-+#33 5 * * * SLACKTREE=/mnt/lacie/slackware test -x /usr/local/sbin/rsync_slackware_patches.sh && /usr/local/sbin/rsync_slackware_patches.sh -q -r 14.0 -a x86
 diff --git a/cron.d/sysstat b/cron.d/sysstat
 new file mode 100644
 index 0000000..09356ad
@@ -835,7 +828,7 @@ index 8288128..2c3a633 100755
  /bin/mount -v -n -o remount,ro /
  
 diff --git a/rc.d/rc.M b/rc.d/rc.M
-index d9b3fed..7e35d96 100755
+index d9b3fed..8b13db7 100755
 --- a/rc.d/rc.M
 +++ b/rc.d/rc.M
 @@ -46,6 +46,8 @@ else
@@ -855,8 +848,12 @@ index d9b3fed..7e35d96 100755
  
  # Remove stale hunt sockets so the game can start.
  if [ -r /tmp/hunt -o -r /tmp/hunt.stats ]; then
-@@ -272,10 +275,11 @@ if [ -x /usr/sbin/crond ]; then
-   /usr/sbin/crond -l notice
+@@ -269,13 +272,14 @@ fi
+ # If you want cron to actually log activity to /var/log/cron, then change
+ # -l notice to -l info to increase the logging level.
+ if [ -x /usr/sbin/crond ]; then
+-  /usr/sbin/crond -l notice
++  /usr/sbin/crond -l info
  fi
  
 +# this should support CIS 7.5 Restrict at/cron To Authorized Users
