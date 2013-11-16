@@ -106,13 +106,11 @@ then
 fi
 echo -n $'\n'
 
-pushd ssh
-patch -p1 -t --dry-run 0<../../../../ssh_harden.patch
+patch -p1 -t --dry-run 0<../../../ssh_harden-6.3p1.patch
 if [ ${?} -ne 0 ]
 then
   echo "WARNING: something wrong!" 1>&2
 fi
-popd
 
 popd
 echo -n $'\n'
