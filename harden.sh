@@ -1402,6 +1402,7 @@ function create_ftpusers() {
   # NOTE: this should be run periodically, since it's a blacklist and
   #       additional user accounts might be created after this.
 
+  echo "${FUNCNAME}(): adding to /etc/ftpusers:"
   # get the login names
   for NAME in `cut -d: -f1 /etc/passwd`
   do
@@ -1410,7 +1411,7 @@ function create_ftpusers() {
       # add the name to ftpusers only if it's not already in there.
       # this should work whether the ftpusers file exists already or not.
       grep -q "^${NAME}$" /etc/ftpusers 2>/dev/null || {
-	echo "${FUNCNAME}(): adding to /etc/ftpusers: \`${NAME}'"
+	echo "  \`${NAME}'"
 	echo "${NAME}" 1>> /etc/ftpusers
       }
     fi
