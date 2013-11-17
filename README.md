@@ -221,6 +221,7 @@ You should also consider running [grsecurity](https://grsecurity.net/). Here's f
 * http://www.sudo.ws/repos/sudo/rev/5b964ea43474
 * http://anonscm.debian.org/viewvc/pkg-shadow?view=revision&revision=3558
 * http://sourceforge.net/p/logwatch/bugs/19/
+* A bug in Metasploit's installer, where it assumes that /bin/bash is the default shell for new users (bug #7666 in some hidden Metasploit Pro tracker)
 
 TODO
 ----
