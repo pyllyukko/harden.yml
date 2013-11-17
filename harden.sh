@@ -508,7 +508,7 @@ function import_pgp_keys() {
   for URL in ${PGP_URLS[*]}
   do
     # after importing these keys, we can verify slackware packages with gpgv
-    /usr/bin/wget --tries=5 "${URL}" --output-document=- | gpg --keyring "${GPG_KEYRING}" --no-default-keyring --import -
+    /usr/bin/wget --tries=5 "${URL}" -nv --output-document=- | gpg --keyring "${GPG_KEYRING}" --no-default-keyring --import -
   done
   # keys with key ID
   # set is to avoid "./harden.sh: line 427: PGP_KEYSERVERS[${PGP_KEY}]: unbound variable"
