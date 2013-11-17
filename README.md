@@ -232,6 +232,8 @@ TODO
 * Some chroot stuff?
 * User quotas
 * Static ARP cache
+* Logging of the script actions
+* aide.conf.new
 
 References
 ----------
