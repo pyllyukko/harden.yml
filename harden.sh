@@ -293,6 +293,7 @@ declare -ra PGP_URLS=(
   "http://www.wangafu.net/~nickm/public_key.asc"
   "https://www.truecrypt.org/download/TrueCrypt-Foundation-Public-Key.asc"
   "https://tails.boum.org/tails-signing.key"
+  "https://grsecurity.net/spender-gpg-key.asc"
 )
 
 # other PGP keys:
@@ -343,7 +344,7 @@ declare -ra PGP_KEYS=(
   "63FEE659"
   "6294BE9B"
   "9624FCD2"
-  "4245D46A"
+  #"4245D46A"
   "6092693E"
   "DDC6C0AD"
   "C52175E2"
