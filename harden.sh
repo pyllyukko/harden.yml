@@ -1600,7 +1600,7 @@ EOF
   then
     touch /var/log/boot
     chown -c root:adm	/var/log/boot
-    chmod -c 644	/var/log/boot
+    chmod -c 640	/var/log/boot
   fi
 
   # Debian specific
