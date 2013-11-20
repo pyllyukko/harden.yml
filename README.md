@@ -47,7 +47,10 @@ What does it do?
   * Sets the maximum size of core files created (ulimit -c)
   * Sets a session timeout (TMOUT) in certain conditions
   * Sets a maximum number of failed login attempts (faillog)
-  * Sets stricter umask
+  * Sets stricter umask in all the following locations:
+    * /etc/login.defs
+    * /etc/limits
+    * /etc/profile
 * Configures shells
   * Creates an option to use restricted bash (rbash)
     * Also sets it as default for new users
