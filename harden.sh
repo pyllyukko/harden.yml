@@ -518,18 +518,46 @@ function import_pgp_keys() {
     # after importing these keys, we can verify slackware packages with gpgv
     /usr/bin/wget --tries=5 "${URL}" -nv --output-document=- | gpg --keyring "${GPG_KEYRING}" --no-default-keyring --import -
   done
+  # https://support.mayfirst.org/wiki/faq/security/mfpl-certificate-authority
+  # https://en.wikipedia.org/wiki/Key_server_%28cryptographic%29#Keyserver_examples
+  # https://we.riseup.net/riseuplabs+paow/openpgp-best-practices#consider-making-your-default-keyserver-use-a-keyse
+  if [ ! -d /usr/local/share/ca-certificates ]
+  then
+    mkdir -pvm 755 /usr/local/share/ca-certificates
+  fi
+  if [ ! -f /usr/local/share/ca-certificates/mfpl.crt ]
+  then
+    wget -nv --directory-prefix=/usr/local/share/ca-certificates \
+      https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt \
+      https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.dkg.asc \
+      https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.jamie.asc
+    chmod -c 644 /usr/local/share/ca-certificates/mfpl.crt
+  fi
+  if [ ! -f /usr/local/share/ca-certificates/sks-keyservers.netCA.pem ]
+  then
+    # https://www.sks-keyservers.net/overview-of-pools.php
+    wget -nv --directory-prefix=/usr/local/share/ca-certificates \
+      https://sks-keyservers.net/sks-keyservers.netCA.pem \
+      https://sks-keyservers.net/sks-keyservers.netCA.pem.asc
+    chmod -c 644 /usr/local/share/ca-certificates/sks-keyservers.netCA.pem
+  fi
   # keys with key ID
   # set is to avoid "./harden.sh: line 427: PGP_KEYSERVERS[${PGP_KEY}]: unbound variable"
   set +u
   for PGP_KEY in ${PGP_KEYS[*]}
   do
-    if [ -n "${PGP_KEYSERVERS[${PGP_KEY}]}" ]
-    then
-      KEYSERVER="${PGP_KEYSERVERS[${PGP_KEY}]}"
-    else
-      KEYSERVER="${DEFAULT_KEYSERVER}"
-    fi
-    /usr/bin/gpg --keyserver "hkp://${KEYSERVER}" --keyring "${GPG_KEYRING}" --no-default-keyring --recv-keys "${PGP_KEY}"
+    #if [ -n "${PGP_KEYSERVERS[${PGP_KEY}]}" ]
+    #then
+    #  KEYSERVER="${PGP_KEYSERVERS[${PGP_KEY}]}"
+    #else
+    #  KEYSERVER="${DEFAULT_KEYSERVER}"
+    #fi
+    #/usr/bin/gpg --keyserver "hkp://${KEYSERVER}" --keyring "${GPG_KEYRING}" --no-default-keyring --recv-keys "${PGP_KEY}"
+    /usr/bin/gpg \
+      --keyserver "hkps://hkps.pool.sks-keyservers.net" \
+      --keyserver-options ca-cert-file=/usr/local/share/ca-certificates/sks-keyservers.netCA.pem \
+      --keyring "${GPG_KEYRING}" --no-default-keyring \
+      --recv-keys "${PGP_KEY}"
   done
   set -u
   return 0
@@ -1553,19 +1581,6 @@ EOF
   then
     /usr/sbin/update-ca-certificates -v
   fi
-
-  # https://support.mayfirst.org/wiki/faq/security/mfpl-certificate-authority
-  # https://en.wikipedia.org/wiki/Key_server_%28cryptographic%29#Keyserver_examples
-  # https://we.riseup.net/riseuplabs+paow/openpgp-best-practices#consider-making-your-default-keyserver-use-a-keyse
-  mkdir -pvm 755 /usr/local/share/ca-certificates
-  wget -nv --directory-prefix=/usr/local/share/ca-certificates \
-    https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt \
-    https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.dkg.asc \
-    https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.jamie.asc
-  # https://www.sks-keyservers.net/overview-of-pools.php
-  wget -nv --directory-prefix=/usr/local/share/ca-certificates \
-    https://sks-keyservers.net/sks-keyservers.netCA.pem \
-    https://sks-keyservers.net/sks-keyservers.netCA.pem.asc
 
   # make installpkg store the MD5 checksums
   sed -i 's/^\(MD5SUM\)=0$/\1=1/' /sbin/installpkg
