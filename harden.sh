@@ -1546,6 +1546,15 @@ EOF
     /usr/sbin/update-ca-certificates -v
   fi
 
+  # https://support.mayfirst.org/wiki/faq/security/mfpl-certificate-authority
+  # https://en.wikipedia.org/wiki/Key_server_%28cryptographic%29#Keyserver_examples
+  # https://we.riseup.net/riseuplabs+paow/openpgp-best-practices#consider-making-your-default-keyserver-use-a-keyse
+  mkdir -pvm 755 /usr/local/share/ca-certificates
+  wget -nv --directory-prefix=/usr/local/share/ca-certificates \
+    https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt \
+    https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.dkg.asc \
+    https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.jamie.asc
+
   # make installpkg store the MD5 checksums
   sed -i 's/^\(MD5SUM\)=0$/\1=1/' /sbin/installpkg
 
