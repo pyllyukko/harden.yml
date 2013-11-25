@@ -298,6 +298,8 @@ declare -ra PGP_URLS=(
 
 # other PGP keys:
 #
+# TODO: make these use long key format
+#
 #   metasploit keys:
 
 #   - CEA0A321 - James Lee <egypt@metasploit.com>
