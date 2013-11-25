@@ -1563,7 +1563,7 @@ EOF
     https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.dkg.asc \
     https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.jamie.asc
   # https://www.sks-keyservers.net/overview-of-pools.php
-  wget -nv --directory-prefix=/usr/local/share/ca-certificates --no-check-certificate \
+  wget -nv --directory-prefix=/usr/local/share/ca-certificates \
     https://sks-keyservers.net/sks-keyservers.netCA.pem \
     https://sks-keyservers.net/sks-keyservers.netCA.pem.asc
 
