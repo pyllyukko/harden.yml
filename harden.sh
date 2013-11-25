@@ -335,6 +335,7 @@ declare -ra PGP_URLS=(
 #   - 15A0A4BC - Mozilla Software Releases <releases@mozilla.org>
 #   - 5F2E4935 - https://support.mayfirst.org/wiki/faq/security/mfpl-certificate-authority Jamie McClelland <jamie@mayfirst.org>
 #     D21739E9   dkg
+#   - 0x0B7F8B60E3EDFAE3 - https://www.sks-keyservers.net/overview-of-pools.php
 declare -ra PGP_KEYS=(
   #"CEA0A321"
   #"060798CB"
@@ -362,6 +363,7 @@ declare -ra PGP_KEYS=(
   "15A0A4BC"
   "5F2E4935"
   "D21739E9"
+  "0x0B7F8B60E3EDFAE3"
 )
 # if there is a recommended/suggested server for a key
 declare -rA PGP_KEYSERVERS=(
@@ -1560,6 +1562,10 @@ EOF
     https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt \
     https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.dkg.asc \
     https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.jamie.asc
+  # https://www.sks-keyservers.net/overview-of-pools.php
+  wget -nv --directory-prefix=/usr/local/share/ca-certificates --no-check-certificate \
+    https://sks-keyservers.net/sks-keyservers.netCA.pem \
+    https://sks-keyservers.net/sks-keyservers.netCA.pem.asc
 
   # make installpkg store the MD5 checksums
   sed -i 's/^\(MD5SUM\)=0$/\1=1/' /sbin/installpkg
