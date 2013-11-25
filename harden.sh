@@ -333,6 +333,8 @@ declare -ra PGP_URLS=(
 #   - C52175E2 - Mozilla Software Releases <releases@mozilla.org>
 #   - 14595A1A - Renaud Deraison (Nessus)
 #   - 15A0A4BC - Mozilla Software Releases <releases@mozilla.org>
+#   - 5F2E4935 - https://support.mayfirst.org/wiki/faq/security/mfpl-certificate-authority Jamie McClelland <jamie@mayfirst.org>
+#     D21739E9   dkg
 declare -ra PGP_KEYS=(
   #"CEA0A321"
   #"060798CB"
@@ -358,6 +360,8 @@ declare -ra PGP_KEYS=(
   "C52175E2"
   "14595A1A"
   "15A0A4BC"
+  "5F2E4935"
+  "D21739E9"
 )
 # if there is a recommended/suggested server for a key
 declare -rA PGP_KEYSERVERS=(
