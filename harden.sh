@@ -518,6 +518,9 @@ function import_pgp_keys() {
     # after importing these keys, we can verify slackware packages with gpgv
     /usr/bin/wget --tries=5 "${URL}" -nv --output-document=- | gpg --keyring "${GPG_KEYRING}" --no-default-keyring --import -
   done
+
+  # some CAs that are used with HKPS
+  #
   # https://support.mayfirst.org/wiki/faq/security/mfpl-certificate-authority
   # https://en.wikipedia.org/wiki/Key_server_%28cryptographic%29#Keyserver_examples
   # https://we.riseup.net/riseuplabs+paow/openpgp-best-practices#consider-making-your-default-keyserver-use-a-keyse
@@ -536,10 +539,29 @@ function import_pgp_keys() {
   if [ ! -f /usr/local/share/ca-certificates/sks-keyservers.netCA.pem ]
   then
     # https://www.sks-keyservers.net/overview-of-pools.php
-    wget -nv --directory-prefix=/usr/local/share/ca-certificates \
-      https://sks-keyservers.net/sks-keyservers.netCA.pem \
-      https://sks-keyservers.net/sks-keyservers.netCA.pem.asc
-    chmod -c 644 /usr/local/share/ca-certificates/sks-keyservers.netCA.pem
+
+    #wget -nv --directory-prefix=/usr/local/share/ca-certificates \
+    #  https://sks-keyservers.net/sks-keyservers.netCA.pem \
+    #  https://sks-keyservers.net/sks-keyservers.netCA.pem.asc
+
+    # get the sks-keyservers CA and verify the HTTPS cert against thawte.
+    # this is really frigging odd, if i don't specify the --capath in Debian,
+    # it verifies against /etc/ssl/certs. on Slackware it doesn't, but i
+    # specified it just in case. we want to verify against thawte and not all
+    # of the CAs!
+    #
+    # https://www.sks-keyservers.net/verify_tls.php
+    curl \
+      --capath /var/empty \
+      --cacert /usr/share/ca-certificates/mozilla/Thawte_Premium_Server_CA.crt \
+      'https://sks-keyservers.net/sks-keyservers.netCA.{pem,pem.asc}' \
+      -o '/usr/local/share/ca-certificates/sks-keyservers.netCA.#1'
+    if [ ${?} -ne 0 ]
+    then
+      echo "${FUNCNAME}(): error: could not download sks-keyservers CA. can not continue!" 1>&2
+      return 1
+    fi
+    chmod -c 644 /usr/local/share/ca-certificates/sks-keyservers.netCA.{pem,pem.asc}
   fi
   # keys with key ID
   # set is to avoid "./harden.sh: line 427: PGP_KEYSERVERS[${PGP_KEY}]: unbound variable"
