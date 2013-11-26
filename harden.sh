@@ -324,13 +324,11 @@ declare -ra PGP_URLS=(
 #                https://grsecurity.net/contact.php
 #   - 6092693E - https://www.kernel.org/signature.html
 #   - DDC6C0AD - https://www.torproject.org/torbutton/
-#   - C52175E2 - http://releases.mozilla.org/pub/mozilla.org/firefox/releases/3.6.28/KEY
 #   - 1FC730C1 - Bitcoin
 #   - 73647CFF - Nico Golde (Debian Advisories)
 #   - 86FF9C48 - Damien Miller (Personal Key) <djm@mindrot.org> (OpenSSH)
 #   - 77F95F95 - Werner Koch <wk@gnupg.org> (gnupg-announce@gnupg.org)
 #   - 54FC8640 - Debian security advisory
-#   - C52175E2 - Mozilla Software Releases <releases@mozilla.org>
 #   - 14595A1A - Renaud Deraison (Nessus)
 #   - 15A0A4BC - Mozilla Software Releases <releases@mozilla.org>
 #   - 5F2E4935 - https://support.mayfirst.org/wiki/faq/security/mfpl-certificate-authority Jamie McClelland <jamie@mayfirst.org>
@@ -352,13 +350,11 @@ declare -ra PGP_KEYS=(
   #"4245D46A"
   "6092693E"
   "DDC6C0AD"
-  "C52175E2"
   "1FC730C1"
   "73647CFF"
   "86FF9C48"
   "77F95F95"
   "54FC8640"
-  "C52175E2"
   "14595A1A"
   "15A0A4BC"
   "5F2E4935"
