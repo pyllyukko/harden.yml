@@ -298,13 +298,10 @@ declare -ra PGP_URLS=(
 
 # other PGP keys:
 #
-# TODO: make these use long key format
-#
 #   metasploit keys:
 
 #   - CEA0A321 - James Lee <egypt@metasploit.com>
 #                (metasploit project signing key)
-#   x 61355B9E - HD Moore (revoked) (not fetched)
 #   - 060798CB - HD Moore (2011-10-06) (latest?)
 #   - 2007B954 - metasploit (18.6.2013)
 #
@@ -334,32 +331,34 @@ declare -ra PGP_URLS=(
 #   - 5F2E4935 - https://support.mayfirst.org/wiki/faq/security/mfpl-certificate-authority Jamie McClelland <jamie@mayfirst.org>
 #     D21739E9   dkg
 #   - 0x0B7F8B60E3EDFAE3 - https://www.sks-keyservers.net/overview-of-pools.php
+#   - 0x2E8DD26C53F1197DDF403E6118E667F1EB8AF314 - https://web.monkeysphere.info/archive-key/
 declare -ra PGP_KEYS=(
   #"CEA0A321"
   #"060798CB"
-  "2007B954"
+  "0xCDFB5FA52007B954"
 
   "28988BF5"
-  "19F78451"
-  "6980F8B0"
-  "D679F6CF"
-  "BF2EA563"
-  "63FEE659"
-  "6294BE9B"
-  "9624FCD2"
+  "0xC218525819F78451"
+  "0x8050C35A6980F8B0"
+  "0x9DEB46C0D679F6CF"
+  "0x48C5521FBF2EA563"
+  "0x416F061063FEE659"
+  "0xDA87E80D6294BE9B"
+  "0xC976607D9624FCD2"
   #"4245D46A"
-  "6092693E"
-  "DDC6C0AD"
-  "1FC730C1"
-  "73647CFF"
-  "86FF9C48"
-  "77F95F95"
-  "54FC8640"
-  "14595A1A"
-  "15A0A4BC"
-  "5F2E4935"
-  "D21739E9"
+  "0x38DBBDC86092693E"
+  "0x1B0CA30CDDC6C0AD"
+  "0x29D9EE6B1FC730C1"
+  "0x1D87E54973647CFF"
+  "0xCE8ECB0386FF9C48"
+  "0x4F0540D577F95F95"
+  "0x1BF83C5E54FC8640"
+  "0xF091044D14595A1A"
+  "0x057CC3EB15A0A4BC"
+  "0xBB0B7EE15F2E4935"
+  "0xCCD2ED94D21739E9"
   "0x0B7F8B60E3EDFAE3"
+  "0x2E8DD26C53F1197DDF403E6118E667F1EB8AF314"
 )
 # if there is a recommended/suggested server for a key
 declare -rA PGP_KEYSERVERS=(
