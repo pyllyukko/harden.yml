@@ -91,7 +91,7 @@ What does it do?
 * System accounting (sysstat)
 * [SBo](http://slackbuilds.org/) related (if installed):
   * Snort
-  * [arpwatch](http://slackbuilds.org/repository/14.1/network/arpwatch/)
+  * [arpwatch][6]
   * Tor
   * Privoxy
   * [audit][5]
@@ -193,18 +193,18 @@ Notes
 There is a bunch of security related software that you can find at [SBo](http://slackbuilds.org/). You could consider installing these for additional security.
 
 * [HIDS](https://en.wikipedia.org/wiki/Host-based_intrusion_detection_system):
-  * [Tiger](http://slackbuilds.org/repository/14.0/system/tiger/)
-  * [Aide](http://slackbuilds.org/repository/14.0/system/aide/)
-  * [rkhunter](http://slackbuilds.org/repository/14.0/system/rkhunter/)
+  * [Tiger](http://slackbuilds.org/repository/14.1/system/tiger/)
+  * [Aide](http://slackbuilds.org/repository/14.1/system/aide/)
+  * [rkhunter](http://slackbuilds.org/repository/14.1/system/rkhunter/)
   * [audit][5]
-  * [chkrootkit](http://slackbuilds.org/repository/14.0/system/chkrootkit/)
+  * [chkrootkit](http://slackbuilds.org/repository/14.1/system/chkrootkit/)
 * Network related:
-  * [arpwatch](http://slackbuilds.org/repository/14.0/network/arpwatch/)
+  * [arpwatch][6]
   * [p0f][3]
 * Antivirus:
   * [ClamAV][4]
 * Other:
-  * [vlock](http://slackbuilds.org/repository/14.0/system/vlock/)
+  * [vlock](http://slackbuilds.org/repository/14.1/system/vlock/)
 
 And from other sources than SBo:
 * [logwatch](http://slackware.com/~alien/slackbuilds/logwatch/)
@@ -216,8 +216,8 @@ And from other sources than SBo:
 You should also consider running [grsecurity](https://grsecurity.net/). Here's few links to get you started:
 * [My packaging scripts](https://github.com/pyllyukko/grsec_confnbuild)
 * [SlackPaX](http://sourceforge.net/projects/slackpax/) (haven't tried this personally)
-* [gradm SlackBuild](http://slackbuilds.org/repository/14.0/system/gradm/)
-* [paxctl SlackBuild](http://slackbuilds.org/repository/14.0/system/paxctl/)
+* [gradm SlackBuild](http://slackbuilds.org/repository/14.1/system/gradm/)
+* [paxctl SlackBuild](http://slackbuilds.org/repository/14.1/system/paxctl/)
 
 ### Bugs discovered during the making :)
 
@@ -265,3 +265,4 @@ Some of these documents are quite old, but most of the stuff still applies.
 [3]: http://slackbuilds.org/repository/14.1/network/p0f/
 [4]: http://slackbuilds.org/repository/14.1/system/clamav/
 [5]: http://slackbuilds.org/repository/14.1/system/audit/
+[6]: http://slackbuilds.org/repository/14.1/network/arpwatch/
