@@ -6,10 +6,11 @@ This is a script and a set of patch files to [harden](https://en.wikipedia.org/w
 Why I made this
 ---------------
 
-* No Bastille for Slackware
-* Not a member of CIS, so no downloading of the ready made scripts
+* No [Bastille](http://bastille-linux.org/) for Slackware (and it's not updated anymore anyway)
+* Not a member of [CIS](http://www.cisecurity.org/), so no downloading of the ready made scripts
 * For learning
 * For minimizing the effort needed to tweak fresh installations
+  * Also for consistency
 
 How does it work?
 -----------------
@@ -60,7 +61,7 @@ What does it do?
 * Restricts logins
   * /etc/login.access
   * /etc/porttime
-  * /etc/limits
+  * ~~/etc/limits~~
   * /etc/login.defs
     * Disallow logins if home dir does not exist
   * SSH *AllowGroups users*
