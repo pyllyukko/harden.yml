@@ -42,7 +42,7 @@ What does it do?
   * Lock the user's password
   * Sets shell to /sbin/nologin
   * Expire the account
-  * Adds the accounts to /etc/ftpusers
+  * Adds the accounts to [/etc/ftpusers](http://linux.die.net/man/5/ftpusers)
 * Sets restrictions for normal users
   * Sets the [maximum number of processes available to a single user](https://en.wikipedia.org/wiki/Fork_bomb#Prevention) (ulimit -u)
   * Sets the maximum size of core files created (ulimit -c)
@@ -87,19 +87,19 @@ What does it do?
 * Through rc.local:
   * logoutd
   * icmpinfo
-* Process accounting (acct)
+* [Process accounting](http://www.tldp.org/HOWTO/Process-Accounting/) (acct)
 * System accounting (sysstat)
 * [SBo](http://slackbuilds.org/) related (if installed):
   * Snort
-  * arpwatch
+  * [arpwatch](http://slackbuilds.org/repository/14.1/network/arpwatch/)
   * Tor
   * Privoxy
-  * auditd
+  * [audit][5]
   * Nagios
   * Apcupsd
-  * ClamAV
+  * [ClamAV][4]
   * Mrtg
-  * p0f
+  * [p0f][3]
 
 #### Hardens few specific services
 
@@ -196,13 +196,13 @@ There is a bunch of security related software that you can find at [SBo](http://
   * [Tiger](http://slackbuilds.org/repository/14.0/system/tiger/)
   * [Aide](http://slackbuilds.org/repository/14.0/system/aide/)
   * [rkhunter](http://slackbuilds.org/repository/14.0/system/rkhunter/)
-  * [audit](http://slackbuilds.org/repository/14.0/system/audit/)
+  * [audit][5]
   * [chkrootkit](http://slackbuilds.org/repository/14.0/system/chkrootkit/)
 * Network related:
   * [arpwatch](http://slackbuilds.org/repository/14.0/network/arpwatch/)
-  * [p0f](http://slackbuilds.org/repository/14.0/network/p0f/)
+  * [p0f][3]
 * Antivirus:
-  * [ClamAV](http://slackbuilds.org/repository/14.0/system/clamav/)
+  * [ClamAV][4]
 * Other:
   * [vlock](http://slackbuilds.org/repository/14.0/system/vlock/)
 
@@ -262,3 +262,6 @@ Some of these documents are quite old, but most of the stuff still applies.
 
 [1]: http://benchmarks.cisecurity.org/downloads/browse/index.cfm?category=benchmarks.os.linux.slackware
 [2]: http://dentonj.freeshell.org/system-hardening-10.2.txt
+[3]: http://slackbuilds.org/repository/14.1/network/p0f/
+[4]: http://slackbuilds.org/repository/14.1/system/clamav/
+[5]: http://slackbuilds.org/repository/14.1/system/audit/
