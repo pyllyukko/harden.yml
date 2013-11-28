@@ -239,6 +239,7 @@ TODO
 * Static ARP cache
 * Logging of the script actions
 * aide.conf.new
+* lilo.conf: audit=1
 
 References
 ----------
