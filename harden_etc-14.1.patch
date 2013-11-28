@@ -225,36 +225,40 @@ index acec0a3..72244e7 100644
  
 diff --git a/limits b/limits
 new file mode 100644
-index 0000000..bee3d11
+index 0000000..d39f2d5
 --- /dev/null
 +++ b/limits
-@@ -0,0 +1,26 @@
-+# /etc/limits
+@@ -0,0 +1,30 @@
++# /etc/limits contains user resource limits.
++# See limits(5).
 +#
-+# from LIMITS(5):
++# Format:
++# <username> <limits-string>
 +#
-+#   "By default no quota is imposed on 'root'. In fact, there is no way to
-+#    impose limits via this procedure to root-equiv accounts (accounts with UID
-+#    0)."
++# default entry is '*' for username
 +#
-+# from shadow-4.1.4.3/libmisc/limits.c:
++# Valid flags are:
++# A: max address space (KB)
++# C: max core file size (KB)
++# D: max data size (KB)
++# F: maximum filesize (KB)
++# M: max locked-in-memory address space (KB) [only for root on Linux 2.0.x]
++# N: max number of open files
++# R: max resident set size (KB) [no effect on Linux 2.0.x]
++# S: max stack size (KB)
++# T: max CPU time (MIN)
++# U: max number of processes
++# L: max number of logins for this user
++# I: max nice value (0..39 translates to 20..-19)
++# O: max real time priority (0..MAX_RT_PRIO)
 +#
-+#   /* The limits file have the following format:
-+#    * - '#' (comment) chars only as first chars on a line;
-+#    * - username must start on first column
-+#    * A better (smarter) checking should be done --cristiang */
-+#
-+#   /* a valid line should have a username, then spaces,
-+#    * then limits
-+#    * we allow the format:
-+#    * username    L2  D2048  R4096
-+#    * where spaces={' ',\t}. Also, we reject invalid limits.
-+#    * Imposing a limit should be done with care, so a wrong
-+#    * entry means no care anyway :-). A '-' as a limits
-+#    * strings means no limits --cristiang */
-+
-+# make sure your shadow has this fixed: http://anonscm.debian.org/viewvc/pkg-shadow/upstream/trunk/libmisc/limits.c?annotate=3558&pathrev=3558#l476
-+* K077L0
++# Examples:
++# the default entry
++#* L2 D6144 R2048 S2048 U32 N32 F16384 T5 C0 I20 O0
++# another way of suspending a user login
++#guest   L0
++# this account has no limits
++#sysadm  -
 diff --git a/login.access b/login.access
 index 078e3f8..9574929 100644
 --- a/login.access
