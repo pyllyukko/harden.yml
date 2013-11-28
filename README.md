@@ -44,7 +44,7 @@ What does it do?
   * Expire the account
   * Adds the accounts to /etc/ftpusers
 * Sets restrictions for normal users
-  * Sets the maximum number of processes available to a single user (ulimit -u)
+  * Sets the [maximum number of processes available to a single user](https://en.wikipedia.org/wiki/Fork_bomb#Prevention) (ulimit -u)
   * Sets the maximum size of core files created (ulimit -c)
   * Sets a session timeout (TMOUT) in certain conditions
   * Sets a maximum number of failed login attempts (faillog)
@@ -53,7 +53,7 @@ What does it do?
     * ~~/etc/limits~~
     * /etc/profile
 * Configures shells
-  * Creates an option to use restricted bash (rbash)
+  * Creates an option to use [restricted shell](https://en.wikipedia.org/wiki/Restricted_shell) (rbash)
     * Also sets it as default for new users
   * Restricts the number of available shells
   * Removes "unnecessary" shells
@@ -134,7 +134,7 @@ What does it do?
 
 * Creates and enables a basic firewall
 * IP stack hardening through sysctl.conf
-* Enables TCP wrappers
+* Enables [TCP wrappers](https://en.wikipedia.org/wiki/TCP_Wrapper)
 
 ### Other controls
 
