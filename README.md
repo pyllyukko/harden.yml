@@ -50,7 +50,7 @@ What does it do?
   * Sets a maximum number of failed login attempts (faillog)
   * Sets stricter umask in all the following locations:
     * /etc/login.defs
-    * /etc/limits
+    * ~~/etc/limits~~
     * /etc/profile
 * Configures shells
   * Creates an option to use restricted bash (rbash)
