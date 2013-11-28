@@ -38,6 +38,7 @@ do
 done
 unset PROGRAM
 JUST_EXPLODE=0
+declare -a RET_VALUES=()
 
 if [ -d tmp ]
 then
@@ -93,21 +94,27 @@ then
 fi
 
 patch -p1 -t --dry-run 0<../../../harden_etc-14.1.patch
-if [ ${?} -ne 0 ]
+RET_VALUE=${?}
+RET_VALUES+=( ${RET_VALUE} )
+if [ ${RET_VALUE} -ne 0 ]
 then
   echo "WARNING: something wrong!" 1>&2
 fi
 echo -n $'\n'
 
 patch -p1 -t --dry-run 0<../../../sudoers-1.8.5p2.patch
-if [ ${?} -ne 0 ]
+RET_VALUE=${?}
+RET_VALUES+=( ${RET_VALUE} )
+if [ ${RET_VALUE} -ne 0 ]
 then
   echo "WARNING: something wrong!" 1>&2
 fi
 echo -n $'\n'
 
 patch -p1 -t --dry-run 0<../../../ssh_harden-6.3p1.patch
-if [ ${?} -ne 0 ]
+RET_VALUE=${?}
+RET_VALUES+=( ${RET_VALUE} )
+if [ ${RET_VALUE} -ne 0 ]
 then
   echo "WARNING: something wrong!" 1>&2
 fi
@@ -116,8 +123,16 @@ popd
 echo -n $'\n'
 pushd tmp/usr/share/sendmail
 patch -p1 -t --dry-run 0<../../../../../sendmail_harden.patch
-if [ ${?} -ne 0 ]
+RET_VALUE=${?}
+RET_VALUES+=( ${RET_VALUE} )
+if [ ${RET_VALUE} -ne 0 ]
 then
   echo "WARNING: something wrong!" 1>&2
 fi
 popd
+
+echo -e "\nresults:"
+for RET_VALUE in ${RET_VALUES[*]}
+do
+  echo "  ${RET_VALUE}"
+done
