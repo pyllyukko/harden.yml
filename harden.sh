@@ -558,6 +558,11 @@ function import_pgp_keys() {
       return 1
     fi
     chmod -c 644 ${SKS_CA_PREFIX}.{pem,pem.asc}
+  # for regular users
+  elif [ ! -f "${SKS_CA_PREFIX}.pem" ]
+  then
+    echo "${FUNCNAME}(): error: sks-keyservers CA not available. can not continue! try to run this as root to get the CA." 1>&2
+    return 1
   fi
   sha512sum -c 0<<<"d0a056251372367230782e050612834a2efa2fdd80eeba08e490a770691e4ddd52a744fd3f3882ca4188f625c3554633381ac90de8ea142519166277cadaf7b0  ${SKS_CA_PREFIX}.pem"
   if [ ${?} -ne 0 ]
