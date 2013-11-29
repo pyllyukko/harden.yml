@@ -558,6 +558,12 @@ function import_pgp_keys() {
     fi
     chmod -c 644 /usr/local/share/ca-certificates/sks-keyservers.netCA.{pem,pem.asc}
   fi
+  sha512sum -c 0<<<"d0a056251372367230782e050612834a2efa2fdd80eeba08e490a770691e4ddd52a744fd3f3882ca4188f625c3554633381ac90de8ea142519166277cadaf7b0  /usr/local/share/ca-certificates/sks-keyservers.netCA.pem"
+  if [ ${?} -ne 0 ]
+  then
+    echo "${FUNCNAME}(): error: sks-keyservers CA's SHA-512 fingerprint does not match!" 1>&2
+    return 1
+  fi
   # keys with key ID
   # set is to avoid "./harden.sh: line 427: PGP_KEYSERVERS[${PGP_KEY}]: unbound variable"
   set +u
