@@ -235,6 +235,7 @@ declare -r SENDMAIL_CF_DIR="/usr/share/sendmail/cf/cf"
 declare -r SENDMAIL_CONF_PREFIX="sendmail-slackware"
 declare -r RBINDIR="/usr/local/rbin"
 declare -r INETDCONF="/etc/inetd.conf"
+declare -r SKS_CA_PREFIX="/usr/local/share/ca-certificates/sks-keyservers.netCA"
 auditPATH='/etc/audit'
 
 # NOLOGIN(8): "It is intended as a replacement shell field for accounts that have been disabled."
@@ -531,7 +532,7 @@ function import_pgp_keys() {
       https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.jamie.asc
     chmod -c 644 /usr/local/share/ca-certificates/mfpl.crt
   fi
-  if [ "${USER}" = "root" -a ! -f /usr/local/share/ca-certificates/sks-keyservers.netCA.pem ]
+  if [ "${USER}" = "root" -a ! -f "${SKS_CA_PREFIX}.pem" ]
   then
     # https://www.sks-keyservers.net/overview-of-pools.php
 
@@ -550,15 +551,15 @@ function import_pgp_keys() {
       --capath /var/empty \
       --cacert /usr/share/ca-certificates/mozilla/Thawte_Premium_Server_CA.crt \
       'https://sks-keyservers.net/sks-keyservers.netCA.{pem,pem.asc}' \
-      -o '/usr/local/share/ca-certificates/sks-keyservers.netCA.#1'
+      -o "${SKS_CA_PREFIX}.#1"
     if [ ${?} -ne 0 ]
     then
       echo "${FUNCNAME}(): error: could not download sks-keyservers CA. can not continue!" 1>&2
       return 1
     fi
-    chmod -c 644 /usr/local/share/ca-certificates/sks-keyservers.netCA.{pem,pem.asc}
+    chmod -c 644 ${SKS_CA_PREFIX}.{pem,pem.asc}
   fi
-  sha512sum -c 0<<<"d0a056251372367230782e050612834a2efa2fdd80eeba08e490a770691e4ddd52a744fd3f3882ca4188f625c3554633381ac90de8ea142519166277cadaf7b0  /usr/local/share/ca-certificates/sks-keyservers.netCA.pem"
+  sha512sum -c 0<<<"d0a056251372367230782e050612834a2efa2fdd80eeba08e490a770691e4ddd52a744fd3f3882ca4188f625c3554633381ac90de8ea142519166277cadaf7b0  ${SKS_CA_PREFIX}.pem"
   if [ ${?} -ne 0 ]
   then
     echo "${FUNCNAME}(): error: sks-keyservers CA's SHA-512 fingerprint does not match!" 1>&2
@@ -578,7 +579,7 @@ function import_pgp_keys() {
     #/usr/bin/gpg --keyserver "hkp://${KEYSERVER}" --keyring "${GPG_KEYRING}" --no-default-keyring --recv-keys "${PGP_KEY}"
     /usr/bin/gpg \
       --keyserver "hkps://hkps.pool.sks-keyservers.net" \
-      --keyserver-options ca-cert-file=/usr/local/share/ca-certificates/sks-keyservers.netCA.pem \
+      --keyserver-options ca-cert-file=${SKS_CA_PREFIX}.pem \
       --keyring "${GPG_KEYRING}" --no-default-keyring \
       --recv-keys "${PGP_KEY}"
   done
