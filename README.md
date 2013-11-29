@@ -144,7 +144,6 @@ What does it do?
   * /etc/login.defs: SU_WHEEL_ONLY
 * Modifies crontab behaviour a bit
   * Users in the *wheel* group are able to create cronjobs (as described in /usr/doc/dcron-4.5/README)
-* Imports a bunch of PGP keys for file/package verification
 * shutdown.allow and /sbin/shutdown -a
 * Clear /tmp on boot
 * Removes unnecessary / potentially dangerous packages
@@ -153,6 +152,10 @@ What does it do?
   * floppy
 * Sets *dmesg_restrict*
 * Make *installpkg* store the MD5 checksums
+
+#### PGP
+
+The *import_pgp_keys()* function imports a bunch of PGP keys to your *trustedkeys.gpg* keyring, so you can verify downloaded files/packages with [gpgv](http://www.gnupg.org/documentation/manuals/gnupg/gpgv.html). The keys that are imported are listed in the PGP_URLS[] and PGP_KEYS[] arrays.
 
 #### Physical security related
 
