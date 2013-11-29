@@ -519,11 +519,11 @@ function import_pgp_keys() {
   # https://support.mayfirst.org/wiki/faq/security/mfpl-certificate-authority
   # https://en.wikipedia.org/wiki/Key_server_%28cryptographic%29#Keyserver_examples
   # https://we.riseup.net/riseuplabs+paow/openpgp-best-practices#consider-making-your-default-keyserver-use-a-keyse
-  if [ ! -d /usr/local/share/ca-certificates ]
+  if [ "${USER}" = "root" -a ! -d /usr/local/share/ca-certificates ]
   then
     mkdir -pvm 755 /usr/local/share/ca-certificates
   fi
-  if [ ! -f /usr/local/share/ca-certificates/mfpl.crt ]
+  if [ "${USER}" = "root" -a ! -f /usr/local/share/ca-certificates/mfpl.crt ]
   then
     wget -nv --directory-prefix=/usr/local/share/ca-certificates \
       https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt \
@@ -531,7 +531,7 @@ function import_pgp_keys() {
       https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.jamie.asc
     chmod -c 644 /usr/local/share/ca-certificates/mfpl.crt
   fi
-  if [ ! -f /usr/local/share/ca-certificates/sks-keyservers.netCA.pem ]
+  if [ "${USER}" = "root" -a ! -f /usr/local/share/ca-certificates/sks-keyservers.netCA.pem ]
   then
     # https://www.sks-keyservers.net/overview-of-pools.php
 
