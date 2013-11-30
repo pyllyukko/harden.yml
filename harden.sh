@@ -1498,7 +1498,30 @@ function set_failure_limits() {
   # NOTE: from FAILLOG(8): "The maximum failure count should always be 0 for root to prevent a denial of services attack against the system."
   # TODO: for important user accounts, the limits should be -l $((60*10)) -m 1
   #       this makes the account to temporary lock for n seconds.
-  faillog -l $((60*5)) -m 1 -u root
+
+  # this if is because of some bug/feature in shadow suite. if the database file is of zero size, for some reason it doesn't work with one command:
+  #   # ls -l /var/log/faillog 
+  #   -rw-r--r-- 1 root root 0 Oct  5 00:03 /var/log/faillog
+  #   # faillog -l 300 -m 1 -u root
+  #   # faillog -u root
+  #   Login       Failures Maximum Latest                   On
+  #   
+  #   root            0        1   01/01/70 02:00:00 +0200  
+  #   # faillog -l 300 -m 1 -u root
+  #   # faillog -u root
+  #   Login       Failures Maximum Latest                   On
+  #   
+  #   root            0        1   01/01/70 02:00:00 +0200   [300s lock]
+  #
+  # the bug/feature exists somewhere inside the set_locktime_one() function of lastlog.c ... probably
+
+  if [ -s /var/log/faillog ]
+  then
+    faillog -l $((60*5)) -m 1 -u root
+  else
+    faillog -m 1 -u root
+    faillog -l $((60*5)) -u root
+  fi
   faillog -u ${UID_MIN:-1000}-${UID_MAX:-60000} -m ${FAILURE_LIMIT:-10} -l 0
   return ${?}
 } # set_failure_limits()
