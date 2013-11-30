@@ -1522,7 +1522,7 @@ function set_failure_limits() {
     faillog -m 1 -u root
     faillog -l $((60*5)) -u root
   fi
-  faillog -u ${UID_MIN:-1000}-${UID_MAX:-60000} -m ${FAILURE_LIMIT:-10} -l 0
+  faillog -a -l 0 -m ${FAILURE_LIMIT:-10} -u ${UID_MIN:-1000}-${UID_MAX:-60000}
   return ${?}
 } # set_failure_limits()
 ################################################################################
