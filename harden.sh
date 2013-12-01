@@ -811,6 +811,8 @@ function user_accounts() {
 
   set_failure_limits
 
+  create_ftpusers
+
   return 0
 } # user_accounts()
 ################################################################################
@@ -1538,8 +1540,6 @@ function miscellaneous_settings() {
   #
   # TODO:
   #   - tcp_diag module to rc.modules
-
-  create_ftpusers
 
   # CIS 7.4 Prevent X Server From Listening On Port 6000/tcp (kinda the same)
   #if [ -f "/usr/bin/startx" ]
