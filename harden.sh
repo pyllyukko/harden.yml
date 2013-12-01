@@ -793,6 +793,7 @@ function user_accounts() {
   # this should create the missing entries to /etc/gshadow
   if [ -x /usr/sbin/grpck ]
   then
+    echo "${FUNCNAME}(): running \`grpck -r'"
     /usr/sbin/grpck -r
     GRPCK_RET=${?}
     case "${GRPCK_RET}" in
