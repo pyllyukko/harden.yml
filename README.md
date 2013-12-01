@@ -123,7 +123,7 @@ What does it do?
   * at
   * chfn + chsh
   * uucp package
-  * floppy package (/usr/bin/fdmount)
+  * [floppy][7] package (/usr/bin/fdmount)
   * ssh-keysign
 * Sets more strict permissions on certain files that might contain secrets or other sensitive information
   * btmp & wtmp
@@ -149,7 +149,7 @@ What does it do?
 * Removes unnecessary / potentially dangerous packages
   * netkit-rsh
   * uucp
-  * floppy
+  * [floppy][7]
 * Sets *dmesg_restrict*
 * Make *installpkg* store the MD5 checksums
 
@@ -269,3 +269,4 @@ Some of these documents are quite old, but most of the stuff still applies.
 [4]: http://slackbuilds.org/repository/14.1/system/clamav/
 [5]: http://slackbuilds.org/repository/14.1/system/audit/
 [6]: http://slackbuilds.org/repository/14.1/network/arpwatch/
+[7]: ftp://ftp.slackware.com/pub/slackware/slackware-14.1/source/a/floppy/
