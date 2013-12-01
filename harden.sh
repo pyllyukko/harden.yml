@@ -2070,6 +2070,17 @@ function usage() {
 
 	  -a		apache
 	  -A		all
+	  		  - hardens user accounts
+	  		  - removes unnecessary packages
+	  		  - removes unnecessary shells
+	  		  - imports PGP keys
+	  		  - applies the etc hardening patch
+	  		  - applies the sudoers hardening patch
+	  		  - applies the SSH hardening patch
+	  		  - disables unnecessary services
+	  		  - miscellaneous_settings()
+	  		  - hardens file permissions
+	  		  - creates hardened fstab.new
 	  -d		default hardening (misc_settings() & file_permissions())
 
 	  -f		file permissions
@@ -2104,6 +2115,13 @@ function usage() {
 	      sudoers
 
 	  -q	"quick harden" - just some generic stuff that should work on any system
+	  	  - creates a deny all TCP wrappers rule
+	  	  - creates sysctl.conf
+	  	  - configures /etc/suauth to disallow the use of su
+	  	  - sets failure limits
+	  	  - creates ftpusers
+	  	  - removes unnecessary shells
+	  	  - creates hardened fstab.new
 	  -r	remove unnecessary shells
 	  -s	disable unnecessary services (also enables few recommended ones)
 	  -u	harden user accounts
