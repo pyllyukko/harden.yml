@@ -2217,9 +2217,7 @@ do
     "q") quick_harden			;;
     "r") remove_shells			;;
     "s") disable_unnecessary_services	;;
-    "u")
-      user_accounts
-    ;;
+    "u") user_accounts			;;
     "U") create_additional_user_accounts ;;
   esac
 done
