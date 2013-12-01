@@ -809,6 +809,8 @@ function user_accounts() {
     echo "WARNING: grpck not found!" 1>&2
   fi
 
+  set_failure_limits
+
   return 0
 } # user_accounts()
 ################################################################################
@@ -1608,8 +1610,6 @@ EOF
     chgrp -c adm /var/log/pacct
     chmod -c 640 /var/log/pacct
   fi
-
-  set_failure_limits
 
   # man 1 xfs
   if [ -f "/etc/X11/fs/config" ]
