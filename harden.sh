@@ -706,6 +706,9 @@ function user_accounts() {
   # see http://tldp.org/HOWTO/Shadow-Password-HOWTO-7.html#ss7.1
   useradd -D -f 0
 
+  # modify adduser to use 700 as newly created home dirs permission
+  sed -i 's/^defchmod=[0-9]\+\(.*\)$/defchmod=700\1/' /usr/sbin/adduser
+
   echo "${FUNCNAME}(): modifying/hardening current user accounts"
 
   # CIS 8.1 Block System Accounts (modified)
