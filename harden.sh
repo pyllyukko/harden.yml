@@ -41,6 +41,7 @@
 #   - http://www.gnupg.org/documentation/manuals/gnupg/addgnupghome.html#addgnupghome
 #   - /usr/bin/ch{mod,own} -> from PATH. since Debian has them under /bin
 #   - add CCE references
+#   - logging_stuff() function
 #
 # NOTES:
 #   - i designed this so it can be run multiple times (with maybe the exception of disabling services)
