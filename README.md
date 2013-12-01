@@ -244,6 +244,8 @@ TODO
 * Logging of the script actions
 * aide.conf.new
 * lilo.conf: audit=1
+* ca-certificates.conf.new
+* faillog for new users?
 
 References
 ----------
