@@ -1574,6 +1574,7 @@ EOF
   #
   # Slackware's at package creates /etc/at.deny by default, which has blacklisted users. so we're switching
   # from blacklist to (empty) whitelist.
+  # TODO: move to user_accounts()
   if [ -s "/etc/at.deny" -a ! -f "/etc/at.allow" ]
   then
     /usr/bin/rm -v	/etc/at.deny
