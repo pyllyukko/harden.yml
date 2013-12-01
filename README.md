@@ -167,7 +167,8 @@ The *import_pgp_keys()* function imports a bunch of PGP keys to your *trustedkey
 
 #### Logging
 
-* Makes default log files group *adm* readable (as in Debian)
+* Makes default log files group *adm* readable ([as in Debian](http://www.debian.org/doc/manuals/debian-reference/ch01.en.html#listofnotablesysupsforfileaccess))
+  * Notice that this takes place only after logrotate. The ownerships/permissions of the existing logs are not modified.
 * Use *shred* to remove rotated log files
 * Log rotation for process accounting (pacct), since these files **will** grow huge
 * Enables the use of *xconsole* (or makes it possible). You can use it with:
