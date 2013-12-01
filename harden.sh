@@ -2219,8 +2219,6 @@ do
     "s") disable_unnecessary_services	;;
     "u")
       user_accounts
-      set_failure_limits
-      create_ftpusers
     ;;
     "U") create_additional_user_accounts ;;
   esac
