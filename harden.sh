@@ -2105,13 +2105,9 @@ function usage() {
 	  -s	disable unnecessary services (also enables few recommended ones)
 	  -u	harden user accounts
 	  -U	create additional user accounts (SBo related)
-
-	functions:
-
 EOF
   # print functions
-  #declare -f 2>/dev/null | sed -n '/^.* ().$/s/^/  /p'
-  declare -f 2>/dev/null | sed -n '/^.* () $/s/^/  /p'
+  #declare -f 2>/dev/null | sed -n '/^.* () $/s/^/  /p'
   exit 0
 } # usage()
 ################################################################################
