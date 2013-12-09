@@ -74,11 +74,22 @@ What does it do?
 * Removes user daemon from group *adm* (as we will take use of the *adm* group)
 * Fix gshadow with *grpck*
 
+#### Groups
+
+  * Makes default log files group *adm* readable ([as in Debian](http://www.debian.org/doc/manuals/debian-reference/ch01.en.html#listofnotablesysupsforfileaccess))
+  * Users in the *wheel* group are able to create cronjobs (as described in /usr/doc/dcron-4.5/README)
+  * [grsecurity related](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#Default_Special_Groups)
+    * GID 1001 for [CONFIG_GRKERNSEC_PROC_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_exempted_from_.2Fproc_restrictions)
+    * GID 1005 for [CONFIG_GRKERNSEC_TPE_TRUSTED_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_TPE-trusted_users)
+    * GID 1006 for [CONFIG_GRKERNSEC_SYMLINKOWN_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_users_with_kernel-enforced_SymlinksIfOwnerMatch)
+    * GID 1007 for [GRKERNSEC_AUDIT_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_auditing) (not in use)
+
 ### Configures services
 
 * Removes unnecessary services
   * xinetd (/etc/inetd.conf)
   * Goes through /etc/rc.d/rc.* and disables plenty of those
+  * *atd* from *rc.M*
 * [X11 -nolisten tcp](http://docs.slackware.com/howtos:security:basic_security#x_-nolisten_tcp)
 
 #### Enable some security and auditing related services
