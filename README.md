@@ -77,7 +77,7 @@ What does it do?
 #### Groups
 
  * Makes default log files group *adm* readable ([as in Debian](http://www.debian.org/doc/manuals/debian-reference/ch01.en.html#listofnotablesysupsforfileaccess))
- * Users in the *wheel* group are able to create cronjobs (as described in /usr/doc/dcron-4.5/README)
+ * Users in the *wheel* group are able to create cronjobs (as described in [/usr/doc/dcron-4.5/README][8])
  * [grsecurity related](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#Default_Special_Groups)
    * GID 1001 for [CONFIG_GRKERNSEC_PROC_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_exempted_from_.2Fproc_restrictions)
    * GID 1005 for [CONFIG_GRKERNSEC_TPE_TRUSTED_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_TPE-trusted_users)
@@ -158,7 +158,8 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
   * /etc/porttime
   * /etc/login.defs: SU_WHEEL_ONLY
 * Modifies crontab behaviour a bit
-  * Users in the *wheel* group are able to create cronjobs (as described in /usr/doc/dcron-4.5/README)
+  * Users in the *wheel* group are able to create cronjobs (as described in [/usr/doc/dcron-4.5/README][8])
+  * Increase cron's logging from *notice* to *info*
 * shutdown.allow and /sbin/shutdown -a
 * Clear /tmp on boot
 * Removes unnecessary / potentially dangerous packages
@@ -289,3 +290,4 @@ Some of these documents are quite old, but most of the stuff still applies.
 [5]: http://slackbuilds.org/repository/14.1/system/audit/
 [6]: http://slackbuilds.org/repository/14.1/network/arpwatch/
 [7]: ftp://ftp.slackware.com/pub/slackware/slackware-14.1/source/a/floppy/
+[8]: http://www.jimpryor.net/linux/dcron-README
