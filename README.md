@@ -83,9 +83,10 @@ What does it do?
    * GID 1005 for [CONFIG_GRKERNSEC_TPE_TRUSTED_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_TPE-trusted_users)
    * GID 1006 for [CONFIG_GRKERNSEC_SYMLINKOWN_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_users_with_kernel-enforced_SymlinksIfOwnerMatch)
    * GID 1007 for [GRKERNSEC_AUDIT_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_auditing) (not in use)
-   * You can also utilize the above groups with sudo, so the allowed users don't have the permissions by default:
 
-		ADMINS ALL=(:grsec_tpe) NOPASSWD: /usr/bin/newgrp
+You can also utilize the above grsec groups with sudo, so the allowed users don't have the permissions by default:
+
+	ADMINS ALL=(:grsec_tpe) NOPASSWD: /usr/bin/newgrp
 
 ### Configures services
 
