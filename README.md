@@ -85,7 +85,7 @@ What does it do?
     * GID 1007 for [GRKERNSEC_AUDIT_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_auditing) (not in use)
     * You can also utilize the above groups with sudo, so the allowed users don't have the permissions by default:
 
-	ADMINS ALL=(:grsec_tpe) NOPASSWD: /usr/bin/newgrp
+		ADMINS ALL=(:grsec_tpe) NOPASSWD: /usr/bin/newgrp
 
 ### Configures services
 
