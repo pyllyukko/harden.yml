@@ -1907,6 +1907,14 @@ function quick_harden() {
 	
 	# custom
 	
+	# IPv6
+	# CIS RHEL6 4.4.1.1 Disable IPv6 Router Advertisements
+	net.ipv6.conf.all.accept_ra = 0
+	net.ipv6.conf.default.accept_ra = 0
+	# 4.4.1.2 Disable IPv6 Redirect Acceptance
+	net.ipv6.conf.all.accept_redirect = 0
+	net.ipv6.conf.default.accept_redirect = 0
+	
 	# use address space randomization
 	#
 	# -plus-
