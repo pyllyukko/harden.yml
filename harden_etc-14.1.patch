@@ -1449,7 +1449,7 @@ index 0000000..a867586
 +#root:ALL EXCEPT GROUP wheel:DENY
 diff --git a/sysctl.conf b/sysctl.conf
 new file mode 100644
-index 0000000..3d306f3
+index 0000000..ec462c7
 --- /dev/null
 +++ b/sysctl.conf
 @@ -0,0 +1,111 @@
@@ -1484,8 +1484,8 @@ index 0000000..3d306f3
 +net.ipv6.conf.all.accept_ra = 0
 +net.ipv6.conf.default.accept_ra = 0
 +# 4.4.1.2 Disable IPv6 Redirect Acceptance
-+net.ipv6.conf.all.accept_redirect = 0
-+net.ipv6.conf.default.accept_redirect = 0
++net.ipv6.conf.all.accept_redirects = 0
++net.ipv6.conf.default.accept_redirects = 0
 +
 +# use address space randomization
 +#

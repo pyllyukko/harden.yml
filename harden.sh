@@ -1912,8 +1912,8 @@ function quick_harden() {
 	net.ipv6.conf.all.accept_ra = 0
 	net.ipv6.conf.default.accept_ra = 0
 	# 4.4.1.2 Disable IPv6 Redirect Acceptance
-	net.ipv6.conf.all.accept_redirect = 0
-	net.ipv6.conf.default.accept_redirect = 0
+	net.ipv6.conf.all.accept_redirects = 0
+	net.ipv6.conf.default.accept_redirects = 0
 	
 	# use address space randomization
 	#
