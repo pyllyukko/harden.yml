@@ -160,7 +160,6 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
 * Modifies crontab behaviour a bit
   * Users in the *wheel* group are able to create cronjobs (as described in [/usr/doc/dcron-4.5/README][8])
   * Increase cron's logging from *notice* to *info*
-* shutdown.allow and /sbin/shutdown -a
 * Clear /tmp on boot
 * Removes unnecessary / potentially dangerous packages
   * netkit-rsh
@@ -180,6 +179,7 @@ The *import_pgp_keys()* function imports a bunch of PGP keys to your *trustedkey
 * Session timeout (TMOUT)
 * X11:
   * DontZap
+* shutdown.allow and /sbin/shutdown -a (FWIW)
 
 #### Logging
 
