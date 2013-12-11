@@ -1915,6 +1915,10 @@ function quick_harden() {
 	net.ipv6.conf.all.accept_redirects = 0
 	net.ipv6.conf.default.accept_redirects = 0
 	
+	# disable IPv6
+	net.ipv6.conf.all.disable_ipv6 = 1
+	net.ipv6.conf.default.disable_ipv6 = 1
+	
 	# use address space randomization
 	#
 	# -plus-
