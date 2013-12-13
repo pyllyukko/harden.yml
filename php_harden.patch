@@ -1,5 +1,5 @@
 diff --git a/php.ini-production b/php.ini-production
-index a422402..677a6e1 100644
+index a422402..48b3220 100644
 --- a/php.ini-production
 +++ b/php.ini-production
 @@ -311,7 +311,7 @@ serialize_precision = 17
@@ -38,12 +38,3 @@ index a422402..677a6e1 100644
  
  ; Whether to allow include/require to open URLs (like http:// or ftp://) as files.
  ; http://php.net/allow-url-include
-@@ -1064,7 +1064,7 @@ mail.add_x_header = On
- 
- [SQL]
- ; http://php.net/sql.safe-mode
--sql.safe_mode = Off
-+sql.safe_mode = On
- 
- [ODBC]
- ; http://php.net/odbc.default-db
