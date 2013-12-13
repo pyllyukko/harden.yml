@@ -1439,6 +1439,14 @@ function file_permissions() {
   return 0
 } # file_permissions()
 ################################################################################
+function various_checks_NOT_IN_USE() {
+  visudo -c
+  pwck -r
+  grpck -r
+  tcpdchk -v
+  apachectl configtest
+} # various_checks()
+################################################################################
 function user_home_directories_permissions() {
   # this has been split into it's own function, since it relates to both
   # "hardening categories", user accounts & file permissions.
