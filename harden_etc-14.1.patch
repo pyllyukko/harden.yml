@@ -275,7 +275,7 @@ index 078e3f8..9574929 100644
 ++:root users:LOCAL
 +-:ALL:ALL
 diff --git a/login.defs b/login.defs
-index e52f91a..587608b 100644
+index e52f91a..54172e6 100644
 --- a/login.defs
 +++ b/login.defs
 @@ -6,8 +6,9 @@
@@ -373,6 +373,15 @@ index e52f91a..587608b 100644
  
  #
  # If compiled with cracklib support, where are the dictionaries
+@@ -218,7 +223,7 @@ SU_WHEEL_ONLY	no
+ #
+ # Min/max values for automatic uid selection in useradd
+ #
+-UID_MIN			 1000
++UID_MIN			 1008
+ UID_MAX			60000
+ # System accounts
+ SYS_UID_MIN		  101
 @@ -264,6 +269,7 @@ PASS_ALWAYS_WARN	yes
  # Require password before chfn/chsh can make any changes.
  #
