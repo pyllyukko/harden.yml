@@ -130,6 +130,7 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
   * Require root's password instead of user's
   * Send alerts on most errors
   * Additional logging to */var/log/sudo.log*
+* [PHP](https://www.owasp.org/index.php/Configuration#PHP_Configuration)
 
 ### File system related
 
