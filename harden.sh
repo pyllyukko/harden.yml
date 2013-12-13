@@ -2132,6 +2132,7 @@ function usage() {
 	      apache
 	      apache-x86_64 (choose this if you have installed slackware64)
 	      sendmail
+	      php
 	      sudoers
 
 	  -q	"quick harden" - just some generic stuff that should work on any system
@@ -2232,6 +2233,7 @@ do
 	"sendmail")
           patch_sendmail
 	;;
+	"php") check_and_patch /etc/httpd php_harden.patch 1 ;;
         "sudoers")
           check_and_patch /etc	"${SUDOERS_PATCH_FILE}"	1
         ;;
@@ -2249,6 +2251,7 @@ do
 	"etc") check_and_patch /etc "${ETC_PATCH_FILE}" 1 reverse && ETC_CHANGED=1	;;
         "apache"*) echo "apache patch reversing not yet implemented!"			;;
         "sendmail") patch_sendmail reverse						;;
+	"php") check_and_patch /etc/httpd php_harden.patch 1 reverse			;;
         "sudoers")
           check_and_patch /etc	"${SUDOERS_PATCH_FILE}"	1 reverse
         ;;

@@ -56,7 +56,8 @@ for PKG in \
   'a/sysklogd-1.5-i486-2.txz' \
   'ap/sudo-1.8.6p8-i486-1.txz' \
   'n/sendmail-cf-8.14.7-noarch-1.txz' \
-  'n/openssh-6.3p1-i486-1.txz'
+  'n/openssh-6.3p1-i486-1.txz' \
+  'n/php-5.4.20-i486-1.txz'
 do
   PKG_BASEN=$( basename "${PKG}" )
   if [ ! -f "${PKG_BASEN}" ]
@@ -123,6 +124,16 @@ popd
 echo -n $'\n'
 pushd tmp/usr/share/sendmail
 patch -p1 -t --dry-run 0<../../../../../sendmail_harden.patch
+RET_VALUE=${?}
+RET_VALUES+=( ${RET_VALUE} )
+if [ ${RET_VALUE} -ne 0 ]
+then
+  echo "WARNING: something wrong!" 1>&2
+fi
+popd
+
+pushd tmp/etc/httpd
+patch -p1 -t --dry-run 0<../../../../php_harden.patch
 RET_VALUE=${?}
 RET_VALUES+=( ${RET_VALUE} )
 if [ ${RET_VALUE} -ne 0 ]
