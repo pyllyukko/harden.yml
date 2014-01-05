@@ -1458,10 +1458,10 @@ index 0000000..a867586
 +#root:ALL EXCEPT GROUP wheel:DENY
 diff --git a/sysctl.conf b/sysctl.conf
 new file mode 100644
-index 0000000..cf31b90
+index 0000000..42daaca
 --- /dev/null
 +++ b/sysctl.conf
-@@ -0,0 +1,115 @@
+@@ -0,0 +1,117 @@
 +# Following 11 lines added by CISecurity Benchmark sec 4.1
 +net.ipv4.tcp_max_syn_backlog = 4096
 +net.ipv4.tcp_syncookies=1
@@ -1540,6 +1540,8 @@ index 0000000..cf31b90
 +
 +# https://www.cert.fi/haavoittuvuudet/2013/haavoittuvuus-2013-071.html
 +kernel.perf_event_paranoid = 2
++
++net.ipv4.tcp_timestamps = 0
 +
 +# grsecurity
 +kernel.grsecurity.linking_restrictions = 1
