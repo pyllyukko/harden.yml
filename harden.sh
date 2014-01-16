@@ -334,6 +334,7 @@ declare -ra PGP_URLS=(
 #     D21739E9   dkg
 #   - 0x0B7F8B60E3EDFAE3 - https://www.sks-keyservers.net/overview-of-pools.php
 #   - 0x2E8DD26C53F1197DDF403E6118E667F1EB8AF314 - https://web.monkeysphere.info/archive-key/
+#   - F0D6B1E0 - http://www.truecrypt.org/docs/digital-signatures
 declare -ra PGP_KEYS=(
   #"CEA0A321"
   #"060798CB"
@@ -361,6 +362,7 @@ declare -ra PGP_KEYS=(
   "0xCCD2ED94D21739E9"
   "0x0B7F8B60E3EDFAE3"
   "0x2E8DD26C53F1197DDF403E6118E667F1EB8AF314"
+  "F0D6B1E0"
 )
 # if there is a recommended/suggested server for a key
 declare -rA PGP_KEYSERVERS=(
