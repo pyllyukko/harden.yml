@@ -881,10 +881,10 @@ index d9b3fed..8b13db7 100755
  # Slackware-Mini-Quota-HOWTO:
  # To really activate quotas, you'll need to add 'usrquota' and/or 'grpquota' to
 diff --git a/rc.d/rc.S b/rc.d/rc.S
-index 7b152e9..33d4b8a 100755
+index 7b152e9..eda55ef 100755
 --- a/rc.d/rc.S
 +++ b/rc.d/rc.S
-@@ -5,6 +5,13 @@
+@@ -5,10 +5,17 @@
  # Mostly written by:  Patrick J. Volkerding, <volkerdi@slackware.com>
  #
  
@@ -898,6 +898,11 @@ index 7b152e9..33d4b8a 100755
  PATH=/sbin:/usr/sbin:/bin:/usr/bin
  
  # Try to mount /proc:
+-/sbin/mount -v proc /proc -n -t proc 2> /dev/null
++/sbin/mount -v proc /proc -n -t proc -o hidepid=2 2> /dev/null
+ 
+ # Mount sysfs next, if the kernel supports it:
+ if [ -d /sys ]; then
 @@ -361,6 +368,7 @@ rm -f /var/run/* /var/run/*/* /var/run/*/*/* /etc/nologin \
    /tmp/.Xauth* 1> /dev/null 2> /dev/null
    ( cd /var/log/setup/tmp && rm -rf * )
