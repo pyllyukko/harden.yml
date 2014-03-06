@@ -1,5 +1,5 @@
 diff --git a/sudoers b/sudoers
-index 0d7760b..292f63c 100644
+index 0d7760b..a6b8449 100644
 --- a/sudoers
 +++ b/sudoers
 @@ -19,7 +19,10 @@
@@ -13,7 +13,7 @@ index 0d7760b..292f63c 100644
  
  ##
  ## Cmnd alias specification
-@@ -62,6 +65,42 @@
+@@ -62,6 +65,46 @@
  # Defaults!/usr/local/bin/sudoreplay !log_output
  # Defaults!/sbin/reboot !log_output
  
@@ -53,10 +53,14 @@ index 0d7760b..292f63c 100644
 +Defaults editor=/usr/bin/vim
 +Defaults passwd_timeout=1
 +
++# explicitly set env_reset, even when it's enabled by default
++# relates to SSA:2014-064-01
++Defaults env_reset
++
  ##
  ## Runas alias specification
  ##
-@@ -69,7 +108,14 @@
+@@ -69,7 +112,14 @@
  ##
  ## User privilege specification
  ##
