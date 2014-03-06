@@ -265,6 +265,7 @@ TODO
 * lilo.conf: audit=1
 * ca-certificates.conf.new
 * faillog for new users?
+* some kernel module configurator thingie for /etc/rc.d/rc.modules
 
 References
 ----------
