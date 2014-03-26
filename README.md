@@ -135,7 +135,7 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
 ### File system related
 
 * Hardens mount options (creates /etc/fstab.new)
-  * Also, mount /proc with hidepid=2
+  * Also, mount [/proc](https://www.kernel.org/doc/Documentation/filesystems/proc.txt) with hidepid=2
 * Removes a bunch of SUID/SGID bits
   * at
   * chfn + chsh
