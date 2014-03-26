@@ -57,7 +57,7 @@ What does it do?
     * Also sets it as default for new users
   * Restricts the number of available shells
   * Removes "unnecessary" shells
-  * Creates .bash_logout to skel with few cleanups
+  * Creates .bash\_logout to skel with few cleanups
 * Restricts logins
   * /etc/login.access
   * /etc/porttime
@@ -79,10 +79,10 @@ What does it do?
  * Makes default log files group *adm* readable ([as in Debian](http://www.debian.org/doc/manuals/debian-reference/ch01.en.html#listofnotablesysupsforfileaccess))
  * Users in the *wheel* group are able to create cronjobs (as described in [/usr/doc/dcron-4.5/README][8])
  * [grsecurity related](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#Default_Special_Groups)
-   * GID 1001 for [CONFIG_GRKERNSEC_PROC_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_exempted_from_.2Fproc_restrictions)
-   * GID 1005 for [CONFIG_GRKERNSEC_TPE_TRUSTED_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_TPE-trusted_users)
-   * GID 1006 for [CONFIG_GRKERNSEC_SYMLINKOWN_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_users_with_kernel-enforced_SymlinksIfOwnerMatch)
-   * GID 1007 for [GRKERNSEC_AUDIT_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_auditing) (not in use)
+   * GID 1001 for [CONFIG\_GRKERNSEC\_PROC\_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_exempted_from_.2Fproc_restrictions)
+   * GID 1005 for [CONFIG\_GRKERNSEC\_TPE\_TRUSTED\_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_TPE-trusted_users)
+   * GID 1006 for [CONFIG\_GRKERNSEC\_SYMLINKOWN\_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_users_with_kernel-enforced_SymlinksIfOwnerMatch)
+   * GID 1007 for [GRKERNSEC\_AUDIT\_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_auditing) (not in use)
 
 You can also utilize the above grsec groups with sudo, so the allowed users don't have the permissions by default:
 
@@ -92,7 +92,7 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
 
 * Removes unnecessary services
   * xinetd (/etc/inetd.conf)
-  * Goes through /etc/rc.d/rc.* and disables plenty of those
+  * Goes through /etc/rc.d/rc.\* and disables plenty of those
   * *atd* from *rc.M*
 * [X11 -nolisten tcp](http://docs.slackware.com/howtos:security:basic_security#x_-nolisten_tcp)
 
@@ -124,7 +124,7 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
   * Disable the [MSA](https://en.wikipedia.org/wiki/Mail_submission_agent)
   * Don't show the version on the banner
 * sudo
-  * Don't cache the password (timestamp_timeout) (should also mitigate against [CVE-2013-1775](http://www.sudo.ws/sudo/alerts/epoch_ticket.html))
+  * Don't cache the password (timestamp\_timeout) (should also mitigate against [CVE-2013-1775](http://www.sudo.ws/sudo/alerts/epoch_ticket.html))
   * Always require password with *sudo -l* (listpw)
   * noexec as default
   * Require root's password instead of user's
@@ -158,7 +158,7 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
 * Restrict the use of su (prefer sudo instead)
   * /etc/suauth
   * /etc/porttime
-  * /etc/login.defs: SU_WHEEL_ONLY
+  * /etc/login.defs: SU\_WHEEL\_ONLY
 * Modifies crontab behaviour a bit
   * Users in the *wheel* group are able to create cronjobs (as described in [/usr/doc/dcron-4.5/README][8])
   * Increase cron's logging from *notice* to *info*
@@ -167,7 +167,7 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
   * netkit-rsh
   * uucp
   * [floppy][7]
-* Sets *dmesg_restrict*
+* Sets *dmesg\_restrict*
 * Make *installpkg* store the MD5 checksums
 
 #### PGP
@@ -176,7 +176,7 @@ The *import_pgp_keys()* function imports a bunch of PGP keys to your *trustedkey
 
 #### Physical security related
 
-* Sets the [authorized_default](https://www.kernel.org/doc/Documentation/usb/authorization.txt) to USB devices
+* Sets the [authorized\_default](https://www.kernel.org/doc/Documentation/usb/authorization.txt) to USB devices
 * Enables [SAK](https://en.wikipedia.org/wiki/Secure_attention_key) and disables the other [magic SysRq stuff](https://www.kernel.org/doc/Documentation/sysrq.txt)
 * Session timeout (TMOUT)
 * X11:
@@ -202,7 +202,7 @@ The *import_pgp_keys()* function imports a bunch of PGP keys to your *trustedkey
 * View bad logins with sudo:
 
         ADMINS ALL=(:adm) NOPASSWD: /usr/bin/lastb
-* Remove *floppy* and *scanner* from CONSOLE_GROUPS
+* Remove *floppy* and *scanner* from CONSOLE\_GROUPS
 
 Notes
 -----
@@ -276,10 +276,10 @@ Some of these documents are quite old, but most of the stuff still applies.
 
 * [CIS Slackware Linux 10.2 Benchmark v1.1.0][1]
 * [Slackware System Hardening][2] by Jeffrey Denton
-* http://docs.slackware.com/howtos:security:basic_security
-* http://alien.slackbook.org/dokuwiki/doku.php?id=linux:admin#security_issues
-* http://slackwiki.com/Basic_Security_Fixes
-* https://en.wikipedia.org/wiki/Fork_bomb#Prevention
+* http://docs.slackware.com/howtos:security:basic\_security
+* http://alien.slackbook.org/dokuwiki/doku.php?id=linux:admin#security\_issues
+* http://slackwiki.com/Basic\_Security\_Fixes
+* https://en.wikipedia.org/wiki/Fork\_bomb#Prevention
 
 ### Other docs
 
