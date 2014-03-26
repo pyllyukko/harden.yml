@@ -296,6 +296,7 @@ declare -ra PGP_URLS=(
   "https://www.truecrypt.org/download/TrueCrypt-Foundation-Public-Key.asc"
   "https://tails.boum.org/tails-signing.key"
   "https://grsecurity.net/spender-gpg-key.asc"
+  "http://sourceforge.net/projects/apcupsd/files/apcupsd%20Public%20Key/Current%20Public%20Key/apcupsd.pub/download"
 )
 
 # other PGP keys:
