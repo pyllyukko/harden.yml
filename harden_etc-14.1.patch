@@ -586,6 +586,23 @@ index 0000000..b21ee23
 +    notifempty
 +    create 0640 root adm
 +}
+diff --git a/logrotate.d/syslog b/logrotate.d/syslog
+index 031e68d..620695f 100644
+--- a/logrotate.d/syslog
++++ b/logrotate.d/syslog
+@@ -1,6 +1,12 @@
+ /var/log/cron /var/log/debug /var/log/maillog /var/log/messages /var/log/secure /var/log/spooler /var/log/syslog {
+     sharedscripts
++    prerotate
++	# remove the append only flag, so logrotate can do it's job
++	/usr/bin/chattr -a /var/log/{cron,debug,maillog,messages,secure,spooler,syslog}
++    endscript
+     postrotate
++	# make logs append only
++	/usr/bin/chattr +a /var/log/{cron,debug,maillog,messages,secure,spooler,syslog}
+ 	/bin/kill -HUP `cat /var/run/syslogd.pid 2>/dev/null` 2>/dev/null || true
+     endscript
+ }
 diff --git a/porttime b/porttime
 new file mode 100644
 index 0000000..70f4aaa

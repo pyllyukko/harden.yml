@@ -193,6 +193,7 @@ The *import_pgp_keys()* function imports a bunch of PGP keys to your *trustedkey
 
         ADMINS ALL=(:adm) NOPASSWD: /usr/bin/xconsole
 * Enables bootlogd
+* Makes certain log files [append only](http://www.seifried.org/lasg/logging/)
 
 #### Principle of least privilege
 
