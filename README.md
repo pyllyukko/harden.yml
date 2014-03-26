@@ -162,7 +162,7 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
 * Modifies crontab behaviour a bit
   * Users in the *wheel* group are able to create cronjobs (as described in [/usr/doc/dcron-4.5/README][8])
   * Increase cron's logging from *notice* to *info*
-* Clear /tmp on boot (also recommended in [FHS](http://refspecs.linuxfoundation.org/FHS_2.3/fhs-2.3.html#TMPTEMPORARYFILES))
+* Clear /tmp on boot (also recommended in [FHS](http://refspecs.linuxfoundation.org/FHS_2.3/fhs-2.3.html#PURPOSE17))
 * Removes unnecessary / potentially dangerous packages
   * netkit-rsh
   * uucp
