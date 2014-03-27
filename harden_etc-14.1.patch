@@ -182,7 +182,7 @@ index cb371ea..7938659 100644
 -
  # End of hosts.equiv.
 diff --git a/inittab b/inittab
-index ba6fe79..d0a8079 100644
+index ba6fe79..1934095 100644
 --- a/inittab
 +++ b/inittab
 @@ -34,7 +34,8 @@ su:1S:wait:/etc/rc.d/rc.K
@@ -205,15 +205,23 @@ index ba6fe79..d0a8079 100644
 -c4:12345:respawn:/sbin/agetty 38400 tty4 linux
 -c5:12345:respawn:/sbin/agetty 38400 tty5 linux
 -c6:12345:respawn:/sbin/agetty 38400 tty6 linux
-+c1:12345:respawn:/sbin/agetty -i --nohostname --noclear 38400 tty1 linux
-+c2:12345:respawn:/sbin/agetty -i --nohostname 38400 tty2 linux
-+c3:12345:respawn:/sbin/agetty -i --nohostname 38400 tty3 linux
-+c4:12345:respawn:/sbin/agetty -i --nohostname 38400 tty4 linux
-+c5:12345:respawn:/sbin/agetty -i --nohostname 38400 tty5 linux
-+c6:12345:respawn:/sbin/agetty -i --nohostname 38400 tty6 linux
++c1:2345:respawn:/sbin/agetty -i --nohostname --noclear 38400 tty1 linux
++c2:2345:respawn:/sbin/agetty -i --nohostname 38400 tty2 linux
++c3:2345:respawn:/sbin/agetty -i --nohostname 38400 tty3 linux
++c4:2345:respawn:/sbin/agetty -i --nohostname 38400 tty4 linux
++c5:2345:respawn:/sbin/agetty -i --nohostname 38400 tty5 linux
++c6:2345:respawn:/sbin/agetty -i --nohostname 38400 tty6 linux
  
  # Local serial lines:
  #s1:12345:respawn:/sbin/agetty -L ttyS0 9600 vt100
+@@ -68,4 +69,7 @@ c6:12345:respawn:/sbin/agetty 38400 tty6 linux
+ # Display managers are preferred in this order:  gdm, kdm, xdm
+ x1:4:respawn:/etc/rc.d/rc.4
+ 
++# single user mode
++~~:S:wait:/sbin/sulogin
++
+ # End of /etc/inittab
 diff --git a/issue b/issue
 index acec0a3..72244e7 100644
 --- a/issue
@@ -856,6 +864,17 @@ index 8288128..2c3a633 100755
 +
  echo "Remounting root filesystem read-only."
  /bin/mount -v -n -o remount,ro /
+ 
+diff --git a/rc.d/rc.K b/rc.d/rc.K
+index 8fc63fd..49d1ba2 100755
+--- a/rc.d/rc.K
++++ b/rc.d/rc.K
+@@ -116,5 +116,5 @@ echo
+ 
+ # Now go to the single user level
+ echo "Going to single user mode..."
+-telinit -t 1 1
++telinit -t 1 S
  
 diff --git a/rc.d/rc.M b/rc.d/rc.M
 index d9b3fed..8b13db7 100755
