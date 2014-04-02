@@ -226,6 +226,9 @@ There is a bunch of security related software that you can find at [SBo](http://
   * [p0f][3]
 * Antivirus:
   * [ClamAV][4]
+* Web server:
+  * [ModSecurity](http://slackbuilds.org/repository/14.1/network/modsecurity-apache/)
+  * [Suhosin](http://slackbuilds.org/repository/13.37/libraries/php-suhosin/)
 * Other:
   * [vlock](http://slackbuilds.org/repository/14.1/system/vlock/)
 
