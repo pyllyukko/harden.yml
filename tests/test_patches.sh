@@ -51,6 +51,7 @@ for PKG in \
   'a/etc-14.1-i486-2.txz' \
   'n/network-scripts-14.1-noarch-2.txz' \
   'a/sysvinit-scripts-2.0-noarch-17.txz' \
+  'a/sysvinit-functions-8.53-i486-2.txz' \
   'a/shadow-4.1.5.1-i486-2.txz' \
   'a/logrotate-3.8.6-i486-1.txz' \
   'a/sysklogd-1.5-i486-2.txz' \
