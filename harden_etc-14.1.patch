@@ -877,7 +877,7 @@ index 8fc63fd..49d1ba2 100755
 +telinit -t 1 S
  
 diff --git a/rc.d/rc.M b/rc.d/rc.M
-index d9b3fed..8b13db7 100755
+index d9b3fed..c019399 100755
 --- a/rc.d/rc.M
 +++ b/rc.d/rc.M
 @@ -46,6 +46,8 @@ else
@@ -897,12 +897,15 @@ index d9b3fed..8b13db7 100755
  
  # Remove stale hunt sockets so the game can start.
  if [ -r /tmp/hunt -o -r /tmp/hunt.stats ]; then
-@@ -269,13 +272,14 @@ fi
+@@ -269,13 +272,17 @@ fi
  # If you want cron to actually log activity to /var/log/cron, then change
  # -l notice to -l info to increase the logging level.
  if [ -x /usr/sbin/crond ]; then
 -  /usr/sbin/crond -l notice
 +  /usr/sbin/crond -l info
++  PID=$(pidof -o %PPID /usr/sbin/crond)
++  echo "$PID" > /var/run/crond.pid
++  unset PID
  fi
  
 +# this should support CIS 7.5 Restrict at/cron To Authorized Users
