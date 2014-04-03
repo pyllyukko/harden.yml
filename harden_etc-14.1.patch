@@ -182,9 +182,18 @@ index cb371ea..7938659 100644
 -
  # End of hosts.equiv.
 diff --git a/inittab b/inittab
-index ba6fe79..1934095 100644
+index ba6fe79..3916d95 100644
 --- a/inittab
 +++ b/inittab
+@@ -25,7 +25,7 @@
+ id:3:initdefault:
+ 
+ # System initialization (runs when system boots).
+-si:S:sysinit:/etc/rc.d/rc.S
++si::sysinit:/etc/rc.d/rc.S
+ 
+ # Script to run when going single user (runlevel 1).
+ su:1S:wait:/etc/rc.d/rc.K
 @@ -34,7 +34,8 @@ su:1S:wait:/etc/rc.d/rc.K
  rc:2345:wait:/etc/rc.d/rc.M
  
