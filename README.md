@@ -169,6 +169,7 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
   * [floppy][7]
 * Sets *dmesg\_restrict*
 * Make *installpkg* store the MD5 checksums
+* Reduce the amount of trusted [CAs](https://en.wikipedia.org/wiki/Certificate_authority)
 
 #### PGP
 

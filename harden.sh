@@ -1882,6 +1882,43 @@ function disable_unnecessary_services() {
   return 0
 } # disable_unnecessary_services()
 ################################################################################
+function create_limited_ca_list() {
+  if [ ! -x /usr/sbin/update-ca-certificates ]
+  then
+    echo "${FUNCNAME}(): ERROR: update-ca-certificates not found!" 1>&2
+    return 1
+  fi
+  if [ ! -f /etc/ca-certificates.conf.original ]
+  then
+    cp -v /etc/ca-certificates.conf /etc/ca-certificates.conf.original
+  fi
+  cat 0<<-EOF 1>/etc/ca-certificates.conf
+	mozilla/AddTrust_External_Root.crt
+	mozilla/Baltimore_CyberTrust_Root.crt
+	mozilla/COMODO_Certification_Authority.crt
+	mozilla/Deutsche_Telekom_Root_CA_2.crt
+	mozilla/DigiCert_High_Assurance_EV_Root_CA.crt
+	mozilla/DigiCert_Global_Root_CA.crt
+	mozilla/Entrust.net_Secure_Server_CA.crt
+	mozilla/Entrust.net_Premium_2048_Secure_Server_CA.crt
+	mozilla/Equifax_Secure_CA.crt
+	mozilla/GTE_CyberTrust_Global_Root.crt
+	mozilla/GeoTrust_Global_CA.crt
+	mozilla/GlobalSign_Root_CA.crt
+	mozilla/Go_Daddy_Class_2_CA.crt
+	mozilla/Go_Daddy_Root_Certificate_Authority_-_G2.crt
+	mozilla/Starfield_Class_2_CA.crt
+	mozilla/StartCom_Certification_Authority.crt
+	mozilla/UTN_USERFirst_Hardware_Root_CA.crt
+	mozilla/ValiCert_Class_2_VA.crt
+	mozilla/VeriSign_Class_3_Public_Primary_Certification_Authority_-_G5.crt
+	mozilla/thawte_Primary_Root_CA.crt
+	mozilla/SecureTrust_CA.crt
+EOF
+  /usr/sbin/update-ca-certificates --verbose --fresh
+  return
+} # create_limited_ca_list()
+################################################################################
 function quick_harden() {
   # this function is designed to do only some basic hardening. so that it can
   # be used in other systems/version that are not directly supported by this
@@ -2105,6 +2142,7 @@ function usage() {
 	  		  - miscellaneous_settings()
 	  		  - hardens file permissions
 	  		  - creates hardened fstab.new
+	  -c		create limited CA conf
 	  -d		default hardening (misc_settings() & file_permissions())
 
 	  -f		file permissions
@@ -2163,7 +2201,7 @@ then
   echo -e "warning: you should probably be root to run this script\n" 1>&2
 fi
 
-while getopts "aAdfFghilL:mMp:P:qrsuU" OPTION
+while getopts "aAcdfFghilL:mMp:P:qrsuU" OPTION
 do
   case "${OPTION}" in
     "a") configure_apache		;;
@@ -2198,6 +2236,7 @@ do
       # there might be new log files with wrong permissions.
       (( ${ETC_CHANGED} )) && restart_services
     ;;
+    "c") create_limited_ca_list		;;
     "d")
       # default
       miscellaneous_settings
