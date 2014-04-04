@@ -1235,7 +1235,7 @@ index 85a8041..6de5e61 100644
  # Example of how to configure a bridge:
  # Note the added "BRNICS" variable which contains a space-separated list
 diff --git a/rc.d/rc.local b/rc.d/rc.local
-index 65b358b..a73c721 100755
+index 65b358b..7471d5c 100755
 --- a/rc.d/rc.local
 +++ b/rc.d/rc.local
 @@ -7,3 +7,117 @@
@@ -1331,7 +1331,7 @@ index 65b358b..a73c721 100755
 +  /etc/rc.d/rc.clamav start
 +fi
 +
-+# http://slackbuilds.org/slackbuilds/13.37/network/framework/README.SLACKWARE
++# http://slackbuilds.org/slackbuilds/14.1/network/metasploit/README.SLACKWARE
 +# Start Metasploit Framework PostgreSQL
 +if [ -x /etc/rc.d/rc.framework-postgres ]; then
 +  /etc/rc.d/rc.framework-postgres start
