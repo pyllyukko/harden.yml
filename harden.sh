@@ -280,6 +280,7 @@ INETD_SERVICES+=(pop3 imap2 netbios-ssn netbios-ns)
 #   - http://www.wangafu.net/~nickm/ 8D29319A - Nick Mathewson (libevent)
 #   - http://www.truecrypt.org/docs/?s=digital-signatures
 #   - https://tails.boum.org/download/index.en.html#verify
+#   - TODO: http://www.snort.org/snort-downloads#pgp
 declare -ra PGP_URLS=(
   "http://www.slackware.com/gpg-key"
   "http://slackbuilds.org/GPG-KEY"
