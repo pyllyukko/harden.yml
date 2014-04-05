@@ -886,19 +886,18 @@ index 8fc63fd..49d1ba2 100755
 +telinit -t 1 S
  
 diff --git a/rc.d/rc.M b/rc.d/rc.M
-index d9b3fed..c019399 100755
+index d9b3fed..97ecf7b 100755
 --- a/rc.d/rc.M
 +++ b/rc.d/rc.M
-@@ -46,6 +46,8 @@ else
+@@ -46,6 +46,7 @@ else
  fi
  # Save the contents of 'dmesg':
  /bin/dmesg -s 65536 > /var/log/dmesg
 +/usr/bin/chgrp adm /var/log/dmesg
-+/usr/bin/chmod 640 /var/log/dmesg
  
  # Initialize PCMCIA devices:
  #
-@@ -125,6 +127,7 @@ fi
+@@ -125,6 +126,7 @@ fi
  # Remove stale locks and junk files (must be done after mount -a!)
  /bin/rm -f /var/lock/* /var/spool/uucp/LCK..* /tmp/.X*lock /tmp/core /core 2> /dev/null
  /bin/rm -rf /var/spool/cron/cron.?????? 2> /dev/null
@@ -906,7 +905,7 @@ index d9b3fed..c019399 100755
  
  # Remove stale hunt sockets so the game can start.
  if [ -r /tmp/hunt -o -r /tmp/hunt.stats ]; then
-@@ -269,13 +272,17 @@ fi
+@@ -269,13 +271,17 @@ fi
  # If you want cron to actually log activity to /var/log/cron, then change
  # -l notice to -l info to increase the logging level.
  if [ -x /usr/sbin/crond ]; then
