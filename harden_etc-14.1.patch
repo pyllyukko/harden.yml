@@ -886,7 +886,7 @@ index 8fc63fd..49d1ba2 100755
 +telinit -t 1 S
  
 diff --git a/rc.d/rc.M b/rc.d/rc.M
-index d9b3fed..97ecf7b 100755
+index d9b3fed..569558c 100755
 --- a/rc.d/rc.M
 +++ b/rc.d/rc.M
 @@ -46,6 +46,7 @@ else
@@ -927,6 +927,13 @@ index d9b3fed..97ecf7b 100755
  
  # Slackware-Mini-Quota-HOWTO:
  # To really activate quotas, you'll need to add 'usrquota' and/or 'grpquota' to
+@@ -370,4 +376,6 @@ if [ -x /etc/rc.d/rc.local ]; then
+   . /etc/rc.d/rc.local
+ fi
+ 
++/bin/killall bootlogd
++
+ # All done.
 diff --git a/rc.d/rc.S b/rc.d/rc.S
 index 7b152e9..eda55ef 100755
 --- a/rc.d/rc.S
