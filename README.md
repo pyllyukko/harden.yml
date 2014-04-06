@@ -283,7 +283,7 @@ Some of these documents are quite old, but most of the stuff still applies.
 
 * [CIS Slackware Linux 10.2 Benchmark v1.1.0][1]
 * [Slackware System Hardening][2] by Jeffrey Denton
-* [SlackDocs: Basic Security](http://docs.slackware.com/howtos:security:basic_security)
+* [SlackDocs: Security HOWTOs](http://docs.slackware.com/howtos:security:start)
 * [Alien's Wiki: Security issues](http://alien.slackbook.org/dokuwiki/doku.php?id=linux:admin#security_issues)
 * [SlackWiki: Basic Security Fixes](http://slackwiki.com/Basic_Security_Fixes)
 * [Wikipedia: Fork bomb Prevention](https://en.wikipedia.org/wiki/Fork_bomb#Prevention)
