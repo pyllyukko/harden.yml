@@ -63,7 +63,7 @@ index bb40819..47d936b 100644
 +  VerifyHostKeyDNS yes
 +  HashKnownHosts yes
 diff --git a/ssh/sshd_config b/ssh/sshd_config
-index 22b9b26..1149876 100644
+index 22b9b26..099531b 100644
 --- a/ssh/sshd_config
 +++ b/ssh/sshd_config
 @@ -10,20 +10,37 @@
@@ -87,7 +87,7 @@ index 22b9b26..1149876 100644
 +#   - https://github.com/ioerror/duraconf/blob/master/configs/sshd/sshd-pfs_config
 +#   - https://bettercrypto.org/
 +Ciphers aes256-ctr
-+MACs MACs hmac-sha2-512
++MACs hmac-sha2-512
 +
 +Port 22
 +AddressFamily inet
