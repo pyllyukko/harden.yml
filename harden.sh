@@ -1894,6 +1894,11 @@ function create_limited_ca_list() {
   then
     cp -v /etc/ca-certificates.conf /etc/ca-certificates.conf.original
   fi
+  # Debian's ssl-cert package runs the make-ssl-cert and creates the snakeoil cert
+  if [ -f /etc/ssl/certs/ssl-cert-snakeoil.pem ]
+  then
+    rm -v /etc/ssl/certs/ssl-cert-snakeoil.pem
+  fi
   cat 0<<-EOF 1>/etc/ca-certificates.conf
 	mozilla/AddTrust_External_Root.crt
 	mozilla/Baltimore_CyberTrust_Root.crt
