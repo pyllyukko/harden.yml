@@ -238,6 +238,7 @@ And from other sources than SBo:
 * [logwatch](http://slackware.com/~alien/slackbuilds/logwatch/)
 * [checksec.sh](http://www.trapkit.de/tools/checksec.html)
 * [psad](http://www.cipherdyne.org/psad/)
+* [Lynis](http://cisofy.com/lynis/)
 
 #### grsecurity
 
