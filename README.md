@@ -269,7 +269,6 @@ TODO
 * Logging of the script actions
 * aide.conf.new
 * lilo.conf: audit=1
-* ca-certificates.conf.new
 * faillog for new users?
 * some kernel module configurator thingie for /etc/rc.d/rc.modules
 * [LUKS nuke](http://www.kali.org/how-to/nuke-kali-linux-luks/)
