@@ -368,11 +368,6 @@ declare -ra PGP_KEYS=(
   "F0D6B1E0"
   "F295C759"
 )
-# if there is a recommended/suggested server for a key
-declare -rA PGP_KEYSERVERS=(
-  ["28988BF5"]="keys.gnupg.net"
-)
-declare -r DEFAULT_KEYSERVER="keys.gnupg.net"
 declare -r ARCH=`/bin/uname -m`
 ################################################################################
 function chattr_files_NOT_IN_USE() {
@@ -499,7 +494,6 @@ function create_environment_for_restricted_shell () {
 ################################################################################
 function import_pgp_keys() {
   local URL
-  local KEYSERVER
   local PGP_KEY
 
   # TODO: GPG:
@@ -582,24 +576,14 @@ function import_pgp_keys() {
     return 1
   fi
   # keys with key ID
-  # set is to avoid "./harden.sh: line 427: PGP_KEYSERVERS[${PGP_KEY}]: unbound variable"
-  set +u
   for PGP_KEY in ${PGP_KEYS[*]}
   do
-    #if [ -n "${PGP_KEYSERVERS[${PGP_KEY}]}" ]
-    #then
-    #  KEYSERVER="${PGP_KEYSERVERS[${PGP_KEY}]}"
-    #else
-    #  KEYSERVER="${DEFAULT_KEYSERVER}"
-    #fi
-    #/usr/bin/gpg --keyserver "hkp://${KEYSERVER}" --keyring "${GPG_KEYRING}" --no-default-keyring --recv-keys "${PGP_KEY}"
     /usr/bin/gpg \
       --keyserver "hkps://hkps.pool.sks-keyservers.net" \
       --keyserver-options ca-cert-file=${SKS_CA_PREFIX}.pem \
       --keyring "${GPG_KEYRING}" --no-default-keyring \
       --recv-keys "${PGP_KEY}"
   done
-  set -u
   return 0
 } # import_pgp_keys()
 ################################################################################
