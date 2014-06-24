@@ -236,7 +236,7 @@ declare -r SENDMAIL_CF_DIR="/usr/share/sendmail/cf/cf"
 declare -r SENDMAIL_CONF_PREFIX="sendmail-slackware"
 declare -r RBINDIR="/usr/local/rbin"
 declare -r INETDCONF="/etc/inetd.conf"
-declare -r SKS_CA_PREFIX="/usr/local/share/ca-certificates/sks-keyservers.netCA"
+declare -r SKS_CA_PREFIX="/usr/share/ca-certificates/local/sks-keyservers.netCA"
 auditPATH='/etc/audit'
 
 # NOLOGIN(8): "It is intended as a replacement shell field for accounts that have been disabled."
@@ -527,17 +527,21 @@ function import_pgp_keys() {
   # https://support.mayfirst.org/wiki/faq/security/mfpl-certificate-authority
   # https://en.wikipedia.org/wiki/Key_server_%28cryptographic%29#Keyserver_examples
   # https://we.riseup.net/riseuplabs+paow/openpgp-best-practices#consider-making-your-default-keyserver-use-a-keyse
-  if [ "${USER}" = "root" -a ! -d /usr/local/share/ca-certificates ]
+  if [ "${USER}" = "root" -a ! -d /usr/share/ca-certificates/local ]
   then
-    mkdir -pvm 755 /usr/local/share/ca-certificates
+    # NOTE: update-ca-certificates will add /usr/local/share/ca-certificates/*.crt to globally trusted CAs... which of course, is not good!
+    #mkdir -pvm 755 /usr/local/share/ca-certificates
+    mkdir -pvm 755 /usr/share/ca-certificates/local
   fi
-  if [ "${USER}" = "root" -a ! -f /usr/local/share/ca-certificates/mfpl.crt ]
+  # TODO: these are not verified, as we need to get the PGP keys first :)
+  #       but we use sks-keyservers currently anyway, and that is verified.
+  if [ "${USER}" = "root" -a ! -f /usr/share/ca-certificates/local/mfpl.crt ]
   then
-    wget -nv --directory-prefix=/usr/local/share/ca-certificates \
+    wget -nv --directory-prefix=/usr/share/ca-certificates/local \
       https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt \
       https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.dkg.asc \
       https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.jamie.asc
-    chmod -c 644 /usr/local/share/ca-certificates/mfpl.crt
+    chmod -c 644 /usr/share/ca-certificates/local/mfpl.crt
   fi
   if [ "${USER}" = "root" -a ! -f "${SKS_CA_PREFIX}.pem" ]
   then
