@@ -329,6 +329,7 @@ declare -ra PGP_URLS=(
 #   - 73647CFF - Nico Golde (Debian Advisories)
 #   - 86FF9C48 - Damien Miller (Personal Key) <djm@mindrot.org> (OpenSSH)
 #   - 77F95F95 - Werner Koch <wk@gnupg.org> (gnupg-announce@gnupg.org)
+#   - 0x249B39D24F25E3B6 - Werner Koch (dist sig)
 #   - 54FC8640 - Debian security advisory
 #   - 14595A1A - Renaud Deraison (Nessus)
 #   - 15A0A4BC - Mozilla Software Releases <releases@mozilla.org>
@@ -358,6 +359,7 @@ declare -ra PGP_KEYS=(
   "0x1D87E54973647CFF"
   "0xCE8ECB0386FF9C48"
   "0x4F0540D577F95F95"
+  "0x249B39D24F25E3B6"
   "0x1BF83C5E54FC8640"
   "0xF091044D14595A1A"
   "0x057CC3EB15A0A4BC"
