@@ -498,18 +498,6 @@ function import_pgp_keys() {
   local URL
   local PGP_KEY
 
-  # TODO: GPG:
-  #     finger wk ,at' g10code.com | gpg --import
-  #
-  #   or using a keyserver like
-  #
-  #     gpg --recv-key 4F25E3B6
-  #
-  #   The distribution key 1CE0C630 is signed by the well known keys
-  #   1E42B367.  If you get an key expired message, you should retrieve a
-  #   fresh copy as the expiration date might have been prolonged.
-
-
   echo "${FUNCNAME}(): importing PGP keys"
   # keys with URL
   for URL in ${PGP_URLS[*]}
