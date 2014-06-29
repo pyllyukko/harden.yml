@@ -1902,6 +1902,23 @@ function create_limited_ca_list() {
 	mozilla/SecureTrust_CA.crt
 EOF
   /usr/sbin/update-ca-certificates --verbose --fresh
+
+  # get Gandi's intermediate CA cert so we can verify freenode
+  # http://freenode.net/irc_servers.shtml#ssl
+  if [ ! -f /usr/share/ca-certificates/local/GandiStandardSSLCA.crt ]
+  then
+    wget -nv --directory-prefix=/usr/share/ca-certificates/local http://crt.gandi.net/GandiStandardSSLCA.crt
+  fi
+  # convert from DER to PEM
+  openssl x509 -inform DER -in /usr/share/ca-certificates/local/GandiStandardSSLCA.crt -outform PEM -out /usr/share/ca-certificates/local/GandiStandardSSLCA.pem
+  # verify
+  openssl verify -CAfile /usr/share/ca-certificates/mozilla/UTN_USERFirst_Email_Root_CA.crt /usr/share/ca-certificates/local/GandiStandardSSLCA.pem
+  if [ ${?} -ne 0 ]
+  then
+    echo "error: could not verify Gandi's cert!" 1>&2
+    rm -v /usr/share/ca-certificates/local/GandiStandardSSLCA.{pem,crt}
+  fi
+
   return
 } # create_limited_ca_list()
 ################################################################################
