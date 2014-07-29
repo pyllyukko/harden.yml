@@ -339,6 +339,7 @@ declare -ra PGP_URLS=(
 #   - 0x2E8DD26C53F1197DDF403E6118E667F1EB8AF314 - https://web.monkeysphere.info/archive-key/
 #   - F0D6B1E0 - http://www.truecrypt.org/docs/digital-signatures
 #   - F295C759 - OpenSSL
+#   - FA40E9E2 - steve@openssl.org
 #   - 0x715ED6A07E7B8AC9 - key that can be used to verify SPI's CA cert - http://www.spi-inc.org/ca/
 declare -ra PGP_KEYS=(
   #"CEA0A321"
@@ -370,6 +371,7 @@ declare -ra PGP_KEYS=(
   "0x2E8DD26C53F1197DDF403E6118E667F1EB8AF314"
   "F0D6B1E0"
   "F295C759"
+  "FA40E9E2"
   "0x715ED6A07E7B8AC9"
 )
 declare -r ARCH=`/bin/uname -m`
