@@ -207,6 +207,11 @@ The *import_pgp_keys()* function imports a bunch of PGP keys to your *trustedkey
         ADMINS ALL=(:adm) NOPASSWD: /usr/bin/lastb
 * Remove *floppy* and *scanner* from CONSOLE\_GROUPS
 
+Benchmarks
+----------
+
+**TODO**: lynis!!!
+
 Notes
 -----
 
