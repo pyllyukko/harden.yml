@@ -273,7 +273,6 @@ TODO
 * User quotas
 * Static ARP cache
 * Logging of the script actions
-* aide.conf.new
 * lilo.conf: audit=1
 * faillog for new users?
 * some kernel module configurator thingie for /etc/rc.d/rc.modules

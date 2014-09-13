@@ -1,0 +1,52 @@
+database=file:/var/lib/aide/aide.db
+database_out=file:/var/lib/aide/aide.db.new
+
+# from Debian:
+OwnerMode = p+u+g+ftype
+R = R+sha1
+
+/boot					R
+
+# exceptions:
+## hwclock?
+/etc/adjtime				R-m-c-md5-sha1
+## modified by rc.S
+/etc/motd				R-m-c-i
+/etc/random-seed			R-m-c-md5-sha1
+## modified by system:
+/etc/mtab				OwnerMode
+/etc/ld.so.cache			R-m-c-i
+/etc/ntp/drift				R-m-c-i-md5-sha1
+/etc/ntp				R-m-c
+
+/etc					R
+
+# binaries
+/usr/local/sbin				R
+/usr/local/bin				R
+/usr/sbin				R
+/usr/bin				R
+/sbin					R
+/bin					R
+/usr/games				R
+## libexec : Binaries run by other programs
+/usr/libexec				R
+
+# libs
+/lib					R
+/usr/lib				R
+/usr/local/lib				R
+/usr/i486-slackware-linux/lib		R
+# libs x86_64
+/lib64					R
+/usr/lib64				R
+/usr/local/lib64			R
+/usr/x86_64-slackware-linux/lib64	R
+
+# CA certs
+/usr/share/ca-certificates		R
+/usr/local/share/ca-certificates	R
+
+#/var/log/[^/]+-[0-9]+			R
+/var/log/.*-[0-9]{8}(\.gz)?$		R+ANF+ARF
+/var					OwnerMode+ANF+ARF
