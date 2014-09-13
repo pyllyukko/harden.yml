@@ -774,6 +774,9 @@ function user_accounts() {
 
   echo "creating groups for grsecurity"
   groupadd -g 1001 grsec_proc
+  groupadd -g 1002 grsec_socketserver
+  groupadd -g 1003 grsec_socketclient
+  groupadd -g 1004 grsec_socketall
   groupadd -g 1005 grsec_tpe
   groupadd -g 1006 grsec_symlinkown
   groupadd -g 1007 grsec_audit
