@@ -266,7 +266,6 @@ TODO
 ----
 
 * Immutable flags with *chattr* on certain files
-* Checksums for log files
 * X hardening
 * Debian support
 * Some chroot stuff?
