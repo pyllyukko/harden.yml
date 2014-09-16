@@ -2073,6 +2073,27 @@ EOF
   return
 } # quick_harden()
 ################################################################################
+function toggle_usb_authorized_default() {
+  local host
+  local state
+
+  for host in /sys/bus/usb/devices/usb*
+  do
+    read state 0<"${host}/authorized_default"
+    ((state^=1))
+    if (( ${state} ))
+    then
+      echo "setting ${host} to authorized_default"
+      echo "${state}" > ${host}/authorized_default
+    else
+      echo "setting ${host} to !authorized"
+      echo "${state}" > ${host}/authorized_default
+    fi
+  done
+
+  return 0
+} # toggle_usb_authorized_default()
+################################################################################
 function patch_sendmail() {
   # $1 = [reverse]
 
@@ -2152,6 +2173,7 @@ function usage() {
 	  		  - miscellaneous_settings()
 	  		  - hardens file permissions
 	  		  - creates hardened fstab.new
+	  -b		toggle USB authorized_default
 	  -c		create limited CA conf
 	  -d		default hardening (misc_settings() & file_permissions())
 
@@ -2211,7 +2233,7 @@ then
   echo -e "warning: you should probably be root to run this script\n" 1>&2
 fi
 
-while getopts "aAcdfFghilL:mMp:P:qrsuU" OPTION
+while getopts "aAbcdfFghilL:mMp:P:qrsuU" OPTION
 do
   case "${OPTION}" in
     "a") configure_apache		;;
@@ -2246,6 +2268,7 @@ do
       # there might be new log files with wrong permissions.
       (( ${ETC_CHANGED} )) && restart_services
     ;;
+    "b") toggle_usb_authorized_default	;;
     "c") create_limited_ca_list		;;
     "d")
       # default
