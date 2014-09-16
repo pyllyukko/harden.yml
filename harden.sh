@@ -2084,11 +2084,10 @@ function toggle_usb_authorized_default() {
     if (( ${state} ))
     then
       echo "setting ${host} to authorized_default"
-      echo "${state}" > ${host}/authorized_default
     else
       echo "setting ${host} to !authorized"
-      echo "${state}" > ${host}/authorized_default
     fi
+    echo "${state}" > ${host}/authorized_default
   done
 
   return 0
