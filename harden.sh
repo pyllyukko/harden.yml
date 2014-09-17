@@ -341,6 +341,7 @@ declare -ra PGP_URLS=(
 #   - F295C759 - OpenSSL
 #   - FA40E9E2 - steve@openssl.org
 #   - 0x715ED6A07E7B8AC9 - key that can be used to verify SPI's CA cert - http://www.spi-inc.org/ca/
+#   - 0xDED64EBB2BA87C5C - OTR Dev Team <otr@cypherpunks.ca>
 declare -ra PGP_KEYS=(
   #"CEA0A321"
   #"060798CB"
@@ -373,6 +374,7 @@ declare -ra PGP_KEYS=(
   "F295C759"
   "FA40E9E2"
   "0x715ED6A07E7B8AC9"
+  "0xDED64EBB2BA87C5C"
 )
 declare -r ARCH=`/bin/uname -m`
 ################################################################################
