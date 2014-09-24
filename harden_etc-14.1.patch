@@ -65,58 +65,6 @@ index 0000000..ae15504
 +fi
 +
 +exit
-diff --git a/cron.weekly/log_checksums.sh b/cron.weekly/log_checksums.sh
-new file mode 100644
-index 0000000..b10a01d
---- /dev/null
-+++ b/cron.weekly/log_checksums.sh
-@@ -0,0 +1,46 @@
-+#!/bin/bash
-+################################################################################
-+# file:
-+# created:	23-07-2012
-+# modified:	2012 Jul 23
-+# TODO: ADD CREATED WITH BASH_VERSION and bash version detection
-+################################################################################
-+if [ ${BASH_VERSINFO[0]} -ne 4 ]
-+then
-+  echo -e "error: bash version != 4, this script might not work properly!" 1>&2
-+  echo    "       you can bypass this check by commenting out lines $[${LINENO}-2]-$[${LINENO}+2]." 1>&2
-+  exit 1
-+fi
-+# Treat unset variables as an error when substituting.
-+set -u
-+for PROGRAM in \
-+  awk \
-+  cat \
-+  cp \
-+  date \
-+  gawk \
-+  grep \
-+  ln \
-+  mkdir \
-+  mv \
-+  rm \
-+  sed \
-+  shred \
-+  sha512sum \
-+  stat
-+do
-+  if ! hash "${PROGRAM}" 2>/dev/null
-+  then
-+    printf "error: command not found in PATH: %s\n" "${PROGRAM}" >&2
-+    exit 1
-+  fi
-+done
-+unset PROGRAM
-+
-+declare -r TODATE=$( date +%Y%m%d )
-+
-+umask 077
-+
-+pushd /var/log
-+sha512sum *-[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9] 1>"/var/log/CHECKSUMS-${TODATE}.sha512"
-+
 diff --git a/host.conf b/host.conf
 index a659e91..3b1781b 100644
 --- a/host.conf
