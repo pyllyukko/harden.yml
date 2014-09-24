@@ -22,7 +22,7 @@ index 0000000..617a3a5
 +exit ${?}
 +
 diff --git a/cron.hourly/rkhunter.sh b/cron.hourly/rkhunter.sh
-new file mode 100644
+new file mode 100755
 index 0000000..ae15504
 --- /dev/null
 +++ b/cron.hourly/rkhunter.sh
