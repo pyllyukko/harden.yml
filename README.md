@@ -210,7 +210,40 @@ The *import_pgp_keys()* function imports a bunch of PGP keys to your *trustedkey
 Benchmarks
 ----------
 
-**TODO**: lynis!!!
+Lynis benchmarks.
+
+The test is performed against a setup like this:
+
+* A minimal Slackware installation with some 135 packages installed
+  * No additional security related tools installed
+  * Running with latest patches
+* One big root partition
+  * No LUKS
+* The hardening is done with *./harden.sh -A*
+  * The system is booted after hardening
+* [AUTH-9262](http://cisofy.com/controls/AUTH-9262/) test disabled
+
+Baseline:
+
+<table>
+  <tr>
+    <th>Date</th><th>Slackware version</th><th>Lynis version</th><th>Hardening index</th>
+  </tr>
+  <tr>
+    <td>24.9.2014</td><td>slackware64-14.1</td><td>1.6.2<td>43</td>
+  </tr>
+</table>
+
+Hardened:
+
+<table>
+  <tr>
+    <th>Date</th><th>Slackware version</th><th>Lynis version</th><th>harden.sh version</th><th>Hardening index</th>
+  </tr>
+  <tr>
+    <td>24.9.2014</td><td>slackware64-14.1</td><td>1.6.2<td>155ad8536aed9e30197d645031c72d79ad93f3f4</td><td>68</td>
+  </tr>
+</table>
 
 Notes
 -----
