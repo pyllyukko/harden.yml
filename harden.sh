@@ -2133,6 +2133,12 @@ function configure_basic_auditing() {
     -e 's:^\(-w /etc/sysconfig/network -p wa -k system-locale\)$:#\1:' \
     "${stig_rules[0]}" 1>/etc/audit/audit.rules
 
+  # disable x86_64 rules
+  if [[ ${ARCH} =~ ^i.86$ ]]
+  then
+    sed -i '/^-.*arch=b64/s/^/#/' /etc/audit/audit.rules
+  fi
+
   /sbin/auditctl -R /etc/audit/audit.rules
 
   chmod -c 700 /etc/rc.d/rc.auditd
