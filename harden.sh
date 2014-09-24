@@ -2093,6 +2093,52 @@ function toggle_usb_authorized_default() {
   return 0
 } # toggle_usb_authorized_default()
 ################################################################################
+function configure_basic_auditing() {
+  local -a stig_rules=()
+  if [ ! -x /sbin/auditctl ]
+  then
+    echo "${FUNCNAME}(): error: auditctl not found!" 1>&2
+    return 1
+  fi
+
+  /sbin/auditctl -l | grep -q "^No rules$"
+  if [ ${PIPESTATUS[1]} -ne 0 ]
+  then
+    # some rules exist...
+    return 0
+  fi
+
+  stig_rules=( /usr/doc/audit-*/contrib/stig.rules )
+  echo "${#stig_rules[*]}"
+  if [ ${#stig_rules[*]} -ne 1 ]
+  then
+    echo "${FUNCNAME}(): error: stig.rules not found!" 1>&2
+    return 1
+  elif [ ! -f ${stig_rules[0]} ]
+  then
+    echo "${FUNCNAME}(): error: stig.rules not found!" 1>&2
+    return 1
+  fi
+
+  echo "${FUNCNAME}(): configuring basic auditing..."
+
+  # backup old rules
+  if [ -f /etc/audit/audit.rules -a ! -f /etc/audit/audit.rules.old ]
+  then
+    cp -v /etc/audit/audit.rules /etc/audit/audit.rules.old
+  fi
+
+  sed \
+    -e 's:^\(-w /etc/security/opasswd -p wa -k identity\)$:#\1:' \
+    -e 's:^\(-w /etc/sysconfig/network -p wa -k system-locale\)$:#\1:' \
+    "${stig_rules[0]}" 1>/etc/audit/audit.rules
+
+  /sbin/auditctl -R /etc/audit/audit.rules
+
+  chmod -c 700 /etc/rc.d/rc.auditd
+
+} # configure_basic_auditing()
+################################################################################
 function patch_sendmail() {
   # $1 = [reverse]
 
@@ -2218,6 +2264,7 @@ function usage() {
 	  	  - creates hardened fstab.new
 	  -r	remove unnecessary shells
 	  -s	disable unnecessary services (also enables few recommended ones)
+	  -S	configure basic auditing using the stig.rules
 	  -u	harden user accounts
 	  -U	create additional user accounts (SBo related)
 EOF
@@ -2232,7 +2279,7 @@ then
   echo -e "warning: you should probably be root to run this script\n" 1>&2
 fi
 
-while getopts "aAbcdfFghilL:mMp:P:qrsuU" OPTION
+while getopts "aAbcdfFghilL:mMp:P:qrsSuU" OPTION
 do
   case "${OPTION}" in
     "a") configure_apache		;;
@@ -2262,6 +2309,7 @@ do
       file_permissions
 
       harden_fstab
+      configure_basic_auditing
 
       # TODO: after restarting syslog,
       # there might be new log files with wrong permissions.
@@ -2336,6 +2384,7 @@ do
     "q") quick_harden			;;
     "r") remove_shells			;;
     "s") disable_unnecessary_services	;;
+    "S") configure_basic_auditing	;;
     "u") user_accounts			;;
     "U") create_additional_user_accounts ;;
   esac

@@ -196,6 +196,7 @@ The *import_pgp_keys()* function imports a bunch of PGP keys to your *trustedkey
         ADMINS ALL=(:adm) NOPASSWD: /usr/bin/xconsole
 * Enables bootlogd
 * Makes certain log files [append only](http://www.seifried.org/lasg/logging/)
+* Configures basic auditing based on [stig.rules](https://fedorahosted.org/audit/browser/trunk/contrib/stig.rules) if [audit][5] is installed
 
 #### Principle of least privilege
 
