@@ -278,7 +278,6 @@ INETD_SERVICES+=(pop3 imap2 netbios-ssn netbios-ns)
 #     - http://sourceforge.net/projects/aide/files/PGP%20key/
 #   - http://wiki.clamav.net/bin/view/Main/FAQ#How_do_I_verify_the_integrity_of
 #   - http://www.wangafu.net/~nickm/ 8D29319A - Nick Mathewson (libevent)
-#   - http://www.truecrypt.org/docs/?s=digital-signatures
 #   - https://tails.boum.org/download/index.en.html#verify
 #   - TODO: http://www.snort.org/snort-downloads#pgp
 declare -ra PGP_URLS=(
@@ -294,7 +293,6 @@ declare -ra PGP_URLS=(
   "http://sourceforge.net/projects/aide/files/PGP%20key/aide-2010_0xCBF11FCD.asc/download"
   "http://www.clamav.net/gpg/tkojm.gpg"
   "http://www.wangafu.net/~nickm/public_key.asc"
-  "https://www.truecrypt.org/download/TrueCrypt-Foundation-Public-Key.asc"
   "https://tails.boum.org/tails-signing.key"
   "https://grsecurity.net/spender-gpg-key.asc"
   "http://sourceforge.net/projects/apcupsd/files/apcupsd%20Public%20Key/Current%20Public%20Key/apcupsd.pub/download"
