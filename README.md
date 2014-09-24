@@ -231,8 +231,6 @@ There is a bunch of security related software that you can find at [SBo](http://
 * Network related:
   * [arpwatch][6]
   * [p0f][3]
-* Antivirus:
-  * [ClamAV][4]
 * Web server:
   * [ModSecurity](http://slackbuilds.org/repository/14.1/network/modsecurity-apache/)
   * [Suhosin](http://slackbuilds.org/repository/13.37/libraries/php-suhosin/)
@@ -244,6 +242,12 @@ And from other sources than SBo:
 * [checksec.sh](http://www.trapkit.de/tools/checksec.html)
 * [psad](http://www.cipherdyne.org/psad/)
 * [Lynis](http://cisofy.com/lynis/)
+
+#### Antivirus
+
+I think it's justified and recommended to run an antivirus software on all of your Linux servers. This is because, even though the server's role would not be something like a file sharing server or a mail server, a proper antivirus is able to detect much more than these "traditional" malwares. I'm talking about rootkits, exploits, [PHP shells](https://en.wikipedia.org/wiki/Backdoor_Shell) and the like. Something that a malicious user might be holding at their home dirs or maybe some PHP shell was dropped through a vulnerable web application. If you would get an early warning from an antivirus software, it just might save you on that one occasion :)
+
+So consider getting [ClamAV][4] from SBo.
 
 #### grsecurity
 
