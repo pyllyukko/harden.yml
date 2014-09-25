@@ -185,6 +185,7 @@ SERVICES_WHITELIST=(
   /etc/rc.d/rc.udev
   /etc/rc.d/rc.ntpd
   /etc/rc.d/rc.mcelog
+  /etc/rc.d/rc.sysvinit
   # SBo:
   /etc/rc.d/rc.clamav
   /etc/rc.d/rc.snort
