@@ -2392,7 +2392,10 @@ do
         "sudoers")
           check_and_patch /etc	"${SUDOERS_PATCH_FILE}"	1 reverse
         ;;
-	"wipe") check_and_patch /etc wipe.patch 1 reverse				;;
+	"wipe")
+	  check_and_patch /etc wipe.patch 1 reverse
+	  init q
+	;;
 	*)     echo "error: unknown patch \`${OPTARG}'!" 1>&2				;;
       esac
     ;;
