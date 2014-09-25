@@ -314,6 +314,8 @@ TODO
 * faillog for new users?
 * some kernel module configurator thingie for /etc/rc.d/rc.modules
 * [LUKS nuke](http://www.kali.org/how-to/nuke-kali-linux-luks/)
+* Provide the trustedkeys.gpg PGP keys with this tool?
+  * Or get rid of wget over HTTP
 
 References
 ----------
