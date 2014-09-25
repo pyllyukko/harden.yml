@@ -172,6 +172,10 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
 * Make *installpkg* store the MD5 checksums
 * Reduce the amount of trusted [CAs](https://en.wikipedia.org/wiki/Certificate_authority)
 
+#### Periodic checks
+
+Some things are added to cron: **TODO**
+
 #### PGP
 
 The *import_pgp_keys()* function imports a bunch of PGP keys to your *trustedkeys.gpg* keyring, so you can verify downloaded files/packages with [gpgv](http://www.gnupg.org/documentation/manuals/gnupg/gpgv.html). The keys that are imported are listed in the PGP_URLS[] and PGP_KEYS[] arrays.
