@@ -201,6 +201,8 @@ So to wipe LUKS headers, you just switch to runlevel 5: `telinit 5` and to resto
 
 There is still some issues, such as some services will be started again (such as *crond*) when returning to runlevel 3. This is because *rc.M* doesn't really consider users switching back and forth between runlevels. So this is a work-in-progress.
 
+As a workaround, there is also a new runlevel **2** that can be used to safely return from runlevel 5. Now we don't need to care about daemons starting over and over again from *rc.M* (runlevel 3).
+
 #### Logging
 
 * Makes default log files group *adm* readable ([as in Debian](http://www.debian.org/doc/manuals/debian-reference/ch01.en.html#listofnotablesysupsforfileaccess))

@@ -2370,7 +2370,7 @@ do
         ;;
 	"wipe")
 	  check_and_patch /etc wipe.patch 1
-	  chmod -c 700 /etc/rc.d/rc.5
+	  chmod -c 700 /etc/rc.d/rc.{2,5}
 	  chmod -c 700 /etc/rc.d/rc5.d/KluksHeaderRestore.sh
 	  chmod -c 700 /etc/rc.d/rc.sysvinit
 	  init q

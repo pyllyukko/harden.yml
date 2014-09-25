@@ -1,18 +1,37 @@
 diff --git a/inittab b/inittab
-index 1934095..285154d 100644
+index 1934095..91e598e 100644
 --- a/inittab
 +++ b/inittab
-@@ -31,7 +31,9 @@ si:S:sysinit:/etc/rc.d/rc.S
+@@ -31,7 +31,10 @@ si:S:sysinit:/etc/rc.d/rc.S
  su:1S:wait:/etc/rc.d/rc.K
  
  # Script to run when going multi user.
 -rc:2345:wait:/etc/rc.d/rc.M
-+rc:234:wait:/etc/rc.d/rc.M
++rc:34:wait:/etc/rc.d/rc.M
 +
++l2:2:wait:/etc/rc.d/rc.2
 +l5:5:wait:/etc/rc.d/rc.5
  
  # What to do at the "Three Finger Salute".
  # ...as suggested in system-hardening-10.2.txt
+diff --git a/rc.d/rc.2 b/rc.d/rc.2
+new file mode 100755
+index 0000000..39e3091
+--- /dev/null
++++ b/rc.d/rc.2
+@@ -0,0 +1,12 @@
++#! /bin/bash
++#
++# rc.2		This file is executed by init(8) when the system is being
++#		initialized for run level 2 (dummy)
++#
++# Author:	pyllyukko, <pyllyukko@maimed.org>
++#
++
++# If there are SystemV init scripts for this runlevel, run them.
++if [ -x /etc/rc.d/rc.sysvinit ]; then
++  . /etc/rc.d/rc.sysvinit
++fi
 diff --git a/rc.d/rc.5 b/rc.d/rc.5
 new file mode 100755
 index 0000000..0cadc57
