@@ -189,6 +189,16 @@ The *import_pgp_keys()* function imports a bunch of PGP keys to your *trustedkey
   * DontZap
 * shutdown.allow and /sbin/shutdown -a (FWIW)
 
+##### Wipe
+
+**WARNING**: This is a highly experimental and dangerous feature (and completely optional)! Use at your own risk!
+
+This is something that has been cooking for a while now. It's a self-destruct sequence for your server :)
+
+The patch creates a new runlevel (**5**) to your Slackware, which when activated, will remove LUKS headers from your disk and copies them inside the encrypted disk. So if anything should happen, the server is not restorable anymore, as the disk encryption keys are gone. When the runlevel is switched back (to say 3), the headers are written back to where they belong.
+
+So to wipe LUKS headers, you just switch to runlevel 5: `telinit 5` and to restore just switch back to 3: `telinit 3`.
+
 #### Logging
 
 * Makes default log files group *adm* readable ([as in Debian](http://www.debian.org/doc/manuals/debian-reference/ch01.en.html#listofnotablesysupsforfileaccess))

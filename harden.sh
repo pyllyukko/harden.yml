@@ -2259,6 +2259,7 @@ function usage() {
 	      sendmail
 	      php
 	      sudoers
+	      wipe **HIGHLY EXPERIMENTAL AND DANGEROUS**
 
 	  -q	"quick harden" - just some generic stuff that should work on any system
 	  	  - creates a deny all TCP wrappers rule
@@ -2366,6 +2367,13 @@ do
         "sudoers")
           check_and_patch /etc	"${SUDOERS_PATCH_FILE}"	1
         ;;
+	"wipe")
+	  check_and_patch /etc wipe.patch 1
+	  chmod -c 700 /etc/rc.d/rc.5
+	  chmod -c 700 /etc/rc.d/rc5.d/KluksHeaderRestore.sh
+	  chmod -c 700 /etc/rc.d/rc.sysvinit
+	  init q
+	;;
 	*) echo "error: unknown patch \`${OPTARG}'!" 1>&2 ;;
       esac
     ;;
@@ -2384,6 +2392,7 @@ do
         "sudoers")
           check_and_patch /etc	"${SUDOERS_PATCH_FILE}"	1 reverse
         ;;
+	"wipe") check_and_patch /etc wipe.patch 1 reverse				;;
 	*)     echo "error: unknown patch \`${OPTARG}'!" 1>&2				;;
       esac
     ;;
