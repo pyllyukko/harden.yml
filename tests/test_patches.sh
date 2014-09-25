@@ -123,6 +123,15 @@ then
   echo "WARNING: something wrong!" 1>&2
 fi
 
+patch -p1 -t --dry-run 0<../../../wipe.patch
+RET_VALUE=${?}
+RET_VALUES+=( ${RET_VALUE} )
+if [ ${RET_VALUE} -ne 0 ]
+then
+  echo "WARNING: something wrong!" 1>&2
+fi
+echo -n $'\n'
+
 popd
 echo -n $'\n'
 pushd tmp/usr/share/sendmail
