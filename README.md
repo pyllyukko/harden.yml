@@ -199,6 +199,8 @@ The patch creates a new runlevel (**5**) to your Slackware, which when activated
 
 So to wipe LUKS headers, you just switch to runlevel 5: `telinit 5` and to restore just switch back to 3: `telinit 3`.
 
+There is still some issues, such as some services will be started again (such as *crond*) when returning to runlevel 3. This is because *rc.M* doesn't really consider users switching back and forth between runlevels. So this is a work-in-progress.
+
 #### Logging
 
 * Makes default log files group *adm* readable ([as in Debian](http://www.debian.org/doc/manuals/debian-reference/ch01.en.html#listofnotablesysupsforfileaccess))
