@@ -69,7 +69,7 @@ What does it do?
   * INACTIVE days to lock accounts after the password expires
   * rbash as default shell
 * Configures a bit better password policy to _login.defs_
-* Changes the hashing mechanism to SHA512 and more crypt rounds
+* Changes the hashing mechanism to [SHA512](https://en.wikipedia.org/wiki/SHA-2) and more crypt rounds
 * Disallow the use of *at*
 * Removes user daemon from group *adm* (as we will take use of the *adm* group)
 * Fix gshadow with *grpck*
