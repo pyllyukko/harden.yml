@@ -334,6 +334,8 @@ TODO
 * [LUKS nuke](http://www.kali.org/how-to/nuke-kali-linux-luks/)
 * Provide the trustedkeys.gpg PGP keys with this tool?
   * Or get rid of wget over HTTP
+* [PAM](http://www.slackware.com/~vbatts/pam/) for Slackware?
+  * Two-factor authentication
 
 References
 ----------
