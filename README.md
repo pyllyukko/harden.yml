@@ -147,6 +147,8 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
   * Removes world-readibility from /var/www
   * Removes world-readibility from home directories
 
+**TODO**: Add a table about file ownership & permission changes. At least the most relevant ones.
+
 ### Network related
 
 * Creates and enables a basic firewall
