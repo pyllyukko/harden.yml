@@ -339,6 +339,7 @@ TODO
 * [PAM](http://www.slackware.com/~vbatts/pam/) for Slackware?
   * Two-factor authentication
 * Add some functionality, that compares your current file system against Slackware's [MANIFEST](ftp://ftp.slackware.com/pub/slackware/slackware64-14.1/slackware64/MANIFEST.bz2) (something like Alien's [restore_fileperms_from_manifest.sh](http://www.slackware.com/~alien/tools/restore_fileperms_from_manifest.sh))
+  * Some HIDS baseline generation from MANIFEST would also be really nice
 
 References
 ----------
