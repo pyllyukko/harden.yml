@@ -327,6 +327,7 @@ declare -ra PGP_URLS=(
 #   - 1FC730C1 - Bitcoin
 #   - 73647CFF - Nico Golde (Debian Advisories)
 #   - 86FF9C48 - Damien Miller (Personal Key) <djm@mindrot.org> (OpenSSH)
+#     0xD3E5F56B6D920D30
 #   - 77F95F95 - Werner Koch <wk@gnupg.org> (gnupg-announce@gnupg.org)
 #   - 0x249B39D24F25E3B6 - Werner Koch (dist sig)
 #   - 54FC8640 - Debian security advisory
@@ -361,6 +362,7 @@ declare -ra PGP_KEYS=(
   "0x29D9EE6B1FC730C1"
   "0x1D87E54973647CFF"
   "0xCE8ECB0386FF9C48"
+  "0xD3E5F56B6D920D30"
   "0x4F0540D577F95F95"
   "0x249B39D24F25E3B6"
   "0x1BF83C5E54FC8640"
