@@ -286,7 +286,7 @@ declare -ra PGP_URLS=(
   "http://nmap.org/data/nmap_gpgkeys.txt"
   "https://www.cipherdyne.org/signing_key"
   "http://www.openwall.com/signatures/openwall-signatures.asc"
-  "http://savannah.nongnu.org/people/viewgpg.php?user_id=7475"
+  "https://savannah.nongnu.org/people/viewgpg.php?user_id=7475"
   "https://www.atagar.com/resources/damianJohnson.asc"
   "http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5"
   "https://www.kismetwireless.net/dragorn.gpg"
