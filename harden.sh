@@ -285,18 +285,18 @@ declare -ra PGP_URLS=(
   "http://www.slackware.com/gpg-key"
   "http://slackbuilds.org/GPG-KEY"
   "http://nmap.org/data/nmap_gpgkeys.txt"
-  "http://www.cipherdyne.org/signing_key"
+  "https://www.cipherdyne.org/signing_key"
   "http://www.openwall.com/signatures/openwall-signatures.asc"
   "http://savannah.nongnu.org/people/viewgpg.php?user_id=7475"
-  "http://www.atagar.com/resources/damianJohnson.asc"
+  "https://www.atagar.com/resources/damianJohnson.asc"
   "http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5"
   "https://www.kismetwireless.net/dragorn.gpg"
-  "http://sourceforge.net/projects/aide/files/PGP%20key/aide-2010_0xCBF11FCD.asc/download"
+  "https://sourceforge.net/projects/aide/files/PGP%20key/aide-2010_0xCBF11FCD.asc/download"
   "http://www.clamav.net/gpg/tkojm.gpg"
   "http://www.wangafu.net/~nickm/public_key.asc"
   "https://tails.boum.org/tails-signing.key"
   "https://grsecurity.net/spender-gpg-key.asc"
-  "http://sourceforge.net/projects/apcupsd/files/apcupsd%20Public%20Key/Current%20Public%20Key/apcupsd.pub/download"
+  "https://sourceforge.net/projects/apcupsd/files/apcupsd%20Public%20Key/Current%20Public%20Key/apcupsd.pub/download"
 )
 
 # other PGP keys:
