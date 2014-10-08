@@ -277,7 +277,6 @@ INETD_SERVICES+=(pop3 imap2 netbios-ssn netbios-ns)
 #   - aide:
 #     - http://aide.sourceforge.net/
 #     - http://sourceforge.net/projects/aide/files/PGP%20key/
-#   - http://wiki.clamav.net/bin/view/Main/FAQ#How_do_I_verify_the_integrity_of
 #   - http://www.wangafu.net/~nickm/ 8D29319A - Nick Mathewson (libevent)
 #   - https://tails.boum.org/download/index.en.html#verify
 #   - TODO: http://www.snort.org/snort-downloads#pgp
@@ -292,7 +291,6 @@ declare -ra PGP_URLS=(
   "http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5"
   "https://www.kismetwireless.net/dragorn.gpg"
   "https://sourceforge.net/projects/aide/files/PGP%20key/aide-2010_0xCBF11FCD.asc/download"
-  "http://www.clamav.net/gpg/tkojm.gpg"
   "http://www.wangafu.net/~nickm/public_key.asc"
   "https://tails.boum.org/tails-signing.key"
   "https://grsecurity.net/spender-gpg-key.asc"
@@ -344,6 +342,7 @@ declare -ra PGP_URLS=(
 #   - 0xDED64EBB2BA87C5C - OTR Dev Team <otr@cypherpunks.ca>
 #   - 0x7CBD620BEC70B1B8 - https://ssl.intevation.de/ - used to sign Gpg4win
 #   - 0x41259773973A612A - https://bitbucket.org/skskeyserver/sks-keyserver/src/tip/README.md
+#   - 0x40B8EA2364221D53 - Sourcefire VRT GPG Key (at least ClamAV)
 declare -ra PGP_KEYS=(
   #"CEA0A321"
   #"060798CB"
@@ -380,6 +379,7 @@ declare -ra PGP_KEYS=(
   "0xDED64EBB2BA87C5C"
   "0x7CBD620BEC70B1B8"
   "0x41259773973A612A"
+  "0x40B8EA2364221D53"
 )
 declare -r ARCH=`/bin/uname -m`
 ################################################################################
