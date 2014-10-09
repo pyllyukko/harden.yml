@@ -556,13 +556,15 @@ function import_pgp_keys() {
     curl \
       --capath /var/empty \
       --cacert /usr/share/ca-certificates/mozilla/Thawte_Premium_Server_CA.crt \
-      'https://sks-keyservers.net/sks-keyservers.netCA.{pem,pem.asc}' \
+      "https://sks-keyservers.net/${SKS_CA_PREFIX##*/}.{pem,pem.asc}" \
       -o "${SKS_CA_PREFIX}.#1"
     if [ ${?} -ne 0 ]
     then
       echo "${FUNCNAME}(): error: could not download sks-keyservers CA. can not continue!" 1>&2
       return 1
     fi
+    # get the CRL
+    wget -nv --ca-certificate=/usr/share/ca-certificates/mozilla/Thawte_Premium_Server_CA.crt https://sks-keyservers.net/ca/crl.pem -O "${SKS_CA_PREFIX%/*}/d378c2f0.r0"
     chmod -c 644 ${SKS_CA_PREFIX}.{pem,pem.asc}
   # for regular users
   elif [ ! -f "${SKS_CA_PREFIX}.pem" ]
