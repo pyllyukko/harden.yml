@@ -214,8 +214,6 @@ declare -r ETC_PATCH_VERSION="14.1"
 declare -r ETC_PATCH_FILE="harden_etc-${ETC_PATCH_VERSION}.patch"
 #declare -r APACHE_PATCH_VERSION="2.4.3-20120929-1"
 #declare -r APACHE_PATCH_FILE="harden_apache-${APACHE_PATCH_VERSION}.patch"
-#declare -r APACHE_PATCH_MODULES_X86_64_FILE="harden_apache-2.2.17-modules-x86_64-20110330.patch"
-#declare -r APACHE_PATCH_MODULES_X86_FILE="harden_apache-2.2.17-modules-x86-20110424.patch"
 declare -r SSH_PATCH_FILE="ssh_harden-6.3p1.patch"
 declare -r SENDMAIL_PATCH_FILE="sendmail_harden.patch"
 declare -r SUDOERS_PATCH_VERSION="1.8.5p2"
@@ -380,6 +378,16 @@ declare -ra PGP_KEYS=(
   "0x7CBD620BEC70B1B8"
   "0x41259773973A612A"
   "0x40B8EA2364221D53"
+)
+# from CIS Apache HTTP Server 2.4 Benchmark v1.1.0 - 12-03-2013
+# 1.2.3-8
+declare -a apache_disable_modules_list=(
+  'dav_'
+  'status_module'
+  'autoindex_module'
+  'proxy_'
+  'userdir_module'
+  'info_module'
 )
 declare -r ARCH=`/bin/uname -m`
 ################################################################################
@@ -1775,42 +1783,44 @@ function remove_shells() {
 ################################################################################
 function configure_apache() {
   # TODO: under construction!!!
-  #   - apply the patch file. also we need arch detection cause httpd.conf has
-  #     lib vs. lib64
-  #   - should the modules be disabled with sed, so we don't need different
-  #     patches for x86 and x86_64?
+  #   - apply the patch file
   #
   # NOTES:
   #   - /var/www ownership and permissions are hardened from file_permissions()
 
   local -i RET=0
-  local    PATCH_FILE="${APACHE_PATCH_FILE}"
-  local    MODULES_PATCH_FILE
+  #local    PATCH_FILE="${APACHE_PATCH_FILE}"
+  local    module
 
   [ ! -f "/etc/httpd/httpd.conf" ] && {
     echo "${FUNCNAME}(): warning: apache configuration file \`/etc/httpd/httpd.conf' does not exist, maybe apache is not installed. skipping this part."
     return 0
   }
 
-  [ ! -f "${PATCH_FILE}" ] && {
-    echo "${FUNCNAME}(): error: apache hardening patch (\`${PATCH_FILE}') does not exist!" 1>&2
-    return 1
-  }
+  # disable modules with sed. this is because x86 vs. x86_64 configs differ,
+  # and there's no sense in having two separate patch files.
+  for module in ${apache_disable_modules_list[*]}
+  do
+    grep -q "^LoadModule ${module}" /etc/httpd/httpd.conf
+    if [ ${?} -ne 0 ]
+    then
+      continue
+    fi
+    if [ "${module:(-1):1}" = "_" ]
+    then
+      echo "disabling apache modules \`${module}'"
+    else
+      echo "disabling apache module \`${module}'"
+    fi
+    sed -i '/^LoadModule '"${module}"'/s/^/#/' /etc/httpd/httpd.conf
+  done
 
-  # this is because of lib vs. lib64 directories
-  case "${ARCH}" in
-    "x86_64")	MODULES_PATCH_FILE="${APACHE_PATCH_MODULES_X86_64_FILE}"	;;
-    i?86)	MODULES_PATCH_FILE="${APACHE_PATCH_MODULES_X86_FILE}"		;;
-    *)		echo "${FUNCNAME}(): error: unknown architecture \`${ARCH}'!" 1>&2 ;;
-  esac
+  #[ ! -f "${PATCH_FILE}" ] && {
+  #  echo "${FUNCNAME}(): error: apache hardening patch (\`${PATCH_FILE}') does not exist!" 1>&2
+  #  return 1
+  #}
 
-  [ -n "${MODULES_PATCH_FILE}" -a ! -f "${MODULES_PATCH_FILE}" ] && {
-    echo "${FUNCNAME}(): error: apache modules hardening patch (\`${MODULES_PATCH_FILE}') does not exist!" 1>&2
-    return 1
-  }
-
-  check_and_patch /etc/httpd "${MODULES_PATCH_FILE}"	3
-  check_and_patch /etc/httpd "${APACHE_PATCH_FILE}"	3
+  #check_and_patch /etc/httpd "${APACHE_PATCH_FILE}"	3
 
   /usr/sbin/apachectl configtest || {
     echo "${FUNCNAME}(): error: something wen't wrong!" 1>&2
