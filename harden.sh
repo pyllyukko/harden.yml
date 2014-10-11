@@ -1826,6 +1826,8 @@ function configure_apache() {
     echo "${FUNCNAME}(): error: something wen't wrong!" 1>&2
     RET=1
   }
+
+  # TODO: apachectl restart
   return ${RET}
 } # configure_apache()
 ################################################################################
