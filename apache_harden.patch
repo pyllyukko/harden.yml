@@ -42,6 +42,41 @@ index 7196922..640ed55 100644
  
  #
  # Optionally add a line containing the server version and virtual host
+diff --git a/etc/httpd/extra/httpd-ssl.conf b/etc/httpd/extra/httpd-ssl.conf
+index 6275e2c..862017f 100644
+--- a/etc/httpd/extra/httpd-ssl.conf
++++ b/etc/httpd/extra/httpd-ssl.conf
+@@ -45,7 +45,10 @@ Listen 443
+ #   SSL Cipher Suite:
+ #   List the ciphers that the client is permitted to negotiate.
+ #   See the mod_ssl documentation for a complete list.
+-SSLCipherSuite HIGH:MEDIUM:!aNULL:!MD5
++#
++# CIS 1.7.4 Restrict Weak SSL Ciphers
++#
++SSLCipherSuite ECDHE-RSA-AES256-SHA384:AES256-SHA256:RC4:HIGH:!MD5:!aNULL:!EDH:!AESGCM
+ 
+ #   Speed-optimized SSL Cipher configuration:
+ #   If speed is your main concern (on busy HTTPS servers e.g.),
+@@ -58,7 +61,17 @@ SSLCipherSuite HIGH:MEDIUM:!aNULL:!MD5
+ #   compromised, captures of past or future traffic must be
+ #   considered compromised, too.
+ #SSLCipherSuite RC4-SHA:AES128-SHA:HIGH:MEDIUM:!aNULL:!MD5
+-#SSLHonorCipherOrder on 
++SSLHonorCipherOrder on
++
++# CIS 1.7.5 Disable SSL Insecure Renegotiation
++SSLInsecureRenegotiation off
++
++# CIS 1.7.6 Ensure SSL Compression is not Enabled
++SSLCompression off
++
++# Enable all protocols except SSL 2 and
++# SSL 3, which are obsolete and insecure.
++SSLProtocol all -SSLv2 -SSLv3
+ 
+ #   Pass Phrase Dialog:
+ #   Configure the pass phrase gathering process.
 diff --git a/etc/httpd/httpd.conf b/etc/httpd/httpd.conf
 index 471fc8f..9c9aed8 100644
 --- a/etc/httpd/httpd.conf
