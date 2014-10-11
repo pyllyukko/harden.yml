@@ -131,6 +131,7 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
   * Send alerts on most errors
   * Additional logging to */var/log/sudo.log*
 * [PHP](https://www.owasp.org/index.php/Configuration#PHP_Configuration)
+* Apache httpd
 
 ### File system related
 

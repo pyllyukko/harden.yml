@@ -213,7 +213,7 @@ declare -r GPG_KEYRING="trustedkeys.gpg"
 declare -r ETC_PATCH_VERSION="14.1"
 declare -r ETC_PATCH_FILE="harden_etc-${ETC_PATCH_VERSION}.patch"
 #declare -r APACHE_PATCH_VERSION="2.4.3-20120929-1"
-#declare -r APACHE_PATCH_FILE="harden_apache-${APACHE_PATCH_VERSION}.patch"
+declare -r APACHE_PATCH_FILE="apache_harden.patch"
 declare -r SSH_PATCH_FILE="ssh_harden-6.3p1.patch"
 declare -r SENDMAIL_PATCH_FILE="sendmail_harden.patch"
 declare -r SUDOERS_PATCH_VERSION="1.8.5p2"
@@ -1789,7 +1789,7 @@ function configure_apache() {
   #   - /var/www ownership and permissions are hardened from file_permissions()
 
   local -i RET=0
-  #local    PATCH_FILE="${APACHE_PATCH_FILE}"
+  local    PATCH_FILE="${APACHE_PATCH_FILE}"
   local    module
 
   [ ! -f "/etc/httpd/httpd.conf" ] && {
@@ -1815,12 +1815,12 @@ function configure_apache() {
     sed -i '/^LoadModule '"${module}"'/s/^/#/' /etc/httpd/httpd.conf
   done
 
-  #[ ! -f "${PATCH_FILE}" ] && {
-  #  echo "${FUNCNAME}(): error: apache hardening patch (\`${PATCH_FILE}') does not exist!" 1>&2
-  #  return 1
-  #}
+  [ ! -f "${PATCH_FILE}" ] && {
+    echo "${FUNCNAME}(): error: apache hardening patch (\`${PATCH_FILE}') does not exist!" 1>&2
+    return 1
+  }
 
-  #check_and_patch /etc/httpd "${APACHE_PATCH_FILE}"	3
+  check_and_patch /etc/httpd "${APACHE_PATCH_FILE}"	3
 
   /usr/sbin/apachectl configtest || {
     echo "${FUNCNAME}(): error: something wen't wrong!" 1>&2
@@ -2276,7 +2276,6 @@ function usage() {
 	          logrotate
 	          sysklogd
 	      apache
-	      apache-x86_64 (choose this if you have installed slackware64)
 	      sendmail
 	      php
 	      sudoers
@@ -2374,13 +2373,7 @@ do
 	      /etc/rc.d/rc.sshd restart
 	;;
 	"etc") check_and_patch /etc "${ETC_PATCH_FILE}" 1 && ETC_CHANGED=1 ;;
-        "apache"|"apache-x86_64")
-	  case "${OPTARG}" in
-            "apache")        check_and_patch /etc/httpd "${APACHE_PATCH_MODULES_X86_FILE}"    3 ;;
-            "apache-x86_64") check_and_patch /etc/httpd "${APACHE_PATCH_MODULES_X86_64_FILE}" 3 ;;
-	  esac
-          check_and_patch /etc/httpd "${APACHE_PATCH_FILE}" 3
-	  ;;
+        "apache") check_and_patch /etc/httpd "${APACHE_PATCH_FILE}" 3 ;;
 	"sendmail")
           patch_sendmail
 	;;
@@ -2407,7 +2400,7 @@ do
 	      /etc/rc.d/rc.sshd restart
 	;;
 	"etc") check_and_patch /etc "${ETC_PATCH_FILE}" 1 reverse && ETC_CHANGED=1	;;
-        "apache"*) echo "apache patch reversing not yet implemented!"			;;
+        "apache") check_and_patch /etc/httpd "${APACHE_PATCH_FILE}" 3 reverse		;;
         "sendmail") patch_sendmail reverse						;;
 	"php") check_and_patch /etc/httpd php_harden.patch 1 reverse			;;
         "sudoers")

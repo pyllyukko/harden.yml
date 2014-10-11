@@ -1,0 +1,122 @@
+diff --git a/etc/httpd/extra/httpd-default.conf b/etc/httpd/extra/httpd-default.conf
+index 7196922..640ed55 100644
+--- a/etc/httpd/extra/httpd-default.conf
++++ b/etc/httpd/extra/httpd-default.conf
+@@ -4,10 +4,18 @@
+ # You may change these, but chances are that you may not need to.
+ #
+ 
++# CIS 1.5.8 Disable HTTP TRACE Method
++TraceEnable off
++
++# CIS 1.5.14 Restrict Browser Frame Options
++Header always append X-Frame-Options SAMEORIGIN
++
+ #
+ # Timeout: The number of seconds before receives and sends time out.
+ #
+-Timeout 60
++# CIS 1.9.1 Set TimeOut to 10 or less
++#
++Timeout 10
+ 
+ #
+ # KeepAlive: Whether or not to allow persistent connections (more than
+@@ -26,7 +34,9 @@ MaxKeepAliveRequests 100
+ # KeepAliveTimeout: Number of seconds to wait for the next request from the
+ # same client on the same connection.
+ #
+-KeepAliveTimeout 5
++# CIS 1.9.4 Set KeepAliveTimeout Low to Mitigate Denial of Service
++#
++KeepAliveTimeout 15
+ 
+ #
+ # UseCanonicalName: Determines how Apache constructs self-referencing 
+@@ -52,7 +62,7 @@ AccessFileName .htaccess
+ # Set to one of:  Full | OS | Minor | Minimal | Major | Prod
+ # where Full conveys the most information, and Prod the least.
+ #
+-ServerTokens Full
++ServerTokens Prod
+ 
+ #
+ # Optionally add a line containing the server version and virtual host
+diff --git a/etc/httpd/httpd.conf b/etc/httpd/httpd.conf
+index 471fc8f..9c9aed8 100644
+--- a/etc/httpd/httpd.conf
++++ b/etc/httpd/httpd.conf
+@@ -210,6 +210,15 @@ ServerAdmin you@example.com
+ #
+ #ServerName www.example.com:80
+ 
++# CIS 1.10.1 Set the LimitRequestLine directive to 512 or less
++LimitRequestline 512
++# CIS 1.10.2 Set the LimitRequestFields directive to 100 or less
++LimitRequestFields 100
++# CIS 1.10.3 Set the LimitRequestFieldsize directive to 1024 or less
++LimitRequestFieldsize 1024
++# CIS 1.10.4 Set the LimitRequestBody directive to 102400 or less
++LimitRequestBody 102400
++
+ #
+ # Deny access to the entirety of your server's filesystem. You must
+ # explicitly permit access to web content directories in other 
+@@ -255,6 +264,12 @@ DocumentRoot "/srv/httpd/htdocs"
+     #
+     AllowOverride None
+ 
++    # CIS 1.5.7 Limit HTTP Request Methods
++    # Limit HTTP methods to standard methods. Note: Does not limit TRACE
++    <LimitExcept GET POST OPTIONS>
++      Require all denied
++    </LimitExcept>
++
+     #
+     # Controls who can get stuff from this server.
+     #
+@@ -291,7 +306,9 @@ ErrorLog "/var/log/httpd/error_log"
+ # Possible values include: debug, info, notice, warn, error, crit,
+ # alert, emerg.
+ #
+-LogLevel warn
++# CIS 1.6.1 Configure the Error Log
++#
++LogLevel notice
+ 
+ <IfModule log_config_module>
+     #
+@@ -313,7 +330,9 @@ LogLevel warn
+     # define per-<VirtualHost> access logfiles, transactions will be
+     # logged therein and *not* in this file.
+     #
+-    CustomLog "/var/log/httpd/access_log" common
++    # CIS 1.6.3 Configure the Access Log
++    #
++    CustomLog "/var/log/httpd/access_log" combined
+ 
+     #
+     # If you prefer a logfile with access, agent, and referer information
+@@ -361,6 +380,13 @@ LogLevel warn
+     #Scriptsock cgisock
+ </IfModule>
+ 
++# CIS 1.5.9 Restrict HTTP Protocol Versions
++<IfModule rewrite_module>
++    RewriteEngine On
++    RewriteCond %{THE_REQUEST} !HTTP/1\.1$
++    RewriteRule .* - [F]
++</IfModule>
++
+ #
+ # "/srv/httpd/cgi-bin" should be changed to whatever your ScriptAliased
+ # CGI directory exists, if you have that configured.
+@@ -491,7 +517,7 @@ LogLevel warn
+ #Include /etc/httpd/extra/httpd-dav.conf
+ 
+ # Various default settings
+-#Include /etc/httpd/extra/httpd-default.conf
++Include /etc/httpd/extra/httpd-default.conf
+ 
+ # Configure mod_proxy_html to understand HTML4/XHTML1
+ <IfModule proxy_html_module>

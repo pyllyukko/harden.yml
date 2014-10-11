@@ -60,7 +60,8 @@ for PKG in \
   'ap/sudo-1.8.6p8-i486-1.txz' \
   'n/sendmail-cf-8.14.7-noarch-1.txz' \
   'n/openssh-6.3p1-i486-1.txz' \
-  'n/php-5.4.20-i486-1.txz'
+  'n/php-5.4.20-i486-1.txz' \
+  'n/httpd-2.4.6-i486-1.txz'
 do
   PKG_BASEN=$( basename "${PKG}" )
   if [ ! -f "${PKG_BASEN}" ]
@@ -152,6 +153,15 @@ if [ ${RET_VALUE} -ne 0 ]
 then
   echo "WARNING: something wrong!" 1>&2
 fi
+
+patch -p3 -t --dry-run 0<../../../../apache_harden.patch
+RET_VALUE=${?}
+RET_VALUES+=( ${RET_VALUE} )
+if [ ${RET_VALUE} -ne 0 ]
+then
+  echo "WARNING: something wrong!" 1>&2
+fi
+
 popd
 
 echo -e "\nresults:"
