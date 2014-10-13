@@ -390,6 +390,10 @@ declare -a apache_disable_modules_list=(
   'info_module'
 )
 declare -r ARCH=`/bin/uname -m`
+case "${MACHTYPE%%-*}" in
+  "x86_64")	SLACKWARE="slackware64"	;;
+  i?86)		SLACKWARE="slackware"	;;
+esac
 ################################################################################
 function chattr_files_NOT_IN_USE() {
   # NOTE: not in use, at least not yet.
