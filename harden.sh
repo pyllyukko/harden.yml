@@ -394,6 +394,27 @@ case "${MACHTYPE%%-*}" in
   "x86_64")	SLACKWARE="slackware64"	;;
   i?86)		SLACKWARE="slackware"	;;
 esac
+MANIFEST_DIR="$( dirname ${0} )/manifests/${SLACKWARE}-${SLACKWARE_VERSION}"
+################################################################################
+function check_manifest() {
+  local MD5_RET
+  if [ ! -f "${MANIFEST_DIR}/CHECKSUMS.md5" -o \
+       ! -f "${MANIFEST_DIR}/CHECKSUMS.md5.asc" -o \
+       ! -f "${MANIFEST_DIR}/MANIFEST.bz2" ]
+  then
+    return 1
+  fi
+  /usr/bin/gpgv "${MANIFEST_DIR}/CHECKSUMS.md5.asc" || return 1
+  pushd "${MANIFEST_DIR}" 1>/dev/null
+  fgrep "MANIFEST.bz2" CHECKSUMS.md5 | /bin/md5sum -c
+  MD5_RET=${PIPESTATUS[1]}
+  popd 1>/dev/null
+  if [ ${MD5_RET} -ne 0 ]
+  then
+    return 1
+  fi
+  return 0
+} # check_manifest()
 ################################################################################
 function chattr_files_NOT_IN_USE() {
   # NOTE: not in use, at least not yet.
