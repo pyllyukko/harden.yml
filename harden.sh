@@ -633,6 +633,7 @@ function user_accounts() {
   # operator:
   #   - according to LSB Core Specification 4.1 (21.2. User & Group Names, Table 21-2)
   #     the user 'operator' is optional
+  #   - TODO: at least change home dir
   #
   # halt, shutdown & sync:
   #   "The accounts "halt" and "shutdown" don't work
