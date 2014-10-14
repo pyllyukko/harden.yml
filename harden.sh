@@ -645,7 +645,7 @@ function user_accounts() {
     return 1
   fi
 
-  #echo "${FUNCNAME}(): removing unnecessary user accounts"
+  echo "${FUNCNAME}(): removing unnecessary user accounts"
 
   # system-hardening-10.2.txt:
   #
@@ -662,12 +662,21 @@ function user_accounts() {
   # halt, shutdown & sync:
   #   "The accounts "halt" and "shutdown" don't work
   #    by default.  The account "sync" isn't needed."
-  # NOTE: 25.9.2012: disabled, so we don't get any unowned files.
-  #for USERID in adm gdm operator halt shutdown sync
-  #do
-  #  /usr/bin/crontab -d -u	"${USERID}"
-  #  /usr/sbin/userdel		"${USERID}"
-  #done
+  check_manifest && {
+    #for USERID in adm gdm operator halt shutdown sync
+    for USERID in gdm operator
+    do
+      # verify from MANIFEST, that the user account is not being used
+      bzcat "${MANIFEST_DIR}/MANIFEST.bz2" | awk '{print$2}' | grep "^${USERID}/"
+      if [ ${PIPESTATUS[2]} -ne 0 ]
+      then
+	echo "  removing user \`${USERID}'"
+        /usr/bin/crontab -d -u	"${USERID}"
+        /usr/sbin/userdel	"${USERID}"
+	# TODO: kill all processes of the user
+      fi
+    done
+  }
 
   # CUSTOM
 
