@@ -390,6 +390,31 @@ declare -a apache_disable_modules_list=(
   'info_module'
 )
 declare -r ARCH=`/bin/uname -m`
+case "${MACHTYPE%%-*}" in
+  "x86_64")	SLACKWARE="slackware64"	;;
+  i?86)		SLACKWARE="slackware"	;;
+esac
+MANIFEST_DIR="$( dirname ${0} )/manifests/${SLACKWARE}-${SLACKWARE_VERSION}"
+################################################################################
+function check_manifest() {
+  local MD5_RET
+  if [ ! -f "${MANIFEST_DIR}/CHECKSUMS.md5" -o \
+       ! -f "${MANIFEST_DIR}/CHECKSUMS.md5.asc" -o \
+       ! -f "${MANIFEST_DIR}/MANIFEST.bz2" ]
+  then
+    return 1
+  fi
+  /usr/bin/gpgv "${MANIFEST_DIR}/CHECKSUMS.md5.asc" || return 1
+  pushd "${MANIFEST_DIR}" 1>/dev/null
+  fgrep "MANIFEST.bz2" CHECKSUMS.md5 | /bin/md5sum -c
+  MD5_RET=${PIPESTATUS[1]}
+  popd 1>/dev/null
+  if [ ${MD5_RET} -ne 0 ]
+  then
+    return 1
+  fi
+  return 0
+} # check_manifest()
 ################################################################################
 function chattr_files_NOT_IN_USE() {
   # NOTE: not in use, at least not yet.
@@ -620,7 +645,7 @@ function user_accounts() {
     return 1
   fi
 
-  #echo "${FUNCNAME}(): removing unnecessary user accounts"
+  echo "${FUNCNAME}(): removing unnecessary user accounts"
 
   # system-hardening-10.2.txt:
   #
@@ -638,12 +663,21 @@ function user_accounts() {
   # halt, shutdown & sync:
   #   "The accounts "halt" and "shutdown" don't work
   #    by default.  The account "sync" isn't needed."
-  # NOTE: 25.9.2012: disabled, so we don't get any unowned files.
-  #for USERID in adm gdm operator halt shutdown sync
-  #do
-  #  /usr/bin/crontab -d -u	"${USERID}"
-  #  /usr/sbin/userdel		"${USERID}"
-  #done
+  check_manifest && {
+    #for USERID in adm gdm operator halt shutdown sync
+    for USERID in gdm operator
+    do
+      # verify from MANIFEST, that the user account is not being used
+      bzcat "${MANIFEST_DIR}/MANIFEST.bz2" | awk '{print$2}' | grep "^${USERID}/"
+      if [ ${PIPESTATUS[2]} -ne 0 ]
+      then
+	echo "  removing user \`${USERID}'"
+        /usr/bin/crontab -d -u	"${USERID}"
+        /usr/sbin/userdel	"${USERID}"
+	# TODO: kill all processes of the user
+      fi
+    done
+  }
 
   # CUSTOM
 
