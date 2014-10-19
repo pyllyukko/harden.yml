@@ -1,15 +1,14 @@
 diff --git a/cron.d/sysstat b/cron.d/sysstat
 new file mode 100644
-index 0000000..09356ad
+index 0000000..09b7f1b
 --- /dev/null
 +++ b/cron.d/sysstat
-@@ -0,0 +1,6 @@
+@@ -0,0 +1,5 @@
 +# Run system activity accounting tool every 10 minutes
-+*/10 * * * * /usr/lib/sa/sa1 -S DISK 1 1
++*/10 * * * * if [ -x /usr/lib64/sa/sa1 ]; then /usr/lib64/sa/sa1 -S DISK 1 1; elif [ -x /usr/lib/sa/sa1 ]; then /usr/lib/sa/sa1 -S DISK 1 1; fi
 +# 0 * * * * /usr/lib/sa/sa1 -S DISK 600 6 &
 +# Generate a daily summary of process accounting at 23:53
-+53 23 * * * /usr/lib/sa/sa2 -A
-+
++53 23 * * * if [ -x /usr/lib64/sa/sa2 ]; then /usr/lib64/sa/sa2 -A; elif [ -x /usr/lib/sa/sa2 ]; then /usr/lib/sa/sa2 -A; fi
 diff --git a/cron.daily/update_rkhunter.sh b/cron.daily/update_rkhunter.sh
 new file mode 100644
 index 0000000..617a3a5
