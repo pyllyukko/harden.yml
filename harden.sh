@@ -2036,6 +2036,8 @@ function quick_harden() {
 	net.ipv6.conf.all.disable_ipv6 = 1
 	net.ipv6.conf.default.disable_ipv6 = 1
 	
+	kernel.core_uses_pid = 1
+	
 	# use address space randomization
 	#
 	# -plus-
@@ -2076,6 +2078,8 @@ function quick_harden() {
 	
 	# https://www.cert.fi/haavoittuvuudet/2013/haavoittuvuus-2013-071.html
 	kernel.perf_event_paranoid = 2
+	
+	net.ipv4.tcp_timestamps = 0
 	
 	# grsecurity
 	kernel.grsecurity.linking_restrictions = 1
