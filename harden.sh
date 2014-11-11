@@ -278,6 +278,7 @@ INETD_SERVICES+=(pop3 imap2 netbios-ssn netbios-ns)
 #   - http://www.wangafu.net/~nickm/ 8D29319A - Nick Mathewson (libevent)
 #   - https://tails.boum.org/download/index.en.html#verify
 #   - TODO: http://www.snort.org/snort-downloads#pgp
+#   - https://www.kali.org/downloads/
 declare -ra PGP_URLS=(
   "http://www.slackware.com/gpg-key"
   "http://slackbuilds.org/GPG-KEY"
@@ -293,6 +294,7 @@ declare -ra PGP_URLS=(
   "https://tails.boum.org/tails-signing.key"
   "https://grsecurity.net/spender-gpg-key.asc"
   "https://sourceforge.net/projects/apcupsd/files/apcupsd%20Public%20Key/Current%20Public%20Key/apcupsd.pub/download"
+  "https://www.kali.org/archive-key.asc"
 )
 
 # other PGP keys:
