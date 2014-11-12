@@ -39,6 +39,15 @@ do
   fi
 done
 unset PROGRAM
+SLACKWARE="slackware"
+SLACKWARE="slackware64"
+if [ "${SLACKWARE}" = "slackware64" ]
+then
+  ARCH="x86_64"
+else
+  ARCH="i486"
+fi
+SLACKWARE_VERSION="14.1"
 JUST_EXPLODE=0
 declare -a RET_VALUES=()
 
@@ -50,27 +59,27 @@ fi
 mkdir -v tmp
 
 for PKG in \
-  'a/etc-14.1-i486-2.txz' \
-  'n/network-scripts-14.1-noarch-2.txz' \
+  "a/etc-${SLACKWARE_VERSION}-${ARCH}-2.txz" \
+  "n/network-scripts-${SLACKWARE_VERSION}-noarch-2.txz" \
   'a/sysvinit-scripts-2.0-noarch-17.txz' \
-  'a/sysvinit-functions-8.53-i486-2.txz' \
-  'a/shadow-4.1.5.1-i486-2.txz' \
-  'a/logrotate-3.8.6-i486-1.txz' \
-  'a/sysklogd-1.5-i486-2.txz' \
-  'ap/sudo-1.8.6p8-i486-1.txz' \
+  "a/sysvinit-functions-8.53-${ARCH}-2.txz" \
+  "a/shadow-4.1.5.1-${ARCH}-2.txz" \
+  "a/logrotate-3.8.6-${ARCH}-1.txz" \
+  "a/sysklogd-1.5-${ARCH}-2.txz" \
+  "ap/sudo-1.8.6p8-${ARCH}-1.txz" \
   'n/sendmail-cf-8.14.7-noarch-1.txz' \
-  'n/openssh-6.3p1-i486-1.txz' \
-  'n/php-5.4.20-i486-1.txz' \
-  'n/httpd-2.4.6-i486-1.txz'
+  "n/openssh-6.3p1-${ARCH}-1.txz" \
+  "n/php-5.4.20-${ARCH}-1.txz" \
+  "n/httpd-2.4.6-${ARCH}-1.txz"
 do
   PKG_BASEN=$( basename "${PKG}" )
   if [ ! -f "${PKG_BASEN}" ]
   then
-    wget ftp://ftp.slackware.com/pub/slackware/slackware-14.1/slackware/${PKG}
+    wget ftp://ftp.slackware.com/pub/slackware/${SLACKWARE}-${SLACKWARE_VERSION}/${SLACKWARE}/${PKG}
   fi
   if [ ! -f "${PKG_BASEN}.asc" ]
   then
-    wget ftp://ftp.slackware.com/pub/slackware/slackware-14.1/slackware/${PKG}.asc
+    wget ftp://ftp.slackware.com/pub/slackware/${SLACKWARE}-${SLACKWARE_VERSION}/${SLACKWARE}/${PKG}.asc
   fi
 
   gpgv ${PKG_BASEN}.asc
