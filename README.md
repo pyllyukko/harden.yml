@@ -105,8 +105,8 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
 * Through rc.local:
   * logoutd
   * icmpinfo
-* [Process accounting](http://www.tldp.org/HOWTO/Process-Accounting/) (acct)
-* System accounting (sysstat)
+* [Process accounting][9] (acct)
+* System accounting ([sysstat][10])
 * [SBo](http://slackbuilds.org/) related (if installed):
   * Snort
   * [arpwatch][6]
@@ -184,6 +184,18 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
 
 Some things are added to cron: **TODO**
 
+##### sysstat
+
+From [sysstat.crond](https://github.com/sysstat/sysstat/blob/master/cron/sysstat.crond.in):
+
+```
+# Run system activity accounting tool every 10 minutes
+*/10 * * * * if [ -x /usr/lib64/sa/sa1 ]; then /usr/lib64/sa/sa1 -S DISK 1 1; elif [ -x /usr/lib/sa/sa1 ]; then /usr/lib/sa/sa1 -S DISK 1 1; fi
+# 0 * * * * /usr/lib/sa/sa1 -S DISK 600 6 &
+# Generate a daily summary of process accounting at 23:53
+53 23 * * * if [ -x /usr/lib64/sa/sa2 ]; then /usr/lib64/sa/sa2 -A; elif [ -x /usr/lib/sa/sa2 ]; then /usr/lib/sa/sa2 -A; fi
+```
+
 #### PGP
 
 The *import_pgp_keys()* function imports a bunch of PGP keys to your *trustedkeys.gpg* keyring, so you can verify downloaded files/packages with [gpgv](http://www.gnupg.org/documentation/manuals/gnupg/gpgv.html). The keys that are imported are listed in the PGP_URLS[] and PGP_KEYS[] arrays.
@@ -216,7 +228,9 @@ As a workaround, there is also a new runlevel **2** that can be used to safely r
 * Makes default log files group *adm* readable ([as in Debian](http://www.debian.org/doc/manuals/debian-reference/ch01.en.html#listofnotablesysupsforfileaccess))
   * Notice that this takes place only after logrotate. The ownerships/permissions of the existing logs are not modified.
 * Use *shred* to remove rotated log files
-* Log rotation for process accounting (pacct), since these files **will** grow huge
+* Enable [process accounting][9] (acct)
+  * Log rotation for process accounting (pacct), since these files **will** grow huge
+* Enable system accounting ([sysstat][10])
 * Enables the use of *xconsole* (or makes it possible). You can use it with:
 
         ADMINS ALL=(:adm) NOPASSWD: /usr/bin/xconsole
@@ -376,3 +390,5 @@ Some of these documents are quite old, but most of the stuff still applies.
 [6]: http://slackbuilds.org/repository/14.1/network/arpwatch/
 [7]: ftp://ftp.slackware.com/pub/slackware/slackware-14.1/source/a/floppy/
 [8]: http://www.jimpryor.net/linux/dcron-README
+[9]: http://www.tldp.org/HOWTO/Process-Accounting/
+[10]: http://sebastien.godard.pagesperso-orange.fr/
