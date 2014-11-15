@@ -179,7 +179,7 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
 * Sets *dmesg\_restrict*
 * Make *installpkg* store the MD5 checksums
 * Reduce the amount of trusted [CAs](https://en.wikipedia.org/wiki/Certificate_authority)
-* "Fix" the single-user mode ( 7e8fb54f49227421b1f352ee97723fa52a1e73b4 )
+* "Fix" the single-user mode
 
 #### Periodic checks
 
