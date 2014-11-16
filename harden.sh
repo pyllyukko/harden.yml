@@ -997,19 +997,21 @@ function remove_packages() {
 
   echo "${FUNCNAME}(): removing potentially dangerous packages"
 
-  # CIS 7.1 Disable rhosts Support
-  /sbin/removepkg netkit-rsh 2>/dev/null
+  {
+    # CIS 7.1 Disable rhosts Support
+    /sbin/removepkg netkit-rsh 2>/dev/null
 
-  # from system-hardening-10.2.txt (Misc Stuff -> Stuff to remove)
-  #
-  # NOTE: uucp comes with a bunch of SUID binaries, plus i think most people
-  #       won't need it nowadays anyway.
-  /sbin/removepkg uucp 2>/dev/null
+    # from system-hardening-10.2.txt (Misc Stuff -> Stuff to remove)
+    #
+    # NOTE: uucp comes with a bunch of SUID binaries, plus i think most people
+    #       won't need it nowadays anyway.
+    /sbin/removepkg uucp 2>/dev/null
 
-  # remove the floppy package. get rid of the fdmount SUID binary.
-  /sbin/removepkg floppy 2>/dev/null
+    # remove the floppy package. get rid of the fdmount SUID binary.
+    /sbin/removepkg floppy 2>/dev/null
 
-  # TODO: remove xinetd package?
+    # TODO: remove xinetd package?
+  } | tee -a "${logdir}/removed_packages.txt"
 
   return 0
 } # remove_packages()
@@ -1798,7 +1800,7 @@ function remove_shells() {
     for SHELL_TO_REMOVE in tcsh ash ksh93 zsh
     do
       /sbin/removepkg "${SHELL_TO_REMOVE}" 2>/dev/null
-    done
+    done | tee -a "${logdir}/removed_packages.txt"
   fi
 
   # see "RESTRICTED SHELL" on BASH(1)
