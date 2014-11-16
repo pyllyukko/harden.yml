@@ -1974,7 +1974,7 @@ function create_limited_ca_list() {
 	mozilla/thawte_Primary_Root_CA.crt
 	mozilla/SecureTrust_CA.crt
 EOF
-  /usr/sbin/update-ca-certificates --verbose --fresh
+  /usr/sbin/update-ca-certificates --verbose --fresh | tee "${logdir}/ca_certificates.txt"
 
   # get Gandi's intermediate CA cert so we can verify freenode
   # http://freenode.net/irc_servers.shtml#ssl
