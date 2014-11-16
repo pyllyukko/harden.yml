@@ -1487,7 +1487,7 @@ function file_permissions() {
       chown -c root:nagios /usr/libexec/nagios
       chmod -c 750 /usr/libexec/nagios
     fi
-  } | tee "${logdir}/file_perms.txt"
+  } | tee -a "${logdir}/file_perms.txt"
 
   return 0
 } # file_permissions()
@@ -1914,20 +1914,20 @@ function disable_unnecessary_services() {
     [ -x "${RC}" ] && sh "${RC}" stop
 
     # and then disable it
-    /usr/bin/chmod -c 600 "${RC}"
+    /usr/bin/chmod -c 600 "${RC}" | tee -a "${logdir}/file_perms.txt"
   done
 
   echo "${FUNCNAME}(): enabling recommended services"
 
   # CIS 1.4 Enable System Accounting
-  /usr/bin/chmod -c 700 "${SA_RC}"
+  /usr/bin/chmod -c 700 "${SA_RC}" | tee -a "${logdir}/file_perms.txt"
   # make it store the data a bit longer =)
   sed -i 's/^\(HISTORY=\).*$/HISTORY=99999/' /etc/sysstat/sysstat
 
   # CIS 2.2 Configure TCP Wrappers and Firewall to Limit Access (applied)
   #
   # NOTE: the rc.firewall script should be created by the etc patch
-  /usr/bin/chmod -c 700 /etc/rc.d/rc.firewall
+  /usr/bin/chmod -c 700 /etc/rc.d/rc.firewall | tee -a "${logdir}/file_perms.txt"
 
   # inetd goes with the territory
   disable_inetd_services
