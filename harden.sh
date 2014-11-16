@@ -2471,4 +2471,6 @@ do
   esac
 done
 
+echo "logs available at: ${logdir}"
+
 exit 0
