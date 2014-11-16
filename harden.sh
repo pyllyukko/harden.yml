@@ -2471,6 +2471,7 @@ do
   esac
 done
 
+# TODO: remove the logdir if it's empty
 echo "logs available at: ${logdir}"
 
 exit 0
