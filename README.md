@@ -350,29 +350,32 @@ TODO
 * X hardening
 * Debian support
 * Some chroot stuff?
-* User quotas
 * Static ARP cache
 * Logging of the script actions
 * lilo.conf: audit=1
-* faillog for new users?
 * some kernel module configurator thingie for /etc/rc.d/rc.modules
 * [LUKS nuke](http://www.kali.org/how-to/nuke-kali-linux-luks/)
 * Provide the trustedkeys.gpg PGP keys with this tool?
   * Or get rid of wget over HTTP
-* [PAM](http://www.slackware.com/~vbatts/pam/) for Slackware?
-  * Two-factor authentication
-* Shadow suite S/Key support (/usr/doc/shadow-4.1.4.3/README)
 * Add some functionality, that compares your current file system against Slackware's [MANIFEST](ftp://ftp.slackware.com/pub/slackware/slackware64-14.1/slackware64/MANIFEST.bz2) (something like Alien's [restore\_fileperms\_from\_manifest.sh](http://www.slackware.com/~alien/tools/restore_fileperms_from_manifest.sh))
   * Some HIDS baseline generation from MANIFEST would also be really nice
+* Add CCE references?
+* /usr/bin/ch{mod,own} -> from PATH. since Debian has them under /bin
+* Create .preharden backups (only once?)
+
+### Auth/user account related
+
 * Some variables to read only?
   * From rbash: SHELL, PATH, ENV, or BASH\_ENV
   * From system-hardening-10.2.txt: HISTCONTROL HISTFILE HISTFILESIZE HISTIGNORE HISTNAME HISTSIZE LESSSECURE LOGNAME USER
-* Add CCE references?
-* /usr/bin/ch{mod,own} -> from PATH. since Debian has them under /bin
+* faillog for new users?
+* User quotas
+* [PAM](http://www.slackware.com/~vbatts/pam/) for Slackware?
+  * Two-factor authentication
+* Shadow suite S/Key support (/usr/doc/shadow-4.1.4.3/README)
+* How do we reset faillogs after successful login?
 * [Create .gnupg home directories](http://www.gnupg.org/documentation/manuals/gnupg/addgnupghome.html#addgnupghome)
 * USERDEL\_CMD from LOGIN.DEFS(5)
-* Create .preharden backups (only once?)
-* How do we reset faillogs after successful login?
 
 ### Guides to read
 
