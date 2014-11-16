@@ -1405,16 +1405,14 @@ function file_permissions() {
          -u /usr/sbin/lastlog ]
     then
       echo "${FUNCNAME}(): notice: you seem to be missing a security patch for SSA:2011-101-01"
-      {
-        /usr/bin/chmod -c u-s	/usr/sbin/faillog
-        /usr/bin/chmod -c u-s	/usr/sbin/lastlog
-      } | tee -a "${logdir}/file_perms.txt"
+      /usr/bin/chmod -c u-s	/usr/sbin/faillog
+      /usr/bin/chmod -c u-s	/usr/sbin/lastlog
     fi
 
     # the process accounting log file:
     if [ -f /var/log/pacct ]
     then
-      /usr/bin/chmod -c 600 /var/log/pacct | tee -a "${logdir}/file_perms.txt"
+      /usr/bin/chmod -c 600 /var/log/pacct
     fi
 
     # adjust the www permissions, so that regular users can't read
