@@ -2475,7 +2475,14 @@ do
   esac
 done
 
-# TODO: remove the logdir if it's empty
-echo "logs available at: ${logdir}"
+shopt -s nullglob
+logfiles=( ${logdir}/* )
+if [ ${#logfiles[*]} -eq 0 ]
+then
+  echo "no log files created. removing dir."
+  rmdir -v "${logdir}"
+else
+  echo "logs available at: ${logdir}"
+fi
 
 exit 0
