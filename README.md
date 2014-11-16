@@ -376,6 +376,7 @@ TODO
 * How do we reset faillogs after successful login?
 * [Create .gnupg home directories](http://www.gnupg.org/documentation/manuals/gnupg/addgnupghome.html#addgnupghome)
 * USERDEL\_CMD from LOGIN.DEFS(5)
+* Is it possible to enforce password policy for root user also?
 
 ### Guides to read
 
