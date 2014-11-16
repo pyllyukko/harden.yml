@@ -972,7 +972,7 @@ function check_and_patch() {
     }
     # if everything was ok, apply the patch
     echo "${FUNCNAME}(): DEBUG: patch would happen"
-    /usr/bin/patch -R -d "${DIR_TO_PATCH}" -t -p${P} -i "${PATCH_FILE}"
+    /usr/bin/patch -R -d "${DIR_TO_PATCH}" -t -p${P} -i "${PATCH_FILE}" | tee -a "${logdir}/patches.txt"
     RET=${?}
   else
     echo "${FUNCNAME}(): testing patch file \`${PATCH_FILE##*/}' with --dry-run"
@@ -984,7 +984,7 @@ function check_and_patch() {
       return 1
     }
     echo "DEBUG: patch would happen"
-    /usr/bin/patch -d "${DIR_TO_PATCH}" -t -p${P} -i "${PATCH_FILE}"
+    /usr/bin/patch -d "${DIR_TO_PATCH}" -t -p${P} -i "${PATCH_FILE}" | tee -a "${logdir}/patches.txt"
     RET=${?}
   fi
   set -u
