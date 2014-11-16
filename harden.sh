@@ -1754,8 +1754,10 @@ EOF
   if [ ! -f /var/log/boot ]
   then
     touch /var/log/boot
-    chown -c root:adm	/var/log/boot
-    chmod -c 640	/var/log/boot
+    {
+      chown -c root:adm	/var/log/boot
+      chmod -c 640	/var/log/boot
+    } | tee -a "${logdir}/file_perms.txt"
   fi
 
   # Debian specific
