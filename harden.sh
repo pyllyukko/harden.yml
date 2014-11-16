@@ -527,8 +527,10 @@ function create_environment_for_restricted_shell () {
   then
     mkdir -pv "${RBINDIR}"
   fi
-  chown -c root:root	"${RBINDIR}"
-  chmod -c 755		"${RBINDIR}"
+  {
+    chown -c root:root	"${RBINDIR}"
+    chmod -c 755		"${RBINDIR}"
+  } | tee -a "${logdir}/file_perms.txt"
 
   #rm -v "${RBINDIR}/"*
 
@@ -576,7 +578,7 @@ function import_pgp_keys() {
       https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt \
       https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.dkg.asc \
       https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.jamie.asc
-    chmod -c 644 /usr/share/ca-certificates/local/mfpl.crt
+    chmod -c 644 /usr/share/ca-certificates/local/mfpl.crt | tee -a "${logdir}/file_perms.txt"
   fi
   if [ "${USER}" = "root" -a ! -f "${SKS_CA_PREFIX}.pem" ]
   then
@@ -605,7 +607,7 @@ function import_pgp_keys() {
     fi
     # get the CRL
     wget -nv --ca-certificate=/usr/share/ca-certificates/mozilla/Thawte_Premium_Server_CA.crt https://sks-keyservers.net/ca/crl.pem -O "${SKS_CA_PREFIX%/*}/d378c2f0.r0"
-    chmod -c 644 ${SKS_CA_PREFIX}.{pem,pem.asc}
+    chmod -c 644 ${SKS_CA_PREFIX}.{pem,pem.asc} | tee -a "${logdir}/file_perms.txt"
   # for regular users
   elif [ ! -f "${SKS_CA_PREFIX}.pem" ]
   then
@@ -1403,14 +1405,16 @@ function file_permissions() {
          -u /usr/sbin/lastlog ]
     then
       echo "${FUNCNAME}(): notice: you seem to be missing a security patch for SSA:2011-101-01"
-      /usr/bin/chmod -c u-s	/usr/sbin/faillog
-      /usr/bin/chmod -c u-s	/usr/sbin/lastlog
+      {
+        /usr/bin/chmod -c u-s	/usr/sbin/faillog
+        /usr/bin/chmod -c u-s	/usr/sbin/lastlog
+      } | tee -a "${logdir}/file_perms.txt"
     fi
 
     # the process accounting log file:
     if [ -f /var/log/pacct ]
     then
-      /usr/bin/chmod -c 600 /var/log/pacct
+      /usr/bin/chmod -c 600 /var/log/pacct | tee -a "${logdir}/file_perms.txt"
     fi
 
     # adjust the www permissions, so that regular users can't read
@@ -1673,8 +1677,10 @@ EOF
   if [ ! -f /var/log/pacct ]
   then
     touch /var/log/pacct
-    chgrp -c adm /var/log/pacct
-    chmod -c 640 /var/log/pacct
+    {
+      chgrp -c adm /var/log/pacct
+      chmod -c 640 /var/log/pacct
+    } | tee -a "${logdir}/file_perms.txt"
   fi
 
   # man 1 xfs
@@ -2132,8 +2138,10 @@ function quick_harden() {
 EOF
 
   echo "ALL:ALL:DENY" >>/etc/suauth
-  chown -c root:root	/etc/suauth
-  chmod -c 400		/etc/suauth
+  {
+    chown -c root:root	/etc/suauth
+    chmod -c 400		/etc/suauth
+  } | tee -a "${logdir}/file_perms.txt"
 
   set_failure_limits
 
@@ -2215,7 +2223,7 @@ function configure_basic_auditing() {
 
   /sbin/auditctl -R /etc/audit/audit.rules
 
-  chmod -c 700 /etc/rc.d/rc.auditd
+  chmod -c 700 /etc/rc.d/rc.auditd | tee -a "${logdir}/file_perms.txt"
 
 } # configure_basic_auditing()
 ################################################################################
@@ -2436,9 +2444,11 @@ do
         ;;
 	"wipe")
 	  check_and_patch /etc wipe.patch 1
-	  chmod -c 700 /etc/rc.d/rc.{2,5}
-	  chmod -c 700 /etc/rc.d/rc5.d/KluksHeaderRestore.sh
-	  chmod -c 700 /etc/rc.d/rc.sysvinit
+	  {
+	    chmod -c 700 /etc/rc.d/rc.{2,5}
+	    chmod -c 700 /etc/rc.d/rc5.d/KluksHeaderRestore.sh
+	    chmod -c 700 /etc/rc.d/rc.sysvinit
+	  } | tee -a "${logdir}/file_perms.txt"
 	  init q
 	;;
 	*) echo "error: unknown patch \`${OPTARG}'!" 1>&2 ;;
