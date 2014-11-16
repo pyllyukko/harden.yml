@@ -1511,7 +1511,7 @@ function user_home_directories_permissions() {
   do
     if [ "x${DIR}" != "x/" ]
     then
-      /usr/bin/chmod -c 700 ${DIR}
+      /usr/bin/chmod -c 700 ${DIR} | tee -a "${logdir}/file_perms.txt"
     fi
   done
 
