@@ -553,8 +553,8 @@ function import_pgp_keys() {
   for URL in ${PGP_URLS[*]}
   do
     # after importing these keys, we can verify slackware packages with gpgv
-    /usr/bin/wget --tries=5 "${URL}" -nv --output-document=- | gpg --keyring "${GPG_KEYRING}" --no-default-keyring --import -
-  done
+    /usr/bin/wget --tries=5 "${URL}" -nv --output-document=- | gpg --logger-fd 1 --keyring "${GPG_KEYRING}" --no-default-keyring --import -
+  done | tee "${logdir}/pgp_keys.txt"
 
   # some CAs that are used with HKPS
   #
@@ -621,11 +621,12 @@ function import_pgp_keys() {
   for PGP_KEY in ${PGP_KEYS[*]}
   do
     /usr/bin/gpg \
+      --logger-fd 1 \
       --keyserver "hkps://hkps.pool.sks-keyservers.net" \
       --keyserver-options ca-cert-file=${SKS_CA_PREFIX}.pem \
       --keyring "${GPG_KEYRING}" --no-default-keyring \
       --recv-keys "${PGP_KEY}"
-  done
+  done | tee -a "${logdir}/pgp_keys.txt"
   return 0
 } # import_pgp_keys()
 ################################################################################
