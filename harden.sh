@@ -238,7 +238,7 @@ declare -r RBINDIR="/usr/local/rbin"
 declare -r INETDCONF="/etc/inetd.conf"
 declare -r SKS_CA_PREFIX="/usr/share/ca-certificates/local/sks-keyservers.netCA"
 auditPATH='/etc/audit'
-logdir=$( mktemp --tmpdir=/tmp -d harden.sh.XXXXXX )
+logdir=$( mktemp -p /tmp -d harden.sh.XXXXXX )
 
 # NOLOGIN(8): "It is intended as a replacement shell field for accounts that have been disabled."
 # Slackware default location:
