@@ -146,6 +146,7 @@ for PROGRAM in \
   sed \
   shred \
   mktemp \
+  tee \
   stat
 do
   if ! hash "${PROGRAM}" 2>/dev/null
