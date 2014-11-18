@@ -231,6 +231,7 @@ declare -ra PGP_URLS=(
 #   - 0x41259773973A612A - https://bitbucket.org/skskeyserver/sks-keyserver/src/tip/README.md
 #   - 0x40B8EA2364221D53 - Sourcefire VRT GPG Key (at least ClamAV)
 #   - 0xBB5869F064EA74AB - Chet Ramey / GNU / Bash
+#   - 0x17167CB4EE3A8EED - https://www.apple.com/support/security/pgp/
 declare -ra PGP_KEYS=(
   #"CEA0A321"
   #"060798CB"
@@ -269,6 +270,7 @@ declare -ra PGP_KEYS=(
   "0x41259773973A612A"
   "0x40B8EA2364221D53"
   "0xBB5869F064EA74AB"
+  "0x17167CB4EE3A8EED"
 )
 # from CIS Apache HTTP Server 2.4 Benchmark v1.1.0 - 12-03-2013
 # 1.2.3-8
