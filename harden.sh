@@ -971,6 +971,12 @@ function harden_fstab() {
     ){
       $4 = $4 ",nosuid,nodev,noexec"
     }
+    $3 == "swap" {
+      # FSTAB(5): "For swap partitions, this field should be specified as "none"."
+      $2 = "none"
+      # FILE-6336
+      $4 = "sw"
+    }
     {
       # formatting from /usr/lib/setup/SeTpartitions of slackware installer
       if($0 ~ /^#/)
