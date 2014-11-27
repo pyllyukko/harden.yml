@@ -362,6 +362,7 @@ TODO
 * Add CCE references?
 * /usr/bin/ch{mod,own} -> from PATH. since Debian has them under /bin
 * Create .preharden backups (only once?)
+* mdadm --monitor
 
 ### Auth/user account related
 
