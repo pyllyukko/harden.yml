@@ -1188,10 +1188,10 @@ index 85a8041..6de5e61 100644
  # Example of how to configure a bridge:
  # Note the added "BRNICS" variable which contains a space-separated list
 diff --git a/rc.d/rc.local b/rc.d/rc.local
-index 65b358b..085c7aa 100755
+index 65b358b..185de1c 100755
 --- a/rc.d/rc.local
 +++ b/rc.d/rc.local
-@@ -7,3 +7,124 @@
+@@ -7,3 +7,129 @@
  # make an /etc/rc.d/rc.local_shutdown script and put those
  # commands in there.
  
@@ -1316,12 +1316,17 @@ index 65b358b..085c7aa 100755
 +  echo "Starting RAID monitoring:  /sbin/mdadm -F -m root -y -f -i /var/run/mdadm.pid -t -s"
 +  /sbin/mdadm -F -m root -y -f -i /var/run/mdadm.pid -t -s
 +fi
++
++if [ -x /etc/rc.d/rc.static_arp ]
++then
++  /etc/rc.d/rc.static_arp start
++fi
 diff --git a/rc.d/rc.local_shutdown b/rc.d/rc.local_shutdown
 new file mode 100644
-index 0000000..2b62447
+index 0000000..3fc9aaf
 --- /dev/null
 +++ b/rc.d/rc.local_shutdown
-@@ -0,0 +1,89 @@
+@@ -0,0 +1,94 @@
 +#!/bin/sh
 +#
 +# /etc/rc.d/rc.local_shutdown
@@ -1411,6 +1416,87 @@ index 0000000..2b62447
 +    echo
 +  fi
 +fi
++
++if [ -x /etc/rc.d/rc.static_arp ]
++then
++  /etc/rc.d/rc.static_arp stop
++fi
+diff --git a/rc.d/rc.static_arp b/rc.d/rc.static_arp
+new file mode 100644
+index 0000000..eebcb04
+--- /dev/null
++++ b/rc.d/rc.static_arp
+@@ -0,0 +1,70 @@
++#!/bin/sh
++
++# rc.static_arp
++#
++# This script sets static ARP cache from /etc/ethers
++
++if [ -f /etc/rc.d/init.d/functions ]
++then
++  . /etc/rc.d/init.d/functions
++  ECHO_OK="echo_success"
++  ECHO_ERROR="echo_failure"
++else
++  ECHO_OK=:
++  ECHO_ERROR=:
++fi
++
++declare -r ETHERS="/etc/ethers"
++
++function start() {
++  echo "Setting static ARP cache:  /sbin/arp -f ${ETHERS}"
++  /sbin/arp -f ${ETHERS}
++  return ${?}
++}
++
++function stop() {
++  local MAC
++  local IP
++
++  if [ ! -f "${ETHERS}" -o ! -r "${ETHERS}" ]
++  then
++    echo "Error: ethers file not found!" 1>&2
++    return 1
++  fi
++
++  echo "Removing static ARP entries:"
++  while read MAC IP
++  do
++    /sbin/arp --delete "${IP}" 2>/dev/null && ${ECHO_OK} || ${ECHO_ERROR}
++    echo "  ${IP}"
++  done 0<"${ETHERS}"
++  return 0
++}
++
++function usage() {
++  echo "Usage: ${0##*/} start|stop|restart|status"
++} # usage()
++
++if [ ${#} -eq 0 ]
++then
++  usage
++  exit 0
++fi
++
++case "${1}" in
++  "start") start ;;
++  "stop")  stop  ;;
++  "restart")
++    stop
++    start
++  ;;
++  "status")
++    /sbin/arp -an | fgrep "PERM"
++    if [ ${PIPESTATUS[1]} -ne 0 ]
++    then
++      echo "No static ARP entries"
++    fi
++  ;;
++esac
++
++exit
 diff --git a/rc.d/rc.syslog b/rc.d/rc.syslog
 index 46208fa..e8ba416 100755
 --- a/rc.d/rc.syslog

@@ -161,6 +161,7 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
 * Enables [TCP wrappers](https://en.wikipedia.org/wiki/TCP_Wrapper)
   * **NOTE**: OpenSSH dropped support for TCP wrappers in [6.7](http://www.openssh.com/txt/release-6.7) (and [here's](https://lists.mindrot.org/pipermail/openssh-unix-dev/2014-April/032507.html) a good argument why this was a bad move!)
     * Also, Slackware introduced OpenSSH 6.7 with [SSA:2014-293-01](http://www.slackware.com/security/viewer.php?l=slackware-security&y=2014&m=slackware-security.521613)
+* Optional static ARP cache through ```/etc/rc.d/rc.static_arp```
 
 ### Other controls
 
@@ -351,7 +352,6 @@ TODO
 * X hardening
 * Debian support
 * Some chroot stuff?
-* Static ARP cache
 * Logging of the script actions
 * lilo.conf: audit=1
 * some kernel module configurator thingie for /etc/rc.d/rc.modules
