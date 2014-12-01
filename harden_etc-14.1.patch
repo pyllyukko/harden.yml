@@ -239,7 +239,7 @@ index 078e3f8..9574929 100644
 ++:root users:LOCAL
 +-:ALL:ALL
 diff --git a/login.defs b/login.defs
-index e52f91a..54172e6 100644
+index e52f91a..bfb2f96 100644
 --- a/login.defs
 +++ b/login.defs
 @@ -6,8 +6,9 @@
@@ -273,7 +273,7 @@ index e52f91a..54172e6 100644
  
  #
  # If defined, ":" delimited list of "message of the day" files to
-@@ -125,14 +127,17 @@ MAIL_DIR	/var/spool/mail
+@@ -125,7 +127,9 @@ MAIL_DIR	/var/spool/mail
  # user's name or shell are found in the file.  If not a full pathname, then
  # hushed mode will be enabled if the file exists in the user's home directory.
  #
@@ -284,16 +284,7 @@ index e52f91a..54172e6 100644
  #HUSHLOGIN_FILE	/etc/hushlogins
  
  #
- # If defined, either a TZ environment parameter spec or the
- # fully-rooted pathname of a file containing such a spec.
-+# (value taken from tzselect utility)
- #
--#ENV_TZ		TZ=CST6CDT
-+ENV_TZ		TZ=Europe/Helsinki
- #ENV_TZ		/etc/tzname
- 
- #
-@@ -147,8 +152,8 @@ ENV_HZ		HZ=100
+@@ -147,8 +151,8 @@ ENV_HZ		HZ=100
  # *REQUIRED*  The default PATH settings, for superuser and normal users.
  #
  # (they are minimal, add the rest in the shell startup files)
@@ -304,7 +295,7 @@ index e52f91a..54172e6 100644
  
  #
  # Terminal permissions
-@@ -187,7 +192,7 @@ KILLCHAR	025
+@@ -187,7 +191,7 @@ KILLCHAR	025
  # 022 is the default value, but 027, or even 077, could be considered
  # better for privacy. There is no One True Answer here: each sysadmin
  # must make up her mind.
@@ -313,7 +304,7 @@ index e52f91a..54172e6 100644
  
  #
  # Password aging controls:
-@@ -197,10 +202,10 @@ UMASK		022
+@@ -197,10 +201,10 @@ UMASK		022
  #	PASS_MIN_LEN	Minimum acceptable password length.
  #	PASS_WARN_AGE	Number of days warning given before a password expires.
  #
@@ -328,7 +319,7 @@ index e52f91a..54172e6 100644
  
  #
  # If "yes", the user must be listed as a member of the first gid 0 group
-@@ -208,7 +213,7 @@ PASS_WARN_AGE	7
+@@ -208,7 +212,7 @@ PASS_WARN_AGE	7
  # to uid 0 accounts.  If the group doesn't exist or is empty, no one
  # will be able to "su" to uid 0.
  #
@@ -337,7 +328,7 @@ index e52f91a..54172e6 100644
  
  #
  # If compiled with cracklib support, where are the dictionaries
-@@ -218,7 +223,7 @@ SU_WHEEL_ONLY	no
+@@ -218,7 +222,7 @@ SU_WHEEL_ONLY	no
  #
  # Min/max values for automatic uid selection in useradd
  #
@@ -346,7 +337,7 @@ index e52f91a..54172e6 100644
  UID_MAX			60000
  # System accounts
  SYS_UID_MIN		  101
-@@ -264,6 +269,7 @@ PASS_ALWAYS_WARN	yes
+@@ -264,6 +268,7 @@ PASS_ALWAYS_WARN	yes
  # Require password before chfn/chsh can make any changes.
  #
  CHFN_AUTH		yes
@@ -354,7 +345,7 @@ index e52f91a..54172e6 100644
  
  #
  # Which fields may be changed by regular users using chfn - use
-@@ -271,7 +277,7 @@ CHFN_AUTH		yes
+@@ -271,7 +276,7 @@ CHFN_AUTH		yes
  # phone, home phone).  If not defined, no changes are allowed.
  # For backward compatibility, "yes" = "rwh" and "no" = "frwh".
  # 
@@ -363,7 +354,7 @@ index e52f91a..54172e6 100644
  
  #
  # Password prompt (%s will be replaced by user name).
-@@ -300,7 +306,7 @@ CHFN_RESTRICT		frwh
+@@ -300,7 +305,7 @@ CHFN_RESTRICT		frwh
  # If set to DES, DES-based algorithm will be used for encrypting password (default)
  # Overrides the MD5_CRYPT_ENAB option
  #
@@ -372,7 +363,7 @@ index e52f91a..54172e6 100644
  
  #
  # Only works if ENCRYPT_METHOD is set to SHA256 or SHA512.
-@@ -315,7 +321,7 @@ ENCRYPT_METHOD SHA256
+@@ -315,7 +320,7 @@ ENCRYPT_METHOD SHA256
  # If only one of the MIN or MAX values is set, then this value will be used.
  # If MIN > MAX, the highest value will be used.
  #
@@ -381,7 +372,7 @@ index e52f91a..54172e6 100644
  # SHA_CRYPT_MAX_ROUNDS 5000
  
  #
-@@ -338,13 +344,13 @@ ENCRYPT_METHOD SHA256
+@@ -338,13 +343,13 @@ ENCRYPT_METHOD SHA256
  # when the user is added with adduser or useradd, or by editing
  # /etc/group directly, preferably using "vigr"
  #
@@ -397,7 +388,7 @@ index e52f91a..54172e6 100644
  
  #
  # If this file exists and is readable, login environment will be
-@@ -385,5 +391,5 @@ USERGROUPS_ENAB yes
+@@ -385,5 +390,5 @@ USERGROUPS_ENAB yes
  # This option is overridden with the -M or -m flags on the useradd command
  # line.
  #
