@@ -150,6 +150,7 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
   * btmp & wtmp
   * Removes world-readibility from /var/www
   * Removes world-readibility from home directories
+* Enables RAID state monitoring with ```mdadm --monitor```
 
 **TODO**: Add a table about file ownership & permission changes. At least the most relevant ones.
 
@@ -362,7 +363,6 @@ TODO
 * Add CCE references?
 * /usr/bin/ch{mod,own} -> from PATH. since Debian has them under /bin
 * Create .preharden backups (only once?)
-* mdadm --monitor
 
 ### Auth/user account related
 

@@ -1188,10 +1188,10 @@ index 85a8041..6de5e61 100644
  # Example of how to configure a bridge:
  # Note the added "BRNICS" variable which contains a space-separated list
 diff --git a/rc.d/rc.local b/rc.d/rc.local
-index 65b358b..7471d5c 100755
+index 65b358b..085c7aa 100755
 --- a/rc.d/rc.local
 +++ b/rc.d/rc.local
-@@ -7,3 +7,117 @@
+@@ -7,3 +7,124 @@
  # make an /etc/rc.d/rc.local_shutdown script and put those
  # commands in there.
  
@@ -1309,12 +1309,19 @@ index 65b358b..7471d5c 100755
 +do
 +  echo 0 > ${host}/authorized_default
 +done
++
++# start mdadm
++if [ -f /proc/mdstat ]
++then
++  echo "Starting RAID monitoring:  /sbin/mdadm -F -m root -y -f -i /var/run/mdadm.pid -t -s"
++  /sbin/mdadm -F -m root -y -f -i /var/run/mdadm.pid -t -s
++fi
 diff --git a/rc.d/rc.local_shutdown b/rc.d/rc.local_shutdown
 new file mode 100644
-index 0000000..e6b5ebc
+index 0000000..2b62447
 --- /dev/null
 +++ b/rc.d/rc.local_shutdown
-@@ -0,0 +1,77 @@
+@@ -0,0 +1,89 @@
 +#!/bin/sh
 +#
 +# /etc/rc.d/rc.local_shutdown
@@ -1391,6 +1398,18 @@ index 0000000..e6b5ebc
 +if [ -x /etc/rc.d/rc.mrtg ]
 +then
 +  /etc/rc.d/rc.mrtg stop
++fi
++
++if [ -f /var/run/mdadm.pid ]
++then
++  read mdadm_pid 0</var/run/mdadm.pid
++  if [ -n "${mdadm_pid}" ]
++  then
++    echo -n "Stopping RAID monitoring..."
++    kill "${mdadm_pid}"
++    rm -f /var/run/mdadm.pid
++    echo
++  fi
 +fi
 diff --git a/rc.d/rc.syslog b/rc.d/rc.syslog
 index 46208fa..e8ba416 100755
