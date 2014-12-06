@@ -87,7 +87,7 @@ What does it do?
    * GID 1006 for [CONFIG\_GRKERNSEC\_SYMLINKOWN\_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_users_with_kernel-enforced_SymlinksIfOwnerMatch)
    * GID 1007 for [GRKERNSEC\_AUDIT\_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_auditing) (not in use)
 
-You can also utilize the above grsec groups with sudo, so the allowed users don't have the permissions by default:
+You can also utilize the above grsec groups with [sudo][11], so the allowed users don't have the permissions by default:
 
 	ADMINS ALL=(:grsec_tpe) NOPASSWD: /usr/bin/newgrp
 
@@ -126,7 +126,7 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
   * Listen only on localhost by default
   * Disable the [MSA](https://en.wikipedia.org/wiki/Mail_submission_agent)
   * Don't show the version on the banner
-* sudo
+* [sudo][11]
   * Don't cache the password (timestamp\_timeout) (should also mitigate against [CVE-2013-1775](http://www.sudo.ws/sudo/alerts/epoch_ticket.html))
   * Always require password with *sudo -l* (listpw)
   * noexec as default
@@ -165,7 +165,7 @@ You can also utilize the above grsec groups with sudo, so the allowed users don'
 
 ### Other controls
 
-* Restrict the use of su (prefer sudo instead)
+* Restrict the use of su (prefer [sudo][11] instead)
   * /etc/suauth
   * /etc/porttime
   * /etc/login.defs: SU\_WHEEL\_ONLY
@@ -244,10 +244,10 @@ As a workaround, there is also a new runlevel **2** that can be used to safely r
 
 #### Principle of least privilege
 
-* You can use the *adm* group to view log files, so you don't need to be *root* to do that. Just add a user to the *adm* group, or configure *sudo* as follows:
+* You can use the *adm* group to view log files, so you don't need to be *root* to do that. Just add a user to the *adm* group, or configure [sudo][11] as follows:
 
         ADMINS ALL=(:adm) NOPASSWD: /bin/cat
-* View bad logins with sudo:
+* View bad logins with [sudo][11]:
 
         ADMINS ALL=(:adm) NOPASSWD: /usr/bin/lastb
 * Remove *floppy* and *scanner* from CONSOLE\_GROUPS
@@ -420,3 +420,4 @@ Some of these documents are quite old, but most of the stuff still applies.
 [8]: http://www.jimpryor.net/linux/dcron-README
 [9]: http://www.tldp.org/HOWTO/Process-Accounting/
 [10]: http://sebastien.godard.pagesperso-orange.fr/
+[11]: http://www.sudo.ws/
