@@ -105,6 +105,7 @@ You can also utilize the above grsec groups with [sudo][11], so the allowed user
 * Through rc.local:
   * logoutd
   * icmpinfo
+  * ```mdadm --monitor``` (if */proc/mdstat* exists)
 * [Process accounting][9] (acct)
 * System accounting ([sysstat][10])
 * [SBo](http://slackbuilds.org/) related (if installed):
