@@ -363,6 +363,7 @@ TODO
 * Add CCE references?
 * /usr/bin/ch{mod,own} -> from PATH. since Debian has them under /bin
 * Create .preharden backups (only once?)
+* Java's CAs
 
 ### Auth/user account related
 
@@ -378,6 +379,7 @@ TODO
 * [Create .gnupg home directories](http://www.gnupg.org/documentation/manuals/gnupg/addgnupghome.html#addgnupghome)
 * USERDEL\_CMD from LOGIN.DEFS(5)
 * Is it possible to enforce password policy for root user also?
+* Use of ```at``` when in *wheel* group?
 
 ### Guides to read
 
