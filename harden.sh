@@ -1591,17 +1591,6 @@ EOF
   # </system-hardening-10.2.txt>
   ##############################################################################
 
-  # rehash the CA certificates so wget and others can use them
-  #[ -d "${CERTS_DIR}" ] && {
-  #  pushd "${CERTS_DIR}"
-  #  /usr/bin/c_rehash
-  #  popd
-  #}
-  if [ -x /usr/sbin/update-ca-certificates ]
-  then
-    /usr/sbin/update-ca-certificates -v
-  fi
-
   # make installpkg store the MD5 checksums
   sed -i 's/^\(MD5SUM\)=0$/\1=1/' /sbin/installpkg
 
