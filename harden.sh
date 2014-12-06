@@ -32,6 +32,8 @@ for PROGRAM in \
   rm \
   sed \
   shred \
+  mktemp \
+  tee \
   stat
 do
   if ! hash "${PROGRAM}" 2>/dev/null
@@ -124,6 +126,7 @@ declare -r RBINDIR="/usr/local/rbin"
 declare -r INETDCONF="/etc/inetd.conf"
 declare -r SKS_CA_PREFIX="/usr/share/ca-certificates/local/sks-keyservers.netCA"
 auditPATH='/etc/audit'
+logdir=$( mktemp -p /tmp -d harden.sh.XXXXXX )
 
 # NOLOGIN(8): "It is intended as a replacement shell field for accounts that have been disabled."
 # Slackware default location:
@@ -413,8 +416,10 @@ function create_environment_for_restricted_shell () {
   then
     mkdir -pv "${RBINDIR}"
   fi
-  chown -c root:root	"${RBINDIR}"
-  chmod -c 755		"${RBINDIR}"
+  {
+    chown -c root:root	"${RBINDIR}"
+    chmod -c 755		"${RBINDIR}"
+  } | tee -a "${logdir}/file_perms.txt"
 
   #rm -v "${RBINDIR}/"*
 
@@ -440,8 +445,8 @@ function import_pgp_keys() {
   for URL in ${PGP_URLS[*]}
   do
     # after importing these keys, we can verify slackware packages with gpgv
-    /usr/bin/wget --tries=5 "${URL}" -nv --output-document=- | gpg --keyring "${GPG_KEYRING}" --no-default-keyring --import -
-  done
+    /usr/bin/wget --tries=5 "${URL}" -nv --output-document=- | gpg --logger-fd 1 --keyring "${GPG_KEYRING}" --no-default-keyring --import -
+  done | tee "${logdir}/pgp_keys.txt"
 
   # some CAs that are used with HKPS
   #
@@ -462,7 +467,7 @@ function import_pgp_keys() {
       https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt \
       https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.dkg.asc \
       https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.jamie.asc
-    chmod -c 644 /usr/share/ca-certificates/local/mfpl.crt
+    chmod -c 644 /usr/share/ca-certificates/local/mfpl.crt | tee -a "${logdir}/file_perms.txt"
   fi
   if [ "${USER}" = "root" -a ! -f "${SKS_CA_PREFIX}.pem" ]
   then
@@ -491,7 +496,7 @@ function import_pgp_keys() {
     fi
     # get the CRL
     wget -nv --ca-certificate=/usr/share/ca-certificates/mozilla/Thawte_Premium_Server_CA.crt https://sks-keyservers.net/ca/crl.pem -O "${SKS_CA_PREFIX%/*}/d378c2f0.r0"
-    chmod -c 644 ${SKS_CA_PREFIX}.{pem,pem.asc}
+    chmod -c 644 ${SKS_CA_PREFIX}.{pem,pem.asc} | tee -a "${logdir}/file_perms.txt"
   # for regular users
   elif [ ! -f "${SKS_CA_PREFIX}.pem" ]
   then
@@ -508,11 +513,12 @@ function import_pgp_keys() {
   for PGP_KEY in ${PGP_KEYS[*]}
   do
     /usr/bin/gpg \
+      --logger-fd 1 \
       --keyserver "hkps://hkps.pool.sks-keyservers.net" \
       --keyserver-options ca-cert-file=${SKS_CA_PREFIX}.pem \
       --keyring "${GPG_KEYRING}" --no-default-keyring \
       --recv-keys "${PGP_KEY}"
-  done
+  done | tee -a "${logdir}/pgp_keys.txt"
   return 0
 } # import_pgp_keys()
 ################################################################################
@@ -857,7 +863,7 @@ function check_and_patch() {
     }
     # if everything was ok, apply the patch
     echo "${FUNCNAME}(): DEBUG: patch would happen"
-    /usr/bin/patch -R -d "${DIR_TO_PATCH}" -t -p${P} -i "${PATCH_FILE}"
+    /usr/bin/patch -R -d "${DIR_TO_PATCH}" -t -p${P} -i "${PATCH_FILE}" | tee -a "${logdir}/patches.txt"
     RET=${?}
   else
     echo "${FUNCNAME}(): testing patch file \`${PATCH_FILE##*/}' with --dry-run"
@@ -869,7 +875,7 @@ function check_and_patch() {
       return 1
     }
     echo "DEBUG: patch would happen"
-    /usr/bin/patch -d "${DIR_TO_PATCH}" -t -p${P} -i "${PATCH_FILE}"
+    /usr/bin/patch -d "${DIR_TO_PATCH}" -t -p${P} -i "${PATCH_FILE}" | tee -a "${logdir}/patches.txt"
     RET=${?}
   fi
   set -u
@@ -882,19 +888,21 @@ function remove_packages() {
 
   echo "${FUNCNAME}(): removing potentially dangerous packages"
 
-  # CIS 7.1 Disable rhosts Support
-  /sbin/removepkg netkit-rsh 2>/dev/null
+  {
+    # CIS 7.1 Disable rhosts Support
+    /sbin/removepkg netkit-rsh 2>/dev/null
 
-  # from system-hardening-10.2.txt (Misc Stuff -> Stuff to remove)
-  #
-  # NOTE: uucp comes with a bunch of SUID binaries, plus i think most people
-  #       won't need it nowadays anyway.
-  /sbin/removepkg uucp 2>/dev/null
+    # from system-hardening-10.2.txt (Misc Stuff -> Stuff to remove)
+    #
+    # NOTE: uucp comes with a bunch of SUID binaries, plus i think most people
+    #       won't need it nowadays anyway.
+    /sbin/removepkg uucp 2>/dev/null
 
-  # remove the floppy package. get rid of the fdmount SUID binary.
-  /sbin/removepkg floppy 2>/dev/null
+    # remove the floppy package. get rid of the fdmount SUID binary.
+    /sbin/removepkg floppy 2>/dev/null
 
-  # TODO: remove xinetd package?
+    # TODO: remove xinetd package?
+  } | tee -a "${logdir}/removed_packages.txt"
 
   return 0
 } # remove_packages()
@@ -1004,379 +1012,381 @@ function file_permissions() {
 
   echo "${FUNCNAME}(): setting file permissions. note that this should be the last function to run."
 
-  # CIS 1.4 Enable System Accounting (applied)
-  #
-  # NOTE: sysstat was added to slackware at version 11.0
-  #
-  # NOTE: the etc patch should create the necessary cron entries under /etc/cron.d
-  /usr/bin/chmod -c 700 "${SA_RC}"
+  {
+    # CIS 1.4 Enable System Accounting (applied)
+    #
+    # NOTE: sysstat was added to slackware at version 11.0
+    #
+    # NOTE: the etc patch should create the necessary cron entries under /etc/cron.d
+    /usr/bin/chmod -c 700 "${SA_RC}"
 
-  # CIS 3.3 Disable GUI Login If Possible (partly)
-  /usr/bin/chown -c root:root	/etc/inittab
-  /usr/bin/chmod -c 0600	/etc/inittab
+    # CIS 3.3 Disable GUI Login If Possible (partly)
+    /usr/bin/chown -c root:root	/etc/inittab
+    /usr/bin/chmod -c 0600	/etc/inittab
 
-  # CIS 4.1 Network Parameter Modifications (partly)
-  #
-  # NOTE: sysctl.conf should be created by the etc patch
-  /usr/bin/chown -c root:root	/etc/sysctl.conf
-  /usr/bin/chmod -c 0600	/etc/sysctl.conf
+    # CIS 4.1 Network Parameter Modifications (partly)
+    #
+    # NOTE: sysctl.conf should be created by the etc patch
+    /usr/bin/chown -c root:root	/etc/sysctl.conf
+    /usr/bin/chmod -c 0600	/etc/sysctl.conf
 
-  ## CIS 5.3 Confirm Permissions On System Log Files (modified)
-  ## NOTE: apache -> httpd
-  pushd /var/log
-  ###############################################################################
-  ## Permissions for other log files in /var/log
-  ###############################################################################
-  ## NOTE: according to tiger, the permissions of wtmp should be 664
-  /usr/bin/chmod -c o-rwx btmp cron* debug* dmesg faillog lastlog maillog* messages* secure* spooler* syslog* wtmp xferlog
+    ## CIS 5.3 Confirm Permissions On System Log Files (modified)
+    ## NOTE: apache -> httpd
+    pushd /var/log
+    ###############################################################################
+    ## Permissions for other log files in /var/log
+    ###############################################################################
+    ## NOTE: according to tiger, the permissions of wtmp should be 664
+    /usr/bin/chmod -c o-rwx btmp cron* debug* dmesg faillog lastlog maillog* messages* secure* spooler* syslog* wtmp xferlog
 
-  ###############################################################################
-  ##   directories in /var/log
-  ###############################################################################
-  #/usr/bin/chmod -c o-w httpd cups iptraf nfsd samba sa uucp
+    ###############################################################################
+    ##   directories in /var/log
+    ###############################################################################
+    #/usr/bin/chmod -c o-w httpd cups iptraf nfsd samba sa uucp
 
-  ###############################################################################
-  ##   contents of directories in /var/log
-  ###############################################################################
-  #/usr/bin/chmod -c o-rwx httpd/* cups/* iptraf/* nfsd/* samba/* sa/* uucp/*
+    ###############################################################################
+    ##   contents of directories in /var/log
+    ###############################################################################
+    #/usr/bin/chmod -c o-rwx httpd/* cups/* iptraf/* nfsd/* samba/* sa/* uucp/*
 
-  ###############################################################################
-  ##   Slackware package management
-  ###############################################################################
-  ##
-  ## NOTE: Nessus plugin 21745 triggers, if /var/log/packages is not readable
-  /usr/bin/chmod -c o-w		packages   removed_packages   removed_scripts   scripts   setup
-  #/usr/bin/chmod -c o-rwx	packages/* removed_packages/* removed_scripts/* scripts/* setup/*
+    ###############################################################################
+    ##   Slackware package management
+    ###############################################################################
+    ##
+    ## NOTE: Nessus plugin 21745 triggers, if /var/log/packages is not readable
+    /usr/bin/chmod -c o-w		packages   removed_packages   removed_scripts   scripts   setup
+    #/usr/bin/chmod -c o-rwx	packages/* removed_packages/* removed_scripts/* scripts/* setup/*
 
-  ###############################################################################
-  ## Permissions for group log files in /var/log
-  ###############################################################################
-  ## NOTE: removed wtmp from here, it is group (utmp) writable by default and there might be a good reason for that.
-  /usr/bin/chmod -c g-wx btmp cron* debug* dmesg faillog lastlog maillog* messages* secure* spooler* syslog* xferlog
+    ###############################################################################
+    ## Permissions for group log files in /var/log
+    ###############################################################################
+    ## NOTE: removed wtmp from here, it is group (utmp) writable by default and there might be a good reason for that.
+    /usr/bin/chmod -c g-wx btmp cron* debug* dmesg faillog lastlog maillog* messages* secure* spooler* syslog* xferlog
 
-  ##   directories in /var/log
-  #/usr/bin/chmod -c g-w httpd cups iptraf nfsd samba sa uucp
+    ##   directories in /var/log
+    #/usr/bin/chmod -c g-w httpd cups iptraf nfsd samba sa uucp
 
-  ##   contents of directories in /var/log
-  #/usr/bin/chmod -c g-wx httpd/* cups/* iptraf/* nfsd/* samba/* sa/* uucp/*
+    ##   contents of directories in /var/log
+    #/usr/bin/chmod -c g-wx httpd/* cups/* iptraf/* nfsd/* samba/* sa/* uucp/*
 
-  ##   Slackware package management
-  /usr/bin/chmod -c g-w		packages   removed_packages   removed_scripts   scripts   setup
-  #/usr/bin/chmod -c g-wx	packages/* removed_packages/* removed_scripts/* scripts/* setup/*
+    ##   Slackware package management
+    /usr/bin/chmod -c g-w		packages   removed_packages   removed_scripts   scripts   setup
+    #/usr/bin/chmod -c g-wx	packages/* removed_packages/* removed_scripts/* scripts/* setup/*
 
-  ###############################################################################
-  ## Permissions for owner
-  ###############################################################################
-  ##   log files in /var/log
-  #/usr/bin/chmod u-x btmp cron* debug* dmesg faillog lastlog maillog* messages* secure* spooler* syslog* wtmp xferlog
-  ##   contents of directories in /var/log
-  ## NOTE: disabled, these directories might contain subdirectories so u-x doesn't make sense.
-  ##/usr/bin/chmod u-x httpd/* cups/* iptraf/* nfsd/* samba/* sa/* uucp/*
+    ###############################################################################
+    ## Permissions for owner
+    ###############################################################################
+    ##   log files in /var/log
+    #/usr/bin/chmod u-x btmp cron* debug* dmesg faillog lastlog maillog* messages* secure* spooler* syslog* wtmp xferlog
+    ##   contents of directories in /var/log
+    ## NOTE: disabled, these directories might contain subdirectories so u-x doesn't make sense.
+    ##/usr/bin/chmod u-x httpd/* cups/* iptraf/* nfsd/* samba/* sa/* uucp/*
 
-  ##   Slackware package management
-  ## NOTE: disabled, these directories might contain subdirectories so u-x doesn't make sense.
-  ##/usr/bin/chmod u-x packages/* removed_packages/* removed_scripts/* scripts/* setup/*
+    ##   Slackware package management
+    ## NOTE: disabled, these directories might contain subdirectories so u-x doesn't make sense.
+    ##/usr/bin/chmod u-x packages/* removed_packages/* removed_scripts/* scripts/* setup/*
 
-  ## Change ownership
-  ## NOTE: disabled, the ownerships should be correct.
-  ##/usr/bin/chown -cR root:root .
-  ##/usr/bin/chown -c uucp uucp
-  ##/usr/bin/chgrp -c uucp uucp/*
-  ##/usr/bin/chgrp -c utmp wtmpq
+    ## Change ownership
+    ## NOTE: disabled, the ownerships should be correct.
+    ##/usr/bin/chown -cR root:root .
+    ##/usr/bin/chown -c uucp uucp
+    ##/usr/bin/chgrp -c uucp uucp/*
+    ##/usr/bin/chgrp -c utmp wtmpq
 
-  popd
+    popd
 
-  ## END OF CIS 5.3
+    ## END OF CIS 5.3
 
-  # CIS 6.3 Verify passwd, shadow, and group File Permissions (modified)
+    # CIS 6.3 Verify passwd, shadow, and group File Permissions (modified)
 
-  # here's where CIS goes wrong, the permissions by default are:
-  # -rw-r----- root/shadow     498 2009-03-08 22:01 etc/shadow.new
-  # ...if we go changing that, xlock for instance goes bananas.
-  # modified accordingly.
-  #
-  # then again, if there is no xlock or xscreensaver binaries in the system,
-  # the perms could be root:root 0600.
-  #
-  # 9.10.2012: added gshadow to the list
-  /usr/bin/chown -c root:root	/etc/passwd /etc/group
-  /usr/bin/chmod -c 644		/etc/passwd /etc/group
-  /usr/bin/chown -c root:shadow	/etc/shadow /etc/gshadow
-  /usr/bin/chmod -c 440		/etc/shadow /etc/gshadow
+    # here's where CIS goes wrong, the permissions by default are:
+    # -rw-r----- root/shadow     498 2009-03-08 22:01 etc/shadow.new
+    # ...if we go changing that, xlock for instance goes bananas.
+    # modified accordingly.
+    #
+    # then again, if there is no xlock or xscreensaver binaries in the system,
+    # the perms could be root:root 0600.
+    #
+    # 9.10.2012: added gshadow to the list
+    /usr/bin/chown -c root:root	/etc/passwd /etc/group
+    /usr/bin/chmod -c 644		/etc/passwd /etc/group
+    /usr/bin/chown -c root:shadow	/etc/shadow /etc/gshadow
+    /usr/bin/chmod -c 440		/etc/shadow /etc/gshadow
 
-  # CIS 7.3 Create ftpusers Files
-  /usr/bin/chown -c root:root	/etc/ftpusers
-  /usr/bin/chmod -c 600		/etc/ftpusers
+    # CIS 7.3 Create ftpusers Files
+    /usr/bin/chown -c root:root	/etc/ftpusers
+    /usr/bin/chmod -c 600		/etc/ftpusers
 
-  # CIS 7.5 Restrict at/cron To Authorized Users
-  /usr/bin/chown -c root:root	/etc/cron.allow /etc/at.allow
-  /usr/bin/chmod -c 400		/etc/cron.allow /etc/at.allow
+    # CIS 7.5 Restrict at/cron To Authorized Users
+    /usr/bin/chown -c root:root	/etc/cron.allow /etc/at.allow
+    /usr/bin/chmod -c 400		/etc/cron.allow /etc/at.allow
 
-  # CIS 7.6 Restrict Permissions On crontab Files
-  #
-  # NOTE: slackware 13.1 doesn't ship with /etc/crontab file
-  if [ -f "/etc/crontab" ]
-  then
-    /usr/bin/chown -c root:root	/etc/crontab
-    /usr/bin/chmod -c 400	/etc/crontab
-  fi
-  /usr/bin/chown -cR root:root	/var/spool/cron
-  /usr/bin/chmod -cR go-rwx	/var/spool/cron
+    # CIS 7.6 Restrict Permissions On crontab Files
+    #
+    # NOTE: slackware 13.1 doesn't ship with /etc/crontab file
+    if [ -f "/etc/crontab" ]
+    then
+      /usr/bin/chown -c root:root	/etc/crontab
+      /usr/bin/chmod -c 400	/etc/crontab
+    fi
+    /usr/bin/chown -cR root:root	/var/spool/cron
+    /usr/bin/chmod -cR go-rwx	/var/spool/cron
 
-  # CIS 7.8 Restrict Root Logins To System Console
-  # also Nessus cert_unix_checklist.audit "Permission and ownership check /etc/securetty"
-  /usr/bin/chown -c root:root	/etc/securetty
-  /usr/bin/chmod -c 400		/etc/securetty
+    # CIS 7.8 Restrict Root Logins To System Console
+    # also Nessus cert_unix_checklist.audit "Permission and ownership check /etc/securetty"
+    /usr/bin/chown -c root:root	/etc/securetty
+    /usr/bin/chmod -c 400		/etc/securetty
 
-  # CIS 7.9 Set LILO Password
-  # - also suggested in system-hardening-10.2.txt
-  # - also Tiger [boot01]
-  /usr/bin/chown -c root:root	/etc/lilo.conf
-  /usr/bin/chmod -c 600		/etc/lilo.conf
+    # CIS 7.9 Set LILO Password
+    # - also suggested in system-hardening-10.2.txt
+    # - also Tiger [boot01]
+    /usr/bin/chown -c root:root	/etc/lilo.conf
+    /usr/bin/chmod -c 600		/etc/lilo.conf
 
-  # CIS 8.13 Limit Access To The Root Account From su
-  /usr/bin/chown -c root:root	/etc/suauth
-  /usr/bin/chmod -c 400		/etc/suauth
+    # CIS 8.13 Limit Access To The Root Account From su
+    /usr/bin/chown -c root:root	/etc/suauth
+    /usr/bin/chmod -c 400		/etc/suauth
 
-  # 8.7 User Home Directories Should Be Mode 750 or More Restrictive (modified)
-  user_home_directories_permissions
+    # 8.7 User Home Directories Should Be Mode 750 or More Restrictive (modified)
+    user_home_directories_permissions
 
-  # CIS SN.2 Change Default Greeting String For sendmail
-  #
-  # i'm not sure about this one...
-  #
-  # ftp://ftp.slackware.com/pub/slackware/slackware-13.1/slackware/MANIFEST.bz2:
-  # -rw-r--r-- root/root     60480 2010-04-24 11:44 etc/mail/sendmail.cf.new
+    # CIS SN.2 Change Default Greeting String For sendmail
+    #
+    # i'm not sure about this one...
+    #
+    # ftp://ftp.slackware.com/pub/slackware/slackware-13.1/slackware/MANIFEST.bz2:
+    # -rw-r--r-- root/root     60480 2010-04-24 11:44 etc/mail/sendmail.cf.new
 
-  #/usr/bin/chown -c root:bin /etc/mail/sendmail.cf
-  #/usr/bin/chmod -c 444 /etc/mail/sendmail.cf
+    #/usr/bin/chown -c root:bin /etc/mail/sendmail.cf
+    #/usr/bin/chmod -c 444 /etc/mail/sendmail.cf
 
-  ##############################################################################
-  # from Security Configuration Benchmark For Apache HTTP Server 2.2
-  # Version 3.0.0 (CIS_Apache_HTTP_Server_Benchmark_v3.0.0)
-  ##############################################################################
+    ##############################################################################
+    # from Security Configuration Benchmark For Apache HTTP Server 2.2
+    # Version 3.0.0 (CIS_Apache_HTTP_Server_Benchmark_v3.0.0)
+    ##############################################################################
 
-  # CIS 1.3.6 Core Dump Directory Security (Level 1, Scorable) (modified)
-  #/usr/bin/chown -c root:apache	/var/log/httpd
-  /usr/bin/chown -c root:adm	/var/log/httpd
-  /usr/bin/chmod -c 750		/var/log/httpd
+    # CIS 1.3.6 Core Dump Directory Security (Level 1, Scorable) (modified)
+    #/usr/bin/chown -c root:apache	/var/log/httpd
+    /usr/bin/chown -c root:adm	/var/log/httpd
+    /usr/bin/chmod -c 750		/var/log/httpd
 
-  ##############################################################################
-  # from Nessus cert_unix_checklist.audit (Cert UNIX Security Checklist v2.0)
-  # http://www.nessus.org/plugins/index.php?view=single&id=21157
-  ##############################################################################
+    ##############################################################################
+    # from Nessus cert_unix_checklist.audit (Cert UNIX Security Checklist v2.0)
+    # http://www.nessus.org/plugins/index.php?view=single&id=21157
+    ##############################################################################
 
-  # NOTE: netgroup comes with yptools
-  # NOTE:
-  #   login.defs might need to be readable:
-  #     groupmems[7511]: cannot open login definitions /etc/login.defs [Permission denied]
-  #     newgrp[4912]: cannot open login definitions /etc/login.defs [Permission denied]
-  for FILE in \
-    "/etc/hosts.equiv" \
-    "${INETDCONF}" \
-    "/etc/netgroup" \
-    "/etc/login.defs" \
-    "/etc/login.access"
-  do
-    [ ! -f "${FILE}" ] && continue
-    /usr/bin/chown -c root:root	"${FILE}"
-    /usr/bin/chmod -c 600	"${FILE}"
-  done
+    # NOTE: netgroup comes with yptools
+    # NOTE:
+    #   login.defs might need to be readable:
+    #     groupmems[7511]: cannot open login definitions /etc/login.defs [Permission denied]
+    #     newgrp[4912]: cannot open login definitions /etc/login.defs [Permission denied]
+    for FILE in \
+      "/etc/hosts.equiv" \
+      "${INETDCONF}" \
+      "/etc/netgroup" \
+      "/etc/login.defs" \
+      "/etc/login.access"
+    do
+      [ ! -f "${FILE}" ] && continue
+      /usr/bin/chown -c root:root	"${FILE}"
+      /usr/bin/chmod -c 600	"${FILE}"
+    done
 
-  # Nessus Cert UNIX Security Checklist v2.0 "Permission and ownership check /var/adm/wtmp"
-  # UTMP(5): "The  wtmp file records all logins and logouts."
-  # LAST,LASTB(1): "Last  searches  back  through the file /var/log/wtmp (or the file designated by the -f flag)
-  #                 and displays a list of all users logged in (and out) since that file was created."
-  #
-  # the default permissions in Slackware are as follows:
-  # -rw-rw-r-- root/utmp         0 1994-02-10 19:01 var/log/wtmp.new
-  #
-  # wtmp offers simply too much detail over so long period of time.
-  #
-  # NOTE: in slackware 13.1 /var/adm is a symbolic link to /var/log
-  #/usr/bin/chown -c root:utmp	/var/adm/wtmp
-  #/usr/bin/chown -c root:root	/var/adm/wtmp[.-]*
+    # Nessus Cert UNIX Security Checklist v2.0 "Permission and ownership check /var/adm/wtmp"
+    # UTMP(5): "The  wtmp file records all logins and logouts."
+    # LAST,LASTB(1): "Last  searches  back  through the file /var/log/wtmp (or the file designated by the -f flag)
+    #                 and displays a list of all users logged in (and out) since that file was created."
+    #
+    # the default permissions in Slackware are as follows:
+    # -rw-rw-r-- root/utmp         0 1994-02-10 19:01 var/log/wtmp.new
+    #
+    # wtmp offers simply too much detail over so long period of time.
+    #
+    # NOTE: in slackware 13.1 /var/adm is a symbolic link to /var/log
+    #/usr/bin/chown -c root:utmp	/var/adm/wtmp
+    #/usr/bin/chown -c root:root	/var/adm/wtmp[.-]*
 
-  # CIS 5.3 handles the permissions, this file shouldn't be readable by all users. it contains sensitive information.
-  # NOTE: 10.10.2012: CIS 5.3 commented out
-  # rotated files... of course this should be done in logrotate.conf.
-  /usr/bin/chmod -c o-rwx	/var/adm/wtmp
-  # make the rotated wtmp files group adm readable
-  /usr/bin/chgrp -c root	/var/adm/wtmp[.-]*
-  /usr/bin/chmod -c 0640	/var/adm/wtmp[.-]*
+    # CIS 5.3 handles the permissions, this file shouldn't be readable by all users. it contains sensitive information.
+    # NOTE: 10.10.2012: CIS 5.3 commented out
+    # rotated files... of course this should be done in logrotate.conf.
+    /usr/bin/chmod -c o-rwx	/var/adm/wtmp
+    # make the rotated wtmp files group adm readable
+    /usr/bin/chgrp -c root	/var/adm/wtmp[.-]*
+    /usr/bin/chmod -c 0640	/var/adm/wtmp[.-]*
 
-  # Nessus CIS_Apache_v2_1.audit "1.19 Updating Ownership and Permissions."
-  # ...wtf?
-  #/usr/bin/chmod -c 0044 /etc/httpd
+    # Nessus CIS_Apache_v2_1.audit "1.19 Updating Ownership and Permissions."
+    # ...wtf?
+    #/usr/bin/chmod -c 0044 /etc/httpd
 
 
 
-  ##############################################################################
-  # from system-hardening-10.2.txt:
-  ##############################################################################
+    ##############################################################################
+    # from system-hardening-10.2.txt:
+    ##############################################################################
 
-  # "The file may hold encryption keys in plain text."
-  /usr/bin/chmod -c 600		/etc/rc.d/rc.wireless.conf
-  /usr/bin/chmod -cR go-rwx	/etc/cron.*
+    # "The file may hold encryption keys in plain text."
+    /usr/bin/chmod -c 600		/etc/rc.d/rc.wireless.conf
+    /usr/bin/chmod -cR go-rwx	/etc/cron.*
 
-  # "The system startup scripts are world readable by default."
-  /usr/bin/chmod -cR go-rwx /etc/rc.d/
+    # "The system startup scripts are world readable by default."
+    /usr/bin/chmod -cR go-rwx /etc/rc.d/
 
-  # "Remove the SUID or SGID bit from the following files"
-  #
-  # Slackware 14.0 default permissions:
-  #   -rwsr-sr-x daemon/daemon 40616 2010-07-28 15:20 usr/bin/at
-  #   -rws--x--x root/root     47199 2012-09-13 20:12 usr/bin/chfn
-  #   -rws--x--x root/root     47197 2012-09-13 20:12 usr/bin/chsh
-  #   -rws--x--x root/root     10096 2012-09-07 15:24 usr/bin/crontab
-  #
-  # NOTE: see CVE-2011-0721 for an example of why.
-  #
-  # NOTE: you can find all SUID/SGID binaries with "find / -type f \( -perm -04000 -o -perm -02000 \)"
-  /usr/bin/chmod -c ug-s	/usr/bin/at
-  /usr/bin/chmod -c u-s		/usr/bin/chfn
-  /usr/bin/chmod -c u-s		/usr/bin/chsh
+    # "Remove the SUID or SGID bit from the following files"
+    #
+    # Slackware 14.0 default permissions:
+    #   -rwsr-sr-x daemon/daemon 40616 2010-07-28 15:20 usr/bin/at
+    #   -rws--x--x root/root     47199 2012-09-13 20:12 usr/bin/chfn
+    #   -rws--x--x root/root     47197 2012-09-13 20:12 usr/bin/chsh
+    #   -rws--x--x root/root     10096 2012-09-07 15:24 usr/bin/crontab
+    #
+    # NOTE: see CVE-2011-0721 for an example of why.
+    #
+    # NOTE: you can find all SUID/SGID binaries with "find / -type f \( -perm -04000 -o -perm -02000 \)"
+    /usr/bin/chmod -c ug-s	/usr/bin/at
+    /usr/bin/chmod -c u-s		/usr/bin/chfn
+    /usr/bin/chmod -c u-s		/usr/bin/chsh
 
-  # somewhere along the lines of CIS 7.5 Restrict at/cron To Authorized Users
-  #
-  # the dcron's README describes that the use should be limited by a
-  # designated group (CRONTAB_GROUP) as follows:
-  #   -rwx------  0 root   root    32232 Jan  6 18:58 /usr/local/sbin/crond
-  #   -rwsr-x---  0 root   wheel   15288 Jan  6 18:58 /usr/local/bin/crontab
-  # NOTE: alien uses the wheel group here: http://alien.slackbook.org/dokuwiki/doku.php?id=linux:admin
-  /usr/bin/chmod -c 700		/usr/sbin/crond
-  chgrp -c wheel		/usr/bin/crontab
-  chmod -c 4710			/usr/bin/crontab
-  # this line disables cron from everyone else but root:
-  #/usr/bin/chmod -c u-s		/usr/bin/crontab
+    # somewhere along the lines of CIS 7.5 Restrict at/cron To Authorized Users
+    #
+    # the dcron's README describes that the use should be limited by a
+    # designated group (CRONTAB_GROUP) as follows:
+    #   -rwx------  0 root   root    32232 Jan  6 18:58 /usr/local/sbin/crond
+    #   -rwsr-x---  0 root   wheel   15288 Jan  6 18:58 /usr/local/bin/crontab
+    # NOTE: alien uses the wheel group here: http://alien.slackbook.org/dokuwiki/doku.php?id=linux:admin
+    /usr/bin/chmod -c 700		/usr/sbin/crond
+    chgrp -c wheel		/usr/bin/crontab
+    chmod -c 4710			/usr/bin/crontab
+    # this line disables cron from everyone else but root:
+    #/usr/bin/chmod -c u-s		/usr/bin/crontab
 
-  # NOTE: 9.10.2012: these could actually be needed.
-  #/usr/bin/chmod -c u-s		/usr/bin/gpasswd
-  #/usr/bin/chmod -c u-s		/usr/bin/newgrp
+    # NOTE: 9.10.2012: these could actually be needed.
+    #/usr/bin/chmod -c u-s		/usr/bin/gpasswd
+    #/usr/bin/chmod -c u-s		/usr/bin/newgrp
 
-  # SSH-KEYSIGN(8):
-  # ssh-keysign is disabled by default and can only be enabled in the global client
-  # configuration file /etc/ssh/ssh_config by setting EnableSSHKeysign to ``yes''.
-  #
-  # if you use host based authentication with SSH, you probably need to comment
-  # this out.
-  #
-  # TODO: is the 64bit version somewhere else?
+    # SSH-KEYSIGN(8):
+    # ssh-keysign is disabled by default and can only be enabled in the global client
+    # configuration file /etc/ssh/ssh_config by setting EnableSSHKeysign to ``yes''.
+    #
+    # if you use host based authentication with SSH, you probably need to comment
+    # this out.
+    #
+    # TODO: is the 64bit version somewhere else?
 
-  /usr/bin/chmod -c u-s		/usr/libexec/ssh-keysign
+    /usr/bin/chmod -c u-s		/usr/libexec/ssh-keysign
 
-  ##############################################################################
-  # end of system-hardening-10.2.txt
-  ##############################################################################
+    ##############################################################################
+    # end of system-hardening-10.2.txt
+    ##############################################################################
 
-  # from CIS RHEL guide (11.1 Configure and enable the auditd and sysstat services, if possible)
-  chown -c root:root	$auditPATH/audit.rules
-  chmod -c 0600		$auditPATH/audit.rules
-  chmod -c 0600		$auditPATH/auditd.conf
+    # from CIS RHEL guide (11.1 Configure and enable the auditd and sysstat services, if possible)
+    chown -c root:root	$auditPATH/audit.rules
+    chmod -c 0600		$auditPATH/audit.rules
+    chmod -c 0600		$auditPATH/auditd.conf
 
-  # CUSTOM STUFF BELOW
+    # CUSTOM STUFF BELOW
 
-  # more SUID binaries:
-  # notice that the uucp package is removed with remove_packages()
-  /usr/bin/chmod -c u-s	/usr/bin/cu
-  /usr/bin/chmod -c u-s	/usr/bin/uucp
-  #/usr/bin/chmod -c u-s	/usr/bin/pkexec
+    # more SUID binaries:
+    # notice that the uucp package is removed with remove_packages()
+    /usr/bin/chmod -c u-s	/usr/bin/cu
+    /usr/bin/chmod -c u-s	/usr/bin/uucp
+    #/usr/bin/chmod -c u-s	/usr/bin/pkexec
 
-  # from GROUPMEMS(8): "The groupmems executable should be in mode 2770 as user root and in group groups."
-  # since we don't allow users to use it, make it 750.
-  #chmod -c 750 /usr/sbin/groupmems
+    # from GROUPMEMS(8): "The groupmems executable should be in mode 2770 as user root and in group groups."
+    # since we don't allow users to use it, make it 750.
+    #chmod -c 750 /usr/sbin/groupmems
 
-  # SSA:2011-101-01:
-  if [ -u /usr/sbin/faillog -o \
-       -u /usr/sbin/lastlog ]
-  then
-    echo "${FUNCNAME}(): notice: you seem to be missing a security patch for SSA:2011-101-01"
-    /usr/bin/chmod -c u-s	/usr/sbin/faillog
-    /usr/bin/chmod -c u-s	/usr/sbin/lastlog
-  fi
+    # SSA:2011-101-01:
+    if [ -u /usr/sbin/faillog -o \
+         -u /usr/sbin/lastlog ]
+    then
+      echo "${FUNCNAME}(): notice: you seem to be missing a security patch for SSA:2011-101-01"
+      /usr/bin/chmod -c u-s	/usr/sbin/faillog
+      /usr/bin/chmod -c u-s	/usr/sbin/lastlog
+    fi
 
-  # the process accounting log file:
-  if [ -f /var/log/pacct ]
-  then
-    /usr/bin/chmod -c 600 /var/log/pacct
-  fi
+    # the process accounting log file:
+    if [ -f /var/log/pacct ]
+    then
+      /usr/bin/chmod -c 600 /var/log/pacct
+    fi
 
-  # adjust the www permissions, so that regular users can't read
-  # your database credentials from some php file etc. also so that
-  # apache can't write there, in case of some web app vulns.
-  if [ -d "${WWWROOT}" ]
-  then
-    # TODO: dokuwiki creates files which are apache:apache, should we ignore those?
-    /usr/bin/chown -cR root:apache ${WWWROOT}
-    #find ${WWWROOT} -type d -exec /usr/bin/chmod -c 750 '{}' \;
-    #find ${WWWROOT} -type f -exec /usr/bin/chmod -c 640 '{}' \;
+    # adjust the www permissions, so that regular users can't read
+    # your database credentials from some php file etc. also so that
+    # apache can't write there, in case of some web app vulns.
+    if [ -d "${WWWROOT}" ]
+    then
+      # TODO: dokuwiki creates files which are apache:apache, should we ignore those?
+      /usr/bin/chown -cR root:apache ${WWWROOT}
+      #find ${WWWROOT} -type d -exec /usr/bin/chmod -c 750 '{}' \;
+      #find ${WWWROOT} -type f -exec /usr/bin/chmod -c 640 '{}' \;
 
-    # some dirs might need to be writable by apache, so we'll just do this:
-    find ${WWWROOT} -exec /usr/bin/chmod -c o-rwx '{}' \;
-  fi
+      # some dirs might need to be writable by apache, so we'll just do this:
+      find ${WWWROOT} -exec /usr/bin/chmod -c o-rwx '{}' \;
+    fi
 
-  # man 5 limits:
-  # "It should be owned by root and readable by root account only."
-  if [ -f "/etc/limits" ]
-  then
-    /usr/bin/chown -c root:root	/etc/limits
-    /usr/bin/chmod -c 600	/etc/limits
-  fi
+    # man 5 limits:
+    # "It should be owned by root and readable by root account only."
+    if [ -f "/etc/limits" ]
+    then
+      /usr/bin/chown -c root:root	/etc/limits
+      /usr/bin/chmod -c 600	/etc/limits
+    fi
 
-  # man 5 audisp-remote.conf:
-  # "Note that the key file must be owned by root and mode 0400."
-  if [ -f "/etc/audisp/audisp-remote.key" ]
-  then
-    /usr/bin/chown -c root:root	/etc/audisp/audisp-remote.key
-    /usr/bin/chmod -c 400	/etc/audisp/audisp-remote.key
-  fi
+    # man 5 audisp-remote.conf:
+    # "Note that the key file must be owned by root and mode 0400."
+    if [ -f "/etc/audisp/audisp-remote.key" ]
+    then
+      /usr/bin/chown -c root:root	/etc/audisp/audisp-remote.key
+      /usr/bin/chmod -c 400	/etc/audisp/audisp-remote.key
+    fi
 
-  # man 5 auditd.conf:
-  # "Note that the key file must be owned by root and mode 0400."
-  if [ -f "/etc/audit/audit.key" ]
-  then
-    /usr/bin/chown -c root:root	/etc/audit/audit.key
-    /usr/bin/chmod -c 400	/etc/audit/audit.key
-  fi
+    # man 5 auditd.conf:
+    # "Note that the key file must be owned by root and mode 0400."
+    if [ -f "/etc/audit/audit.key" ]
+    then
+      /usr/bin/chown -c root:root	/etc/audit/audit.key
+      /usr/bin/chmod -c 400	/etc/audit/audit.key
+    fi
 
-  # sudo: /etc/sudoers is mode 0640, should be 0440
-  # visudo -c says: "/etc/sudoers: bad permissions, should be mode 0440"
-  /usr/bin/chmod -c 0440 /etc/sudoers
+    # sudo: /etc/sudoers is mode 0640, should be 0440
+    # visudo -c says: "/etc/sudoers: bad permissions, should be mode 0440"
+    /usr/bin/chmod -c 0440 /etc/sudoers
 
-  # wpa_supplicant conf might include pre-shared keys or private key passphrases.
-  chmod -c 600 /etc/wpa_supplicant.conf
+    # wpa_supplicant conf might include pre-shared keys or private key passphrases.
+    chmod -c 600 /etc/wpa_supplicant.conf
 
-  # snmptrapd.conf might have SNMP credentials
-  chmod -c 600 /etc/snmp/snmptrapd.conf
+    # snmptrapd.conf might have SNMP credentials
+    chmod -c 600 /etc/snmp/snmptrapd.conf
 
-  # there can be SO many log files under /var/log, so i think this is the safest bet.
-  # any idea if there's some log files that should be world-readable? for instance Xorg.n.log?
-  #
-  # NOTE: wtmp has special ownership/permissions which are handled by the etc package (.new)
-  #       and logrotate
-  # NOTE: ideally, all the permissions of the files should be handled by syslog/logrotate/etc...
-  #
-  #/usr/bin/find /var/log -type f -maxdepth 1 \! -name 'wtmp*' -exec /usr/bin/chmod -c 600 '{}' \;
-  # we define mindepth here, so /var/log itself doesn't get chmodded. if there are some logs files
-  # that need to be written by some other user (for instance tor), it doesn't work if /var/log
-  # is with 700 permissions.
-  /usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -group root -exec /usr/bin/chgrp -c adm '{}' \;
-  /usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -group adm -exec /usr/bin/chmod -c 750 '{}' \;
-  /usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -exec /usr/bin/chmod -c o-rwx '{}' \;
-  #/usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -exec /usr/bin/chmod -c 700 '{}' \;
+    # there can be SO many log files under /var/log, so i think this is the safest bet.
+    # any idea if there's some log files that should be world-readable? for instance Xorg.n.log?
+    #
+    # NOTE: wtmp has special ownership/permissions which are handled by the etc package (.new)
+    #       and logrotate
+    # NOTE: ideally, all the permissions of the files should be handled by syslog/logrotate/etc...
+    #
+    #/usr/bin/find /var/log -type f -maxdepth 1 \! -name 'wtmp*' -exec /usr/bin/chmod -c 600 '{}' \;
+    # we define mindepth here, so /var/log itself doesn't get chmodded. if there are some logs files
+    # that need to be written by some other user (for instance tor), it doesn't work if /var/log
+    # is with 700 permissions.
+    /usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -group root -exec /usr/bin/chgrp -c adm '{}' \;
+    /usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -group adm -exec /usr/bin/chmod -c 750 '{}' \;
+    /usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -exec /usr/bin/chmod -c o-rwx '{}' \;
+    #/usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -exec /usr/bin/chmod -c 700 '{}' \;
 
-  #/usr/bin/find /var/log -type f -name 'wtmp*' -exec /usr/bin/chmod -c 660 '{}' \;
-  #chmod -c 660 /var/log/wtmp
+    #/usr/bin/find /var/log -type f -name 'wtmp*' -exec /usr/bin/chmod -c 660 '{}' \;
+    #chmod -c 660 /var/log/wtmp
 
-  # DEBIAN SPECIFIC
-  chmod -c 600 /etc/network/interfaces
+    # DEBIAN SPECIFIC
+    chmod -c 600 /etc/network/interfaces
 
-  # if you have nagios installed. also this is because of grsec's TPE:
-  if [ -d /usr/libexec/nagios ]
-  then
-    chown -c root:nagios /usr/libexec/nagios
-    chmod -c 750 /usr/libexec/nagios
-  fi
+    # if you have nagios installed. also this is because of grsec's TPE:
+    if [ -d /usr/libexec/nagios ]
+    then
+      chown -c root:nagios /usr/libexec/nagios
+      chmod -c 750 /usr/libexec/nagios
+    fi
+  } | tee -a "${logdir}/file_perms.txt"
 
   return 0
 } # file_permissions()
@@ -1400,7 +1410,7 @@ function user_home_directories_permissions() {
   do
     if [ "x${DIR}" != "x/" ]
     then
-      /usr/bin/chmod -c 700 ${DIR}
+      /usr/bin/chmod -c 700 ${DIR} | tee -a "${logdir}/file_perms.txt"
     fi
   done
 
@@ -1560,8 +1570,10 @@ EOF
   if [ ! -f /var/log/pacct ]
   then
     touch /var/log/pacct
-    chgrp -c adm /var/log/pacct
-    chmod -c 640 /var/log/pacct
+    {
+      chgrp -c adm /var/log/pacct
+      chmod -c 640 /var/log/pacct
+    } | tee -a "${logdir}/file_perms.txt"
   fi
 
   # man 1 xfs
@@ -1643,8 +1655,10 @@ EOF
   if [ ! -f /var/log/boot ]
   then
     touch /var/log/boot
-    chown -c root:adm	/var/log/boot
-    chmod -c 640	/var/log/boot
+    {
+      chown -c root:adm	/var/log/boot
+      chmod -c 640	/var/log/boot
+    } | tee -a "${logdir}/file_perms.txt"
   fi
 
   # Debian specific
@@ -1685,7 +1699,7 @@ function remove_shells() {
     for SHELL_TO_REMOVE in tcsh ash ksh93 zsh
     do
       /sbin/removepkg "${SHELL_TO_REMOVE}" 2>/dev/null
-    done
+    done | tee -a "${logdir}/removed_packages.txt"
   fi
 
   # see "RESTRICTED SHELL" on BASH(1)
@@ -1803,20 +1817,20 @@ function disable_unnecessary_services() {
     [ -x "${RC}" ] && sh "${RC}" stop
 
     # and then disable it
-    /usr/bin/chmod -c 600 "${RC}"
+    /usr/bin/chmod -c 600 "${RC}" | tee -a "${logdir}/file_perms.txt"
   done
 
   echo "${FUNCNAME}(): enabling recommended services"
 
   # CIS 1.4 Enable System Accounting
-  /usr/bin/chmod -c 700 "${SA_RC}"
+  /usr/bin/chmod -c 700 "${SA_RC}" | tee -a "${logdir}/file_perms.txt"
   # make it store the data a bit longer =)
   sed -i 's/^\(HISTORY=\).*$/HISTORY=99999/' /etc/sysstat/sysstat
 
   # CIS 2.2 Configure TCP Wrappers and Firewall to Limit Access (applied)
   #
   # NOTE: the rc.firewall script should be created by the etc patch
-  /usr/bin/chmod -c 700 /etc/rc.d/rc.firewall
+  /usr/bin/chmod -c 700 /etc/rc.d/rc.firewall | tee -a "${logdir}/file_perms.txt"
 
   # inetd goes with the territory
   disable_inetd_services
@@ -1863,7 +1877,7 @@ function create_limited_ca_list() {
 	mozilla/thawte_Primary_Root_CA.crt
 	mozilla/SecureTrust_CA.crt
 EOF
-  /usr/sbin/update-ca-certificates --verbose --fresh
+  /usr/sbin/update-ca-certificates --verbose --fresh | tee "${logdir}/ca_certificates.txt"
 
   # get Gandi's intermediate CA cert so we can verify freenode
   # http://freenode.net/irc_servers.shtml#ssl
@@ -2017,8 +2031,10 @@ function quick_harden() {
 EOF
 
   echo "ALL:ALL:DENY" >>/etc/suauth
-  chown -c root:root	/etc/suauth
-  chmod -c 400		/etc/suauth
+  {
+    chown -c root:root	/etc/suauth
+    chmod -c 400		/etc/suauth
+  } | tee -a "${logdir}/file_perms.txt"
 
   set_failure_limits
 
@@ -2100,7 +2116,7 @@ function configure_basic_auditing() {
 
   /sbin/auditctl -R /etc/audit/audit.rules
 
-  chmod -c 700 /etc/rc.d/rc.auditd
+  chmod -c 700 /etc/rc.d/rc.auditd | tee -a "${logdir}/file_perms.txt"
 
 } # configure_basic_auditing()
 ################################################################################
@@ -2321,9 +2337,11 @@ do
         ;;
 	"wipe")
 	  check_and_patch /etc wipe.patch 1
-	  chmod -c 700 /etc/rc.d/rc.{2,5}
-	  chmod -c 700 /etc/rc.d/rc5.d/KluksHeaderRestore.sh
-	  chmod -c 700 /etc/rc.d/rc.sysvinit
+	  {
+	    chmod -c 700 /etc/rc.d/rc.{2,5}
+	    chmod -c 700 /etc/rc.d/rc5.d/KluksHeaderRestore.sh
+	    chmod -c 700 /etc/rc.d/rc.sysvinit
+	  } | tee -a "${logdir}/file_perms.txt"
 	  init q
 	;;
 	*) echo "error: unknown patch \`${OPTARG}'!" 1>&2 ;;
@@ -2359,5 +2377,15 @@ do
     "U") create_additional_user_accounts ;;
   esac
 done
+
+shopt -s nullglob
+logfiles=( ${logdir}/* )
+if [ ${#logfiles[*]} -eq 0 ]
+then
+  echo "no log files created. removing dir."
+  rmdir -v "${logdir}"
+else
+  echo "logs available at: ${logdir}"
+fi
 
 exit 0
