@@ -1407,6 +1407,12 @@ function file_permissions() {
     fi
   } | tee -a "${logdir}/file_perms.txt"
 
+  # make lastlog adm readable
+  {
+    chown -c root:adm	/var/log/lastlog
+    chmod -c 640	/var/log/lastlog
+  } | tee -a "${logdir}/file_perms.txt"
+
   return 0
 } # file_permissions()
 ################################################################################
