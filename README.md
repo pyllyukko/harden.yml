@@ -247,11 +247,9 @@ As a workaround, there is also a new runlevel **2** that can be used to safely r
 #### Principle of least privilege
 
 * You can use the *adm* group to view log files, so you don't need to be *root* to do that. Just add a user to the *adm* group, or configure [sudo][11] as follows:
-
-        ADMINS ALL=(:adm) NOPASSWD: /bin/cat
-* View bad logins with [sudo][11]:
-
-        ADMINS ALL=(:adm) NOPASSWD: /usr/bin/lastb
+  * ```ADMINS ALL=(:adm) NOPASSWD: /bin/cat```
+  * View bad logins with: ```ADMINS ALL=(:adm) NOPASSWD: /usr/bin/lastb```
+  * Or recent logins: ```ADMINS ALL=(:adm) NOPASSWD: /usr/bin/lastlog ""```
 * Remove *floppy* and *scanner* from CONSOLE\_GROUPS
 * Restrict the use of *at* and *cron* from regular users
 
