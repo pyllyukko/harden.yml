@@ -759,10 +759,9 @@ function user_accounts() {
 
   # CIS 7.5 Restrict at/cron To Authorized Users
   #
-  # NOTE: the cron.allow file doesn't seem to do anything?!
-  #       also, these are created with the patch as necessary.
+  # NOTE: Dillon's cron does not support /etc/cron.{allow,deny}
   #
-  # NOTE: if both cron.* are missing, tiger reports this:
+  # NOTE: if both /etc/cron.{allow,deny} are missing, tiger reports this:
   #       --WARN-- [cron005w] Use of cron is not restricted
   #
   # "Don't allow anyone to use at."

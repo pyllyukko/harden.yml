@@ -173,6 +173,7 @@ You can also utilize the above grsec groups with [sudo][11], so the allowed user
 * Modifies crontab behaviour a bit
   * Users in the [wheel][12] group are able to create cronjobs (as described in [/usr/doc/dcron-4.5/README][8])
   * Increase cron's logging from *notice* to *info*
+  * Notice that Dillon's cron does not support the */etc/cron.{allow,deny}* lists
 * Clear /tmp on boot (also recommended in [FHS](http://refspecs.linuxfoundation.org/FHS_2.3/fhs-2.3.html#PURPOSE17))
   * **TODO**: is it redundant to have it both in rc.M and rc.S?
 * Removes unnecessary / potentially dangerous packages
@@ -252,6 +253,7 @@ As a workaround, there is also a new runlevel **2** that can be used to safely r
 
         ADMINS ALL=(:adm) NOPASSWD: /usr/bin/lastb
 * Remove *floppy* and *scanner* from CONSOLE\_GROUPS
+* Restrict the use of *at* and *cron* from regular users
 
 Benchmarks
 ----------
