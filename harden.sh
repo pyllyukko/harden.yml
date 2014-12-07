@@ -1143,11 +1143,12 @@ function file_permissions() {
 
     # CIS 7.6 Restrict Permissions On crontab Files
     #
-    # NOTE: slackware 13.1 doesn't ship with /etc/crontab file
+    # NOTE: Slackware doesn't have /etc/crontab, as it's ISC cron that has this
+    #       file and not Dillon's cron
     if [ -f "/etc/crontab" ]
     then
       /usr/bin/chown -c root:root	/etc/crontab
-      /usr/bin/chmod -c 400	/etc/crontab
+      /usr/bin/chmod -c 400		/etc/crontab
     fi
     /usr/bin/chown -cR root:root	/var/spool/cron
     /usr/bin/chmod -cR go-rwx	/var/spool/cron
