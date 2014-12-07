@@ -765,8 +765,6 @@ function user_accounts() {
   # NOTE: if both cron.* are missing, tiger reports this:
   #       --WARN-- [cron005w] Use of cron is not restricted
   #
-  # TODO: what's the truth behind dcrond and cron.*?
-  #
   # "Don't allow anyone to use at."
   #
   # AT.ALLOW(5) & AT(1): "If the file /etc/at.allow exists, only usernames mentioned in it are allowed to use at."
@@ -783,10 +781,6 @@ function user_accounts() {
       chmod -c 640		/etc/at.allow
     } | tee -a "${logdir}/file_perms.txt"
   fi
-
-  #rm -fv /etc/cron.deny /etc/at.deny
-  #[ ! -f "/etc/cron.allow" ] &&	echo root 1> /etc/cron.allow
-  #[ ! -f "/etc/at.allow" ] &&	echo root 1> /etc/at.allow
 
   return 0
 } # user_accounts()
@@ -1147,10 +1141,6 @@ function file_permissions() {
     # CIS 7.3 Create ftpusers Files
     /usr/bin/chown -c root:root	/etc/ftpusers
     /usr/bin/chmod -c 600		/etc/ftpusers
-
-    # CIS 7.5 Restrict at/cron To Authorized Users
-    #/usr/bin/chown -c root:root	/etc/cron.allow /etc/at.allow
-    #/usr/bin/chmod -c 400		/etc/cron.allow /etc/at.allow
 
     # CIS 7.6 Restrict Permissions On crontab Files
     #
