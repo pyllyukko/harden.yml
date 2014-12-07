@@ -1118,8 +1118,8 @@ function file_permissions() {
     /usr/bin/chmod -c 600		/etc/ftpusers
 
     # CIS 7.5 Restrict at/cron To Authorized Users
-    /usr/bin/chown -c root:root	/etc/cron.allow /etc/at.allow
-    /usr/bin/chmod -c 400		/etc/cron.allow /etc/at.allow
+    #/usr/bin/chown -c root:root	/etc/cron.allow /etc/at.allow
+    #/usr/bin/chmod -c 400		/etc/cron.allow /etc/at.allow
 
     # CIS 7.6 Restrict Permissions On crontab Files
     #
