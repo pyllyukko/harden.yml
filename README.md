@@ -236,9 +236,7 @@ As a workaround, there is also a new runlevel **2** that can be used to safely r
 * Enable [process accounting][9] (acct)
   * Log rotation for process accounting (pacct), since these files **will** grow huge
 * Enable system accounting ([sysstat][10])
-* Enables the use of *xconsole* (or makes it possible). You can use it with:
-
-        ADMINS ALL=(:adm) NOPASSWD: /usr/bin/xconsole
+* Enables the use of *xconsole* (or makes it possible). You can use it with [sudo][11] as follows: ```ADMINS ALL=(:adm) NOPASSWD: /usr/bin/xconsole```
 * Enables bootlogd
 * Makes certain log files [append only](http://www.seifried.org/lasg/logging/)
 * Configures basic auditing based on [stig.rules](https://fedorahosted.org/audit/browser/trunk/contrib/stig.rules) if [audit][5] is installed
