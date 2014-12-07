@@ -1263,7 +1263,7 @@ function file_permissions() {
     # NOTE: see CVE-2011-0721 for an example of why.
     #
     # NOTE: you can find all SUID/SGID binaries with "find / -type f \( -perm -04000 -o -perm -02000 \)"
-    /usr/bin/chmod -c ug-s	/usr/bin/at
+    #/usr/bin/chmod -c ug-s	/usr/bin/at
     /usr/bin/chmod -c u-s		/usr/bin/chfn
     /usr/bin/chmod -c u-s		/usr/bin/chsh
 
