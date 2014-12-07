@@ -778,6 +778,10 @@ function user_accounts() {
   then
     /usr/bin/rm -v	/etc/at.deny
     /usr/bin/touch	/etc/at.allow
+    {
+      chown -c root:daemon	/etc/at.allow
+      chmod -c 640		/etc/at.allow
+    } | tee -a "${logdir}/file_perms.txt"
   fi
 
   #rm -fv /etc/cron.deny /etc/at.deny
