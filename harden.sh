@@ -757,6 +757,33 @@ function user_accounts() {
 
   create_ftpusers
 
+  # CIS 7.5 Restrict at/cron To Authorized Users
+  #
+  # NOTE: the cron.allow file doesn't seem to do anything?!
+  #       also, these are created with the patch as necessary.
+  #
+  # NOTE: if both cron.* are missing, tiger reports this:
+  #       --WARN-- [cron005w] Use of cron is not restricted
+  #
+  # TODO: what's the truth behind dcrond and cron.*?
+  #
+  # "Don't allow anyone to use at."
+  #
+  # AT.ALLOW(5) & AT(1): "If the file /etc/at.allow exists, only usernames mentioned in it are allowed to use at."
+  #
+  # Slackware's at package creates /etc/at.deny by default, which has blacklisted users. so we're switching
+  # from blacklist to (empty) whitelist.
+  echo "restricting the use of at"
+  if [ -s "/etc/at.deny" -a ! -f "/etc/at.allow" ]
+  then
+    /usr/bin/rm -v	/etc/at.deny
+    /usr/bin/touch	/etc/at.allow
+  fi
+
+  #rm -fv /etc/cron.deny /etc/at.deny
+  #[ ! -f "/etc/cron.allow" ] &&	echo root 1> /etc/cron.allow
+  #[ ! -f "/etc/at.allow" ] &&	echo root 1> /etc/at.allow
+
   return 0
 } # user_accounts()
 ################################################################################
@@ -1517,33 +1544,6 @@ function miscellaneous_settings() {
 	exec /usr/bin/X -nolisten tcp
 EOF
   fi
-
-  # CIS 7.5 Restrict at/cron To Authorized Users
-  #
-  # NOTE: the cron.allow file doesn't seem to do anything?!
-  #       also, these are created with the patch as necessary.
-  #
-  # NOTE: if both cron.* are missing, tiger reports this:
-  #       --WARN-- [cron005w] Use of cron is not restricted
-  #
-  # TODO: what's the truth behind dcrond and cron.*?
-  #
-  # "Don't allow anyone to use at."
-  #
-  # AT.ALLOW(5) & AT(1): "If the file /etc/at.allow exists, only usernames mentioned in it are allowed to use at."
-  #
-  # Slackware's at package creates /etc/at.deny by default, which has blacklisted users. so we're switching
-  # from blacklist to (empty) whitelist.
-  # TODO: move to user_accounts()
-  if [ -s "/etc/at.deny" -a ! -f "/etc/at.allow" ]
-  then
-    /usr/bin/rm -v	/etc/at.deny
-    /usr/bin/touch	/etc/at.allow
-  fi
-
-  #rm -fv /etc/cron.deny /etc/at.deny
-  #[ ! -f "/etc/cron.allow" ] &&	echo root 1> /etc/cron.allow
-  #[ ! -f "/etc/at.allow" ] &&	echo root 1> /etc/at.allow
 
   # this is done so the CIS_Apache_v2_1.audit works with Nessus
   # "CIS Recommends removing the default httpd.conf and
