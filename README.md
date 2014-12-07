@@ -77,7 +77,7 @@ What does it do?
 #### Groups
 
  * Makes default log files group *adm* readable ([as in Debian](http://www.debian.org/doc/manuals/debian-reference/ch01.en.html#listofnotablesysupsforfileaccess))
- * Users in the *wheel* group are able to create cronjobs (as described in [/usr/doc/dcron-4.5/README][8])
+ * Users in the [wheel][12] group are able to create cronjobs (as described in [/usr/doc/dcron-4.5/README][8])
  * [grsecurity related](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#Default_Special_Groups)
    * GID 1001 for [CONFIG\_GRKERNSEC\_PROC\_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_exempted_from_.2Fproc_restrictions)
    * GID 1002 for [GRKERNSEC\_SOCKET\_SERVER\_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_to_deny_server_sockets_for)
@@ -171,7 +171,7 @@ You can also utilize the above grsec groups with [sudo][11], so the allowed user
   * /etc/porttime
   * /etc/login.defs: SU\_WHEEL\_ONLY
 * Modifies crontab behaviour a bit
-  * Users in the *wheel* group are able to create cronjobs (as described in [/usr/doc/dcron-4.5/README][8])
+  * Users in the [wheel][12] group are able to create cronjobs (as described in [/usr/doc/dcron-4.5/README][8])
   * Increase cron's logging from *notice* to *info*
 * Clear /tmp on boot (also recommended in [FHS](http://refspecs.linuxfoundation.org/FHS_2.3/fhs-2.3.html#PURPOSE17))
   * **TODO**: is it redundant to have it both in rc.M and rc.S?
@@ -379,7 +379,7 @@ TODO
 * [Create .gnupg home directories](http://www.gnupg.org/documentation/manuals/gnupg/addgnupghome.html#addgnupghome)
 * USERDEL\_CMD from LOGIN.DEFS(5)
 * Is it possible to enforce password policy for root user also?
-* Use of ```at``` when in *wheel* group?
+* Use of ```at``` when in [wheel][12] group?
 
 ### Guides to read
 
@@ -423,3 +423,4 @@ Some of these documents are quite old, but most of the stuff still applies.
 [9]: http://www.tldp.org/HOWTO/Process-Accounting/
 [10]: http://sebastien.godard.pagesperso-orange.fr/
 [11]: http://www.sudo.ws/
+[12]: https://en.wikipedia.org/wiki/Wheel_%28Unix_term%29
