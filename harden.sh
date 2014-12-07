@@ -1290,8 +1290,6 @@ function file_permissions() {
     #
     # if you use host based authentication with SSH, you probably need to comment
     # this out.
-    #
-    # TODO: is the 64bit version somewhere else?
 
     /usr/bin/chmod -c u-s		/usr/libexec/ssh-keysign
 
