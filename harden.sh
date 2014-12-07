@@ -1405,10 +1405,8 @@ function file_permissions() {
       chown -c root:nagios /usr/libexec/nagios
       chmod -c 750 /usr/libexec/nagios
     fi
-  } | tee -a "${logdir}/file_perms.txt"
 
-  # make lastlog adm readable
-  {
+    # make lastlog adm readable
     chown -c root:adm	/var/log/lastlog
     chmod -c 640	/var/log/lastlog
   } | tee -a "${logdir}/file_perms.txt"
