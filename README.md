@@ -53,7 +53,7 @@ What does it do?
     * ~~/etc/limits~~
     * /etc/profile
 * Configures shells
-  * Creates an option to use [restricted shell](https://en.wikipedia.org/wiki/Restricted_shell) (rbash)
+  * Creates an option to use [restricted shell](https://en.wikipedia.org/wiki/Restricted_shell) ([rbash](https://www.gnu.org/software/bash/manual/html_node/The-Restricted-Shell.html))
     * Also sets it as default for new users
   * Restricts the number of available shells
   * Removes "unnecessary" shells
