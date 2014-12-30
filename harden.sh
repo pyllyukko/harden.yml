@@ -178,7 +178,7 @@ declare -ra PGP_URLS=(
   "http://www.openwall.com/signatures/openwall-signatures.asc"
   "https://savannah.nongnu.org/people/viewgpg.php?user_id=7475"
   "https://www.atagar.com/resources/damianJohnson.asc"
-  "http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5"
+  #"http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5"
   "https://www.kismetwireless.net/dragorn.gpg"
   "https://sourceforge.net/projects/aide/files/PGP%20key/aide-2010_0xCBF11FCD.asc/download"
   "http://www.wangafu.net/~nickm/public_key.asc"
@@ -237,6 +237,7 @@ declare -ra PGP_URLS=(
 #   - 0x40B8EA2364221D53 - Sourcefire VRT GPG Key (at least ClamAV)
 #   - 0xBB5869F064EA74AB - Chet Ramey / GNU / Bash
 #   - 0x17167CB4EE3A8EED - https://www.apple.com/support/security/pgp/
+#   - 0x24C6A8A7F4A80EB5 - https://www.centos.org/keys/#centos-7-signing-key
 declare -ra PGP_KEYS=(
   #"CEA0A321"
   #"060798CB"
@@ -276,6 +277,7 @@ declare -ra PGP_KEYS=(
   "0x40B8EA2364221D53"
   "0xBB5869F064EA74AB"
   "0x17167CB4EE3A8EED"
+  "0x24C6A8A7F4A80EB5"
 )
 # from CIS Apache HTTP Server 2.4 Benchmark v1.1.0 - 12-03-2013
 # 1.2.3-8
