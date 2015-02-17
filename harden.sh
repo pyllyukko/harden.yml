@@ -1868,6 +1868,7 @@ function create_limited_ca_list() {
 	mozilla/VeriSign_Class_3_Public_Primary_Certification_Authority_-_G5.crt
 	mozilla/Verisign_Class_3_Public_Primary_Certification_Authority.crt
 	mozilla/thawte_Primary_Root_CA.crt
+	mozilla/thawte_Primary_Root_CA_-_G3.crt
 	mozilla/SecureTrust_CA.crt
 EOF
   /usr/sbin/update-ca-certificates --verbose --fresh | tee "${logdir}/ca_certificates.txt"
