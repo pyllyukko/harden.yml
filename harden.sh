@@ -170,6 +170,7 @@ INETD_SERVICES+=(pop3 imap2 netbios-ssn netbios-ns)
 #   - TODO: http://www.snort.org/snort-downloads#pgp
 #   - https://www.kali.org/downloads/
 #   - https://cisofy.com/documentation/lynis/#no-installation
+#   - https://wiki.qubes-os.org/wiki/VerifyingSignatures
 declare -ra PGP_URLS=(
   "http://www.slackware.com/gpg-key"
   "http://slackbuilds.org/GPG-KEY"
@@ -187,6 +188,7 @@ declare -ra PGP_URLS=(
   "https://sourceforge.net/projects/apcupsd/files/apcupsd%20Public%20Key/Current%20Public%20Key/apcupsd.pub/download"
   "https://www.kali.org/archive-key.asc"
   "https://cisofy.com/files/cisofy-software.pub"
+  "https://keys.qubes-os.org/keys/qubes-release-2-signing-key.asc"
 )
 
 # other PGP keys:
