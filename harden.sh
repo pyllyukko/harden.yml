@@ -209,6 +209,7 @@ declare -ra PGP_URLS=(
 #   - BF2EA563 - Fabian Keil, lead developer of privoxy
 #   - 63FEE659 - Erinn Clark (Tor Browser Bundles)
 #                https://www.torproject.org/docs/signing-keys.html.en
+#   - 0x4E2C6E8793298290 - Tor Browser Developers (signing key) <torbrowser@torproject.org>
 #   - 6294BE9B - http://www.debian.org/CD/verify
 #   - 9624FCD2 - Ryan Barnett (OWASP Core Rule Set Project Leader) <rbarnett@trustwave.com>
 #                https://www.owasp.org/index.php/Category:OWASP_ModSecurity_Core_Rule_Set_Project#Download
@@ -254,6 +255,7 @@ declare -ra PGP_KEYS=(
   "0x9DEB46C0D679F6CF"
   "0x48C5521FBF2EA563"
   "0x416F061063FEE659"
+  "0x4E2C6E8793298290"
   "0xDA87E80D6294BE9B"
   "0xC976607D9624FCD2"
   #"4245D46A"
