@@ -233,6 +233,7 @@ declare -ra PGP_URLS=(
 #   - F0D6B1E0 - http://www.truecrypt.org/docs/digital-signatures
 #   - F295C759 - OpenSSL
 #   - FA40E9E2 - steve@openssl.org
+#   - 0xD9C4D26D0E604491 - matt@openssl.org
 #   - 0x715ED6A07E7B8AC9 - key that can be used to verify SPI's CA cert - http://www.spi-inc.org/ca/
 #   - 0xDED64EBB2BA87C5C - OTR Dev Team <otr@cypherpunks.ca>
 #   - 0x7CBD620BEC70B1B8 - https://ssl.intevation.de/ - used to sign Gpg4win
@@ -277,6 +278,7 @@ declare -ra PGP_KEYS=(
   "0xE3BA73CAF0D6B1E0"
   "0xA2D29B7BF295C759"
   "0xD3577507FA40E9E2"
+  "0xD9C4D26D0E604491"
   "0x715ED6A07E7B8AC9"
   "0xDED64EBB2BA87C5C"
   "0x7CBD620BEC70B1B8"
