@@ -1560,10 +1560,10 @@ index 0000000..a867586
 +#root:ALL EXCEPT GROUP wheel:DENY
 diff --git a/sysctl.conf b/sysctl.conf
 new file mode 100644
-index 0000000..558a923
+index 0000000..b4d7073
 --- /dev/null
 +++ b/sysctl.conf
-@@ -0,0 +1,119 @@
+@@ -0,0 +1,122 @@
 +# Following 11 lines added by CISecurity Benchmark sec 4.1
 +net.ipv4.tcp_max_syn_backlog = 4096
 +net.ipv4.tcp_syncookies=1
@@ -1635,6 +1635,9 @@ index 0000000..558a923
 +
 +# see Restrict unprivileged access to the kernel syslog (CONFIG_SECURITY_DMESG_RESTRICT) in kernel
 +kernel.dmesg_restrict = 1
++
++# https://www.kernel.org/doc/Documentation/sysctl/kernel.txt
++kernel.kptr_restrict = 1
 +
 +# if the client doesn't want to talk to us... :)
 +net.ipv4.tcp_synack_retries = 0

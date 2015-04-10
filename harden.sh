@@ -1983,6 +1983,9 @@ function quick_harden() {
 	
 	# see Restrict unprivileged access to the kernel syslog (CONFIG_SECURITY_DMESG_RESTRICT) in kernel
 	kernel.dmesg_restrict = 1
+
+	# https://www.kernel.org/doc/Documentation/sysctl/kernel.txt
+	kernel.kptr_restrict = 1
 	
 	# if the client doesn't want to talk to us... :)
 	net.ipv4.tcp_synack_retries = 0
