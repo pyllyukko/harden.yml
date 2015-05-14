@@ -855,8 +855,8 @@ function restart_services() {
   #       - process accounting
   #       - logoutd
 
-  [ -f /etc/sysctl.conf ] &&		/sbin/sysctl -p /etc/sysctl.conf
-  [ -x /etc/rc.d/rc.syslog ] &&		/etc/rc.d/rc.syslog	restart
+  [ -f /etc/sysctl.conf ]	&&	/sbin/sysctl -p 	/etc/sysctl.conf
+  [ -x /etc/rc.d/rc.syslog ]	&&	/etc/rc.d/rc.syslog	restart
   # TODO: this might kill your SSH connection
   #[ -x /etc/rc.d/rc.firewall ] &&	/etc/rc.d/rc.firewall	restart
 
@@ -1095,7 +1095,7 @@ function file_permissions() {
     ###############################################################################
     ##
     ## NOTE: Nessus plugin 21745 triggers, if /var/log/packages is not readable
-    /usr/bin/chmod -c o-w		packages   removed_packages   removed_scripts   scripts   setup
+    /usr/bin/chmod -c o-w packages removed_packages removed_scripts scripts setup
     #/usr/bin/chmod -c o-rwx	packages/* removed_packages/* removed_scripts/* scripts/* setup/*
 
     ###############################################################################
@@ -1111,7 +1111,7 @@ function file_permissions() {
     #/usr/bin/chmod -c g-wx httpd/* cups/* iptraf/* nfsd/* samba/* sa/* uucp/*
 
     ##   Slackware package management
-    /usr/bin/chmod -c g-w		packages   removed_packages   removed_scripts   scripts   setup
+    /usr/bin/chmod -c g-w packages removed_packages removed_scripts scripts setup
     #/usr/bin/chmod -c g-wx	packages/* removed_packages/* removed_scripts/* scripts/* setup/*
 
     ###############################################################################
@@ -1149,13 +1149,13 @@ function file_permissions() {
     # the perms could be root:root 0600.
     #
     # 9.10.2012: added gshadow to the list
-    /usr/bin/chown -c root:root	/etc/passwd /etc/group
+    /usr/bin/chown -c root:root		/etc/passwd /etc/group
     /usr/bin/chmod -c 644		/etc/passwd /etc/group
     /usr/bin/chown -c root:shadow	/etc/shadow /etc/gshadow
     /usr/bin/chmod -c 440		/etc/shadow /etc/gshadow
 
     # CIS 7.3 Create ftpusers Files
-    /usr/bin/chown -c root:root	/etc/ftpusers
+    /usr/bin/chown -c root:root		/etc/ftpusers
     /usr/bin/chmod -c 600		/etc/ftpusers
 
     # CIS 7.6 Restrict Permissions On crontab Files
@@ -1168,21 +1168,21 @@ function file_permissions() {
       /usr/bin/chmod -c 400		/etc/crontab
     fi
     /usr/bin/chown -cR root:root	/var/spool/cron
-    /usr/bin/chmod -cR go-rwx	/var/spool/cron
+    /usr/bin/chmod -cR go-rwx		/var/spool/cron
 
     # CIS 7.8 Restrict Root Logins To System Console
     # also Nessus cert_unix_checklist.audit "Permission and ownership check /etc/securetty"
-    /usr/bin/chown -c root:root	/etc/securetty
+    /usr/bin/chown -c root:root		/etc/securetty
     /usr/bin/chmod -c 400		/etc/securetty
 
     # CIS 7.9 Set LILO Password
     # - also suggested in system-hardening-10.2.txt
     # - also Tiger [boot01]
-    /usr/bin/chown -c root:root	/etc/lilo.conf
+    /usr/bin/chown -c root:root		/etc/lilo.conf
     /usr/bin/chmod -c 600		/etc/lilo.conf
 
     # CIS 8.13 Limit Access To The Root Account From su
-    /usr/bin/chown -c root:root	/etc/suauth
+    /usr/bin/chown -c root:root		/etc/suauth
     /usr/bin/chmod -c 400		/etc/suauth
 
     # 8.7 User Home Directories Should Be Mode 750 or More Restrictive (modified)
@@ -1205,7 +1205,7 @@ function file_permissions() {
 
     # CIS 1.3.6 Core Dump Directory Security (Level 1, Scorable) (modified)
     #/usr/bin/chown -c root:apache	/var/log/httpd
-    /usr/bin/chown -c root:adm	/var/log/httpd
+    /usr/bin/chown -c root:adm		/var/log/httpd
     /usr/bin/chmod -c 750		/var/log/httpd
 
     ##############################################################################
@@ -1227,7 +1227,7 @@ function file_permissions() {
     do
       [ ! -f "${FILE}" ] && continue
       /usr/bin/chown -c root:root	"${FILE}"
-      /usr/bin/chmod -c 600	"${FILE}"
+      /usr/bin/chmod -c 600		"${FILE}"
     done
 
     # Nessus Cert UNIX Security Checklist v2.0 "Permission and ownership check /var/adm/wtmp"
@@ -1263,7 +1263,7 @@ function file_permissions() {
     ##############################################################################
 
     # "The file may hold encryption keys in plain text."
-    /usr/bin/chmod -c 600		/etc/rc.d/rc.wireless.conf
+    /usr/bin/chmod -c 600	/etc/rc.d/rc.wireless.conf
     /usr/bin/chmod -cR go-rwx	/etc/cron.*
 
     # "The system startup scripts are world readable by default."
@@ -1281,8 +1281,8 @@ function file_permissions() {
     #
     # NOTE: you can find all SUID/SGID binaries with "find / -type f \( -perm -04000 -o -perm -02000 \)"
     #/usr/bin/chmod -c ug-s	/usr/bin/at
-    /usr/bin/chmod -c u-s		/usr/bin/chfn
-    /usr/bin/chmod -c u-s		/usr/bin/chsh
+    /usr/bin/chmod -c u-s	/usr/bin/chfn
+    /usr/bin/chmod -c u-s	/usr/bin/chsh
 
     # somewhere along the lines of CIS 7.5 Restrict at/cron To Authorized Users
     #
@@ -1291,9 +1291,9 @@ function file_permissions() {
     #   -rwx------  0 root   root    32232 Jan  6 18:58 /usr/local/sbin/crond
     #   -rwsr-x---  0 root   wheel   15288 Jan  6 18:58 /usr/local/bin/crontab
     # NOTE: alien uses the wheel group here: http://alien.slackbook.org/dokuwiki/doku.php?id=linux:admin
-    /usr/bin/chmod -c 700		/usr/sbin/crond
+    /usr/bin/chmod -c 700	/usr/sbin/crond
     chgrp -c wheel		/usr/bin/crontab
-    chmod -c 4710			/usr/bin/crontab
+    chmod -c 4710		/usr/bin/crontab
     # this line disables cron from everyone else but root:
     #/usr/bin/chmod -c u-s		/usr/bin/crontab
 
@@ -1317,7 +1317,7 @@ function file_permissions() {
     ##############################################################################
 
     # from CIS RHEL guide (11.1 Configure and enable the auditd and sysstat services, if possible)
-    chown -c root:root	$auditPATH/audit.rules
+    chown -c root:root		$auditPATH/audit.rules
     chmod -c 0600		$auditPATH/audit.rules
     chmod -c 0600		$auditPATH/auditd.conf
 
@@ -1367,7 +1367,7 @@ function file_permissions() {
     if [ -f "/etc/limits" ]
     then
       /usr/bin/chown -c root:root	/etc/limits
-      /usr/bin/chmod -c 600	/etc/limits
+      /usr/bin/chmod -c 600		/etc/limits
     fi
 
     # man 5 audisp-remote.conf:
@@ -1375,7 +1375,7 @@ function file_permissions() {
     if [ -f "/etc/audisp/audisp-remote.key" ]
     then
       /usr/bin/chown -c root:root	/etc/audisp/audisp-remote.key
-      /usr/bin/chmod -c 400	/etc/audisp/audisp-remote.key
+      /usr/bin/chmod -c 400		/etc/audisp/audisp-remote.key
     fi
 
     # man 5 auditd.conf:
@@ -1383,7 +1383,7 @@ function file_permissions() {
     if [ -f "/etc/audit/audit.key" ]
     then
       /usr/bin/chown -c root:root	/etc/audit/audit.key
-      /usr/bin/chmod -c 400	/etc/audit/audit.key
+      /usr/bin/chmod -c 400		/etc/audit/audit.key
     fi
 
     # sudo: /etc/sudoers is mode 0640, should be 0440
