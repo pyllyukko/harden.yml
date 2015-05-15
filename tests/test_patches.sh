@@ -82,7 +82,7 @@ do
     wget ftp://ftp.slackware.com/pub/slackware/${SLACKWARE}-${SLACKWARE_VERSION}/${SLACKWARE}/${PKG}.asc
   fi
 
-  gpgv ${PKG_BASEN}.asc
+  gpgv "${PKG_BASEN}.asc" "${PKG_BASEN}"
   if [ ${?} -ne 0 ]
   then
     echo "WARNING: package verification failed! aborting!" 1>&2
