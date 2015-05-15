@@ -434,33 +434,18 @@ function create_environment_for_restricted_shell () {
   fi
   {
     chown -c root:root	"${RBINDIR}"
-    chmod -c 755	"${RBINDIR}"
+    chmod -c 755		"${RBINDIR}"
   } | tee -a "${logdir}/file_perms.txt"
 
   #rm -v "${RBINDIR}/"*
 
   pushd "${RBINDIR}" || return 1
 
-  for PRG in \
-    /usr/bin/passwd \
-    /usr/bin/chage \
-    /bin/id \
-    /bin/ls \
-    /usr/bin/printenv \
-    /usr/bin/uptime \
-    /bin/uname \
-    /bin/who \
-    /bin/df \
-    /bin/du \
-    /bin/mkdir \
-    /bin/cp \
-    /bin/mv \
-    /bin/cat
+  for PRG in /usr/bin/passwd /usr/bin/chage /bin/id /bin/ls /usr/bin/printenv /usr/bin/uptime /bin/uname
   do
     ln -sv ${PRG}
   done
-  ln -sv /usr/bin/vim	rvim
-  ln -sv /usr/bin/view	rview
+  ln -sv /usr/bin/vim rvim
 
   popd
 
