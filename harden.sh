@@ -1321,6 +1321,8 @@ function file_permissions() {
     #
     # if you use host based authentication with SSH, you probably need to comment
     # this out.
+    #
+    # also mentioned in the NSA guide section 2.2.3.4 "Find Unauthorized SUID/SGID System Executables"
 
     /usr/bin/chmod -c u-s		/usr/libexec/ssh-keysign
 
