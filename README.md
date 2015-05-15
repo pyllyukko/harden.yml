@@ -351,6 +351,8 @@ TODO
 * Debian support
 * Some chroot stuff?
 * ~~Logging of the script actions~~ -> partly done
+  * User account modifications
+  * Get start/stop times and grab /var/log/secure between that range
 * lilo.conf: audit=1
 * some kernel module configurator thingie for /etc/rc.d/rc.modules
 * [LUKS nuke](http://www.kali.org/how-to/nuke-kali-linux-luks/)
