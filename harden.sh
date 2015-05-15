@@ -441,7 +441,7 @@ function create_environment_for_restricted_shell () {
 
   pushd "${RBINDIR}" || return 1
 
-  for PRG in /bin/{id,ls,uname} /usr/bin/{chage,passwd,printenv,uptime}
+  for PRG in /bin/{cat,cp,df,du,id,ls,mkdir,mv,uname,who} /usr/bin/{chage,passwd,printenv,uptime}
   do
     ln -sv ${PRG}
   done
