@@ -109,7 +109,7 @@ then
 fi
 
 tests+=("etc")
-patch -p1 -t --dry-run 0<../../../harden_etc-14.1.patch
+patch -p1 -t --dry-run 0<../../../harden_etc-14.2.patch
 RET_VALUE=${?}
 RET_VALUES+=( ${RET_VALUE} )
 if [ ${RET_VALUE} -ne 0 ]
