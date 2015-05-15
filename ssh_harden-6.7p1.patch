@@ -63,10 +63,10 @@ index 03a228f..fdd2375 100644
 +  VerifyHostKeyDNS yes
 +  HashKnownHosts yes
 diff --git a/ssh/sshd_config b/ssh/sshd_config
-index f5a355e..abe9976 100644
+index f5a355e..4b04461 100644
 --- a/ssh/sshd_config
 +++ b/ssh/sshd_config
-@@ -10,21 +10,38 @@
+@@ -10,21 +10,39 @@
  # possible, but leave them commented.  Uncommented options override the
  # default value.
  
@@ -86,8 +86,9 @@ index f5a355e..abe9976 100644
 +#   - http://www.openssh.com/txt/gcmrekey.adv (AES-GCM)
 +#   - https://github.com/ioerror/duraconf/blob/master/configs/sshd/sshd-pfs_config
 +#   - https://bettercrypto.org/
-+Ciphers aes256-ctr
-+MACs hmac-sha2-512
++Ciphers aes256-ctr,aes256-gcm@openssh.com,chacha20-poly1305@openssh.com
++MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-sha2-512,hmac-sha2-256
++KexAlgorithms curve25519-sha256@libssh.org,ecdh-sha2-nistp521
 +
 +Port 22
 +AddressFamily inet
@@ -111,7 +112,7 @@ index f5a355e..abe9976 100644
  
  # Lifetime and size of ephemeral version 1 server key
  #KeyRegenerationInterval 1h
-@@ -35,19 +52,19 @@
+@@ -35,19 +53,19 @@
  
  # Logging
  # obsoletes QuietMode and FascistLogging
@@ -137,7 +138,7 @@ index f5a355e..abe9976 100644
  
  # The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
  # but this is overridden so installations will only check .ssh/authorized_keys
-@@ -59,18 +76,18 @@ AuthorizedKeysFile	.ssh/authorized_keys
+@@ -59,18 +77,18 @@ AuthorizedKeysFile	.ssh/authorized_keys
  #AuthorizedKeysCommandUser nobody
  
  # For this to work you will also need host keys in /etc/ssh/ssh_known_hosts
@@ -160,7 +161,7 @@ index f5a355e..abe9976 100644
  
  # Change to no to disable s/key passwords
  #ChallengeResponseAuthentication yes
-@@ -85,6 +102,8 @@ AuthorizedKeysFile	.ssh/authorized_keys
+@@ -85,6 +103,8 @@ AuthorizedKeysFile	.ssh/authorized_keys
  #GSSAPIAuthentication no
  #GSSAPICleanupCredentials yes
  
@@ -169,7 +170,7 @@ index f5a355e..abe9976 100644
  # Set this to 'yes' to enable PAM authentication, account processing,
  # and session processing. If this is enabled, PAM authentication will
  # be allowed through the ChallengeResponseAuthentication and
-@@ -103,17 +122,17 @@ AuthorizedKeysFile	.ssh/authorized_keys
+@@ -103,17 +123,17 @@ AuthorizedKeysFile	.ssh/authorized_keys
  #X11DisplayOffset 10
  #X11UseLocalhost yes
  #PermitTTY yes
