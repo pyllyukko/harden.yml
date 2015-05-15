@@ -434,7 +434,7 @@ function create_environment_for_restricted_shell () {
   fi
   {
     chown -c root:root	"${RBINDIR}"
-    chmod -c 755		"${RBINDIR}"
+    chmod -c 755	"${RBINDIR}"
   } | tee -a "${logdir}/file_perms.txt"
 
   #rm -v "${RBINDIR}/"*
@@ -445,7 +445,8 @@ function create_environment_for_restricted_shell () {
   do
     ln -sv ${PRG}
   done
-  ln -sv /usr/bin/vim rvim
+  ln -sv /usr/bin/vim	rvim
+  ln -sv /usr/bin/view	rview
 
   popd
 
