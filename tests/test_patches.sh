@@ -129,7 +129,7 @@ fi
 echo -n $'\n'
 
 tests+=("ssh")
-patch -p1 -t --dry-run 0<../../../ssh_harden-6.3p1.patch
+patch -p1 -t --dry-run 0<../../../ssh_harden-6.7p1.patch
 RET_VALUE=${?}
 RET_VALUES+=( ${RET_VALUE} )
 if [ ${RET_VALUE} -ne 0 ]
