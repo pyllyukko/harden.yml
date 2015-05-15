@@ -47,9 +47,10 @@ then
 else
   ARCH="i486"
 fi
-SLACKWARE_VERSION="14.1"
+SLACKWARE_VERSION="current"
 JUST_EXPLODE=0
 declare -a RET_VALUES=()
+declare -a tests=()
 
 if [ -d tmp ]
 then
@@ -59,27 +60,27 @@ fi
 mkdir -v tmp
 
 for PKG in \
-  "a/etc-${SLACKWARE_VERSION}-${ARCH}-2.txz" \
-  "n/network-scripts-${SLACKWARE_VERSION}-noarch-2.txz" \
-  'a/sysvinit-scripts-2.0-noarch-17.txz' \
+  "a/etc-14.2-${ARCH}-1.txz" \
+  "n/network-scripts-14.1-noarch-2.txz" \
+  'a/sysvinit-scripts-2.0-noarch-20.txz' \
   "a/sysvinit-functions-8.53-${ARCH}-2.txz" \
-  "a/shadow-4.1.5.1-${ARCH}-2.txz" \
-  "a/logrotate-3.8.6-${ARCH}-1.txz" \
+  "a/shadow-4.2.1-${ARCH}-1.txz" \
+  "a/logrotate-3.8.9-${ARCH}-1.txz" \
   "a/sysklogd-1.5-${ARCH}-2.txz" \
-  "ap/sudo-1.8.6p8-${ARCH}-1.txz" \
-  'n/sendmail-cf-8.14.7-noarch-1.txz' \
-  "n/openssh-6.3p1-${ARCH}-1.txz" \
-  "n/php-5.4.20-${ARCH}-1.txz" \
-  "n/httpd-2.4.6-${ARCH}-1.txz"
+  "ap/sudo-1.8.12-${ARCH}-1.txz" \
+  'n/sendmail-cf-8.14.9-noarch-1.txz' \
+  "n/openssh-6.7p1-${ARCH}-2.txz" \
+  "n/php-5.6.8-${ARCH}-2.txz" \
+  "n/httpd-2.4.12-${ARCH}-1.txz"
 do
   PKG_BASEN=$( basename "${PKG}" )
   if [ ! -f "${PKG_BASEN}" ]
   then
-    wget ftp://ftp.slackware.com/pub/slackware/${SLACKWARE}-${SLACKWARE_VERSION}/${SLACKWARE}/${PKG}
+    wget -nv ftp://ftp.slackware.com/pub/slackware/${SLACKWARE}-${SLACKWARE_VERSION}/${SLACKWARE}/${PKG}
   fi
   if [ ! -f "${PKG_BASEN}.asc" ]
   then
-    wget ftp://ftp.slackware.com/pub/slackware/${SLACKWARE}-${SLACKWARE_VERSION}/${SLACKWARE}/${PKG}.asc
+    wget -nv ftp://ftp.slackware.com/pub/slackware/${SLACKWARE}-${SLACKWARE_VERSION}/${SLACKWARE}/${PKG}.asc
   fi
 
   gpgv "${PKG_BASEN}.asc" "${PKG_BASEN}"
@@ -107,6 +108,7 @@ then
   exit 0
 fi
 
+tests+=("etc")
 patch -p1 -t --dry-run 0<../../../harden_etc-14.1.patch
 RET_VALUE=${?}
 RET_VALUES+=( ${RET_VALUE} )
@@ -116,6 +118,7 @@ then
 fi
 echo -n $'\n'
 
+tests+=("sudoers")
 patch -p1 -t --dry-run 0<../../../sudoers-1.8.5p2.patch
 RET_VALUE=${?}
 RET_VALUES+=( ${RET_VALUE} )
@@ -125,6 +128,7 @@ then
 fi
 echo -n $'\n'
 
+tests+=("ssh")
 patch -p1 -t --dry-run 0<../../../ssh_harden-6.3p1.patch
 RET_VALUE=${?}
 RET_VALUES+=( ${RET_VALUE} )
@@ -133,6 +137,7 @@ then
   echo "WARNING: something wrong!" 1>&2
 fi
 
+tests+=("wipe")
 patch -p1 -t --dry-run 0<../../../wipe.patch
 RET_VALUE=${?}
 RET_VALUES+=( ${RET_VALUE} )
@@ -142,6 +147,7 @@ then
 fi
 echo -n $'\n'
 
+tests+=("sendmail")
 popd
 echo -n $'\n'
 pushd tmp/usr/share/sendmail
@@ -154,6 +160,7 @@ then
 fi
 popd
 
+tests+=("php")
 pushd tmp/etc/httpd
 patch -p1 -t --dry-run 0<../../../../php_harden.patch
 RET_VALUE=${?}
@@ -163,6 +170,7 @@ then
   echo "WARNING: something wrong!" 1>&2
 fi
 
+tests+=("apache")
 patch -p3 -t --dry-run 0<../../../../apache_harden.patch
 RET_VALUE=${?}
 RET_VALUES+=( ${RET_VALUE} )
@@ -174,7 +182,8 @@ fi
 popd
 
 echo -e "\nresults:"
-for RET_VALUE in ${RET_VALUES[*]}
+#for RET_VALUE in ${RET_VALUES[*]}
+for ((i=0; i<${#RET_VALUES[*]}; i++))
 do
-  echo "  ${RET_VALUE}"
+  echo -e "  ${RET_VALUES[i]} ${tests[i]}"
 done
