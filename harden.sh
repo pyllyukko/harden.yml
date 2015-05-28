@@ -1914,130 +1914,20 @@ function quick_harden() {
   # configure TCP wrappers
   echo "ALL: ALL EXCEPT localhost" > /etc/hosts.deny
 
-  cat 0<<-EOF 1>>/etc/sysctl.conf
-	# Following 11 lines added by CISecurity Benchmark sec 4.1
-	net.ipv4.tcp_max_syn_backlog = 4096
-	net.ipv4.tcp_syncookies=1
-	net.ipv4.conf.all.rp_filter = 1
-	net.ipv4.conf.all.accept_source_route = 0
-	net.ipv4.conf.all.accept_redirects = 0
-	net.ipv4.conf.all.secure_redirects = 0
-	net.ipv4.conf.default.rp_filter = 1
-	net.ipv4.conf.default.accept_source_route = 0
-	net.ipv4.conf.default.accept_redirects = 0
-	net.ipv4.conf.default.secure_redirects = 0
-	net.ipv4.icmp_echo_ignore_broadcasts = 1
-	
-	# Following 3 lines added by CISecurity Benchmark sec 4.2
-	net.ipv4.ip_forward = 0
-	net.ipv4.conf.all.send_redirects = 0
-	net.ipv4.conf.default.send_redirects = 0
-	
-	# following lines are from system-hardening-10.2.txt
-	
-	# Enable/Disable log spoofed, source routed,redirect packets
-	net.ipv4.conf.all.log_martians = 1
-	net.ipv4.conf.default.log_martians = 1
-	
-	# custom
-	
-	# IPv6
-	# CIS RHEL6 4.4.1.1 Disable IPv6 Router Advertisements
-	net.ipv6.conf.all.accept_ra = 0
-	net.ipv6.conf.default.accept_ra = 0
-	# 4.4.1.2 Disable IPv6 Redirect Acceptance
-	net.ipv6.conf.all.accept_redirects = 0
-	net.ipv6.conf.default.accept_redirects = 0
-	
-	# disable IPv6
-	net.ipv6.conf.all.disable_ipv6 = 1
-	net.ipv6.conf.default.disable_ipv6 = 1
-	
-	kernel.core_uses_pid = 1
-	
-	# use address space randomization
-	#
-	# -plus-
-	#
-	# Randomizing heap placement makes heap exploits harder, but it
-	# also breaks ancient binaries (including anything libc5 based).
-	#
-	kernel.randomize_va_space = 2
-	
-	# "Any process which has changed privilege levels or is execute only will not be dumped"
-	fs.suid_dumpable = 0
-	
-	# got the idea from:
-	# https://secure.wikimedia.org/wikibooks/en/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#Larger_entropy_pools
-	#kernel.random.poolsize = 8192
-	
-	# set this to 1, if you don't want the system to reply to ICMP ECHO requests:
-	net.ipv4.icmp_echo_ignore_all = 0
-	
-	# 0 - disable sysrq completely
-	# 4 - enable control of keyboard (SAK, unraw)
-	#
-	# links:
-	#   - http://www.debian.org/doc/manuals/securing-debian-howto/ch4.en.html#s-restrict-sysrq
-	#   - http://tldp.org/HOWTO/Remote-Serial-Console-HOWTO/security-sysrq.html
-	#   - kernel.org/doc/Documentation/sysrq.txt
-	#   - en.wikipedia.org/wiki/Magic_SysRq_key
-	kernel.sysrq = 4
-	
-	# see Restrict unprivileged access to the kernel syslog (CONFIG_SECURITY_DMESG_RESTRICT) in kernel
-	kernel.dmesg_restrict = 1
-
-	# https://www.kernel.org/doc/Documentation/sysctl/kernel.txt
-	kernel.kptr_restrict = 1
-	
-	# if the client doesn't want to talk to us... :)
-	net.ipv4.tcp_synack_retries = 0
-	
-	# TODO: shared_media?!?
-	# https://tools.ietf.org/html/rfc1620
-	
-	# https://www.cert.fi/haavoittuvuudet/2013/haavoittuvuus-2013-071.html
-	kernel.perf_event_paranoid = 2
-	
-	net.ipv4.tcp_timestamps = 0
-	
-	# grsecurity
-	kernel.grsecurity.linking_restrictions = 1
-	kernel.grsecurity.deter_bruteforce = 1
-	kernel.grsecurity.fifo_restrictions = 1
-	kernel.grsecurity.ptrace_readexec = 1
-	kernel.grsecurity.consistent_setxid = 1
-	kernel.grsecurity.rwxmap_logging = 1
-	kernel.grsecurity.signal_logging = 1
-	kernel.grsecurity.forkfail_logging = 1
-	kernel.grsecurity.timechange_logging = 1
-	kernel.grsecurity.chroot_deny_shmat = 1
-	kernel.grsecurity.chroot_deny_unix = 1
-	kernel.grsecurity.chroot_deny_mount = 1
-	kernel.grsecurity.chroot_deny_fchdir = 1
-	kernel.grsecurity.chroot_deny_chroot = 1
-	kernel.grsecurity.chroot_deny_pivot = 1
-	kernel.grsecurity.chroot_enforce_chdir = 1
-	kernel.grsecurity.chroot_deny_chmod = 1
-	kernel.grsecurity.chroot_deny_mknod = 1
-	kernel.grsecurity.chroot_restrict_nice = 1
-	kernel.grsecurity.chroot_caps = 1
-	kernel.grsecurity.chroot_deny_sysctl = 1
-	kernel.grsecurity.tpe = 1
-	kernel.grsecurity.tpe_gid = 1005
-	kernel.grsecurity.tpe_invert = 1
-	kernel.grsecurity.tpe_restrict_all = 1
-	kernel.grsecurity.audit_mount = 1
-	kernel.grsecurity.dmesg = 1
-	kernel.grsecurity.chroot_findtask = 1
-	kernel.grsecurity.resource_logging = 1
-	kernel.grsecurity.audit_ptrace = 1
-	kernel.grsecurity.harden_ptrace = 1
-	kernel.grsecurity.romount_protect = 0
-	
-	# lock it
-	kernel.grsecurity.grsec_lock = 1
-EOF
+  # sysctl.conf
+  if [ ! "${CWD}/newconfs/sysctl.conf.new" ]
+  then
+    echo "WARNING: sysctl.conf.new not found!" 1>&2
+  fi
+  if [ -d /etc/sysctl.d -a ! -f /etc/sysctl.d/local.conf ]
+  then
+    # for debian
+    cat "${CWD}/newconfs/sysctl.conf.new" 1>/etc/sysctl.d/local.conf
+  else
+    # slackware
+    # TODO: add some check if it's already there.
+    cat "${CWD}/newconfs/sysctl.conf.new" 1>>/etc/sysctl.conf
+  fi
 
   echo "ALL:ALL:DENY" >>/etc/suauth
   {
