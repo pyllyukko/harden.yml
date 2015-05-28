@@ -1932,7 +1932,7 @@ function quick_harden() {
   echo "ALL:ALL:DENY" >>/etc/suauth
   {
     chown -c root:root	/etc/suauth
-    chmod -c 400		/etc/suauth
+    chmod -c 400	/etc/suauth
   } | tee -a "${logdir}/file_perms.txt"
 
   set_failure_limits
