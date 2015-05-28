@@ -127,6 +127,7 @@ declare -r INETDCONF="/etc/inetd.conf"
 declare -r SKS_CA_PREFIX="/usr/share/ca-certificates/local/sks-keyservers.netCA"
 auditPATH='/etc/audit'
 logdir=$( mktemp -p /tmp -d harden.sh.XXXXXX )
+CWD="${PWD}"
 
 # NOLOGIN(8): "It is intended as a replacement shell field for accounts that have been disabled."
 # Slackware default location:
@@ -871,7 +872,6 @@ function check_and_patch() {
   # $2 = patch file
   # $3 = p level
   # $4 = [reverse]
-  local CWD="${PWD}"
   local DIR_TO_PATCH="${1}"
   local PATCH_FILE="${CWD}/${2}"
   local P="${3}"
