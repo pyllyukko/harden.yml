@@ -72,6 +72,7 @@ kernel.dmesg_restrict = 1
 
 # https://www.kernel.org/doc/Documentation/sysctl/kernel.txt
 kernel.kptr_restrict = 1
+kernel.ctrl-alt-del = 0
 
 # if the client doesn't want to talk to us... :)
 net.ipv4.tcp_synack_retries = 0
