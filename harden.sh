@@ -227,6 +227,7 @@ declare -ra PGP_URLS=(
 #   - 54FC8640 - Debian security advisory
 #   - 14595A1A - Renaud Deraison (Nessus)
 #   - 15A0A4BC - Mozilla Software Releases <releases@mozilla.org>
+#   - 5E9905DB - Mozilla Software Releases <releases@mozilla.org>
 #   - 5F2E4935 - https://support.mayfirst.org/wiki/faq/security/mfpl-certificate-authority Jamie McClelland <jamie@mayfirst.org>
 #     D21739E9   dkg
 #   - 0x0B7F8B60E3EDFAE3 - https://www.sks-keyservers.net/overview-of-pools.php
@@ -272,6 +273,7 @@ declare -ra PGP_KEYS=(
   "0x1BF83C5E54FC8640"
   "0xF091044D14595A1A"
   "0x057CC3EB15A0A4BC"
+  "5E9905DB"
   "0xBB0B7EE15F2E4935"
   "0xCCD2ED94D21739E9"
   "0x0B7F8B60E3EDFAE3"
