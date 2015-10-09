@@ -190,6 +190,7 @@ declare -ra PGP_URLS=(
   "https://www.kali.org/archive-key.asc"
   "https://cisofy.com/files/cisofy-software.pub"
   "https://keys.qubes-os.org/keys/qubes-release-2-signing-key.asc"
+  "https://bitcoin.org/laanwj-releases.asc"
 )
 
 # other PGP keys:
