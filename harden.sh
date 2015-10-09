@@ -248,6 +248,7 @@ declare -ra PGP_URLS=(
 #   - 0x409B6B1796C275462A1703113804BB82D39DC0E3 - RVM https://rvm.io/rvm/security
 #   - 0x4623E8F745953F23 - http://deb.mempo.org/
 #   - 0x00CCB587DDBEF0E1 - The Irssi project <staff@irssi.org>
+#   - 1E453B2CE87BEE2F7DFE99661E34A1828E207901 - LEAP (https://bitmask.net/en/install/signature-verification)
 declare -ra PGP_KEYS=(
   #"CEA0A321"
   #"060798CB"
@@ -295,6 +296,7 @@ declare -ra PGP_KEYS=(
   "0x409B6B1796C275462A1703113804BB82D39DC0E3"
   "0x4623E8F745953F23"
   "0x00CCB587DDBEF0E1"
+  "0x1E453B2CE87BEE2F7DFE99661E34A1828E207901"
 )
 # from CIS Apache HTTP Server 2.4 Benchmark v1.1.0 - 12-03-2013
 # 1.2.3-8
