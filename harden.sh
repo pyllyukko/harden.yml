@@ -251,6 +251,7 @@ declare -ra PGP_URLS=(
 #   - 0x00CCB587DDBEF0E1 - The Irssi project <staff@irssi.org>
 #   - 1E453B2CE87BEE2F7DFE99661E34A1828E207901 - LEAP (https://bitmask.net/en/install/signature-verification)
 #   - 0xC29D97ED198D22A3 - https://openvpn.net/index.php/open-source/documentation/sig.html
+#   - 0x1AF51CE72993D5F9 - Mixmaster 3.x Code Release Signing Key
 declare -ra PGP_KEYS=(
   #"CEA0A321"
   #"060798CB"
@@ -300,6 +301,7 @@ declare -ra PGP_KEYS=(
   "0x00CCB587DDBEF0E1"
   "0x1E453B2CE87BEE2F7DFE99661E34A1828E207901"
   "0xC29D97ED198D22A3"
+  "0x1AF51CE72993D5F9"
 )
 # from CIS Apache HTTP Server 2.4 Benchmark v1.1.0 - 12-03-2013
 # 1.2.3-8
