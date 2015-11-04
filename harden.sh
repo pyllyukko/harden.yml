@@ -1685,6 +1685,9 @@ EOF
     echo "BOOTLOGD_ENABLE=yes" 1>>/etc/default/bootlogd
   fi
 
+  # make run-parts print "$SCRIPT failed." to stderr, so cron can mail this info to root.
+  sed -i 's/\(echo "\$SCRIPT failed."\)$/\1 1>\&2/' /usr/bin/run-parts
+
   return 0
 } # miscellaneous settings()
 ################################################################################
