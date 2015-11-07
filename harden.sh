@@ -112,12 +112,12 @@ declare -r SUDOERS_PATCH_FILE="sudoers-${SUDOERS_PATCH_VERSION}.patch"
 
 declare -r SLACKWARE_VERSION=`sed 's/^.*[[:space:]]\([0-9]\+\.[0-9]\+\).*$/\1/' /etc/slackware-version 2>/dev/null`
 # these are not declared as integers cause then the ${ ... :-DEFAULT } syntax won't work(?!)
-declare -r UID_MIN=`awk '/^UID_MIN/{print$2}' /etc/login.defs 2>/dev/null`
-declare -r UID_MAX=`awk '/^UID_MAX/{print$2}' /etc/login.defs 2>/dev/null`
-declare -r PASS_MIN_DAYS=$( awk '/^PASS_MIN_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
-declare -r PASS_MAX_DAYS=$( awk '/^PASS_MAX_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
-declare -r PASS_WARN_AGE=$( awk '/^PASS_WARN_AGE/{print$2}' /etc/login.defs 2>/dev/null )
-declare -r SYS_UID_MAX=`awk '/^SYS_UID_MAX/{print$2}' /etc/login.defs 2>/dev/null`
+declare -r UID_MIN=`		awk '/^UID_MIN/{print$2}'	/etc/login.defs 2>/dev/null`
+declare -r UID_MAX=`		awk '/^UID_MAX/{print$2}'	/etc/login.defs 2>/dev/null`
+declare -r PASS_MIN_DAYS=$(	awk '/^PASS_MIN_DAYS/{print$2}'	/etc/login.defs 2>/dev/null )
+declare -r PASS_MAX_DAYS=$(	awk '/^PASS_MAX_DAYS/{print$2}'	/etc/login.defs 2>/dev/null )
+declare -r PASS_WARN_AGE=$(	awk '/^PASS_WARN_AGE/{print$2}'	/etc/login.defs 2>/dev/null )
+declare -r SYS_UID_MAX=`	awk '/^SYS_UID_MAX/{print$2}'	/etc/login.defs 2>/dev/null`
 declare -r WWWROOT="/var/www"
 declare -i ETC_CHANGED=0
 declare -r SENDMAIL_CF_DIR="/usr/share/sendmail/cf/cf"
