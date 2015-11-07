@@ -125,6 +125,7 @@ declare -r SENDMAIL_CONF_PREFIX="sendmail-slackware"
 declare -r RBINDIR="/usr/local/rbin"
 declare -r INETDCONF="/etc/inetd.conf"
 declare -r SKS_CA_PREFIX="/usr/share/ca-certificates/local/sks-keyservers.netCA"
+declare -a NAMES=( $( cut -d: -f1 /etc/passwd ) )
 auditPATH='/etc/audit'
 logdir=$( mktemp -p /tmp -d harden.sh.XXXXXX )
 CWD="${PWD}"
@@ -693,7 +694,7 @@ function user_accounts() {
   #   - 29.8.2012: added expire as suggested in passwd(1)
   #
   # TODO: find out the details about mysql's shell!!
-  for NAME in `cut -d: -f1 /etc/passwd`
+  for NAME in ${NAMES[*]}
   do
     MyUID=`id -u ${NAME}`
     if [ \
@@ -710,7 +711,7 @@ function user_accounts() {
   done
 
   # CIS 8.3 Set Account Expiration Parameters On Active Accounts
-  for NAME in `cut -d: -f1 /etc/passwd`
+  for NAME in ${NAMES[*]}
   do
     uid=`id -u $NAME`
     if [ $uid -ge ${UID_MIN:-1000} -a $uid != 65534 ]
@@ -1499,7 +1500,7 @@ function create_ftpusers() {
 
   echo "${FUNCNAME}(): adding to /etc/ftpusers:"
   # get the login names
-  for NAME in `cut -d: -f1 /etc/passwd`
+  for NAME in ${NAMES[*]}
   do
     if [ `id -u $NAME` -lt 500 ]
     then
