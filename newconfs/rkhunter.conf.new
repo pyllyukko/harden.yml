@@ -154,7 +154,7 @@ MAIL_CMD=mail -s "[rkhunter] Warnings found for ${HOST_NAME}"
 # subsequently commented out or removed, then the program will assume a
 # default directory beneath the installation directory.
 #
-#TMPDIR=/var/lib/rkhunter/tmp
+TMPDIR=/var/lib/rkhunter/tmp
 
 #
 # This option specifies the database directory to use.
@@ -163,7 +163,7 @@ MAIL_CMD=mail -s "[rkhunter] Warnings found for ${HOST_NAME}"
 # subsequently commented out or removed, then the program will assume a
 # default directory beneath the installation directory.
 #
-#DBDIR=/var/lib/rkhunter/db
+DBDIR=/var/lib/rkhunter/db
 
 #
 # This option specifies the script directory to use.
@@ -264,7 +264,7 @@ COPY_LOG_ON_ERROR=1
 #
 # The default value is not to use syslog.
 #
-#USE_SYSLOG=authpriv.notice
+USE_SYSLOG=authpriv.notice
 
 #
 # Set the following option to '1' if the second colour set is to be used. This
@@ -421,7 +421,7 @@ HASH_CMD=sha224sum
 #
 # Also see the PKGMGR_NO_VRFY and USE_SUNSUM options.
 #
-#PKGMGR=NONE
+PKGMGR=NONE
 
 #
 # It is possible that a file, which is part of a package, may have been
@@ -702,7 +702,7 @@ SCRIPTWHITELIST=/usr/bin/whatis
 #
 # The default value is the null string.
 #
-#INETD_CONF_PATH=/etc/inetd.conf
+INETD_CONF_PATH=/etc/inetd.conf
 
 #
 # This option allows the specified enabled inetd services.
