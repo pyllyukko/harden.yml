@@ -130,7 +130,7 @@
 #
 # Also see the MAIL_CMD option.
 #
-#MAIL-ON-WARNING=me@mydomain   root@mydomain
+MAIL-ON-WARNING=root
 
 #
 # This option specifies the mail command to use if MAIL-ON-WARNING is set.
@@ -141,7 +141,7 @@
 # The default is to use the 'mail' command, with a subject line
 # of '[rkhunter] Warnings found for ${HOST_NAME}'.
 #
-#MAIL_CMD=mail -s "[rkhunter] Warnings found for ${HOST_NAME}"
+MAIL_CMD=mail -s "[rkhunter] Warnings found for ${HOST_NAME}"
 
 #
 # This option specifies the directory to use for temporary files.
@@ -202,7 +202,7 @@
 #
 # The default language is 'en' (English).
 #
-#LANGUAGE=en
+LANGUAGE=en
 
 #
 # This option is a space-separated list of the languages that are to be updated
@@ -249,7 +249,7 @@ LOGFILE=/var/log/rkhunter.log
 #
 # The default value is '0'.
 #
-#COPY_LOG_ON_ERROR=0
+COPY_LOG_ON_ERROR=1
 
 #
 # Set the following option to enable the rkhunter check start and finish times
@@ -303,7 +303,7 @@ AUTO_X_DETECT=1
 #
 # The default value is 'no'.
 #
-#ALLOW_SSH_ROOT_USER=no
+ALLOW_SSH_ROOT_USER=no
 
 #
 # Set this option to '1' to allow the use of the SSH-1 protocol, but note
@@ -317,7 +317,7 @@ AUTO_X_DETECT=1
 #
 # The default value is '0'.
 #
-#ALLOW_SSH_PROT_V1=0
+ALLOW_SSH_PROT_V1=0
 
 #
 # This setting tells rkhunter the directory containing the SSH configuration
@@ -381,7 +381,7 @@ DISABLE_TESTS=suspscan hidden_ports hidden_procs deleted_files packet_cap_apps
 #
 # Also see the HASH_FLD_IDX option.
 #
-#HASH_CMD=sha1sum
+HASH_CMD=sha224sum
 
 #
 # The HASH_FLD_IDX option specifies which field from the HASH_CMD command
@@ -574,7 +574,9 @@ DISABLE_TESTS=suspscan hidden_ports hidden_procs deleted_files packet_cap_apps
 #
 # The default value is the null string.
 #
-#SCRIPTWHITELIST=/usr/bin/groups
+SCRIPTWHITELIST=/usr/sbin/adduser
+SCRIPTWHITELIST=/usr/bin/ldd
+SCRIPTWHITELIST=/usr/bin/whatis
 
 #
 # Allow the specified file to have the immutable attribute set.
@@ -818,7 +820,7 @@ DISABLE_TESTS=suspscan hidden_ports hidden_procs deleted_files packet_cap_apps
 #
 # The default value is '0'.
 #
-#ALLOW_SYSLOG_REMOTE_LOGGING=0
+ALLOW_SYSLOG_REMOTE_LOGGING=1
 
 #
 # This option allows the specified applications, or a specific version of an
@@ -853,7 +855,7 @@ DISABLE_TESTS=suspscan hidden_ports hidden_procs deleted_files packet_cap_apps
 #
 # The default value is the '/tmp' and '/var/tmp' directories.
 #
-#SUSPSCAN_DIRS=/tmp /var/tmp
+SUSPSCAN_DIRS=/tmp /var/tmp /dev/shm
 
 #
 # This option specifies the directory for temporary files used by the
@@ -941,7 +943,7 @@ DISABLE_TESTS=suspscan hidden_ports hidden_procs deleted_files packet_cap_apps
 #
 # Also see the WARN_ON_OS_CHANGE and UPDT_ON_OS_CHANGE options.
 #
-#OS_VERSION_FILE=/etc/release
+OS_VERSION_FILE=/etc/slackware-version
 
 #
 # Set the following option to '0' if you do not want to receive a warning if any
@@ -951,7 +953,7 @@ DISABLE_TESTS=suspscan hidden_ports hidden_procs deleted_files packet_cap_apps
 #
 # The default value is '1'.
 #
-#WARN_ON_OS_CHANGE=1
+WARN_ON_OS_CHANGE=1
 
 #
 # Set the following option to '1' if you want rkhunter to automatically run a
