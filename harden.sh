@@ -1147,6 +1147,12 @@ function file_permissions() {
     ##/usr/bin/chgrp -c uucp uucp/*
     ##/usr/bin/chgrp -c utmp wtmpq
 
+    if [ -d sudo-io ]
+    then
+      /usr/bin/chown -c root:root	sudo-io
+      /usr/bin/chmod -c 700		sudo-io
+    fi
+
     popd
 
     ## END OF CIS 5.3
