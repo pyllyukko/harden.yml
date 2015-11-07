@@ -1066,7 +1066,7 @@ function file_permissions() {
 
   echo "${FUNCNAME}(): setting file permissions. note that this should be the last function to run."
 
-  {
+  { # log everything to file_perms.txt
     # CIS 1.4 Enable System Accounting (applied)
     #
     # NOTE: sysstat was added to slackware at version 11.0
