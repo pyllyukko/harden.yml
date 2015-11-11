@@ -254,6 +254,7 @@ declare -ra PGP_URLS=(
 #   - 0xC29D97ED198D22A3 - https://openvpn.net/index.php/open-source/documentation/sig.html
 #   - 0x1AF51CE72993D5F9 - Mixmaster 3.x Code Release Signing Key
 #   - 0x6887935AB297B391 - sukhbir@torproject.org (Tor messenger)
+#   - 0xADEF768480316BDA - Kevin McCarthy's key (mutt)
 declare -ra PGP_KEYS=(
   #"CEA0A321"
   #"060798CB"
@@ -305,6 +306,7 @@ declare -ra PGP_KEYS=(
   "0xC29D97ED198D22A3"
   "0x1AF51CE72993D5F9"
   "0x6887935AB297B391"
+  "0xADEF768480316BDA"
 )
 # from CIS Apache HTTP Server 2.4 Benchmark v1.1.0 - 12-03-2013
 # 1.2.3-8
