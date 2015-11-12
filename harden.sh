@@ -1126,10 +1126,6 @@ function file_permissions() {
     ##   contents of directories in /var/log
     #/usr/bin/chmod -c g-wx httpd/* cups/* iptraf/* nfsd/* samba/* sa/* uucp/*
 
-    ##   Slackware package management
-    /usr/bin/chmod -c g-w packages removed_packages removed_scripts scripts setup
-    #/usr/bin/chmod -c g-wx	packages/* removed_packages/* removed_scripts/* scripts/* setup/*
-
     ###############################################################################
     ## Permissions for owner
     ###############################################################################
