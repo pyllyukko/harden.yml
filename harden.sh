@@ -1094,7 +1094,7 @@ function file_permissions() {
     ## Permissions for other log files in /var/log
     ###############################################################################
     ## NOTE: according to tiger, the permissions of wtmp should be 664
-    /usr/bin/chmod -c o-rwx btmp cron* debug* dmesg faillog lastlog maillog* messages* secure* spooler* syslog* wtmp xferlog
+    /usr/bin/chmod -c o-rwx {b,w}tmp cron* debug* dmesg {last,fail}log maillog* messages* secure* spooler* syslog* xferlog
 
     ###############################################################################
     ##   directories in /var/log
@@ -1118,7 +1118,7 @@ function file_permissions() {
     ## Permissions for group log files in /var/log
     ###############################################################################
     ## NOTE: removed wtmp from here, it is group (utmp) writable by default and there might be a good reason for that.
-    /usr/bin/chmod -c g-wx btmp cron* debug* dmesg faillog lastlog maillog* messages* secure* spooler* syslog* xferlog
+    /usr/bin/chmod -c g-wx btmp cron* debug* dmesg {last,fail}log maillog* messages* secure* spooler* syslog* xferlog
 
     ##   directories in /var/log
     #/usr/bin/chmod -c g-w httpd cups iptraf nfsd samba sa uucp
