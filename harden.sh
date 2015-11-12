@@ -1111,7 +1111,7 @@ function file_permissions() {
     ###############################################################################
     ##
     ## NOTE: Nessus plugin 21745 triggers, if /var/log/packages is not readable
-    /usr/bin/chmod -c o-w packages removed_packages removed_scripts scripts setup
+    /usr/bin/chmod -c o-w packages removed_{packages,scripts} scripts setup
     #/usr/bin/chmod -c o-rwx	packages/* removed_packages/* removed_scripts/* scripts/* setup/*
 
     ###############################################################################
