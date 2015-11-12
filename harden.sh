@@ -1425,9 +1425,9 @@ function file_permissions() {
     # we define mindepth here, so /var/log itself doesn't get chmodded. if there are some logs files
     # that need to be written by some other user (for instance tor), it doesn't work if /var/log
     # is with 700 permissions.
-    /usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -group root -exec /usr/bin/chgrp -c adm '{}' \;
-    /usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -group adm -exec /usr/bin/chmod -c 750 '{}' \;
-    /usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -exec /usr/bin/chmod -c o-rwx '{}' \;
+    /usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -group root	-exec /usr/bin/chgrp -c adm	'{}' \;
+    /usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -group adm	-exec /usr/bin/chmod -c 750	'{}' \;
+    /usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1		-exec /usr/bin/chmod -c o-rwx	'{}' \;
     #/usr/bin/find /var/log -type d -maxdepth 1 -mindepth 1 -exec /usr/bin/chmod -c 700 '{}' \;
 
     #/usr/bin/find /var/log -type f -name 'wtmp*' -exec /usr/bin/chmod -c 660 '{}' \;
