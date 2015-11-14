@@ -70,7 +70,7 @@ for PKG in \
   "ap/sudo-1.8.12-${ARCH}-1.txz" \
   'n/sendmail-cf-8.15.2-noarch-2.txz' \
   "n/openssh-7.1p1-${ARCH}-1.txz" \
-  "n/php-5.6.8-${ARCH}-2.txz" \
+  "n/php-5.6.14-${ARCH}-1.txz" \
   "n/httpd-2.4.12-${ARCH}-1.txz"
 do
   PKG_BASEN=$( basename "${PKG}" )
