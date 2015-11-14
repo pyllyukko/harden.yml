@@ -1878,32 +1878,7 @@ function create_limited_ca_list() {
   then
     rm -v /etc/ssl/certs/ssl-cert-snakeoil.pem
   fi
-  cat 0<<-EOF 1>/etc/ca-certificates.conf
-	mozilla/AddTrust_External_Root.crt
-	mozilla/Baltimore_CyberTrust_Root.crt
-	mozilla/COMODO_Certification_Authority.crt
-	mozilla/Deutsche_Telekom_Root_CA_2.crt
-	mozilla/DigiCert_High_Assurance_EV_Root_CA.crt
-	mozilla/DigiCert_Global_Root_CA.crt
-	mozilla/Entrust.net_Secure_Server_CA.crt
-	mozilla/Entrust.net_Premium_2048_Secure_Server_CA.crt
-	mozilla/Equifax_Secure_CA.crt
-	mozilla/GTE_CyberTrust_Global_Root.crt
-	mozilla/GeoTrust_Global_CA.crt
-	mozilla/GlobalSign_Root_CA.crt
-	mozilla/Go_Daddy_Class_2_CA.crt
-	mozilla/Go_Daddy_Root_Certificate_Authority_-_G2.crt
-	mozilla/Starfield_Class_2_CA.crt
-	mozilla/StartCom_Certification_Authority.crt
-	mozilla/UTN_USERFirst_Hardware_Root_CA.crt
-	mozilla/ValiCert_Class_2_VA.crt
-	mozilla/Verisign_Class_3_Public_Primary_Certification_Authority_-_G3.crt
-	mozilla/VeriSign_Class_3_Public_Primary_Certification_Authority_-_G5.crt
-	mozilla/Verisign_Class_3_Public_Primary_Certification_Authority.crt
-	mozilla/thawte_Primary_Root_CA.crt
-	mozilla/thawte_Primary_Root_CA_-_G3.crt
-	mozilla/SecureTrust_CA.crt
-EOF
+  cat "${CWD}/newconfs/ca-certificates.conf.new" 1>/etc/ca-certificates.conf
   /usr/sbin/update-ca-certificates --verbose --fresh | tee "${logdir}/ca_certificates.txt"
 
   # get Gandi's intermediate CA cert so we can verify freenode
