@@ -128,7 +128,7 @@ declare -r SKS_CA_PREFIX="/usr/share/ca-certificates/local/sks-keyservers.netCA"
 declare -a NAMES=( $( cut -d: -f1 /etc/passwd ) )
 auditPATH='/etc/audit'
 logdir=$( mktemp -p /tmp -d harden.sh.XXXXXX )
-CWD="${PWD}"
+CWD=$( dirname "${0}" )
 
 # NOLOGIN(8): "It is intended as a replacement shell field for accounts that have been disabled."
 # Slackware default location:
