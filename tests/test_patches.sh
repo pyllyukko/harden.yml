@@ -47,6 +47,7 @@ else
 fi
 SLACKWARE_VERSION="current"
 JUST_EXPLODE=0
+DRY_RUN="--dry-run"
 declare -a RET_VALUES=()
 declare -a tests=()
 
@@ -107,7 +108,7 @@ then
 fi
 
 tests+=("etc")
-patch -p1 -t --dry-run 0<../../../harden_etc-14.2.patch
+patch -p1 -t ${DRY_RUN} 0<../../../harden_etc-14.2.patch
 RET_VALUE=${?}
 RET_VALUES+=( ${RET_VALUE} )
 if [ ${RET_VALUE} -ne 0 ]
@@ -117,7 +118,7 @@ fi
 echo -n $'\n'
 
 tests+=("sudoers")
-patch -p1 -t --dry-run 0<../../../sudoers-1.8.5p2.patch
+patch -p1 -t ${DRY_RUN} 0<../../../sudoers-1.8.5p2.patch
 RET_VALUE=${?}
 RET_VALUES+=( ${RET_VALUE} )
 if [ ${RET_VALUE} -ne 0 ]
@@ -127,7 +128,7 @@ fi
 echo -n $'\n'
 
 tests+=("ssh")
-patch -p1 -t --dry-run 0<../../../ssh_harden-6.7p1.patch
+patch -p1 -t ${DRY_RUN} 0<../../../ssh_harden-6.7p1.patch
 RET_VALUE=${?}
 RET_VALUES+=( ${RET_VALUE} )
 if [ ${RET_VALUE} -ne 0 ]
@@ -136,7 +137,7 @@ then
 fi
 
 tests+=("wipe")
-patch -p1 -t --dry-run 0<../../../wipe.patch
+patch -p1 -t ${DRY_RUN} 0<../../../wipe.patch
 RET_VALUE=${?}
 RET_VALUES+=( ${RET_VALUE} )
 if [ ${RET_VALUE} -ne 0 ]
@@ -149,7 +150,7 @@ tests+=("sendmail")
 popd
 echo -n $'\n'
 pushd tmp/usr/share/sendmail
-patch -p1 -t --dry-run 0<../../../../../sendmail_harden.patch
+patch -p1 -t ${DRY_RUN} 0<../../../../../sendmail_harden.patch
 RET_VALUE=${?}
 RET_VALUES+=( ${RET_VALUE} )
 if [ ${RET_VALUE} -ne 0 ]
@@ -160,7 +161,7 @@ popd
 
 tests+=("php")
 pushd tmp/etc/httpd
-patch -p1 -t --dry-run 0<../../../../php_harden.patch
+patch -p1 -t ${DRY_RUN} 0<../../../../php_harden.patch
 RET_VALUE=${?}
 RET_VALUES+=( ${RET_VALUE} )
 if [ ${RET_VALUE} -ne 0 ]
@@ -169,7 +170,7 @@ then
 fi
 
 tests+=("apache")
-patch -p3 -t --dry-run 0<../../../../apache_harden.patch
+patch -p3 -t ${DRY_RUN} 0<../../../../apache_harden.patch
 RET_VALUE=${?}
 RET_VALUES+=( ${RET_VALUE} )
 if [ ${RET_VALUE} -ne 0 ]
