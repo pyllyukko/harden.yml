@@ -323,7 +323,7 @@ case "${MACHTYPE%%-*}" in
   "x86_64")	SLACKWARE="slackware64"	;;
   i?86)		SLACKWARE="slackware"	;;
 esac
-MANIFEST_DIR="$( dirname ${0} )/manifests/${SLACKWARE}-${SLACKWARE_VERSION}"
+MANIFEST_DIR="${CWD}/manifests/${SLACKWARE}-${SLACKWARE_VERSION}"
 ################################################################################
 function check_manifest() {
   local MD5_RET
