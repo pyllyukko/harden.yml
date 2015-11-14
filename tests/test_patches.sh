@@ -69,7 +69,7 @@ for PKG in \
   "a/sysklogd-1.5-${ARCH}-2.txz" \
   "ap/sudo-1.8.12-${ARCH}-1.txz" \
   'n/sendmail-cf-8.15.2-noarch-2.txz' \
-  "n/openssh-6.7p1-${ARCH}-2.txz" \
+  "n/openssh-7.1p1-${ARCH}-1.txz" \
   "n/php-5.6.8-${ARCH}-2.txz" \
   "n/httpd-2.4.12-${ARCH}-1.txz"
 do
