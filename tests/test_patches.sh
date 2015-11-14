@@ -185,5 +185,11 @@ echo -e "\nresults:"
 #for RET_VALUE in ${RET_VALUES[*]}
 for ((i=0; i<${#RET_VALUES[*]}; i++))
 do
-  echo -e "  ${RET_VALUES[i]} ${tests[i]}"
+  if [ ${RET_VALUES[i]} -ne 0 ]
+  then
+    COLOR="\033[0;31m"
+  else
+    COLOR="\033[0;32m"
+  fi
+  echo -e "  ${COLOR}${RET_VALUES[i]}\033[0m ${tests[i]}"
 done
