@@ -1479,6 +1479,7 @@ function user_home_directories_permissions() {
 ################################################################################
 function create_ftpusers() {
   local NAME
+  local uid
   # CIS 7.3 Create ftpusers Files (modified)
   #
   # FTPUSERS(5):
@@ -1500,7 +1501,14 @@ function create_ftpusers() {
   # get the login names
   for NAME in ${NAMES[*]}
   do
-    if [ `id -u $NAME` -lt 500 ]
+    uid=$(id -u "${NAME}")
+    # as the NAMES array is populated in the beginning of the script, some user
+    # accounts might have been hardened away already at this point.
+    if [ -z "${uid}" ]
+    then
+      continue
+    fi
+    if [ ${uid} -lt 500 ]
     then
       # add the name to ftpusers only if it's not already in there.
       # this should work whether the ftpusers file exists already or not.
