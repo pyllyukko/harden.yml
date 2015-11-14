@@ -60,7 +60,7 @@ fi
 mkdir -v tmp
 
 for PKG in \
-  "a/etc-14.2-${ARCH}-1.txz" \
+  "a/etc-14.2-${ARCH}-3.txz" \
   "n/network-scripts-14.1-noarch-2.txz" \
   'a/sysvinit-scripts-2.0-noarch-20.txz' \
   "a/sysvinit-functions-8.53-${ARCH}-2.txz" \
