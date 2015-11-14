@@ -38,9 +38,9 @@ What does it do?
 
 ### Harden user accounts
 
-* Properly locks down system accounts (0 - *SYS_UID_MAX* && !root)
+* Properly locks down system accounts (0 - ```SYS_UID_MAX``` && !root)
   * Lock the user's password
-  * Sets shell to /sbin/nologin
+  * Sets shell to ```/sbin/nologin```
   * Expire the account
   * Adds the accounts to [/etc/ftpusers](http://linux.die.net/man/5/ftpusers)
 * Sets restrictions for normal users
@@ -64,19 +64,19 @@ What does it do?
   * ~~/etc/limits~~
   * /etc/login.defs
     * Disallow logins if home dir does not exist
-  * SSH *AllowGroups users*
+  * SSH ```AllowGroups users```
 * Sets useradd defaults
   * INACTIVE days to lock accounts after the password expires
-  * rbash as default shell
+  * ```rbash``` as default shell
 * Configures a bit better password policy to _login.defs_
 * Changes the hashing mechanism to [SHA512](https://en.wikipedia.org/wiki/SHA-2) and more crypt rounds
-* Disallow the use of *at*
-* Removes user daemon from group *adm* (as we will take use of the *adm* group)
-* Fix gshadow with *grpck*
+* Disallow the use of ```at```
+* Removes user daemon from group ```adm``` (as we will take use of the ```adm``` group)
+* Fix gshadow with ```grpck```
 
 #### Groups
 
- * Makes default log files group *adm* readable ([as in Debian](http://www.debian.org/doc/manuals/debian-reference/ch01.en.html#listofnotablesysupsforfileaccess))
+ * Makes default log files group ```adm``` readable ([as in Debian](http://www.debian.org/doc/manuals/debian-reference/ch01.en.html#listofnotablesysupsforfileaccess))
  * Users in the [wheel][12] group are able to create cronjobs (as described in [/usr/doc/dcron-4.5/README][8])
  * [grsecurity related](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#Default_Special_Groups)
    * GID 1001 for [CONFIG\_GRKERNSEC\_PROC\_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_exempted_from_.2Fproc_restrictions)
@@ -95,8 +95,8 @@ You can also utilize the above grsec groups with [sudo][11], so the allowed user
 
 * Removes unnecessary services
   * xinetd (/etc/inetd.conf)
-  * Goes through /etc/rc.d/rc.\* and disables plenty of those
-  * *atd* from *rc.M*
+  * Goes through ```/etc/rc.d/rc.*``` and disables plenty of those
+  * ```atd``` from ```rc.M```
 * [X11 -nolisten tcp](http://docs.slackware.com/howtos:security:basic_security#x_-nolisten_tcp)
 
 #### Enable some security and auditing related services
@@ -105,7 +105,7 @@ You can also utilize the above grsec groups with [sudo][11], so the allowed user
 * Through rc.local:
   * logoutd
   * icmpinfo
-  * ```mdadm --monitor``` (if */proc/mdstat* exists)
+  * ```mdadm --monitor``` (if ```/proc/mdstat``` exists)
 * [Process accounting][9] (acct)
 * System accounting ([sysstat][10])
 * [SBo](http://slackbuilds.org/) related (if installed):
@@ -129,18 +129,18 @@ You can also utilize the above grsec groups with [sudo][11], so the allowed user
   * Don't show the version on the banner
 * [sudo][11]
   * Don't cache the password (timestamp\_timeout) (should also mitigate against [CVE-2013-1775](http://www.sudo.ws/sudo/alerts/epoch_ticket.html))
-  * Always require password with *sudo -l* (listpw)
+  * Always require password with ```sudo -l``` (```listpw```)
   * noexec as default
   * Require root's password instead of user's
   * Send alerts on most errors
-  * Additional logging to */var/log/sudo.log*
+  * Additional logging to ```/var/log/sudo.log```
 * [PHP](https://www.owasp.org/index.php/Configuration#PHP_Configuration)
 * Apache httpd
 
 ### File system related
 
-* Hardens mount options (creates /etc/fstab.new)
-  * Also, mount [/proc](https://www.kernel.org/doc/Documentation/filesystems/proc.txt) with hidepid=2
+* Hardens mount options (creates ```/etc/fstab.new```)
+  * Also, mount [/proc](https://www.kernel.org/doc/Documentation/filesystems/proc.txt) with ```hidepid=2```
 * Removes a bunch of SUID/SGID bits
   * at
   * chfn + chsh
@@ -169,19 +169,19 @@ You can also utilize the above grsec groups with [sudo][11], so the allowed user
 * Restrict the use of su (prefer [sudo][11] instead)
   * /etc/suauth
   * /etc/porttime
-  * /etc/login.defs: SU\_WHEEL\_ONLY
+  * ```/etc/login.defs```:```SU_WHEEL_ONLY```
 * Modifies crontab behaviour a bit
   * Users in the [wheel][12] group are able to create cronjobs (as described in [/usr/doc/dcron-4.5/README][8])
-  * Increase cron's logging from *notice* to *info*
-  * Notice that Dillon's cron does not support the */etc/cron.{allow,deny}* lists
+  * Increase cron's logging from ```notice``` to ```info```
+  * Notice that Dillon's cron does not support the ```/etc/cron.{allow,deny}``` lists
 * Clear /tmp on boot (also recommended in [FHS](http://refspecs.linuxfoundation.org/FHS_2.3/fhs-2.3.html#PURPOSE17))
-  * **TODO**: is it redundant to have it both in rc.M and rc.S?
+  * **TODO**: is it redundant to have it both in ```rc.M``` and ```rc.S```?
 * Removes unnecessary / potentially dangerous packages
   * netkit-rsh
   * uucp
   * [floppy][7]
-* Sets *dmesg\_restrict*
-* Make *installpkg* store the MD5 checksums
+* Sets ```dmesg_restrict```
+* Make ```installpkg``` store the MD5 checksums
 * Reduce the amount of trusted [CAs](https://en.wikipedia.org/wiki/Certificate_authority)
 * "Fix" the single-user mode
 
@@ -203,7 +203,7 @@ From [sysstat.crond](https://github.com/sysstat/sysstat/blob/master/cron/sysstat
 
 #### PGP
 
-The *import_pgp_keys()* function imports a bunch of PGP keys to your *trustedkeys.gpg* keyring, so you can verify downloaded files/packages with [gpgv](http://www.gnupg.org/documentation/manuals/gnupg/gpgv.html). The keys that are imported are listed in the PGP_URLS[] and PGP_KEYS[] arrays.
+The ```import_pgp_keys()``` function imports a bunch of PGP keys to your ```trustedkeys.gpg``` keyring, so you can verify downloaded files/packages with [gpgv](http://www.gnupg.org/documentation/manuals/gnupg/gpgv.html). The keys that are imported are listed in the ```PGP_URLS[]``` and ```PGP_KEYS[]``` arrays.
 
 #### Physical security related
 
@@ -211,8 +211,8 @@ The *import_pgp_keys()* function imports a bunch of PGP keys to your *trustedkey
 * Enables [SAK](https://en.wikipedia.org/wiki/Secure_attention_key) and disables the other [magic SysRq stuff](https://www.kernel.org/doc/Documentation/sysrq.txt)
 * Session timeout (TMOUT)
 * X11:
-  * DontZap
-* shutdown.allow and /sbin/shutdown -a (FWIW)
+  * ```DontZap```
+* ```/etc/shutdown.allow``` and ```/sbin/shutdown -a``` (FWIW)
 
 ##### Wipe
 
@@ -224,32 +224,32 @@ The patch creates a new runlevel (**5**) to your Slackware, which when activated
 
 So to wipe LUKS headers, you just switch to runlevel 5: `telinit 5` and to restore just switch back to 3: `telinit 3`.
 
-There is still some issues, such as some services will be started again (such as *crond*) when returning to runlevel 3. This is because *rc.M* doesn't really consider users switching back and forth between runlevels. So this is a work-in-progress.
+There is still some issues, such as some services will be started again (such as ```crond```) when returning to runlevel 3. This is because ```rc.M``` doesn't really consider users switching back and forth between runlevels. So this is a work-in-progress.
 
-As a workaround, there is also a new runlevel **2** that can be used to safely return from runlevel 5. Now we don't need to care about daemons starting over and over again from *rc.M* (runlevel 3).
+As a workaround, there is also a new runlevel **2** that can be used to safely return from runlevel 5. Now we don't need to care about daemons starting over and over again from ```rc.M``` (runlevel 3).
 
 #### Logging
 
-* Makes default log files group *adm* readable ([as in Debian](http://www.debian.org/doc/manuals/debian-reference/ch01.en.html#listofnotablesysupsforfileaccess))
+* Makes default log files group ```adm``` readable ([as in Debian](http://www.debian.org/doc/manuals/debian-reference/ch01.en.html#listofnotablesysupsforfileaccess))
   * Notice that this takes place only after logrotate. The ownerships/permissions of the existing logs are not modified.
-* Use *shred* to remove rotated log files
+* Use ```shred``` to remove rotated log files
 * Enable [process accounting][9] (acct)
   * Log rotation for process accounting (pacct), since these files **will** grow huge
 * Enable system accounting ([sysstat][10])
-* Enables the use of *xconsole* (or makes it possible). You can use it with [sudo][11] as follows: ```ADMINS ALL=(:adm) NOPASSWD: /usr/bin/xconsole```
-* Enables bootlogd
+* Enables the use of ```xconsole``` (or makes it possible). You can use it with [sudo][11] as follows: ```ADMINS ALL=(:adm) NOPASSWD: /usr/bin/xconsole```
+* Enables ```bootlogd```
 * Makes certain log files [append only](http://www.seifried.org/lasg/logging/)
 * Configures basic auditing based on [stig.rules](https://fedorahosted.org/audit/browser/trunk/contrib/stig.rules) if [audit][5] is installed
 * Increase the default log retention period to 26 weeks
 
 #### Principle of least privilege
 
-* You can use the *adm* group to view log files, so you don't need to be *root* to do that. Just add a user to the *adm* group, or configure [sudo][11] as follows:
+* You can use the ```adm``` group to view log files, so you don't need to be ```root``` to do that. Just add a user to the ```adm``` group, or configure [sudo][11] as follows:
   * ```ADMINS ALL=(:adm) NOPASSWD: /bin/cat```
   * View bad logins with: ```ADMINS ALL=(:adm) NOPASSWD: /usr/bin/lastb```
   * Or recent logins: ```ADMINS ALL=(:adm) NOPASSWD: /usr/bin/lastlog ""```
-* Remove *floppy* and *scanner* from CONSOLE\_GROUPS
-* Restrict the use of *at* and *cron* from regular users
+* Remove ```floppy``` and ```scanner``` from ```CONSOLE_GROUPS```
+* Restrict the use of ```at``` and ```cron``` from regular users
 
 Benchmarks
 ----------
@@ -263,7 +263,7 @@ The test is performed against a setup like this:
   * Running with latest patches
 * One big root partition
   * No LUKS
-* The hardening is done with *./harden.sh -A*
+* The hardening is done with ```./harden.sh -A```
   * The system is booted after hardening
 * [AUTH-9262](http://cisofy.com/controls/AUTH-9262/) test disabled
 
@@ -336,7 +336,7 @@ You should also consider running [grsecurity](https://grsecurity.net/). Here's f
 TODO
 ----
 
-* Immutable flags with *chattr* on certain files
+* Immutable flags with ```chattr``` on certain files
 * X hardening
 * Debian support
 * Some chroot stuff?
