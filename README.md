@@ -44,10 +44,10 @@ What does it do?
   * Expire the account
   * Adds the accounts to [/etc/ftpusers](http://linux.die.net/man/5/ftpusers)
 * Sets restrictions for normal users
-  * Sets the [maximum number of processes available to a single user](https://en.wikipedia.org/wiki/Fork_bomb#Prevention) (ulimit -u)
-  * Sets the maximum size of core files created (ulimit -c)
-  * Sets a session timeout (TMOUT) in certain conditions
-  * Sets a maximum number of failed login attempts (faillog)
+  * Sets the [maximum number of processes available to a single user](https://en.wikipedia.org/wiki/Fork_bomb#Prevention) (```ulimit -u```)
+  * Sets the maximum size of core files created (```ulimit -c```)
+  * Sets a session timeout (```TMOUT```) in certain conditions
+  * Sets a maximum number of failed login attempts (```faillog```)
   * Sets stricter umask in all the following locations:
     * /etc/login.defs
     * ~~/etc/limits~~
@@ -57,7 +57,7 @@ What does it do?
     * Also sets it as default for new users
   * Restricts the number of available shells
   * Removes "unnecessary" shells
-  * Creates .bash\_logout to skel with few cleanups
+  * Creates ```.bash_logout``` to ```/etc/skel``` with few cleanups
 * Restricts logins
   * /etc/login.access
   * /etc/porttime
@@ -65,14 +65,14 @@ What does it do?
   * /etc/login.defs
     * Disallow logins if home dir does not exist
   * SSH ```AllowGroups users```
-* Sets useradd defaults
-  * INACTIVE days to lock accounts after the password expires
+* Sets ```useradd``` defaults
+  * ```INACTIVE``` days to lock accounts after the password expires
   * ```rbash``` as default shell
-* Configures a bit better password policy to _login.defs_
+* Configures a bit better password policy to ```login.defs```
 * Changes the hashing mechanism to [SHA512](https://en.wikipedia.org/wiki/SHA-2) and more crypt rounds
 * Disallow the use of ```at```
 * Removes user daemon from group ```adm``` (as we will take use of the ```adm``` group)
-* Fix gshadow with ```grpck```
+* Fix ```gshadow``` with ```grpck```
 
 #### Groups
 
@@ -94,7 +94,7 @@ You can also utilize the above grsec groups with [sudo][11], so the allowed user
 ### Configures services
 
 * Removes unnecessary services
-  * xinetd (/etc/inetd.conf)
+  * xinetd (```/etc/inetd.conf```)
   * Goes through ```/etc/rc.d/rc.*``` and disables plenty of those
   * ```atd``` from ```rc.M```
 * [X11 -nolisten tcp](http://docs.slackware.com/howtos:security:basic_security#x_-nolisten_tcp)
@@ -128,7 +128,7 @@ You can also utilize the above grsec groups with [sudo][11], so the allowed user
   * Disable the [MSA](https://en.wikipedia.org/wiki/Mail_submission_agent)
   * Don't show the version on the banner
 * [sudo][11]
-  * Don't cache the password (timestamp\_timeout) (should also mitigate against [CVE-2013-1775](http://www.sudo.ws/sudo/alerts/epoch_ticket.html))
+  * Don't cache the password (```timestamp_timeout```) (should also mitigate against [CVE-2013-1775](http://www.sudo.ws/sudo/alerts/epoch_ticket.html))
   * Always require password with ```sudo -l``` (```listpw```)
   * noexec as default
   * Require root's password instead of user's
