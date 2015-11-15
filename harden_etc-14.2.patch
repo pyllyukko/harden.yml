@@ -403,58 +403,6 @@ index 27b03e1..fe4ae0e 100644
  }
  
  # Note that /var/log/lastlog is not rotated.  This is intentional, and it should
-diff --git a/logrotate.d/pacct b/logrotate.d/pacct
-new file mode 100644
-index 0000000..9d63ba2
---- /dev/null
-+++ b/logrotate.d/pacct
-@@ -0,0 +1,19 @@
-+/var/log/pacct {
-+  yearly
-+  rotate 10
-+  dateext
-+  size 1G
-+  shred
-+  notifempty
-+  nocompress
-+  create 0640 root adm
-+  nomail
-+
-+  prerotate
-+    /sbin/accton off
-+  endscript
-+
-+  postrotate
-+    /sbin/accton /var/log/pacct
-+  endscript
-+}
-diff --git a/logrotate.d/sudo b/logrotate.d/sudo
-new file mode 100644
-index 0000000..69611ca
---- /dev/null
-+++ b/logrotate.d/sudo
-@@ -0,0 +1,7 @@
-+# sudo.log is a separate log file that is configured with the logfile options
-+# in sudoers.
-+/var/log/sudo.log {
-+    monthly
-+    notifempty
-+    create 0640 root adm
-+}
-diff --git a/logrotate.d/sulog b/logrotate.d/sulog
-new file mode 100644
-index 0000000..b21ee23
---- /dev/null
-+++ b/logrotate.d/sulog
-@@ -0,0 +1,8 @@
-+# Rotate /var/log/sulog:
-+# sulog is a separate log file that is not created by syslog, hence we process
-+# it here instead of logrotate.d/syslog.
-+/var/log/sulog {
-+    monthly
-+    notifempty
-+    create 0640 root adm
-+}
 diff --git a/logrotate.d/syslog b/logrotate.d/syslog
 index 031e68d..620695f 100644
 --- a/logrotate.d/syslog
