@@ -1826,6 +1826,7 @@ function disable_unnecessary_services() {
   echo "${FUNCNAME}(): disabling and shutting down unnecessary services"
 
   # go through all the rc scripts
+  shopt -s nullglob
   for RC in /etc/rc.d/rc.*
   do
     # there might also be directories...
