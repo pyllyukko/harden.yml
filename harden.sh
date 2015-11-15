@@ -423,7 +423,7 @@ function disable_inetd_services() {
 
   if [ ! -f "${INETDCONF}" ]
   then
-    echo "${FUNCNAME}(): error: inetd conf file not found!" 1>&2
+    echo "${FUNCNAME}(): inetd conf file not found!" 1>&2
     return 0
   fi
 
