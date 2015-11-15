@@ -1,0 +1,19 @@
+/var/log/pacct {
+  yearly
+  rotate 10
+  dateext
+  size 1G
+  shred
+  notifempty
+  nocompress
+  create 0640 root adm
+  nomail
+
+  prerotate
+    /sbin/accton off
+  endscript
+
+  postrotate
+    /sbin/accton /var/log/pacct
+  endscript
+}

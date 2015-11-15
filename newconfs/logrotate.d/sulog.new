@@ -1,0 +1,8 @@
+# Rotate /var/log/sulog:
+# sulog is a separate log file that is not created by syslog, hence we process
+# it here instead of logrotate.d/syslog.
+/var/log/sulog {
+    monthly
+    notifempty
+    create 0640 root adm
+}

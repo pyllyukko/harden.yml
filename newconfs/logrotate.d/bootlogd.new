@@ -1,0 +1,9 @@
+# https://www.linuxquestions.org/questions/slackware-14/how-to-activate-bootlogd-918962/
+# logrotate configuration for default bootlogd log 
+
+/var/log/boot { 
+    monthly 
+    rotate 5 
+    notifempty 
+    missingok 
+}
