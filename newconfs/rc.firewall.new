@@ -1,0 +1,284 @@
+#!/bin/sh
+################################################################################
+# rc.firewall                                                                  #
+################################################################################
+declare -r LOG_PRIORITY="debug"
+declare -r INT_IF="eth0"
+declare -r INT_NET="192.168.0.0/24"
+declare -r STATE_FILE="/var/state/iptables.state"
+# THROW, NAT & XRESOLVE?!?                                                     #
+# not in the list for a purpose: LOCAL                                         #
+declare -ra ADDRESS_TYPES=(
+  UNSPEC	# an unspecified address (i.e. 0.0.0.0)
+  #UNICAST	# an unicast address
+  BROADCAST	# a broadcast address
+  ANYCAST	# an anycast packet
+  MULTICAST	# a multicast address (DST=224.0.0.0/4)
+  BLACKHOLE	# a blackhole address
+  UNREACHABLE	# an unreachable address
+  PROHIBIT	# a prohibited address
+)
+#declare -r EXT="eth1"
+umask 077
+################################################################################
+function log_and_reject() {
+  # $1 = log-prefix
+  # $2 = reject with
+  # $3 -> = iptables parameters
+  # log-level == priority in syslog                                            #
+  [ ${#} -lt 3 ] && {
+    echo "${FUNCNAME}(): error!"
+    return 1
+  }
+  local LOG_PREFIX="${1}"
+  local REJECT_WITH="${2}"
+  shift 2
+  iptables \
+    ${*} \
+    --jump      LOG \
+    --log-prefix        "${LOG_PREFIX}: " \
+    --log-level         "${LOG_PRIORITY}" \
+    --log-tcp-sequence \
+    --log-tcp-options \
+    --log-ip-options
+  iptables ${*} --jump REJECT --reject-with "${REJECT_WITH}"
+  return 0
+} # log_and_reject()
+################################################################################
+function log_only() {
+  # $1 = log-prefix
+  # $2 -> = iptables parameters
+  # log-level == priority in syslog                                            #
+  [ ${#} -lt 2 ] && {
+    echo "${FUNCNAME}(): error!"
+    return 1
+  }
+  local LOG_PREFIX="${1}"
+  shift 1
+  iptables \
+    ${*} \
+    --jump      LOG \
+    --log-prefix        "${LOG_PREFIX}: " \
+    --log-level         "${LOG_PRIORITY}" \
+    --log-tcp-sequence \
+    --log-tcp-options \
+    --log-ip-options
+  return 0
+} # log_only()
+################################################################################
+function log_and_drop() {
+  # $1 = log-prefix
+  # $2 -> = iptables parameters
+  [ ${#} -lt 3 ] && {
+    echo "${FUNCNAME}(): error!"
+    return 1
+  }
+  local LOG_PREFIX="${1}"
+  shift 1
+  ##############################################################################
+  # LOG AND DROP INVALID PACKETS                                               #
+  ##############################################################################
+  # Michael_Rash_OSCON_2007.pdf:                                               #
+  #                                                                            #
+  # Iptables Logging Args                                                      #
+  # When building iptables LOG rules:                                          #
+  #                                                                            #
+  # Use --log-ip-options                                                       #
+  # Use --log-tcp-sequence                                                     #
+  # Use --log-tcp-options                                                      #
+  #                                                                            #
+  # More attacks can be detected, and operating                                #
+  # systems can be passively fingerprinted                                     #
+  ##############################################################################
+  iptables \
+    ${*} \
+    --jump	LOG \
+    --log-prefix	"${LOG_PREFIX}: " \
+    --log-level		"${LOG_PRIORITY}" \
+    --log-tcp-sequence \
+    --log-tcp-options \
+    --log-ip-options
+  iptables ${*} --jump DROP
+  return 0
+} # log_and_drop()
+################################################################################
+function set_default_policies() {
+  local CHAIN
+
+  echo "[+] rc.firewall ${FUNCNAME}(): setting the default policies"
+
+  # Turn off IPv4 packet forwarding support.
+  if [ -x /etc/rc.d/rc.ip_forward ]
+  then
+    echo "[+] rc.firewall ${FUNCNAME}(): disabling IP forwarding..."
+    . /etc/rc.d/rc.ip_forward stop
+  fi
+
+  #echo 1 1>/proc/sys/net/ipv4/tcp_syncookies
+
+  ##############################################################################
+  # default policies                                                           #
+  ##############################################################################
+  iptables --table filter --policy INPUT   ACCEPT
+  iptables --table filter --policy FORWARD DROP
+  iptables --table filter --policy OUTPUT  ACCEPT
+
+  # drop policy for IPv6
+  echo "[+] rc.firewall ${FUNCNAME}(): disabling IPv6 traffic..."
+  for CHAIN in INPUT OUTPUT FORWARD
+  do
+    /usr/sbin/ip6tables -P "${CHAIN}" DROP
+  done
+
+  # TODO: localhost? nmap book page 263?
+
+  return 0
+} # set_default_policies()
+################################################################################
+function log_odd_address_types() {
+  ##############################################################################
+  # you never know what might be lurking behind the next corner...             #
+  # ...so we log these just to make sure                                       #
+  ##############################################################################
+  local ADDRTYPE
+  for ADDRTYPE in ${ADDRESS_TYPES[*]}
+  do
+    # TODO: should some of these be --src-type?
+    log_and_drop "DROP dst addrtype ${ADDRTYPE}" -A INPUT -m addrtype --dst-type "${ADDRTYPE}"
+    log_and_drop "DROP src addrtype ${ADDRTYPE}" -A INPUT -m addrtype --src-type "${ADDRTYPE}"
+  done
+  return 0
+} # log_odd_address_types()
+################################################################################
+function start() {
+  echo "[+] rc.firewall ${FUNCNAME}()"
+
+  set_default_policies
+
+  ###### INPUT chain ######
+
+  echo "[+] rc.firewall ${FUNCNAME}(): setting up INPUT chain..."
+
+  ##############################################################################
+  # invalid packets                                                            #
+  ##############################################################################
+  log_and_drop "DROP INVALID" --table filter --append INPUT --match state --state INVALID
+
+  ##############################################################################
+  # allow loopback                                                             #
+  ##############################################################################
+  iptables -t filter -A INPUT -i lo -s 127.0.0.1 -d 127.0.0.1 -j ACCEPT
+
+  ### anti-spoofing rules
+  #log_and_drop "SPOOFED PKT" -A INPUT -i "${INT_IF}" ! -s "${INT_NET}"
+
+  ##############################################################################
+  # reject icmp timestamp requests for a cleaner nessus report=)               #
+  # see CVE-1999-0524 &  http://osvdb.org/94                                   #
+  ##############################################################################
+  log_and_reject "REJECT ICMP Timestamp req" "icmp-admin-prohibited" -A INPUT -p icmp --icmp-type timestamp-request
+  ##############################################################################
+  # drop replys                                                                #
+  ##############################################################################
+  log_and_drop "DROP timestamp-reply" -t filter -A OUTPUT -p icmp --icmp-type timestamp-reply
+
+  log_odd_address_types
+
+  ##############################################################################
+  # drop SSDP packets                                                          #
+  ##############################################################################
+  log_and_drop "DROP SSDP" -t filter -A INPUT -d 239.255.255.250 -p udp -m udp --dport 1900
+
+  #iptables -t filter -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
+  #log_and_reject "REJECT NEW" "icmp-admin-prohibited" -A INPUT -m state --state NEW
+  ##############################################################################
+  # log other incoming packets                                                 #
+  ##############################################################################
+  log_only "NEW" -A INPUT -m state --state NEW
+
+  return 0
+} # start()
+################################################################################
+function stop() {
+  local    TABLE
+  local -a TABLES=(`cat /proc/net/ip_tables_names 2>/dev/null`)
+  for TABLE in ${TABLES[*]}
+  do
+    echo "[+] rc.firewall ${FUNCNAME}(): flushing rules from table ${TABLE}"
+    iptables --table "${TABLE}" --flush
+  done
+  # "There must be no  references  to  the chain" ... so we run this last
+  echo "[+] rc.firewall ${FUNCNAME}(): deleting (possible) user-defined chains"
+  iptables -X
+  return ${?}
+} # stop()
+################################################################################
+function status() {
+  local    TABLE
+  local -a TABLES=(`cat /proc/net/ip_tables_names 2>/dev/null`)
+  #echo "forwarding:"
+  #sysctl net.ipv4.conf 2>/dev/null | awk -F'.' '/forwarding = 1$/{printf "  %s\n",$4}'
+  for TABLE in ${TABLES[*]}
+  do
+    echo "table ${TABLE}:"
+    iptables -t "${TABLE}" -n -v -L
+  done
+  return 0
+} # status()
+################################################################################
+function usage() {
+  cat 0<<-EOF
+	usage: ${0} start|stop|restart|status
+EOF
+  return ${?}
+} # usage()
+################################################################################
+function load_state() {
+  local -i RET=0
+  echo "${0##*/}: ${FUNCNAME}()"
+  logger -t "${0##*/}" "${FUNCNAME}()"
+  ##############################################################################
+  # if the state file doesn't exist or is not readable, we fall back to        #
+  # initializing the firewall "from scratch"                                   #
+  ##############################################################################
+  if [ ! -f "${STATE_FILE}" -o ! -r "${STATE_FILE}" ]
+  then
+    echo "${FUNCNAME}(): error!" 1>&2
+    /usr/bin/logger -t "${0##*/}" "${FUNCNAME}(): failed"
+    return 1
+  fi
+  /usr/sbin/iptables-restore -c 0<"${STATE_FILE}"
+  RET=${?}
+  /usr/bin/logger -t "${0##*/}" "${FUNCNAME}(): restored firewall rules from state file with status ${RET}"
+  rm -v -f "${STATE_FILE}"
+  /usr/bin/logger -t "${0##*/}" "${FUNCNAME}(): state file removed"
+  return ${RET}
+} # load_state()
+################################################################################
+function save_state() {
+  # this function is invoked from stop() or by directly running rc.firewall save
+  local -i RET=0
+  echo "${0##*/}: ${FUNCNAME}()"
+  /usr/sbin/iptables-save -c 1>"${STATE_FILE}"
+  RET=${?}
+  # if there is some problem saving the state, assume it's useless and remove it.
+  if [ ${RET} -ne 0 ]
+  then
+    /usr/bin/rm -v "${STATE_FILE}"
+  fi
+  /usr/bin/logger -t "${0##*/}" "${FUNCNAME}(): state saved with status ${RET}"
+  return ${RET}
+} # save_state()
+################################################################################
+# TODO: http://refspecs.linux-foundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/iniscrptact.html
+case "${1}" in
+  "start") start ;;
+  "stop")  stop  ;;
+  "restart"|"reload"|"force-reload")
+    stop
+    start
+  ;;
+  "status") status ;;
+esac
+
+exit 0
