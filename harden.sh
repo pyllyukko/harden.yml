@@ -1822,6 +1822,7 @@ function disable_unnecessary_services() {
   #   - support for sysvinit scripts
   local RC
   local WHILELISTED
+  local service
 
   echo "${FUNCNAME}(): disabling and shutting down unnecessary services"
 
@@ -1853,6 +1854,16 @@ function disable_unnecessary_services() {
     # and then disable it
     /usr/bin/chmod -c 600 "${RC}" | tee -a "${logdir}/file_perms.txt"
   done
+
+  # debian systemd
+  if [ -x /bin/systemctl ]
+  then
+    for service in "avahi-daemon" "atd" "cups" "nfs-common" "exim4"
+    do
+      /bin/systemctl stop	"${service}"
+      /bin/systemctl disable	"${service}"
+    done
+  fi
 
   echo "${FUNCNAME}(): enabling recommended services"
 
