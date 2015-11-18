@@ -112,7 +112,7 @@ declare -r SUDOERS_PATCH_FILE="sudoers-${SUDOERS_PATCH_VERSION}.patch"
 SSH_VERSION=$( ssh -V 2>&1 | sed 's/^OpenSSH_\([^,]\+\),.*$/\1/' )
 case "${SSH_VERSION}" in
   "6.3p1")	SSH_PATCH_FILE="ssh_harden-6.3p1.patch" ;;
-  "6.7p1")	SSH_PATCH_FILE="ssh_harden-6.3p1.patch" ;;
+  "6.7p1")	SSH_PATCH_FILE="ssh_harden-6.7p1.patch" ;;
   "7.1p1")	SSH_PATCH_FILE="ssh_harden-7.1p1.patch" ;;
   *)		SSH_PATCH_FILE="ssh_harden-6.3p1.patch" ;;
 esac
