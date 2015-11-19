@@ -119,9 +119,9 @@ function set_default_policies() {
   ##############################################################################
   # default policies                                                           #
   ##############################################################################
-  iptables --table filter --policy INPUT   ACCEPT
-  iptables --table filter --policy FORWARD DROP
-  iptables --table filter --policy OUTPUT  ACCEPT
+  iptables --table filter --policy INPUT	ACCEPT
+  iptables --table filter --policy FORWARD	DROP
+  iptables --table filter --policy OUTPUT	ACCEPT
 
   # drop policy for IPv6
   echo "[+] rc.firewall ${FUNCNAME}(): disabling IPv6 traffic..."
