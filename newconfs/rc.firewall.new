@@ -6,6 +6,9 @@ declare -r LOG_PRIORITY="debug"
 declare -r INT_IF=""
 declare -r INT_NET=""
 declare -r STATE_FILE="/var/state/iptables.state"
+declare -r BLOCK_INCOMING=0
+declare -a ALLOWED_TCP_PORTS=()
+declare -a ALLOWED_UDP_PORTS=()
 # THROW, NAT & XRESOLVE?!?                                                     #
 # not in the list for a purpose: LOCAL                                         #
 declare -ra ADDRESS_TYPES=(
@@ -174,6 +177,22 @@ function start() {
     log_and_drop "SPOOFED PKT" --table filter --append INPUT -i ${INT_IF} ! -s $INT_NET
   fi
 
+  if (( ${BLOCK_INCOMING} ))
+  then
+    for ALLOWED_PORT in ${ALLOWED_TCP_PORTS[*]}
+    do
+      iptables -t filter -A INPUT -p tcp -m tcp --dport ${ALLOWED_PORT} -j ACCEPT
+    done
+    for ALLOWED_PORT in ${ALLOWED_UDP_PORTS[*]}
+    do
+      iptables -t filter -A INPUT -p udp -m udp --dport ${ALLOWED_PORT} -j ACCEPT
+    done
+
+    iptables		--table filter --append INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+    log_and_drop "NEW"	--table filter --append INPUT -m state --state NEW
+    #log_and_reject "REJECT NEW" "icmp-admin-prohibited" -A INPUT -m state --state NEW
+  fi
+
   ##############################################################################
   # reject icmp timestamp requests for a cleaner nessus report=)               #
   # see CVE-1999-0524 &  http://osvdb.org/94                                   #
@@ -191,8 +210,6 @@ function start() {
   ##############################################################################
   log_and_drop "DROP SSDP" -t filter -A INPUT -d 239.255.255.250 -p udp -m udp --dport 1900
 
-  #iptables -t filter -A INPUT -p tcp -m tcp --dport 22 -j ACCEPT
-  #log_and_reject "REJECT NEW" "icmp-admin-prohibited" -A INPUT -m state --state NEW
   ##############################################################################
   # log other incoming packets                                                 #
   ##############################################################################
