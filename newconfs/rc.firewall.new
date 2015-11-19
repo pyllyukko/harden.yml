@@ -169,8 +169,10 @@ function start() {
   ##############################################################################
   iptables -t filter -A INPUT -i lo -s 127.0.0.1 -d 127.0.0.1 -j ACCEPT
 
-  ### anti-spoofing rules
-  #log_and_drop "SPOOFED PKT" -A INPUT -i "${INT_IF}" ! -s "${INT_NET}"
+  if [ -n "${INT_IF}" -a -n "${INT_NET}" ]
+  then
+    log_and_drop "SPOOFED PKT" --table filter --append INPUT -i ${INT_IF} ! -s $INT_NET
+  fi
 
   ##############################################################################
   # reject icmp timestamp requests for a cleaner nessus report=)               #
