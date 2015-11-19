@@ -9,18 +9,6 @@ declare -r STATE_FILE="/var/state/iptables.state"
 declare -r BLOCK_INCOMING=0
 declare -a ALLOWED_TCP_PORTS=()
 declare -a ALLOWED_UDP_PORTS=()
-# THROW, NAT & XRESOLVE?!?                                                     #
-# not in the list for a purpose: LOCAL                                         #
-declare -ra ADDRESS_TYPES=(
-  UNSPEC	# an unspecified address (i.e. 0.0.0.0)
-  #UNICAST	# an unicast address
-  BROADCAST	# a broadcast address
-  ANYCAST	# an anycast packet
-  MULTICAST	# a multicast address (DST=224.0.0.0/4)
-  BLACKHOLE	# a blackhole address
-  UNREACHABLE	# an unreachable address
-  PROHIBIT	# a prohibited address
-)
 #declare -r EXT="eth1"
 umask 077
 ################################################################################
@@ -138,21 +126,6 @@ function set_default_policies() {
   return 0
 } # set_default_policies()
 ################################################################################
-function log_odd_address_types() {
-  ##############################################################################
-  # you never know what might be lurking behind the next corner...             #
-  # ...so we log these just to make sure                                       #
-  ##############################################################################
-  local ADDRTYPE
-  for ADDRTYPE in ${ADDRESS_TYPES[*]}
-  do
-    # TODO: should some of these be --src-type?
-    log_and_drop "DROP dst addrtype ${ADDRTYPE}" -A INPUT -m addrtype --dst-type "${ADDRTYPE}"
-    log_and_drop "DROP src addrtype ${ADDRTYPE}" -A INPUT -m addrtype --src-type "${ADDRTYPE}"
-  done
-  return 0
-} # log_odd_address_types()
-################################################################################
 function start() {
   echo "[+] rc.firewall ${FUNCNAME}()"
 
@@ -202,8 +175,6 @@ function start() {
   # drop replys                                                                #
   ##############################################################################
   log_and_drop "DROP timestamp-reply" -t filter -A OUTPUT -p icmp --icmp-type timestamp-reply
-
-  log_odd_address_types
 
   ##############################################################################
   # drop SSDP packets                                                          #
