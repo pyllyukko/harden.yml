@@ -184,7 +184,10 @@ function start() {
   ##############################################################################
   # log other incoming packets                                                 #
   ##############################################################################
-  log_only "NEW" -A INPUT -m state --state NEW
+  if (( ! ${BLOCK_INCOMING} ))
+  then
+    log_only "NEW" -A INPUT -m state --state NEW
+  fi
 
   return 0
 } # start()
