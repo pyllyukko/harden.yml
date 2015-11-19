@@ -3,8 +3,8 @@
 # rc.firewall                                                                  #
 ################################################################################
 declare -r LOG_PRIORITY="debug"
-declare -r INT_IF="eth0"
-declare -r INT_NET="192.168.0.0/24"
+declare -r INT_IF=""
+declare -r INT_NET=""
 declare -r STATE_FILE="/var/state/iptables.state"
 # THROW, NAT & XRESOLVE?!?                                                     #
 # not in the list for a purpose: LOCAL                                         #
