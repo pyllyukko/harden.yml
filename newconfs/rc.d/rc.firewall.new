@@ -145,6 +145,12 @@ function start() {
   ##############################################################################
   iptables -t filter -A INPUT -i lo -s 127.0.0.1 -d 127.0.0.1 -j ACCEPT
 
+  ##############################################################################
+  # drop SSDP packets                                                          #
+  ##############################################################################
+  log_and_drop "DROP SSDP" -t filter -A INPUT -d 239.255.255.250 -p udp -m udp --dport 1900
+
+
   if [ -n "${INT_IF}" -a -n "${INT_NET}" ]
   then
     log_and_drop "SPOOFED PKT" --table filter --append INPUT -i ${INT_IF} ! -s $INT_NET
@@ -175,11 +181,6 @@ function start() {
   # drop replys                                                                #
   ##############################################################################
   log_and_drop "DROP timestamp-reply" -t filter -A OUTPUT -p icmp --icmp-type timestamp-reply
-
-  ##############################################################################
-  # drop SSDP packets                                                          #
-  ##############################################################################
-  log_and_drop "DROP SSDP" -t filter -A INPUT -d 239.255.255.250 -p udp -m udp --dport 1900
 
   ##############################################################################
   # log other incoming packets                                                 #
