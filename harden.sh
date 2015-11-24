@@ -708,6 +708,12 @@ function user_accounts() {
   for NAME in ${NAMES[*]}
   do
     MyUID=`id -u ${NAME}`
+    # as the NAMES array is populated in the beginning of the script, some user
+    # accounts might have been hardened away already at this point.
+    if [ -z "${MyUID}" ]
+    then
+      continue
+    fi
     if [ \
       ${MyUID} -le ${SYS_UID_MAX:-999} -a \
       ${NAME} != 'root' ]
