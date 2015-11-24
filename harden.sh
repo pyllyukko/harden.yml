@@ -898,7 +898,7 @@ function check_and_patch() {
   # $3 = p level
   # $4 = [reverse]
   local DIR_TO_PATCH="${1}"
-  local PATCH_FILE="${CWD}/${2}"
+  local PATCH_FILE="${CWD}/patches/${2}"
   local P="${3}"
   local -i GREP_RET
   local -i PATCH_RET
