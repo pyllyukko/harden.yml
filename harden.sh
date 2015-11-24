@@ -575,7 +575,6 @@ function user_accounts() {
   # TODO: it still might be too dangerous to just start removing anything. reconsider this.
 
   local -i GRPCK_RET
-  local MyUID
   local uid
   local NAME
   local USERID
@@ -707,15 +706,15 @@ function user_accounts() {
   # TODO: find out the details about mysql's shell!!
   for NAME in ${NAMES[*]}
   do
-    MyUID=`id -u ${NAME}`
+    uid=`id -u ${NAME}`
     # as the NAMES array is populated in the beginning of the script, some user
     # accounts might have been hardened away already at this point.
-    if [ -z "${MyUID}" ]
+    if [ -z "${uid}" ]
     then
       continue
     fi
     if [ \
-      ${MyUID} -le ${SYS_UID_MAX:-999} -a \
+      ${uid} -le ${SYS_UID_MAX:-999} -a \
       ${NAME} != 'root' ]
     then
       crontab -l -u "${NAME}" 2>&1 | grep -q "^no crontab for"
