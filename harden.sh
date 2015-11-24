@@ -731,6 +731,10 @@ function user_accounts() {
   for NAME in ${NAMES[*]}
   do
     uid=`id -u $NAME`
+    if [ -z "${uid}" ]
+    then
+      continue
+    fi
     if [ $uid -ge ${UID_MIN:-1000} -a $uid != 65534 ]
     then
       chage -m ${PASS_MIN_DAYS:-1} -M ${PASS_MAX_DAYS:-365} -W ${PASS_WARN_AGE:-30} $NAME
