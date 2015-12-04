@@ -29,6 +29,7 @@ for PROGRAM in \
   ln \
   mkdir \
   mv \
+  openssl \
   rm \
   sed \
   shred \
