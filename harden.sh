@@ -133,7 +133,8 @@ declare -r SENDMAIL_CF_DIR="/usr/share/sendmail/cf/cf"
 declare -r SENDMAIL_CONF_PREFIX="sendmail-slackware"
 declare -r RBINDIR="/usr/local/rbin"
 declare -r INETDCONF="/etc/inetd.conf"
-declare -r SKS_CA_PREFIX="/usr/share/ca-certificates/local/sks-keyservers.netCA"
+declare -r CADIR="/usr/share/ca-certificates/local"
+declare -r SKS_CA="sks-keyservers.netCA.pem"
 declare -a NAMES=( $( cut -d: -f1 /etc/passwd ) )
 auditPATH='/etc/audit'
 logdir=$( mktemp -p /tmp -d harden.sh.XXXXXX )
@@ -482,6 +483,7 @@ function create_environment_for_restricted_shell () {
 function import_pgp_keys() {
   local URL
   local PGP_KEY
+  local SKS_HASH
 
   echo "${FUNCNAME}(): importing PGP keys"
   # keys with URL
@@ -512,41 +514,25 @@ function import_pgp_keys() {
       https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.jamie.asc
     chmod -c 644 /usr/share/ca-certificates/local/mfpl.crt | tee -a "${logdir}/file_perms.txt"
   fi
-  if [ "${USER}" = "root" -a ! -f "${SKS_CA_PREFIX}.pem" ]
+  if [ "${USER}" = "root" -a ! -f "${CADIR}/${SKS_CA}" ]
   then
-    # https://www.sks-keyservers.net/overview-of-pools.php
-
-    #wget -nv --directory-prefix=/usr/local/share/ca-certificates \
-    #  https://sks-keyservers.net/sks-keyservers.netCA.pem \
-    #  https://sks-keyservers.net/sks-keyservers.netCA.pem.asc
-
-    # get the sks-keyservers CA and verify the HTTPS cert against thawte.
-    # this is really frigging odd, if i don't specify the --capath in Debian,
-    # it verifies against /etc/ssl/certs. on Slackware it doesn't, but i
-    # specified it just in case. we want to verify against thawte and not all
-    # of the CAs!
-    #
     # https://www.sks-keyservers.net/verify_tls.php
-    curl \
-      --capath /var/empty \
-      --cacert /usr/share/ca-certificates/mozilla/Thawte_Premium_Server_CA.crt \
-      "https://sks-keyservers.net/${SKS_CA_PREFIX##*/}.{pem,pem.asc}" \
-      -o "${SKS_CA_PREFIX}.#1"
-    if [ ${?} -ne 0 ]
-    then
-      echo "${FUNCNAME}(): error: could not download sks-keyservers CA. can not continue!" 1>&2
-      return 1
-    fi
-    # get the CRL
-    wget -nv --ca-certificate=/usr/share/ca-certificates/mozilla/Thawte_Premium_Server_CA.crt https://sks-keyservers.net/ca/crl.pem -O "${SKS_CA_PREFIX%/*}/d378c2f0.r0"
-    chmod -c 644 ${SKS_CA_PREFIX}.{pem,pem.asc} | tee -a "${logdir}/file_perms.txt"
+    cat "${CWD}/certificates/${SKS_CA}" 1>"${CADIR}/${SKS_CA}"
+    chmod -c 644 "${CADIR}/${SKS_CA}" | tee -a "${logdir}/file_perms.txt"
   # for regular users
-  elif [ ! -f "${SKS_CA_PREFIX}.pem" ]
+  elif [ "${USER}" != "root" -a ! -f "${CADIR}/${SKS_CA}" ]
   then
-    echo "${FUNCNAME}(): error: sks-keyservers CA not available. can not continue! try to run this as root to get the CA." 1>&2
+    echo "${FUNCNAME}(): error: sks-keyservers CA not available. can not continue! try to run this as root to install the CA." 1>&2
     return 1
   fi
-  sha512sum -c 0<<<"d0a056251372367230782e050612834a2efa2fdd80eeba08e490a770691e4ddd52a744fd3f3882ca4188f625c3554633381ac90de8ea142519166277cadaf7b0  ${SKS_CA_PREFIX}.pem"
+  # get the CRL
+  SKS_HASH=$( openssl x509 -in ${CADIR}/${SKS_CA} -noout -hash )
+  if [ -n "${SKS_HASH}" -a "${USER}" = "root" ]
+  then
+    wget -nv --ca-certificate=/usr/share/ca-certificates/mozilla/Thawte_Premium_Server_CA.crt https://sks-keyservers.net/ca/crl.pem -O "${CADIR}/${SKS_HASH}.r0"
+    chmod -c 644 "${CADIR}/${SKS_HASH}.r0" | tee -a "${logdir}/file_perms.txt"
+  fi
+  sha512sum -c 0<<<"d0a056251372367230782e050612834a2efa2fdd80eeba08e490a770691e4ddd52a744fd3f3882ca4188f625c3554633381ac90de8ea142519166277cadaf7b0  ${CADIR}/${SKS_CA}"
   if [ ${?} -ne 0 ]
   then
     echo "${FUNCNAME}(): error: sks-keyservers CA's SHA-512 fingerprint does not match!" 1>&2
@@ -558,7 +544,7 @@ function import_pgp_keys() {
     /usr/bin/gpg \
       --logger-fd 1 \
       --keyserver "hkps://hkps.pool.sks-keyservers.net" \
-      --keyserver-options ca-cert-file=${SKS_CA_PREFIX}.pem \
+      --keyserver-options ca-cert-file=${CADIR}/${SKS_CA} \
       --keyring "${GPG_KEYRING}" --no-default-keyring \
       --recv-keys "${PGP_KEY}"
   done | tee -a "${logdir}/pgp_keys.txt"
