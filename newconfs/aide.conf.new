@@ -6,6 +6,7 @@ OwnerMode = p+u+g+ftype
 R = R+sha1
 
 /boot					R
+=/home/*                                OwnerMode
 
 # exceptions:
 ## hwclock?
