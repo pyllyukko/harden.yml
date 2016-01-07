@@ -1956,6 +1956,8 @@ function quick_harden() {
     sed -i 's/^ENABLED="false"$/ENABLED="true"/' /etc/default/sysstat
   fi
 
+  create_limited_ca_list
+
   return
 } # quick_harden()
 ################################################################################
