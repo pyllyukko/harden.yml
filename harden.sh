@@ -1950,6 +1950,12 @@ function quick_harden() {
 
   harden_fstab
 
+  # enable sysstat in Debian
+  if [ -f /etc/default/sysstat ]
+  then
+    sed -i 's/^ENABLED="false"$/ENABLED="true"/' /etc/default/sysstat
+  fi
+
   return
 } # quick_harden()
 ################################################################################
