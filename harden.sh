@@ -1011,7 +1011,9 @@ function harden_fstab() {
   # TODO: /tmp and maybe the /var/tmp binding from NSA 2.2.1.4
   gawk '
     BEGIN{
-      if(system("test -f /etc/slackware-version")==0)
+      if(system("grep -q raspbian /etc/os-release")==0)
+	os="raspbian"
+      else if(system("test -f /etc/slackware-version")==0)
 	os="slackware"
       else if(system("test -f /etc/debian_version")==0)
 	os="debian"
@@ -1078,6 +1080,10 @@ function harden_fstab() {
 	print
       else
 	switch(os) {
+	  case "raspbian":
+	    # raspbian format
+	    printf "%-15s %-15s %-7s %-17s %-7s %s\n", $1, $2, $3, $4, $5, $6
+	    break
 	  case "debian":
 	    # debian format
 	    printf "%-15s %-15s %-7s %-15s %-7s %s\n", $1, $2, $3, $4, $5, $6
