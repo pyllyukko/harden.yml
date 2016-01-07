@@ -1955,7 +1955,11 @@ function quick_harden() {
   # TODO: under construction
 
   # configure TCP wrappers
-  echo "ALL: ALL EXCEPT localhost" 1>>/etc/hosts.deny
+  grep -q "^ALL" /etc/hosts.deny
+  if [ ${?} -ne 0 ]
+  then
+    echo "ALL: ALL EXCEPT localhost" 1>>/etc/hosts.deny
+  fi
 
   # sysctl.conf
   if [ -f "${CWD}/newconfs/sysctl.conf.new" ]
