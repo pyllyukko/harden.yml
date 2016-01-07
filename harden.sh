@@ -1996,6 +1996,8 @@ function quick_harden() {
 
   create_limited_ca_list
 
+  lock_system_accounts
+
   return
 } # quick_harden()
 ################################################################################
