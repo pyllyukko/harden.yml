@@ -1920,18 +1920,19 @@ function quick_harden() {
   echo "ALL: ALL EXCEPT localhost" > /etc/hosts.deny
 
   # sysctl.conf
-  if [ ! -f "${CWD}/newconfs/sysctl.conf.new" ]
+  if [ -f "${CWD}/newconfs/sysctl.conf.new" ]
   then
-    echo "WARNING: sysctl.conf.new not found!" 1>&2
-  fi
-  if [ -d /etc/sysctl.d -a ! -f /etc/sysctl.d/harden.conf ]
-  then
-    # for debian
-    cat "${CWD}/newconfs/sysctl.conf.new" 1>/etc/sysctl.d/harden.conf
+    if [ -d /etc/sysctl.d -a ! -f /etc/sysctl.d/harden.conf ]
+    then
+      # for debian
+      cat "${CWD}/newconfs/sysctl.conf.new" 1>/etc/sysctl.d/harden.conf
+    else
+      # slackware
+      # TODO: add some check if it's already there.
+      cat "${CWD}/newconfs/sysctl.conf.new" 1>>/etc/sysctl.conf
+    fi
   else
-    # slackware
-    # TODO: add some check if it's already there.
-    cat "${CWD}/newconfs/sysctl.conf.new" 1>>/etc/sysctl.conf
+    echo "WARNING: sysctl.conf.new not found!" 1>&2
   fi
 
   echo "ALL:ALL:DENY" >>/etc/suauth
