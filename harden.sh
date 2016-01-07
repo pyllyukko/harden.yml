@@ -1010,6 +1010,14 @@ function harden_fstab() {
   fi
   # TODO: /tmp and maybe the /var/tmp binding from NSA 2.2.1.4
   gawk '
+    BEGIN{
+      if(system("test -f /etc/slackware-version")==0)
+	os="slackware"
+      else if(system("test -f /etc/debian_version")==0)
+	os="debian"
+      else
+	os="unknown"
+    }
     # partly from system-hardening-10.2.txt
     # strict settings for filesystems mounted under /mnt
     ( \
@@ -1069,10 +1077,17 @@ function harden_fstab() {
       if($0 ~ /^#/)
 	print
       else
-	# slackware format
-        printf "%-16s %-16s %-11s %-16s %-3s %s\n", $1, $2, $3, $4, $5, $6
-	# debian format
-        #printf "%-15s %-15s %-7s %-15s %-7s %s\n", $1, $2, $3, $4, $5, $6
+	switch(os) {
+	  case "debian":
+	    # debian format
+	    printf "%-15s %-15s %-7s %-15s %-7s %s\n", $1, $2, $3, $4, $5, $6
+	    break
+	  case "slackware":
+	  default:
+	    # slackware format
+	    printf "%-16s %-16s %-11s %-16s %-3s %s\n", $1, $2, $3, $4, $5, $6
+	    break
+	}
     }' /etc/fstab 1>/etc/fstab.new
 
   if [ -f /etc/fstab.new ]
