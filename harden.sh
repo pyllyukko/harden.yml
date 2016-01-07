@@ -552,6 +552,44 @@ function import_pgp_keys() {
   return 0
 } # import_pgp_keys()
 ################################################################################
+function lock_system_accounts() {
+  local NAME
+  local uid
+
+  # CIS 8.1 Block System Accounts (modified)
+  # CIS 3.4 Disable Standard Boot Services (modified) (the user accounts part)
+  #
+  # NOTE: according to CIS (3.13 Only Enable SQL Server Processes If Absolutely Necessary & 8.1 Block System Accounts)
+  #       mysql user account needs to have bash as it's shell.
+  #
+  # NOTE:
+  #   - this should be run periodically
+  #   - 29.8.2012: added expire as suggested in passwd(1)
+  #
+  # TODO: find out the details about mysql's shell!!
+  for NAME in ${NAMES[*]}
+  do
+    uid=`id -u ${NAME}`
+    # as the NAMES array is populated in the beginning of the script, some user
+    # accounts might have been hardened away already at this point.
+    if [ -z "${uid}" ]
+    then
+      continue
+    fi
+    if [ \
+      ${uid} -le ${SYS_UID_MAX:-999} -a \
+      ${NAME} != 'root' ]
+    then
+      crontab -l -u "${NAME}" 2>&1 | grep -q "^no crontab for"
+      if [ ${PIPESTATUS[1]} -ne 0 ]
+      then
+        echo "${FUNCNAME}(): WARNING: the user \`${NAME}' has some cronjobs! should it be so?" 1>&2
+      fi
+      /usr/sbin/usermod -e 1970-01-02 -L -s "${DENY_SHELL}" "${NAME}"
+    fi
+  done
+} # lock_system_accounts()
+################################################################################
 function user_accounts() {
   # NOTE: http://refspecs.freestandards.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/usernames.html
   #
@@ -680,38 +718,7 @@ function user_accounts() {
 
   echo "${FUNCNAME}(): modifying/hardening current user accounts"
 
-  # CIS 8.1 Block System Accounts (modified)
-  # CIS 3.4 Disable Standard Boot Services (modified) (the user accounts part)
-  #
-  # NOTE: according to CIS (3.13 Only Enable SQL Server Processes If Absolutely Necessary & 8.1 Block System Accounts)
-  #       mysql user account needs to have bash as it's shell.
-  #
-  # NOTE:
-  #   - this should be run periodically
-  #   - 29.8.2012: added expire as suggested in passwd(1)
-  #
-  # TODO: find out the details about mysql's shell!!
-  for NAME in ${NAMES[*]}
-  do
-    uid=`id -u ${NAME}`
-    # as the NAMES array is populated in the beginning of the script, some user
-    # accounts might have been hardened away already at this point.
-    if [ -z "${uid}" ]
-    then
-      continue
-    fi
-    if [ \
-      ${uid} -le ${SYS_UID_MAX:-999} -a \
-      ${NAME} != 'root' ]
-    then
-      crontab -l -u "${NAME}" 2>&1 | grep -q "^no crontab for"
-      if [ ${PIPESTATUS[1]} -ne 0 ]
-      then
-        echo "${FUNCNAME}(): WARNING: the user \`${NAME}' has some cronjobs! should it be so?" 1>&2
-      fi
-      /usr/sbin/usermod -e 1970-01-02 -L -s "${DENY_SHELL}" "${NAME}"
-    fi
-  done
+  lock_system_accounts
 
   # CIS 8.3 Set Account Expiration Parameters On Active Accounts
   for NAME in ${NAMES[*]}
