@@ -555,6 +555,7 @@ function import_pgp_keys() {
 function lock_system_accounts() {
   local NAME
   local uid
+  local password_status
 
   # CIS 8.1 Block System Accounts (modified)
   # CIS 3.4 Disable Standard Boot Services (modified) (the user accounts part)
@@ -584,6 +585,11 @@ function lock_system_accounts() {
       if [ ${PIPESTATUS[1]} -ne 0 ]
       then
         echo "${FUNCNAME}(): WARNING: the user \`${NAME}' has some cronjobs! should it be so?" 1>&2
+      fi
+      password_status=$( /usr/bin/passwd -S "${NAME}" | awk '{print$2}' )
+      if [ "${password_status}" != "L" ]
+      then
+        echo "${FUNCNAME}(): WARNING: the account \`${NAME}' is not locked properly!" 1>&2
       fi
       /usr/sbin/usermod -e 1970-01-02 -L -s "${DENY_SHELL}" "${NAME}"
     fi
