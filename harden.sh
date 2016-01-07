@@ -1920,7 +1920,7 @@ function quick_harden() {
   echo "ALL: ALL EXCEPT localhost" > /etc/hosts.deny
 
   # sysctl.conf
-  if [ ! "${CWD}/newconfs/sysctl.conf.new" ]
+  if [ ! -f "${CWD}/newconfs/sysctl.conf.new" ]
   then
     echo "WARNING: sysctl.conf.new not found!" 1>&2
   fi
