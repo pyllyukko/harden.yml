@@ -333,8 +333,12 @@ declare -r ARCH=`/bin/uname -m`
 case "${MACHTYPE%%-*}" in
   "x86_64")	SLACKWARE="slackware64"	;;
   i?86)		SLACKWARE="slackware"	;;
+  # TODO: arm
 esac
-MANIFEST_DIR="${CWD}/manifests/${SLACKWARE}-${SLACKWARE_VERSION}"
+if [ -n "${SLACKWARE_VERSION}" ]
+then
+  MANIFEST_DIR="${CWD}/manifests/${SLACKWARE}-${SLACKWARE_VERSION}"
+fi
 ################################################################################
 function check_manifest() {
   local MD5_RET
