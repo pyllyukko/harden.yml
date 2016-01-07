@@ -2196,6 +2196,8 @@ function usage() {
 	  	  - creates ftpusers
 	  	  - removes unnecessary shells
 	  	  - creates hardened fstab.new
+		  - creates limited CA list
+		  - lock system accounts
 	  -r	remove unnecessary shells
 	  -s	disable unnecessary services (also enables few recommended ones)
 	  -S	configure basic auditing using the stig.rules
