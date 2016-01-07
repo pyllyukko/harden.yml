@@ -1924,10 +1924,10 @@ function quick_harden() {
   then
     echo "WARNING: sysctl.conf.new not found!" 1>&2
   fi
-  if [ -d /etc/sysctl.d -a ! -f /etc/sysctl.d/local.conf ]
+  if [ -d /etc/sysctl.d -a ! -f /etc/sysctl.d/harden.conf ]
   then
     # for debian
-    cat "${CWD}/newconfs/sysctl.conf.new" 1>/etc/sysctl.d/local.conf
+    cat "${CWD}/newconfs/sysctl.conf.new" 1>/etc/sysctl.d/harden.conf
   else
     # slackware
     # TODO: add some check if it's already there.
