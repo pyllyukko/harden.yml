@@ -266,6 +266,7 @@ declare -ra PGP_URLS=(
 #   - 0x1AF51CE72993D5F9 - Mixmaster 3.x Code Release Signing Key
 #   - 0x6887935AB297B391 - sukhbir@torproject.org (Tor messenger)
 #   - 0xADEF768480316BDA - Kevin McCarthy's key (mutt)
+#   - 0xD94AA3F0EFE21092 - Ubuntu https://help.ubuntu.com/community/VerifyIsoHowto
 declare -ra PGP_KEYS=(
   #"CEA0A321"
   #"060798CB"
@@ -318,6 +319,7 @@ declare -ra PGP_KEYS=(
   "0x1AF51CE72993D5F9"
   "0x6887935AB297B391"
   "0xADEF768480316BDA"
+  "0xD94AA3F0EFE21092"
 )
 # from CIS Apache HTTP Server 2.4 Benchmark v1.1.0 - 12-03-2013
 # 1.2.3-8
