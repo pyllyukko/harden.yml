@@ -2061,7 +2061,7 @@ function configure_basic_auditing() {
   then
     stig_rules=( /usr/share/doc/audit-*/stig.rules )
   fi
-  echo "${#stig_rules[*]}"
+
   if [ ${#stig_rules[*]} -ne 1 ]
   then
     echo "${FUNCNAME}(): error: stig.rules not found!" 1>&2
