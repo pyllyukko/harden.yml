@@ -2049,8 +2049,13 @@ function configure_basic_auditing() {
     stig_rules[0]="/usr/share/doc/auditd/examples/stig.rules.gz"
     concat="/bin/zcat"
   # Slackware
-  else
+  elif [ -f /etc/slackware-version ]
+  then
     stig_rules=( /usr/doc/audit-*/contrib/stig.rules )
+  # CentOS
+  elif [ -f /etc/centos-release ]
+  then
+    stig_rules=( /usr/share/doc/audit-*/stig.rules )
   fi
   echo "${#stig_rules[*]}"
   if [ ${#stig_rules[*]} -ne 1 ]
