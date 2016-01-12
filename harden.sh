@@ -2039,8 +2039,7 @@ function configure_basic_auditing() {
   /sbin/auditctl -l | grep -q "^No rules$"
   if [ ${PIPESTATUS[1]} -ne 0 ]
   then
-    # some rules exist...
-    return 0
+    echo "${FUNCNAME}(): notice: some rules exist already."
   fi
 
   # Debian
