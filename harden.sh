@@ -2062,9 +2062,20 @@ function configure_basic_auditing() {
     cp -v /etc/audit/audit.rules /etc/audit/audit.rules.old
   fi
 
+  # fix the audit.rules for Slackware:
+  #   - Slackware does not have old passwords (opasswd)
+  #   - Slackware does not have /etc/sysconfig/network
+  #   - Enable auditing of lastlog
+  #   - Enable auditing of faillog (change tallylog -> faillog, as we don't have PAM)
+  #   - Enable session files logging ([ubw]tmp)
+  #   - Enable kernel module logging
   sed \
     -e 's:^\(-w /etc/security/opasswd -p wa -k identity\)$:#\1:' \
     -e 's:^\(-w /etc/sysconfig/network -p wa -k system-locale\)$:#\1:' \
+    -e 's:^#\(-w /var/log/lastlog -p wa -k logins\)$:\1:' \
+    -e 's:^#\(-w /var/log/\)tallylog\( -p wa -k logins\)$:\1faillog\2:' \
+    -e 's:^#\(-w /var/\(run\|log\)/[ubw]tmp -p wa -k session\)$:\1:' \
+    -e 's:^#\(.*-k modules\)$:\1:' \
     "${stig_rules[0]}" 1>/etc/audit/audit.rules
 
   # disable x86_64 rules
