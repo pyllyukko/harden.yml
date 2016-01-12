@@ -2030,6 +2030,9 @@ function toggle_usb_authorized_default() {
 function configure_basic_auditing() {
   local -a stig_rules=()
   local    concat="/bin/cat"
+  local    rules_exist=0
+  local    dotnew=""
+
   if [ ! -x /sbin/auditctl ]
   then
     echo "${FUNCNAME}(): error: auditctl not found!" 1>&2
@@ -2040,6 +2043,8 @@ function configure_basic_auditing() {
   if [ ${PIPESTATUS[1]} -ne 0 ]
   then
     echo "${FUNCNAME}(): notice: some rules exist already."
+    rules_exist=1
+    dotnew=".new"
   fi
 
   # Debian
@@ -2089,22 +2094,34 @@ function configure_basic_auditing() {
     -e 's:^#\(-w /var/log/\)tallylog\( -p wa -k logins\)$:\1faillog\2:' \
     -e 's:^#\(-w /var/\(run\|log\)/[ubw]tmp -p wa -k session\)$:\1:' \
     -e 's:^#\(.*\(-k \|-F key=\)module.*\)$:\1:' \
-    1>/etc/audit/audit.rules
+    1>/etc/audit/audit.rules${dotnew}
 
   # set the correct architecture
   if [[ ${ARCH} =~ ^i.86$ ]]
   then
     # disable x86_64 rules
-    sed -i '/^-.*arch=b64/s/^/#/' /etc/audit/audit.rules
+    sed -i '/^-.*arch=b64/s/^/#/' /etc/audit/audit.rules${dotnew}
   elif [ "${ARCH}" = "x86_64" ]
   then
     # disable x86 rules
-    sed -i '/^-.*arch=b32/s/^/#/' /etc/audit/audit.rules
+    sed -i '/^-.*arch=b32/s/^/#/' /etc/audit/audit.rules${dotnew}
   fi
 
-  /sbin/auditctl -R /etc/audit/audit.rules
+  if (( ${rules_exist} ))
+  then
+    echo "${FUNCNAME}(): all done. some rule(s) existed, so you need to review the .new file, move it over and run \"/sbin/auditctl -R audit.rules\" manually."
+    ls -l /etc/audit/audit.rules.new
+  else
+    /sbin/auditctl -R /etc/audit/audit.rules${dotnew}
+  fi
 
-  chmod -c 700 /etc/rc.d/rc.auditd | tee -a "${logdir}/file_perms.txt"
+  if [ -f /etc/rc.d/rc.auditd ]
+  then
+    chmod -c 700 /etc/rc.d/rc.auditd | tee -a "${logdir}/file_perms.txt"
+  elif [ -x /bin/systemctl ]
+  then
+    /bin/systemctl enable auditd
+  fi
 
 } # configure_basic_auditing()
 ################################################################################
