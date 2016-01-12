@@ -2084,7 +2084,7 @@ function configure_basic_auditing() {
     -e 's:^#\(-w /var/log/lastlog -p wa -k logins\)$:\1:' \
     -e 's:^#\(-w /var/log/\)tallylog\( -p wa -k logins\)$:\1faillog\2:' \
     -e 's:^#\(-w /var/\(run\|log\)/[ubw]tmp -p wa -k session\)$:\1:' \
-    -e 's:^#\(.*-k modules\)$:\1:' \
+    -e 's:^#\(.*-k module.*\)$:\1:' \
     1>/etc/audit/audit.rules
 
   # set the correct architecture
