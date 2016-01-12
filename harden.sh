@@ -2029,6 +2029,7 @@ function toggle_usb_authorized_default() {
 ################################################################################
 function configure_basic_auditing() {
   local -a stig_rules=()
+  local    concat="/bin/cat"
   if [ ! -x /sbin/auditctl ]
   then
     echo "${FUNCNAME}(): error: auditctl not found!" 1>&2
@@ -2042,7 +2043,15 @@ function configure_basic_auditing() {
     return 0
   fi
 
-  stig_rules=( /usr/doc/audit-*/contrib/stig.rules )
+  # Debian
+  if [ -f /usr/share/doc/auditd/examples/stig.rules.gz ]
+  then
+    stig_rules[0]="/usr/share/doc/auditd/examples/stig.rules.gz"
+    concat="/bin/zcat"
+  # Slackware
+  else
+    stig_rules=( /usr/doc/audit-*/contrib/stig.rules )
+  fi
   echo "${#stig_rules[*]}"
   if [ ${#stig_rules[*]} -ne 1 ]
   then
@@ -2069,14 +2078,14 @@ function configure_basic_auditing() {
   #   - Enable auditing of faillog (change tallylog -> faillog, as we don't have PAM)
   #   - Enable session files logging ([ubw]tmp)
   #   - Enable kernel module logging
-  sed \
+  ${concat} "${stig_rules[0]}" | sed \
     -e 's:^\(-w /etc/security/opasswd -p wa -k identity\)$:#\1:' \
     -e 's:^\(-w /etc/sysconfig/network -p wa -k system-locale\)$:#\1:' \
     -e 's:^#\(-w /var/log/lastlog -p wa -k logins\)$:\1:' \
     -e 's:^#\(-w /var/log/\)tallylog\( -p wa -k logins\)$:\1faillog\2:' \
     -e 's:^#\(-w /var/\(run\|log\)/[ubw]tmp -p wa -k session\)$:\1:' \
     -e 's:^#\(.*-k modules\)$:\1:' \
-    "${stig_rules[0]}" 1>/etc/audit/audit.rules
+    1>/etc/audit/audit.rules
 
   # set the correct architecture
   if [[ ${ARCH} =~ ^i.86$ ]]
