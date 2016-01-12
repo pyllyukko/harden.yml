@@ -2078,10 +2078,15 @@ function configure_basic_auditing() {
     -e 's:^#\(.*-k modules\)$:\1:' \
     "${stig_rules[0]}" 1>/etc/audit/audit.rules
 
-  # disable x86_64 rules
+  # set the correct architecture
   if [[ ${ARCH} =~ ^i.86$ ]]
   then
+    # disable x86_64 rules
     sed -i '/^-.*arch=b64/s/^/#/' /etc/audit/audit.rules
+  elif [ "${ARCH}" = "x86_64" ]
+  then
+    # disable x86 rules
+    sed -i '/^-.*arch=b32/s/^/#/' /etc/audit/audit.rules
   fi
 
   /sbin/auditctl -R /etc/audit/audit.rules
