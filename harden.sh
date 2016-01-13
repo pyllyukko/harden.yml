@@ -2096,6 +2096,12 @@ function configure_basic_auditing() {
     -e 's:^#\(.*\(-k \|-F key=\)module.*\)$:\1:' \
     1>/etc/audit/audit.rules${dotnew}
 
+  # fix the UID_MIN
+  if [ -n "${UID_MIN}" ]
+  then
+    sed -i "s/auid>=500/auid>=${UID_MIN}/" /etc/audit/audit.rules${dotnew}
+  fi
+
   # set the correct architecture
   if [[ ${ARCH} =~ ^i.86$ ]]
   then
