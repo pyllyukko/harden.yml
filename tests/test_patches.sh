@@ -65,7 +65,7 @@ for PKG in \
   "a/sysvinit-functions-8.53-${ARCH}-2.txz" \
   "a/shadow-4.2.1-${ARCH}-1.txz" \
   "a/logrotate-3.8.9-${ARCH}-1.txz" \
-  "a/sysklogd-1.5-${ARCH}-2.txz" \
+  "a/sysklogd-1.5.1-${ARCH}-1.txz" \
   "ap/sudo-1.8.12-${ARCH}-1.txz" \
   'n/sendmail-cf-8.15.2-noarch-2.txz' \
   "n/openssh-7.1p1-${ARCH}-1.txz" \
