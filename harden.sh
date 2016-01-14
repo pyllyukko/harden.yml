@@ -2007,6 +2007,42 @@ function quick_harden() {
   return
 } # quick_harden()
 ################################################################################
+function apply_newconfs() {
+  local    newconf
+  local    basename
+  local    subdir
+  local -a sha256sums
+
+  pushd /etc 1>/dev/null || {
+    echo "${FUNCNAME}(): error!" 1>&2
+    return 1
+  }
+  for subdir in . cron.d logrotate.d rc.d
+  do
+    for newconf in ${CWD}/newconfs/${subdir}/*.new
+    do
+      basename=$( basename "${newconf}" )
+      # check if the file exists
+      if [ ! -f "${subdir}/${basename%.new}" ]
+      then
+	# if not, move the .new into place
+        echo "file \`${subdir}/${basename%.new}' does not exist!"
+	#cat "${newconf}" 1>"${subdir}/${basename%.new}"
+      elif
+	sha256sums=( $( sha256sum "${subdir}/${basename%.new}" "${newconf}" | awk '{print$1}' ) )
+	[ "${sha256sums[0]}" != "${sha256sums[1]}" ]
+      then
+	echo "${FUNCNAME}(): DEBUG: SHA-2 checksums do not match"
+	# leave the .new file for the admin to consider
+	#cat "${newconf}" 1>"${subdir}/${basename}"
+      else
+	echo "${FUNCNAME}(): DEBUG: file \`${subdir}/${basename%.new}' exists"
+      fi
+    done
+  done
+  popd 1>/dev/null
+} # apply_newconfs()
+################################################################################
 function toggle_usb_authorized_default() {
   local host
   local state
