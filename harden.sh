@@ -30,6 +30,7 @@ for PROGRAM in \
   mkdir \
   mv \
   openssl \
+  patch \
   rm \
   sed \
   shred \
