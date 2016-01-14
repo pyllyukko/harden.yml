@@ -2166,6 +2166,16 @@ function configure_basic_auditing() {
     /bin/systemctl enable auditd
   fi
 
+  # enable it in grub/lilo
+  if [ -f /etc/default/grub ] && ! grep -q '^GRUB_CMDLINE_LINUX=".*audit=1' /etc/default/grub
+  then
+    #sed -i 's/^\(GRUB_CMDLINE_LINUX=".*\)"$/\1 audit=1"/' /etc/default/grub
+    true
+  elif [ -f /etc/lilo.conf ] && ! grep -q '^append=".*audit=1' /etc/lilo.conf
+  then
+    #sed -i 's/^\(append=".*\)"$/\1 audit=1"/' /etc/lilo.conf
+    true
+  fi
 } # configure_basic_auditing()
 ################################################################################
 function patch_sendmail() {
