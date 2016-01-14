@@ -824,19 +824,6 @@ index 0000000..6ce6c0f
 +#
 +
 +# End of shutdown.allow.
-diff --git a/suauth b/suauth
-new file mode 100644
-index 0000000..a867586
---- /dev/null
-+++ b/suauth
-@@ -0,0 +1,7 @@
-+# from CIS Slackware Linux Benchmark v1.1
-+# 8.13 Limit Access To The Root Account From su
-+#root:ALL:DENY
-+
-+# other examples:
-+ALL:ALL:DENY
-+#root:ALL EXCEPT GROUP wheel:DENY
 diff --git a/sysctl.conf b/sysctl.conf
 new file mode 100644
 index 0000000..b4d7073

@@ -1,0 +1,7 @@
+# from CIS Slackware Linux Benchmark v1.1
+# 8.13 Limit Access To The Root Account From su
+#root:ALL:DENY
+
+# other examples:
+ALL:ALL:DENY
+#root:ALL EXCEPT GROUP wheel:DENY
