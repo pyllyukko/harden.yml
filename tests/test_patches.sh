@@ -60,8 +60,8 @@ mkdir -v tmp
 
 for PKG in \
   "a/etc-14.2-${ARCH}-5.txz" \
-  "n/network-scripts-14.1-noarch-2.txz" \
-  'a/sysvinit-scripts-2.0-noarch-21.txz' \
+  "n/network-scripts-14.2-noarch-1.txz" \
+  'a/sysvinit-scripts-2.0-noarch-26.txz' \
   "a/sysvinit-functions-8.53-${ARCH}-2.txz" \
   "a/shadow-4.2.1-${ARCH}-1.txz" \
   "a/logrotate-3.8.9-${ARCH}-1.txz" \
@@ -69,8 +69,8 @@ for PKG in \
   "ap/sudo-1.8.12-${ARCH}-1.txz" \
   'n/sendmail-cf-8.15.2-noarch-2.txz' \
   "n/openssh-7.1p1-${ARCH}-1.txz" \
-  "n/php-5.6.14-${ARCH}-1.txz" \
-  "n/httpd-2.4.17-${ARCH}-1.txz"
+  "n/php-5.6.15-${ARCH}-1.txz" \
+  "n/httpd-2.4.17-${ARCH}-2.txz"
 do
   PKG_BASEN=$( basename "${PKG}" )
   if [ ! -f "${PKG_BASEN}" ]
