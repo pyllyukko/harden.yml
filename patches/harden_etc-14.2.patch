@@ -812,18 +812,6 @@ index 46208fa..e8ba416 100755
    if [ -x /usr/sbin/syslogd -a -x /usr/sbin/klogd ]; then
      echo -n "Starting sysklogd daemons:  "
      echo -n "/usr/sbin/syslogd "
-diff --git a/shutdown.allow b/shutdown.allow
-new file mode 100644
-index 0000000..6ce6c0f
---- /dev/null
-+++ b/shutdown.allow
-@@ -0,0 +1,6 @@
-+#
-+# shutdown.allow
-+#
-+#
-+
-+# End of shutdown.allow.
 diff --git a/sysctl.conf b/sysctl.conf
 new file mode 100644
 index 0000000..b4d7073
