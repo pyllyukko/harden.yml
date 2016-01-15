@@ -267,17 +267,9 @@ The test is performed against a setup like this:
   * The system is booted after hardening
 * [AUTH-9262](http://cisofy.com/controls/AUTH-9262/) test disabled
 
-Baseline:
-
-| Date		| Slackware version	| Lynis version	| Hardening index	|
-| ------------- | --------------------- | ------------- | --------------------- |
-| 24.9.2014	| slackware64-14.1	| 1.6.2		| 43			|
-
-Hardened:
-
-| Date		| Slackware version 	| Lynis version	| harden.sh version				| Hardening index	|
-| ------------- | --------------------- | ------------- | --------------------------------------------- | --------------------- |
-| 24.9.2014	| slackware64-14.1	| 1.6.2		| 155ad8536aed9e30197d645031c72d79ad93f3f4	| 68			|
+| Date		| Slackware version	                             | Packages installed | Lynis version | Tests performed | Hardening index (before) | Hardening index (after) | harden.sh version                        |
+| ------------- | -------------------------------------------------- | ------------------ | ------------- | --------------- | ------------------------ | ----------------------- | ---------------------------------------- |
+| 24.9.2014	| slackware64-14.1	                             | ~135               | 1.6.2         |                 | 43                       | 68 (+25)                | 155ad8536aed9e30197d645031c72d79ad93f3f4 |
 
 Notes
 -----
