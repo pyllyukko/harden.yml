@@ -521,7 +521,7 @@ index 8c5df4d..903299c 100644
 +fi
 +
 diff --git a/rc.d/rc.6 b/rc.d/rc.6
-index 613ac75..7598677 100755
+index 610006b..49d51df 100755
 --- a/rc.d/rc.6
 +++ b/rc.d/rc.6
 @@ -10,6 +10,13 @@
@@ -539,10 +539,10 @@ index 613ac75..7598677 100755
  PATH=/sbin:/etc:/bin:/usr/bin
  
 diff --git a/rc.d/rc.K b/rc.d/rc.K
-index ee98954..f54248f 100755
+index d47f3df..326a71e 100755
 --- a/rc.d/rc.K
 +++ b/rc.d/rc.K
-@@ -116,5 +116,5 @@ echo
+@@ -117,5 +117,5 @@ echo
  
  # Now go to the single user level
  echo "Going to single user mode..."
@@ -550,7 +550,7 @@ index ee98954..f54248f 100755
 +telinit -t 1 S
  
 diff --git a/rc.d/rc.M b/rc.d/rc.M
-index 84b8a4a..e96bd49 100755
+index a98716b..121b679 100755
 --- a/rc.d/rc.M
 +++ b/rc.d/rc.M
 @@ -46,6 +46,7 @@ else
@@ -569,7 +569,7 @@ index 84b8a4a..e96bd49 100755
  
  # Remove stale hunt sockets so the game can start.
  if [ -r /tmp/hunt -o -r /tmp/hunt.stats ]; then
-@@ -277,13 +279,17 @@ fi
+@@ -271,13 +273,17 @@ fi
  # If you want cron to actually log activity to /var/log/cron, then change
  # -l notice to -l info to increase the logging level.
  if [ -x /usr/sbin/crond ]; then
@@ -591,7 +591,7 @@ index 84b8a4a..e96bd49 100755
  
  # Slackware-Mini-Quota-HOWTO:
  # To really activate quotas, you'll need to add 'usrquota' and/or 'grpquota' to
-@@ -378,4 +384,6 @@ if [ -x /etc/rc.d/rc.local ]; then
+@@ -372,4 +378,6 @@ if [ -x /etc/rc.d/rc.local ]; then
    . /etc/rc.d/rc.local
  fi
  
@@ -599,7 +599,7 @@ index 84b8a4a..e96bd49 100755
 +
  # All done.
 diff --git a/rc.d/rc.S b/rc.d/rc.S
-index 15c5ca5..9d07105 100755
+index 50d5967..8416a13 100755
 --- a/rc.d/rc.S
 +++ b/rc.d/rc.S
 @@ -5,10 +5,17 @@
@@ -621,14 +621,14 @@ index 15c5ca5..9d07105 100755
  
  # Mount sysfs next, if the kernel supports it:
  if [ -d /sys ]; then
-@@ -386,6 +393,7 @@ rm -f /var/run/* /var/run/*/* /var/run/*/*/* /etc/nologin \
+@@ -349,6 +356,7 @@ rm -f /var/run/* /var/run/*/* /var/run/*/*/* /etc/nologin \
    /tmp/.Xauth* 1> /dev/null 2> /dev/null
    ( cd /var/log/setup/tmp && rm -rf * )
    ( cd /tmp && rm -rf kde-[a-zA-Z]* ksocket-[a-zA-Z]* hsperfdata_[a-zA-Z]* plugtmp* )
 +  ( cd /tmp && rm -rf * )
  
- # Create /tmp/{.ICE-unix,.X11-unix} if they are not present:
- if [ ! -e /tmp/.ICE-unix ]; then
+ # Clear /var/lock/subsys:
+ if [ -d /var/lock/subsys ]; then
 diff --git a/rc.d/rc.inet1.conf b/rc.d/rc.inet1.conf
 index 85a8041..6de5e61 100644
 --- a/rc.d/rc.inet1.conf
@@ -786,7 +786,7 @@ index 65b358b..185de1c 100755
 +  /etc/rc.d/rc.static_arp start
 +fi
 diff --git a/rc.d/rc.syslog b/rc.d/rc.syslog
-index 46208fa..e8ba416 100755
+index 830ba4c..69e3738 100755
 --- a/rc.d/rc.syslog
 +++ b/rc.d/rc.syslog
 @@ -3,7 +3,22 @@
@@ -812,134 +812,6 @@ index 46208fa..e8ba416 100755
    if [ -x /usr/sbin/syslogd -a -x /usr/sbin/klogd ]; then
      echo -n "Starting sysklogd daemons:  "
      echo -n "/usr/sbin/syslogd "
-diff --git a/sysctl.conf b/sysctl.conf
-new file mode 100644
-index 0000000..b4d7073
---- /dev/null
-+++ b/sysctl.conf
-@@ -0,0 +1,122 @@
-+# Following 11 lines added by CISecurity Benchmark sec 4.1
-+net.ipv4.tcp_max_syn_backlog = 4096
-+net.ipv4.tcp_syncookies=1
-+net.ipv4.conf.all.rp_filter = 1
-+net.ipv4.conf.all.accept_source_route = 0
-+net.ipv4.conf.all.accept_redirects = 0
-+net.ipv4.conf.all.secure_redirects = 0
-+net.ipv4.conf.default.rp_filter = 1
-+net.ipv4.conf.default.accept_source_route = 0
-+net.ipv4.conf.default.accept_redirects = 0
-+net.ipv4.conf.default.secure_redirects = 0
-+net.ipv4.icmp_echo_ignore_broadcasts = 1
-+
-+# Following 3 lines added by CISecurity Benchmark sec 4.2
-+net.ipv4.ip_forward = 0
-+net.ipv4.conf.all.send_redirects = 0
-+net.ipv4.conf.default.send_redirects = 0
-+
-+# following lines are from system-hardening-10.2.txt
-+
-+# Enable/Disable log spoofed, source routed,redirect packets
-+net.ipv4.conf.all.log_martians = 1
-+net.ipv4.conf.default.log_martians = 1
-+
-+# custom
-+
-+# IPv6
-+# CIS RHEL6 4.4.1.1 Disable IPv6 Router Advertisements
-+net.ipv6.conf.all.accept_ra = 0
-+net.ipv6.conf.default.accept_ra = 0
-+# 4.4.1.2 Disable IPv6 Redirect Acceptance
-+net.ipv6.conf.all.accept_redirects = 0
-+net.ipv6.conf.default.accept_redirects = 0
-+
-+# disable IPv6
-+net.ipv6.conf.all.disable_ipv6 = 1
-+net.ipv6.conf.default.disable_ipv6 = 1
-+
-+kernel.core_uses_pid = 1
-+
-+# use address space randomization
-+#
-+# -plus-
-+#
-+# Randomizing heap placement makes heap exploits harder, but it
-+# also breaks ancient binaries (including anything libc5 based).
-+#
-+kernel.randomize_va_space = 2
-+
-+# "Any process which has changed privilege levels or is execute only will not be dumped"
-+fs.suid_dumpable = 0
-+
-+# got the idea from:
-+# https://secure.wikimedia.org/wikibooks/en/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#Larger_entropy_pools
-+#kernel.random.poolsize = 8192
-+
-+# set this to 1, if you don't want the system to reply to ICMP ECHO requests:
-+net.ipv4.icmp_echo_ignore_all = 0
-+
-+# 0 - disable sysrq completely
-+# 4 - enable control of keyboard (SAK, unraw)
-+#
-+# links:
-+#   - http://www.debian.org/doc/manuals/securing-debian-howto/ch4.en.html#s-restrict-sysrq
-+#   - http://tldp.org/HOWTO/Remote-Serial-Console-HOWTO/security-sysrq.html
-+#   - kernel.org/doc/Documentation/sysrq.txt
-+#   - en.wikipedia.org/wiki/Magic_SysRq_key
-+kernel.sysrq = 4
-+
-+# see Restrict unprivileged access to the kernel syslog (CONFIG_SECURITY_DMESG_RESTRICT) in kernel
-+kernel.dmesg_restrict = 1
-+
-+# https://www.kernel.org/doc/Documentation/sysctl/kernel.txt
-+kernel.kptr_restrict = 1
-+
-+# if the client doesn't want to talk to us... :)
-+net.ipv4.tcp_synack_retries = 0
-+
-+# TODO: shared_media?!?
-+# https://tools.ietf.org/html/rfc1620
-+
-+# https://www.cert.fi/haavoittuvuudet/2013/haavoittuvuus-2013-071.html
-+kernel.perf_event_paranoid = 2
-+
-+net.ipv4.tcp_timestamps = 0
-+
-+# grsecurity
-+kernel.grsecurity.linking_restrictions = 1
-+kernel.grsecurity.deter_bruteforce = 1
-+kernel.grsecurity.fifo_restrictions = 1
-+kernel.grsecurity.ptrace_readexec = 1
-+kernel.grsecurity.consistent_setxid = 1
-+kernel.grsecurity.rwxmap_logging = 1
-+kernel.grsecurity.signal_logging = 1
-+kernel.grsecurity.forkfail_logging = 1
-+kernel.grsecurity.timechange_logging = 1
-+kernel.grsecurity.chroot_deny_shmat = 1
-+kernel.grsecurity.chroot_deny_unix = 1
-+kernel.grsecurity.chroot_deny_mount = 1
-+kernel.grsecurity.chroot_deny_fchdir = 1
-+kernel.grsecurity.chroot_deny_chroot = 1
-+kernel.grsecurity.chroot_deny_pivot = 1
-+kernel.grsecurity.chroot_enforce_chdir = 1
-+kernel.grsecurity.chroot_deny_chmod = 1
-+kernel.grsecurity.chroot_deny_mknod = 1
-+kernel.grsecurity.chroot_restrict_nice = 1
-+kernel.grsecurity.chroot_caps = 1
-+kernel.grsecurity.chroot_deny_sysctl = 1
-+kernel.grsecurity.tpe = 1
-+kernel.grsecurity.tpe_gid = 1005
-+kernel.grsecurity.tpe_invert = 1
-+kernel.grsecurity.tpe_restrict_all = 1
-+kernel.grsecurity.audit_mount = 1
-+kernel.grsecurity.dmesg = 1
-+kernel.grsecurity.chroot_findtask = 1
-+kernel.grsecurity.resource_logging = 1
-+kernel.grsecurity.audit_ptrace = 1
-+kernel.grsecurity.harden_ptrace = 1
-+kernel.grsecurity.romount_protect = 0
-+
-+# lock it
-+kernel.grsecurity.grsec_lock = 1
 diff --git a/syslog.conf b/syslog.conf
 index 15bc5ee..a50d779 100644
 --- a/syslog.conf
