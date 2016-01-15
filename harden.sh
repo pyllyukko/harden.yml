@@ -2336,7 +2336,7 @@ do
       remove_shells
       import_pgp_keys
       check_and_patch /etc	"${ETC_PATCH_FILE}"	1 && ETC_CHANGED=1
-      newconfs
+      apply_newconfs
       check_and_patch /etc	"${SUDOERS_PATCH_FILE}"	1
       check_and_patch /etc	"${SSH_PATCH_FILE}"	1
 
