@@ -550,7 +550,7 @@ index d47f3df..326a71e 100755
 +telinit -t 1 S
  
 diff --git a/rc.d/rc.M b/rc.d/rc.M
-index a98716b..121b679 100755
+index a98716b..f35f76a 100755
 --- a/rc.d/rc.M
 +++ b/rc.d/rc.M
 @@ -46,6 +46,7 @@ else
@@ -569,9 +569,12 @@ index a98716b..121b679 100755
  
  # Remove stale hunt sockets so the game can start.
  if [ -r /tmp/hunt -o -r /tmp/hunt.stats ]; then
-@@ -271,13 +273,17 @@ fi
- # If you want cron to actually log activity to /var/log/cron, then change
- # -l notice to -l info to increase the logging level.
+@@ -268,16 +270,18 @@ if [ -x /sbin/accton -a -r /var/log/pacct ]; then
+ fi
+ 
+ # Start crond (Dillon's crond):
+-# If you want cron to actually log activity to /var/log/cron, then change
+-# -l notice to -l info to increase the logging level.
  if [ -x /usr/sbin/crond ]; then
 -  /usr/sbin/crond -l notice
 +  /usr/sbin/crond -l info
@@ -591,7 +594,7 @@ index a98716b..121b679 100755
  
  # Slackware-Mini-Quota-HOWTO:
  # To really activate quotas, you'll need to add 'usrquota' and/or 'grpquota' to
-@@ -372,4 +378,6 @@ if [ -x /etc/rc.d/rc.local ]; then
+@@ -372,4 +376,6 @@ if [ -x /etc/rc.d/rc.local ]; then
    . /etc/rc.d/rc.local
  fi
  
