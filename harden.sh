@@ -2027,15 +2027,15 @@ function apply_newconfs() {
       if [ ! -f "${subdir}/${basename%.new}" ]
       then
 	# if not, move the .new into place
-        echo "file \`${subdir}/${basename%.new}' does not exist!"
-	#cat "${newconf}" 1>"${subdir}/${basename%.new}"
+        echo "creating new file \`${subdir}/${basename%.new}'"
+	cat "${newconf}" 1>"${subdir}/${basename%.new}"
       elif
 	sha256sums=( $( sha256sum "${subdir}/${basename%.new}" "${newconf}" | awk '{print$1}' ) )
 	[ "${sha256sums[0]}" != "${sha256sums[1]}" ]
       then
-	echo "${FUNCNAME}(): DEBUG: SHA-2 checksums do not match"
+	echo "file \`${subdir}/${basename%.new}' exists. creating \`${subdir}/${basename}'."
 	# leave the .new file for the admin to consider
-	#cat "${newconf}" 1>"${subdir}/${basename}"
+	cat "${newconf}" 1>"${subdir}/${basename}"
       else
 	echo "${FUNCNAME}(): DEBUG: file \`${subdir}/${basename%.new}' exists"
       fi
@@ -2337,6 +2337,7 @@ do
       remove_shells
       import_pgp_keys
       check_and_patch /etc	"${ETC_PATCH_FILE}"	1 && ETC_CHANGED=1
+      newconfs
       check_and_patch /etc	"${SUDOERS_PATCH_FILE}"	1
       check_and_patch /etc	"${SSH_PATCH_FILE}"	1
 
