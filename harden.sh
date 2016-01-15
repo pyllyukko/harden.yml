@@ -101,8 +101,6 @@ declare -r GPG_KEYRING="trustedkeys.gpg"
 
 # PATCHES
 
-declare -r ETC_PATCH_VERSION="14.1"
-declare -r ETC_PATCH_FILE="harden_etc-${ETC_PATCH_VERSION}.patch"
 #declare -r APACHE_PATCH_VERSION="2.4.3-20120929-1"
 declare -r APACHE_PATCH_FILE="apache_harden.patch"
 declare -r SENDMAIL_PATCH_FILE="sendmail_harden.patch"
@@ -122,6 +120,7 @@ esac
 # /PATCHES
 
 declare -r SLACKWARE_VERSION=`sed 's/^.*[[:space:]]\([0-9]\+\.[0-9]\+\).*$/\1/' /etc/slackware-version 2>/dev/null`
+declare -r ETC_PATCH_FILE="harden_etc-${SLACKWARE_VERSION}.patch"
 # these are not declared as integers cause then the ${ ... :-DEFAULT } syntax won't work(?!)
 declare -r UID_MIN=`		awk '/^UID_MIN/{print$2}'	/etc/login.defs 2>/dev/null`
 declare -r UID_MAX=`		awk '/^UID_MAX/{print$2}'	/etc/login.defs 2>/dev/null`
