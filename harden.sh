@@ -2027,7 +2027,8 @@ function apply_newconfs() {
     echo "${FUNCNAME}(): error!" 1>&2
     return 1
   }
-  for subdir in . cron.d logrotate.d rc.d
+  shopt -s nullglob
+  for subdir in . cron.d logrotate.d rc.d modprobe.d
   do
     for newconf in ${CWD}/newconfs/${subdir}/*.new
     do

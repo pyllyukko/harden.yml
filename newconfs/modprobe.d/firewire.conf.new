@@ -1,0 +1,6 @@
+# Disable Firewire
+# http://www.hermann-uwe.de/blog/physical-memory-attacks-via-firewire-dma-part-1-overview-and-mitigation
+
+blacklist ohci1394
+blacklist firewire-ohci
+blacklist firewire-core

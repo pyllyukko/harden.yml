@@ -213,6 +213,7 @@ The ```import_pgp_keys()``` function imports a bunch of PGP keys to your ```trus
 * X11:
   * ```DontZap```
 * ```/etc/shutdown.allow``` and ```/sbin/shutdown -a``` (FWIW)
+* Disable [Firewire](http://www.hermann-uwe.de/blog/physical-memory-attacks-via-firewire-dma-part-1-overview-and-mitigation)
 
 ##### Wipe
 
