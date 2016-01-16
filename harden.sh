@@ -2172,8 +2172,8 @@ function configure_basic_auditing() {
     true
   elif [ -f /etc/lilo.conf ] && ! grep -q '^append=".*audit=1' /etc/lilo.conf
   then
-    #sed -i 's/^\(append=".*\)"$/\1 audit=1"/' /etc/lilo.conf
-    true
+    sed -i 's/^\(append=".*\)"$/\1 audit=1"/' /etc/lilo.conf
+    echo "NOTICE: /etc/lilo.conf updated. you need to run \`lilo' to update the boot loader."
   fi
 } # configure_basic_auditing()
 ################################################################################
