@@ -118,7 +118,7 @@ fi
 echo -n $'\n'
 
 tests+=("sudoers")
-patch -p1 -t ${DRY_RUN} 0<../../../patches/sudoers-1.8.5p2.patch
+patch -p1 -t ${DRY_RUN} 0<../../../patches/sudoers-1.8.12.patch
 RET_VALUE=${?}
 RET_VALUES+=( ${RET_VALUE} )
 if [ ${RET_VALUE} -ne 0 ]
