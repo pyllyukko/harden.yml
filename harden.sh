@@ -344,9 +344,9 @@ fi
 ################################################################################
 function check_manifest() {
   local MD5_RET
-  if [ ! -f "${MANIFEST_DIR}/CHECKSUMS.md5" -o \
-       ! -f "${MANIFEST_DIR}/CHECKSUMS.md5.asc" -o \
-       ! -f "${MANIFEST_DIR}/MANIFEST.bz2" ]
+  if [ ! -f "${MANIFEST_DIR}/CHECKSUMS.md5" ] || \
+     [ ! -f "${MANIFEST_DIR}/CHECKSUMS.md5.asc" ] || \
+     [ ! -f "${MANIFEST_DIR}/MANIFEST.bz2" ]
   then
     return 1
   fi
@@ -505,7 +505,7 @@ function import_pgp_keys() {
   # https://support.mayfirst.org/wiki/faq/security/mfpl-certificate-authority
   # https://en.wikipedia.org/wiki/Key_server_%28cryptographic%29#Keyserver_examples
   # https://we.riseup.net/riseuplabs+paow/openpgp-best-practices#consider-making-your-default-keyserver-use-a-keyse
-  if [ "${USER}" = "root" -a ! -d /usr/share/ca-certificates/local ]
+  if [ "${USER}" = "root" ] && [ ! -d /usr/share/ca-certificates/local ]
   then
     # NOTE: update-ca-certificates will add /usr/local/share/ca-certificates/*.crt to globally trusted CAs... which of course, is not good!
     #mkdir -pvm 755 /usr/local/share/ca-certificates
@@ -513,7 +513,7 @@ function import_pgp_keys() {
   fi
   # TODO: these are not verified, as we need to get the PGP keys first :)
   #       but we use sks-keyservers currently anyway, and that is verified.
-  if [ "${USER}" = "root" -a ! -f /usr/share/ca-certificates/local/mfpl.crt ]
+  if [ "${USER}" = "root" ] && [ ! -f /usr/share/ca-certificates/local/mfpl.crt ]
   then
     wget -nv --directory-prefix=/usr/share/ca-certificates/local \
       https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt \
@@ -521,20 +521,20 @@ function import_pgp_keys() {
       https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.jamie.asc
     chmod -c 644 /usr/share/ca-certificates/local/mfpl.crt | tee -a "${logdir}/file_perms.txt"
   fi
-  if [ "${USER}" = "root" -a ! -f "${CADIR}/${SKS_CA}" ]
+  if [ "${USER}" = "root" ] && [ ! -f "${CADIR}/${SKS_CA}" ]
   then
     # https://www.sks-keyservers.net/verify_tls.php
     cat "${CWD}/certificates/${SKS_CA}" 1>"${CADIR}/${SKS_CA}"
     chmod -c 644 "${CADIR}/${SKS_CA}" | tee -a "${logdir}/file_perms.txt"
   # for regular users
-  elif [ "${USER}" != "root" -a ! -f "${CADIR}/${SKS_CA}" ]
+  elif [ "${USER}" != "root" ] && [ ! -f "${CADIR}/${SKS_CA}" ]
   then
     echo "${FUNCNAME}(): error: sks-keyservers CA not available. can not continue! try to run this as root to install the CA." 1>&2
     return 1
   fi
   # get the CRL
   SKS_HASH=$( openssl x509 -in ${CADIR}/${SKS_CA} -noout -hash )
-  if [ -n "${SKS_HASH}" -a "${USER}" = "root" ]
+  if [ -n "${SKS_HASH}" ] && [ "${USER}" = "root" ]
   then
     wget -nv --ca-certificate=/usr/share/ca-certificates/mozilla/Thawte_Premium_Server_CA.crt https://sks-keyservers.net/ca/crl.pem -O "${CADIR}/${SKS_HASH}.r0"
     chmod -c 644 "${CADIR}/${SKS_HASH}.r0" | tee -a "${logdir}/file_perms.txt"
@@ -583,9 +583,7 @@ function lock_system_accounts() {
     then
       continue
     fi
-    if [ \
-      ${uid} -le ${SYS_UID_MAX:-999} -a \
-      ${NAME} != 'root' ]
+    if [ ${uid} -le ${SYS_UID_MAX:-999} ] && [ ${NAME} != 'root' ]
     then
       crontab -l -u "${NAME}" 2>&1 | grep -q "^no crontab for"
       if [ ${PIPESTATUS[1]} -ne 0 ]
@@ -707,7 +705,7 @@ function user_accounts() {
   # installed.
   #
   # NOTE: 25.9.2012: disabled, so we don't get any unowned files.
-  #if [ ! -d "/usr/lib/nn" -a ! -d "/var/spool/slrnpull" ]
+  #if [ ! -d "/usr/lib/nn" ] && [ ! -d "/var/spool/slrnpull" ]
   #then
   #  /usr/bin/crontab -d -u	news
   #  /usr/sbin/userdel		news
@@ -740,7 +738,7 @@ function user_accounts() {
     then
       continue
     fi
-    if [ $uid -ge ${UID_MIN:-1000} -a $uid != 65534 ]
+    if [ $uid -ge ${UID_MIN:-1000} ] && [ $uid != 65534 ]
     then
       chage -m ${PASS_MIN_DAYS:-1} -M ${PASS_MAX_DAYS:-365} -W ${PASS_WARN_AGE:-30} $NAME
     fi
@@ -755,7 +753,7 @@ function user_accounts() {
   #   lp:x:4:7:lp:/var/spool/lpd:/bin/false
   # lprng had this dir back in 11.0, even then it was in pasture/
   #   drwx------ lp/lp             0 2006-02-03 04:55 var/spool/lpd/
-  if [ ! -d /var/spool/lpd -a -d /var/spool/cups ]
+  if [ ! -d /var/spool/lpd ] && [ -d /var/spool/cups ]
   then
     /usr/sbin/usermod -d /var/spool/cups lp
   fi
@@ -829,7 +827,7 @@ function user_accounts() {
   # Slackware's at package creates /etc/at.deny by default, which has blacklisted users. so we're switching
   # from blacklist to (empty) whitelist.
   echo "restricting the use of at"
-  if [ -s "/etc/at.deny" -a ! -f "/etc/at.allow" ]
+  if [ -s "/etc/at.deny" ] && [ ! -f "/etc/at.allow" ]
   then
     /usr/bin/rm -v	/etc/at.deny
     /usr/bin/touch	/etc/at.allow
@@ -931,14 +929,14 @@ function check_and_patch() {
   #pushd "${1}" || return 1
 
   set +u
-  if [ -n "${4}" -a "${4}" = "reverse" ]
+  if [ -n "${4}" ] && [ "${4}" = "reverse" ]
   then
     # this is the best i came up with to detect if the patch is already applied/reversed before actually applying/reversing it.
     # patch seems to return 0 in every case, so we'll have to use grep here.
     echo "${FUNCNAME}(): testing patch file \`${PATCH_FILE##*/}' with --dry-run"
     /usr/bin/patch -R -d "${DIR_TO_PATCH}" -t -p${P} --dry-run -i "${PATCH_FILE}" | /usr/bin/grep "^\(Unreversed patch detected\|The next patch, when reversed, would delete the file\)"
     PATCH_RET=${PIPESTATUS[0]} GREP_RET=${PIPESTATUS[1]}
-    [ ${PATCH_RET} -ne 0 -o ${GREP_RET} -eq 0 ] && {
+    { [ ${PATCH_RET} -ne 0 ] || [ ${GREP_RET} -eq 0 ]; } && {
       echo "${FUNCNAME}(): error: patch dry-run didn't work out, maybe the patch has already been reversed?" 1>&2
       return 1
     }
@@ -951,7 +949,7 @@ function check_and_patch() {
     # TODO: detect rej? "3 out of 4 hunks FAILED -- saving rejects to file php.ini.rej"
     /usr/bin/patch -d "${DIR_TO_PATCH}" -t -p${P} --dry-run -i "${PATCH_FILE}" | /usr/bin/grep "^\(The next patch would create the file\|Reversed (or previously applied) patch detected\)"
     PATCH_RET=${PIPESTATUS[0]} GREP_RET=${PIPESTATUS[1]}
-    [ ${PATCH_RET} -ne 0 -o ${GREP_RET} -eq 0 ] && {
+    { [ ${PATCH_RET} -ne 0 ] || [ ${GREP_RET} -eq 0 ]; } && {
       echo "${FUNCNAME}(): error: patch dry-run didn't work out, maybe the patch has already been applied?" 1>&2
       return 1
     }
@@ -1397,8 +1395,8 @@ function file_permissions() {
     #chmod -c 750 /usr/sbin/groupmems
 
     # SSA:2011-101-01:
-    if [ -u /usr/sbin/faillog -o \
-         -u /usr/sbin/lastlog ]
+    if [ -u /usr/sbin/faillog ] || \
+       [ -u /usr/sbin/lastlog ]
     then
       echo "${FUNCNAME}(): notice: you seem to be missing a security patch for SSA:2011-101-01"
       /usr/bin/chmod -c u-s	/usr/sbin/faillog
@@ -1621,7 +1619,7 @@ function miscellaneous_settings() {
   #then
   #  sed -i 's/^defaultserverargs=""$/defaultserverargs="-nolisten tcp"/' /usr/bin/startx
   #fi
-  if [ -d /etc/X11/xinit -a ! -f /etc/X11/xinit/xserverrc ]
+  if [ -d /etc/X11/xinit ] && [ ! -f /etc/X11/xinit/xserverrc ]
   then
     # from http://docs.slackware.com/howtos:security:basic_security#x_-nolisten_tcp
     cat 0<<-EOF 1>/etc/X11/xinit/xserverrc
@@ -1966,7 +1964,7 @@ function quick_harden() {
   # sysctl.conf
   if [ -f "${CWD}/newconfs/sysctl.conf.new" ]
   then
-    if [ -d /etc/sysctl.d -a ! -f /etc/sysctl.d/harden.conf ]
+    if [ -d /etc/sysctl.d ] && [ ! -f /etc/sysctl.d/harden.conf ]
     then
       # for debian
       cat "${CWD}/newconfs/sysctl.conf.new" 1>/etc/sysctl.d/harden.conf
@@ -2111,7 +2109,7 @@ function configure_basic_auditing() {
   echo "${FUNCNAME}(): configuring basic auditing..."
 
   # backup old rules
-  if [ -f /etc/audit/audit.rules -a ! -f /etc/audit/audit.rules.old ]
+  if [ -f /etc/audit/audit.rules ] && [ ! -f /etc/audit/audit.rules.old ]
   then
     cp -v /etc/audit/audit.rules /etc/audit/audit.rules.old
   fi
@@ -2227,7 +2225,7 @@ function patch_sendmail() {
   sed -i 's/^smtp\tThis is sendmail version \$v$/smtp\tThis is sendmail/' /etc/mail/helpfile
 
   # if sendmail is running, restart it
-  if [ -f "/var/run/sendmail.pid" -a -x "/etc/rc.d/rc.sendmail" ]
+  if [ -f "/var/run/sendmail.pid" ] && [ -x "/etc/rc.d/rc.sendmail" ]
   then
     /etc/rc.d/rc.sendmail restart
   fi
@@ -2383,7 +2381,7 @@ do
 	"ssh")
 	  # CIS 1.3 Configure SSH
 	  check_and_patch /etc "${SSH_PATCH_FILE}" 1 && \
-            [ -f "/var/run/sshd.pid" -a -x "/etc/rc.d/rc.sshd" ] && \
+            [ -f "/var/run/sshd.pid" ] && [ -x "/etc/rc.d/rc.sshd" ] && \
 	      /etc/rc.d/rc.sshd restart
 	;;
 	"etc") check_and_patch /etc "${ETC_PATCH_FILE}" 1 && ETC_CHANGED=1 ;;
@@ -2412,7 +2410,7 @@ do
       case "${OPTARG}" in
 	"ssh")
 	  check_and_patch /etc "${SSH_PATCH_FILE}" 1 reverse && \
-	    [ -f "/var/run/sshd.pid" -a -x "/etc/rc.d/rc.sshd" ] && \
+	    [ -f "/var/run/sshd.pid" ] && [ -x "/etc/rc.d/rc.sshd" ] && \
 	      /etc/rc.d/rc.sshd restart
 	;;
 	"etc") check_and_patch /etc "${ETC_PATCH_FILE}" 1 reverse && ETC_CHANGED=1	;;
