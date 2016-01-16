@@ -936,10 +936,11 @@ function check_and_patch() {
     echo "${FUNCNAME}(): testing patch file \`${PATCH_FILE##*/}' with --dry-run"
     /usr/bin/patch -R -d "${DIR_TO_PATCH}" -t -p${P} --dry-run -i "${PATCH_FILE}" | /usr/bin/grep "^\(Unreversed patch detected\|The next patch, when reversed, would delete the file\)"
     PATCH_RET=${PIPESTATUS[0]} GREP_RET=${PIPESTATUS[1]}
-    { [ ${PATCH_RET} -ne 0 ] || [ ${GREP_RET} -eq 0 ]; } && {
+    if [ ${PATCH_RET} -ne 0 ] || [ ${GREP_RET} -eq 0 ]
+    then
       echo "${FUNCNAME}(): error: patch dry-run didn't work out, maybe the patch has already been reversed?" 1>&2
       return 1
-    }
+    fi
     # if everything was ok, apply the patch
     echo "${FUNCNAME}(): DEBUG: patch would happen"
     /usr/bin/patch -R -d "${DIR_TO_PATCH}" -t -p${P} -i "${PATCH_FILE}" | tee -a "${logdir}/patches.txt"
@@ -949,10 +950,11 @@ function check_and_patch() {
     # TODO: detect rej? "3 out of 4 hunks FAILED -- saving rejects to file php.ini.rej"
     /usr/bin/patch -d "${DIR_TO_PATCH}" -t -p${P} --dry-run -i "${PATCH_FILE}" | /usr/bin/grep "^\(The next patch would create the file\|Reversed (or previously applied) patch detected\)"
     PATCH_RET=${PIPESTATUS[0]} GREP_RET=${PIPESTATUS[1]}
-    { [ ${PATCH_RET} -ne 0 ] || [ ${GREP_RET} -eq 0 ]; } && {
+    if [ ${PATCH_RET} -ne 0 ] || [ ${GREP_RET} -eq 0 ]
+    then
       echo "${FUNCNAME}(): error: patch dry-run didn't work out, maybe the patch has already been applied?" 1>&2
       return 1
-    }
+    fi
     echo "DEBUG: patch would happen"
     /usr/bin/patch -d "${DIR_TO_PATCH}" -t -p${P} -i "${PATCH_FILE}" | tee -a "${logdir}/patches.txt"
     RET=${?}
