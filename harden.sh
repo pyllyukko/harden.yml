@@ -1874,10 +1874,20 @@ function disable_unnecessary_services() {
   for RC in /etc/rc.d/rc.*
   do
     # there might also be directories...
-    [ ! -f "${RC}" ] && {
+    if [ ! -f "${RC}" ]
+    then
       echo "${FUNCNAME}(): DEBUG: \`${RC}' is not a file -> skipping" 1>&2
       continue
-    }
+    # leftovers from patch
+    elif [ "${RC(-5):5}" = ".orig" ]
+    then
+      echo ".orig file -> skipping" 1>&2
+      continue
+    elif [ "${RC(-1):1}" = "~" ]
+    then
+      echo "tilde file -> skipping" 1>&2
+      continue
+    fi
     #echo "${FUNCNAME}(): DEBUG: processing \`${RC}'"
     # go through the whitelist
     for WHITELISTED in ${SERVICES_WHITELIST[*]}
