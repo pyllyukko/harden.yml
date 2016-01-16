@@ -119,15 +119,15 @@ esac
 
 # /PATCHES
 
-declare -r SLACKWARE_VERSION=`sed 's/^.*[[:space:]]\([0-9]\+\.[0-9]\+\).*$/\1/' /etc/slackware-version 2>/dev/null`
+declare -r SLACKWARE_VERSION=$( sed 's/^.*[[:space:]]\([0-9]\+\.[0-9]\+\).*$/\1/' /etc/slackware-version 2>/dev/null )
 declare -r ETC_PATCH_FILE="harden_etc-${SLACKWARE_VERSION}.patch"
 # these are not declared as integers cause then the ${ ... :-DEFAULT } syntax won't work(?!)
-declare -r UID_MIN=`		awk '/^UID_MIN/{print$2}'	/etc/login.defs 2>/dev/null`
-declare -r UID_MAX=`		awk '/^UID_MAX/{print$2}'	/etc/login.defs 2>/dev/null`
+declare -r UID_MIN=$(		awk '/^UID_MIN/{print$2}'	/etc/login.defs 2>/dev/null )
+declare -r UID_MAX=$(		awk '/^UID_MAX/{print$2}'	/etc/login.defs 2>/dev/null )
 declare -r PASS_MIN_DAYS=$(	awk '/^PASS_MIN_DAYS/{print$2}'	/etc/login.defs 2>/dev/null )
 declare -r PASS_MAX_DAYS=$(	awk '/^PASS_MAX_DAYS/{print$2}'	/etc/login.defs 2>/dev/null )
 declare -r PASS_WARN_AGE=$(	awk '/^PASS_WARN_AGE/{print$2}'	/etc/login.defs 2>/dev/null )
-declare -r SYS_UID_MAX=`	awk '/^SYS_UID_MAX/{print$2}'	/etc/login.defs 2>/dev/null`
+declare -r SYS_UID_MAX=$(	awk '/^SYS_UID_MAX/{print$2}'	/etc/login.defs 2>/dev/null )
 declare -r WWWROOT="/var/www"
 declare -i ETC_CHANGED=0
 declare -r SENDMAIL_CF_DIR="/usr/share/sendmail/cf/cf"
@@ -331,7 +331,7 @@ declare -a apache_disable_modules_list=(
   'userdir_module'
   'info_module'
 )
-declare -r ARCH=`/bin/uname -m`
+declare -r ARCH=$( /bin/uname -m )
 case "${MACHTYPE%%-*}" in
   "x86_64")	SLACKWARE="slackware64"	;;
   i?86)		SLACKWARE="slackware"	;;
@@ -371,15 +371,15 @@ function chattr_files_NOT_IN_USE() {
   chattr +i /etc/lilo.conf
 
   # system-hardening-10.2.txt: Filesystem
-  for i in `ls /etc/rc.d`
+  for i in $( ls /etc/rc.d )
   do
     chattr +i /etc/rc.d/$i
   done
-  for i in `ls /etc/httpd`
+  for i in $( ls /etc/httpd )
   do
     chattr +i /etc/httpd/$i
   done
-  for i in `ls /etc/mail`
+  for i in $( ls /etc/mail )
   do
     chattr +i /etc/mail/$i
   done
@@ -576,7 +576,7 @@ function lock_system_accounts() {
   # TODO: find out the details about mysql's shell!!
   for NAME in ${NAMES[*]}
   do
-    uid=`id -u ${NAME}`
+    uid=$( id -u ${NAME} )
     # as the NAMES array is populated in the beginning of the script, some user
     # accounts might have been hardened away already at this point.
     if [ -z "${uid}" ]
@@ -735,7 +735,7 @@ function user_accounts() {
   # CIS 8.3 Set Account Expiration Parameters On Active Accounts
   for NAME in ${NAMES[*]}
   do
-    uid=`id -u $NAME`
+    uid=$( id -u $NAME )
     if [ -z "${uid}" ]
     then
       continue
@@ -1510,7 +1510,7 @@ function user_home_directories_permissions() {
   local DIR
   # 8.7 User Home Directories Should Be Mode 750 or More Restrictive (modified)
   for DIR in \
-    `awk -F: '($3 >= 500) { print $6 }' /etc/passwd` \
+    $( awk -F: '($3 >= 500) { print $6 }' /etc/passwd ) \
     /root
   do
     if [ "x${DIR}" != "x/" ]
