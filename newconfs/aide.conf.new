@@ -9,6 +9,10 @@ R = R+sha1
 =/home/*                                OwnerMode
 
 # exceptions:
+/etc/resolv.conf			R-m-c-md5-sha1
+/etc/udev$				R-m-c
+/etc/udev/hwdb\.bin			R-m-c-i
+/etc$					R-m-c
 ## hwclock?
 /etc/adjtime				R-m-c-md5-sha1
 ## modified by rc.S
