@@ -3,25 +3,25 @@ database_out=file:/var/lib/aide/aide.db.new
 
 # from Debian:
 OwnerMode = p+u+g+ftype
-R = R+sha1
+R = R+sha256
 
 /boot					R
 =/home/*                                OwnerMode
 
 # exceptions:
-/etc/resolv.conf			R-m-c-md5-sha1
+/etc/resolv.conf			R-m-c-md5-sha256
 /etc/udev$				R-m-c
 /etc/udev/hwdb\.bin			R-m-c-i
 /etc$					R-m-c
 ## hwclock?
-/etc/adjtime				R-m-c-md5-sha1
+/etc/adjtime				R-m-c-md5-sha256
 ## modified by rc.S
 /etc/motd				R-m-c-i
-/etc/random-seed			R-m-c-md5-sha1
+/etc/random-seed			R-m-c-md5-sha256
 ## modified by system:
 /etc/mtab				OwnerMode
 /etc/ld.so.cache			R-m-c-i
-/etc/ntp/drift				R-m-c-i-md5-sha1
+/etc/ntp/drift				R-m-c-i-md5-sha256
 /etc/ntp				R-m-c
 
 /etc					R
