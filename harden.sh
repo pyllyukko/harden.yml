@@ -4,7 +4,7 @@
 # harden.sh -- https://github.com/pyllyukko/harden.sh
 #
 ################################################################################
-if [ ${BASH_VERSINFO[0]} -ne 4 ]
+if (( ${BASH_VERSINFO[0]} != 4 ))
 then
   echo -e "error: bash version != 4, this script might not work properly!" 1>&2
   echo    "       you can bypass this check by commenting out lines $[${LINENO}-2]-$[${LINENO}+2]." 1>&2
@@ -357,11 +357,7 @@ function check_manifest() {
   fgrep "MANIFEST.bz2" CHECKSUMS.md5 | /bin/md5sum -c
   MD5_RET=${PIPESTATUS[1]}
   popd 1>/dev/null
-  if [ ${MD5_RET} -ne 0 ]
-  then
-    return 1
-  fi
-  return 0
+  (( ${MD5_RET} != 0 )) && return 1 || return 0
 } # check_manifest()
 ################################################################################
 function chattr_files_NOT_IN_USE() {
@@ -539,7 +535,7 @@ function import_pgp_keys() {
     chmod -c 644 "${CADIR}/${SKS_HASH}.r0" | tee -a "${logdir}/file_perms.txt"
   fi
   sha512sum -c 0<<<"d0a056251372367230782e050612834a2efa2fdd80eeba08e490a770691e4ddd52a744fd3f3882ca4188f625c3554633381ac90de8ea142519166277cadaf7b0  ${CADIR}/${SKS_CA}" 1>/dev/null
-  if [ ${?} -ne 0 ]
+  if (( ${?} != 0 ))
   then
     echo "${FUNCNAME}(): error: sks-keyservers CA's SHA-512 fingerprint does not match!" 1>&2
     return 1
@@ -584,10 +580,10 @@ function lock_system_accounts() {
     then
       continue
     fi
-    if [ ${uid} -le ${SYS_UID_MAX:-999} ] && [ ${NAME} != 'root' ]
+    if (( ${uid} <= ${SYS_UID_MAX:-999} )) && [ ${NAME} != 'root' ]
     then
       crontab -l -u "${NAME}" 2>&1 | grep -q "^no crontab for"
-      if [ ${PIPESTATUS[1]} -ne 0 ]
+      if (( ${PIPESTATUS[1]} != 0 ))
       then
         echo "${FUNCNAME}(): WARNING: the user \`${NAME}' has some cronjobs! should it be so?" 1>&2
       fi
@@ -646,7 +642,7 @@ function user_accounts() {
     do
       # verify from MANIFEST, that the user account is not being used
       bzcat "${MANIFEST_DIR}/MANIFEST.bz2" | awk '{print$2}' | grep "^${USERID}/"
-      if [ ${PIPESTATUS[2]} -ne 0 ]
+      if (( ${PIPESTATUS[2]} != 0 ))
       then
 	echo "  removing user \`${USERID}'"
         /usr/bin/crontab -d -u	"${USERID}"
@@ -739,7 +735,7 @@ function user_accounts() {
     then
       continue
     fi
-    if [ $uid -ge ${UID_MIN:-1000} ] && [ $uid != 65534 ]
+    if (( $uid >= ${UID_MIN:-1000} )) && (( $uid != 65534 ))
     then
       chage -m ${PASS_MIN_DAYS:-1} -M ${PASS_MAX_DAYS:-365} -W ${PASS_WARN_AGE:-30} $NAME
     fi
@@ -848,7 +844,7 @@ function lock_account() {
     return 1
   fi
   id -u "${1}" &>/dev/null
-  if [ ${?} -ne 0 ]
+  if (( ${?} != 0 ))
   then
     echo "${FUNCNAME}(): no such user!" 1>&2
     return 1
@@ -937,7 +933,7 @@ function check_and_patch() {
     echo "${FUNCNAME}(): testing patch file \`${PATCH_FILE##*/}' with --dry-run"
     /usr/bin/patch -R -d "${DIR_TO_PATCH}" -t -p${P} --dry-run -i "${PATCH_FILE}" | /usr/bin/grep "^\(Unreversed patch detected\|The next patch, when reversed, would delete the file\)"
     PATCH_RET=${PIPESTATUS[0]} GREP_RET=${PIPESTATUS[1]}
-    if [ ${PATCH_RET} -ne 0 ] || [ ${GREP_RET} -eq 0 ]
+    if (( ${PATCH_RET} != 0 )) || (( ${GREP_RET} == 0 ))
     then
       echo "${FUNCNAME}(): error: patch dry-run didn't work out, maybe the patch has already been reversed?" 1>&2
       return 1
@@ -951,7 +947,7 @@ function check_and_patch() {
     # TODO: detect rej? "3 out of 4 hunks FAILED -- saving rejects to file php.ini.rej"
     /usr/bin/patch -d "${DIR_TO_PATCH}" -t -p${P} --dry-run -i "${PATCH_FILE}" | /usr/bin/grep "^\(The next patch would create the file\|Reversed (or previously applied) patch detected\)"
     PATCH_RET=${PIPESTATUS[0]} GREP_RET=${PIPESTATUS[1]}
-    if [ ${PATCH_RET} -ne 0 ] || [ ${GREP_RET} -eq 0 ]
+    if (( ${PATCH_RET} != 0 )) || (( ${GREP_RET} == 0 ))
     then
       echo "${FUNCNAME}(): error: patch dry-run didn't work out, maybe the patch has already been applied?" 1>&2
       return 1
@@ -1554,7 +1550,7 @@ function create_ftpusers() {
     then
       continue
     fi
-    if [ ${uid} -lt 500 ]
+    if (( ${uid} < 500 ))
     then
       # add the name to ftpusers only if it's not already in there.
       # this should work whether the ftpusers file exists already or not.
@@ -1684,7 +1680,7 @@ EOF
   # NOTE: according to slack14.0 CHANGES_AND_HINTS.TXT, blacklist.conf is a
   #       "stale" file.
   #grep -q "^blacklist ipv6$" /etc/modprobe.d/blacklist.conf 2>/dev/null
-  #if [ ${?} -ne 0 ]
+  #if (( ${?} != 0 ))
   #then
   #  echo "# Disable IPv6" 1>>/etc/modprobe.d/blacklist.conf
   #  echo "blacklist ipv6" 1>>/etc/modprobe.d/blacklist.conf
@@ -1829,10 +1825,7 @@ function configure_apache() {
   for module in ${apache_disable_modules_list[*]}
   do
     grep -q "^LoadModule ${module}" /etc/httpd/httpd.conf
-    if [ ${?} -ne 0 ]
-    then
-      continue
-    fi
+    (( ${?} != 0 )) && continue
     if [ "${module:(-1):1}" = "_" ]
     then
       echo "disabling apache modules \`${module}'"
@@ -1969,7 +1962,7 @@ function quick_harden() {
 
   # configure TCP wrappers
   grep -q "^ALL" /etc/hosts.deny
-  if [ ${?} -ne 0 ]
+  if (( ${?} != 0 ))
   then
     echo "ALL: ALL EXCEPT localhost" 1>>/etc/hosts.deny
   fi
@@ -2088,7 +2081,7 @@ function configure_basic_auditing() {
   fi
 
   /sbin/auditctl -l | grep -q "^No rules$"
-  if [ ${PIPESTATUS[1]} -ne 0 ]
+  if (( ${PIPESTATUS[1]} != 0 ))
   then
     echo "${FUNCNAME}(): notice: some rules exist already."
     rules_exist=1
@@ -2110,7 +2103,7 @@ function configure_basic_auditing() {
     stig_rules=( /usr/share/doc/audit-*/stig.rules )
   fi
 
-  if [ ${#stig_rules[*]} -ne 1 ]
+  if (( ${#stig_rules[*]} != 1 ))
   then
     echo "${FUNCNAME}(): error: stig.rules not found!" 1>&2
     return 1
@@ -2194,10 +2187,7 @@ function patch_sendmail() {
 
   local REV=""
 
-  if [ ${#} -eq 1 ]
-  then
-    REV="${1}"
-  fi
+  (( ${#} == 1 )) && REV="${1}"
 
   if [ ! -d "/etc/mail" ]
   then
@@ -2453,7 +2443,7 @@ done
 
 shopt -s nullglob
 logfiles=( ${logdir}/* )
-if [ ${#logfiles[*]} -eq 0 ]
+if (( ${#logfiles[*]} == 0 ))
 then
   echo "no log files created. removing dir."
   rmdir -v "${logdir}"
