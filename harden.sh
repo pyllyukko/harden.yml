@@ -2358,7 +2358,7 @@ do
         ;;
 	"wipe")
 	  check_and_patch /etc wipe.patch 1 reverse
-	  init q
+          /sbin/init q
 	;;
 	*)     echo "error: unknown patch \`${OPTARG}'!" 1>&2				;;
       esac
