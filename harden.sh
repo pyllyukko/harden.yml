@@ -165,37 +165,28 @@ declare -a INETD_SERVICES=(echo discard daytime chargen time ftp telnet comsat s
 INETD_SERVICES+=(pop3 imap2 netbios-ssn netbios-ns)
 
 # more info about these PGP keys:
-#   - http://www.slackbuilds.org/faq/#asc
 #   - http://nmap.org/book/install.html#inst-integrity
 #   - http://www.cipherdyne.org/contact.html
 #   - http://www.openwall.com/signatures/ (295029F1)
 #   - http://www.nongnu.org/tiger/key.html & http://savannah.nongnu.org/users/jfs
 #   - http://www.atagar.com/pgp.php
-#   - http://wiki.centos.org/FAQ/CentOS5#head-3a83196c7a97a7990ca646cbd135fd67198fe812
-#     (centos key here might seem odd, but i want to be able to verify ISO
-#      images i've downloaded)
 #   - https://kismetwireless.net/download.shtml#gpg
 #   - aide:
 #     - http://aide.sourceforge.net/
 #     - http://sourceforge.net/projects/aide/files/PGP%20key/
-#   - http://www.wangafu.net/~nickm/ 8D29319A - Nick Mathewson (libevent)
 #   - https://tails.boum.org/download/index.en.html#verify
 #   - TODO: http://www.snort.org/snort-downloads#pgp
 #   - https://www.kali.org/downloads/
 #   - https://cisofy.com/documentation/lynis/#no-installation
 #   - https://wiki.qubes-os.org/wiki/VerifyingSignatures
 declare -ra PGP_URLS=(
-  "http://www.slackware.com/gpg-key"
-  "http://slackbuilds.org/GPG-KEY"
-  "http://nmap.org/data/nmap_gpgkeys.txt"
+  "https://svn.nmap.org/nmap/docs/nmap_gpgkeys.txt"
   "https://www.cipherdyne.org/signing_key"
   "http://www.openwall.com/signatures/openwall-signatures.asc"
   "https://savannah.nongnu.org/people/viewgpg.php?user_id=7475"
   "https://www.atagar.com/resources/damianJohnson.asc"
-  #"http://mirror.centos.org/centos/RPM-GPG-KEY-CentOS-5"
   "https://www.kismetwireless.net/dragorn.gpg"
   "https://sourceforge.net/projects/aide/files/PGP%20key/aide-2010_0xCBF11FCD.asc/download"
-  "http://www.wangafu.net/~nickm/public_key.asc"
   "https://tails.boum.org/tails-signing.key"
   "https://grsecurity.net/spender-gpg-key.asc"
   "https://sourceforge.net/projects/apcupsd/files/apcupsd%20Public%20Key/Current%20Public%20Key/apcupsd.pub/download"
@@ -206,18 +197,21 @@ declare -ra PGP_URLS=(
 )
 
 # other PGP keys:
+#   Slackware related:
+#
+#   - 0x6A4463C040102233 - http://www.slackbuilds.org/faq/#asc
+#   - 0x0368EF579C7BA3B6 - http://slackbuilds.org/GPG-KEY
 #
 #   metasploit keys:
 
-#   - CEA0A321 - James Lee <egypt@metasploit.com>
-#                (metasploit project signing key)
-#   - 060798CB - HD Moore (2011-10-06) (latest?)
 #   - 2007B954 - metasploit (18.6.2013)
 #
-#
+#   Tor project:
 #   - 28988BF5 - Roger from torproject
 #                https://www.torproject.org/docs/verifying-signatures.html.en
 #   - 19F78451 - -- || --
+#
+#   - 0x21194EBB165733EA - http://www.wangafu.net/~nickm/ 8D29319A - Nick Mathewson (libevent)
 #   - 6980F8B0 - Breno Silva (ModSecurity)
 #   - D679F6CF - Karl Berry <karl@freefriends.org> (gawk)
 #   - BF2EA563 - Fabian Keil, lead developer of privoxy
@@ -268,12 +262,18 @@ declare -ra PGP_URLS=(
 #   - 0xADEF768480316BDA - Kevin McCarthy's key (mutt)
 #   - 0xD94AA3F0EFE21092 - Ubuntu https://help.ubuntu.com/community/VerifyIsoHowto
 declare -ra PGP_KEYS=(
-  #"CEA0A321"
-  #"060798CB"
+  # slackware
+  "0x6A4463C040102233"
+  "0x0368EF579C7BA3B6"
+
+  # metasploit
   "0xCDFB5FA52007B954"
 
+  # tor
   "0xEB5A896A28988BF5"
   "0xC218525819F78451"
+
+  "0x21194EBB165733EA"
   "0x8050C35A6980F8B0"
   "0x9DEB46C0D679F6CF"
   "0x48C5521FBF2EA563"
