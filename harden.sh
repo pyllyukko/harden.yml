@@ -503,7 +503,6 @@ function import_pgp_keys() {
 
   # some CAs that are used with HKPS
   #
-  # https://support.mayfirst.org/wiki/faq/security/mfpl-certificate-authority
   # https://en.wikipedia.org/wiki/Key_server_%28cryptographic%29#Keyserver_examples
   # https://we.riseup.net/riseuplabs+paow/openpgp-best-practices#consider-making-your-default-keyserver-use-a-keyse
   if [ "${USER}" = "root" ] && [ ! -d /usr/share/ca-certificates/local ]
@@ -511,16 +510,6 @@ function import_pgp_keys() {
     # NOTE: update-ca-certificates will add /usr/local/share/ca-certificates/*.crt to globally trusted CAs... which of course, is not good!
     #mkdir -pvm 755 /usr/local/share/ca-certificates
     mkdir -pvm 755 /usr/share/ca-certificates/local
-  fi
-  # TODO: these are not verified, as we need to get the PGP keys first :)
-  #       but we use sks-keyservers currently anyway, and that is verified.
-  if [ "${USER}" = "root" ] && [ ! -f /usr/share/ca-certificates/local/mfpl.crt ]
-  then
-    wget --append-output="${logdir}/wget-log.txt" -nv --directory-prefix=/usr/share/ca-certificates/local \
-      https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt \
-      https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.dkg.asc \
-      https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.jamie.asc
-    chmod -c 644 /usr/share/ca-certificates/local/mfpl.crt | tee -a "${logdir}/file_perms.txt"
   fi
   if [ "${USER}" = "root" ] && [ ! -f "${CADIR}/${SKS_CA}" ]
   then
