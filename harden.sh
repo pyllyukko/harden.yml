@@ -493,11 +493,18 @@ function import_pgp_keys() {
   local URL
   local PGP_KEY
   local SKS_HASH
+  local schema
 
   echo -n "${FUNCNAME}(): importing PGP keys to ${GPG_KEYRING}"
   # keys with URL
   for URL in ${PGP_URLS[*]}
   do
+    schema="${URL%%:*}"
+    if [ "${schema}" != "https" ]
+    then
+      echo "WARNING: refusing to download PGP key as schema!=https" 1>&2
+      continue
+    fi
     # after importing these keys, we can verify slackware packages with gpgv
     /usr/bin/wget --append-output="${logdir}/wget-log.txt" --tries=5 "${URL}" -nv --output-document=- | gpg --logger-fd 1 --keyring "${GPG_KEYRING}" --no-default-keyring --import - 1>>"${logdir}/pgp_keys.txt"
     echo -n '.'
