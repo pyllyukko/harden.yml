@@ -58,6 +58,21 @@ function log_only() {
 } # log_only()
 ################################################################################
 function create_logndrop_chain() {
+  ##############################################################################
+  # LOG AND DROP PACKETS                                                       #
+  ##############################################################################
+  # Michael_Rash_OSCON_2007.pdf:                                               #
+  #                                                                            #
+  # Iptables Logging Args                                                      #
+  # When building iptables LOG rules:                                          #
+  #                                                                            #
+  # Use --log-ip-options                                                       #
+  # Use --log-tcp-sequence                                                     #
+  # Use --log-tcp-options                                                      #
+  #                                                                            #
+  # More attacks can be detected, and operating                                #
+  # systems can be passively fingerprinted                                     #
+  ##############################################################################
   iptables -N LOGNDROP
   iptables -F LOGNDROP
   iptables \
