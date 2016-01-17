@@ -149,8 +149,6 @@ function start() {
     done
 
     iptables		--table filter --append INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
-    iptables		--table filter --append INPUT -m state --state NEW -j LOGNDROP
-    #log_and_reject "REJECT NEW" "icmp-admin-prohibited" -A INPUT -m state --state NEW
   fi
 
   ##############################################################################
