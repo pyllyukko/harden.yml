@@ -536,7 +536,6 @@ function user_accounts() {
   #
   # TODO: for loop through SYS_UID_MIN - SYS_UID_MAX
   # TODO: groups (or are they even necessary?)
-  # TODO: it still might be too dangerous to just start removing anything. reconsider this.
 
   local -i GRPCK_RET
   local uid
@@ -549,40 +548,6 @@ function user_accounts() {
     echo "${FUNCNAME}(): error: invalid \$DENY_SHELL!" 1>&2
     return 1
   fi
-
-  echo "${FUNCNAME}(): removing unnecessary user accounts"
-
-  # system-hardening-10.2.txt:
-  #
-  # remove user account 'gdm'
-  #   - suggested in system-hardening-10.2.txt
-  #   - gnome was dropped from slackware in v10.2
-  #   - from ftp://ftp.slackware.com/pub/slackware/slackware-10.2/ChangeLog.txt:
-  #     "gnome/*:  Removed from -current"...
-  #
-  # operator:
-  #   - according to LSB Core Specification 4.1 (21.2. User & Group Names, Table 21-2)
-  #     the user 'operator' is optional
-  #   - TODO: at least change home dir
-  #
-  # halt, shutdown & sync:
-  #   "The accounts "halt" and "shutdown" don't work
-  #    by default.  The account "sync" isn't needed."
-  check_manifest && {
-    #for USERID in adm gdm operator halt shutdown sync
-    for USERID in gdm operator
-    do
-      # verify from MANIFEST, that the user account is not being used
-      bzcat "${MANIFEST_DIR}/MANIFEST.bz2" | awk '{print$2}' | grep "^${USERID}/"
-      if [ ${PIPESTATUS[2]} -ne 0 ]
-      then
-	echo "  removing user \`${USERID}'"
-        /usr/bin/crontab -d -u	"${USERID}"
-        /usr/sbin/userdel	"${USERID}"
-	# TODO: kill all processes of the user
-      fi
-    done
-  }
 
   # CUSTOM
 
