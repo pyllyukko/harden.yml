@@ -110,6 +110,7 @@ function start() {
   echo "[+] rc.firewall ${FUNCNAME}()"
 
   set_default_policies
+  create_logndrop_chain
 
   ###### INPUT chain ######
 
