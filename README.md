@@ -242,6 +242,7 @@ As a workaround, there is also a new runlevel **2** that can be used to safely r
 * Makes certain log files [append only](http://www.seifried.org/lasg/logging/)
 * Configures basic auditing based on [stig.rules](https://fedorahosted.org/audit/browser/trunk/contrib/stig.rules) if [audit][5] is installed
 * Increase the default log retention period to 26 weeks
+* Increase wtmp log size through logrotate
 
 #### Principle of least privilege
 
