@@ -2100,6 +2100,7 @@ function configure_basic_auditing() {
   # enable it in grub/lilo
   if [ -f /etc/default/grub ] && ! grep -q '^GRUB_CMDLINE_LINUX=".*audit=1' /etc/default/grub
   then
+    # TODO
     #sed -i 's/^\(GRUB_CMDLINE_LINUX=".*\)"$/\1 audit=1"/' /etc/default/grub
     true
   elif [ -f /etc/lilo.conf ] && ! grep -q '^append=".*audit=1' /etc/lilo.conf
