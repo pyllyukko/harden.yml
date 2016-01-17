@@ -1882,11 +1882,11 @@ function disable_unnecessary_services() {
       echo "${FUNCNAME}(): DEBUG: \`${RC}' is not a file -> skipping" 1>&2
       continue
     # leftovers from patch
-    elif [ "${RC(-5):5}" = ".orig" ]
+    elif [ "${RC:(-5):5}" = ".orig" ]
     then
       echo ".orig file -> skipping" 1>&2
       continue
-    elif [ "${RC(-1):1}" = "~" ]
+    elif [ "${RC:(-1):1}" = "~" ]
     then
       echo "tilde file -> skipping" 1>&2
       continue
