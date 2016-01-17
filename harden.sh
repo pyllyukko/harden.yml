@@ -167,7 +167,6 @@ INETD_SERVICES+=(pop3 imap2 netbios-ssn netbios-ns)
 # more info about these PGP keys:
 #   - http://nmap.org/book/install.html#inst-integrity
 #   - http://www.cipherdyne.org/contact.html
-#   - http://www.openwall.com/signatures/ (295029F1)
 #   - http://www.nongnu.org/tiger/key.html & http://savannah.nongnu.org/users/jfs
 #   - http://www.atagar.com/pgp.php
 #   - https://kismetwireless.net/download.shtml#gpg
@@ -182,7 +181,6 @@ INETD_SERVICES+=(pop3 imap2 netbios-ssn netbios-ns)
 declare -ra PGP_URLS=(
   "https://svn.nmap.org/nmap/docs/nmap_gpgkeys.txt"
   "https://www.cipherdyne.org/signing_key"
-  "http://www.openwall.com/signatures/openwall-signatures.asc"
   "https://savannah.nongnu.org/people/viewgpg.php?user_id=7475"
   "https://www.atagar.com/resources/damianJohnson.asc"
   "https://www.kismetwireless.net/dragorn.gpg"
@@ -211,6 +209,7 @@ declare -ra PGP_URLS=(
 #                https://www.torproject.org/docs/verifying-signatures.html.en
 #   - 19F78451 - -- || --
 #
+#   - 0x72B97DB1295029F1 - http://www.openwall.com/signatures/ (295029F1)
 #   - 0x21194EBB165733EA - http://www.wangafu.net/~nickm/ 8D29319A - Nick Mathewson (libevent)
 #   - 6980F8B0 - Breno Silva (ModSecurity)
 #   - D679F6CF - Karl Berry <karl@freefriends.org> (gawk)
@@ -272,6 +271,9 @@ declare -ra PGP_KEYS=(
   # tor
   "0xEB5A896A28988BF5"
   "0xC218525819F78451"
+
+  # openwall
+  "0x72B97DB1295029F1"
 
   "0x21194EBB165733EA"
   "0x8050C35A6980F8B0"
