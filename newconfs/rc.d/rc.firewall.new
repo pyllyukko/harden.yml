@@ -95,6 +95,7 @@ function log_and_drop() {
 ################################################################################
 function create_logndrop_chain() {
   iptables -N LOGNDROP
+  iptables -F LOGNDROP
   iptables \
     -t filter -A LOGNDROP \
     --jump	LOG \
