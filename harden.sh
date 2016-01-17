@@ -364,78 +364,6 @@ function check_manifest() {
   return 0
 } # check_manifest()
 ################################################################################
-function chattr_files_NOT_IN_USE() {
-  # NOTE: not in use, at least not yet.
-
-  local i
-
-  # CIS SN.4 Additional LILO Security
-  chattr +i /etc/lilo.conf
-
-  # system-hardening-10.2.txt: Filesystem
-  for i in $( ls /etc/rc.d )
-  do
-    chattr +i /etc/rc.d/$i
-  done
-  for i in $( ls /etc/httpd )
-  do
-    chattr +i /etc/httpd/$i
-  done
-  for i in $( ls /etc/mail )
-  do
-    chattr +i /etc/mail/$i
-  done
-
-  find / -type f \( -perm -4000 -o -perm -2000 \) -exec chattr +i {} \;
-
-  chattr +i /etc/at.deny
-  chattr +i /etc/exports
-  chattr +i /etc/ftpusers
-  chattr +i /etc/host.conf
-  chattr +i /etc/hosts
-  chattr +i /etc/hosts.allow
-  chattr +i /etc/hosts.deny
-  chattr +i /etc/hosts.equiv
-  chattr +i /etc/hosts.lpd
-  chattr +i "${INETDCONF}"
-  chattr +i /etc/inittab
-  #chattr +i /etc/lilo.conf
-  chattr +i /etc/login.access
-  chattr +i /etc/login.defs
-  chattr +i /etc/named.conf
-  chattr +i /etc/porttime
-  chattr +i /etc/profile
-  chattr +i /etc/protocols
-  chattr +i /etc/securetty
-  chattr +i /etc/services
-  chattr +i /etc/suauth
-  #chattr +i /home/dentonj/.forward
-  #chattr +i /home/dentonj/.netrc
-  #chattr +i /home/dentonj/.rhosts
-  #chattr +i /home/dentonj/.shosts
-  chmod go-rwx /usr/bin/chattr /usr/bin/lsattr
-
-  return
-} # chattr_files()
-################################################################################
-function install_additional_software_NOT_IN_USE() {
-  # TODO:
-  #   - under construction
-  #   - what to do with the "(P)roceed or (Q)uit?:" prompt?
-  if [ -x /usr/sbin/sbopkg ]
-  then
-    # sync the repos
-    /usr/sbin/sbopkg -r || {
-      echo "${FUNCNAME}(): error: error syncing repos!" 1>&2
-      return 1
-    }
-  else
-    echo "${FUNCNAME}(): error: sbopkg not found!" 1>&2
-    return 1
-  fi
-  return
-} # install_additional_software()
-################################################################################
 function disable_inetd_services() {
   # CIS 2.1 Disable Standard Services
   local SERVICE
@@ -1496,14 +1424,6 @@ function file_permissions() {
 
   return 0
 } # file_permissions()
-################################################################################
-function various_checks_NOT_IN_USE() {
-  visudo -c
-  pwck -r
-  grpck -r
-  tcpdchk -v
-  apachectl configtest
-} # various_checks()
 ################################################################################
 function user_home_directories_permissions() {
   # this has been split into it's own function, since it relates to both
