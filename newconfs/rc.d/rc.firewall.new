@@ -149,13 +149,16 @@ function start() {
     done
 
     iptables		--table filter --append INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+  else
+    # INPUTs that we want to explicitly deny when policy!=DROP
+
+    ##############################################################################
+    # reject icmp timestamp requests for a cleaner nessus report=)               #
+    # see CVE-1999-0524 &  http://osvdb.org/94                                   #
+    ##############################################################################
+    log_and_reject "REJECT ICMP Timestamp req" "icmp-admin-prohibited" -A INPUT -p icmp --icmp-type timestamp-request
   fi
 
-  ##############################################################################
-  # reject icmp timestamp requests for a cleaner nessus report=)               #
-  # see CVE-1999-0524 &  http://osvdb.org/94                                   #
-  ##############################################################################
-  log_and_reject "REJECT ICMP Timestamp req" "icmp-admin-prohibited" -A INPUT -p icmp --icmp-type timestamp-request
   ##############################################################################
   # drop replys                                                                #
   ##############################################################################
