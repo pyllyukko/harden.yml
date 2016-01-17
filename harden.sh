@@ -492,13 +492,14 @@ function import_pgp_keys() {
   local PGP_KEY
   local SKS_HASH
 
-  echo "${FUNCNAME}(): importing PGP keys"
+  echo -n "${FUNCNAME}(): importing PGP keys to ${GPG_KEYRING}"
   # keys with URL
   for URL in ${PGP_URLS[*]}
   do
     # after importing these keys, we can verify slackware packages with gpgv
-    /usr/bin/wget --tries=5 "${URL}" -nv --output-document=- | gpg --logger-fd 1 --keyring "${GPG_KEYRING}" --no-default-keyring --import -
-  done | tee "${logdir}/pgp_keys.txt"
+    /usr/bin/wget --append-output="${logdir}/wget-log.txt" --tries=5 "${URL}" -nv --output-document=- | gpg --logger-fd 1 --keyring "${GPG_KEYRING}" --no-default-keyring --import - 1>>"${logdir}/pgp_keys.txt"
+    echo -n '.'
+  done
 
   # some CAs that are used with HKPS
   #
@@ -515,7 +516,7 @@ function import_pgp_keys() {
   #       but we use sks-keyservers currently anyway, and that is verified.
   if [ "${USER}" = "root" ] && [ ! -f /usr/share/ca-certificates/local/mfpl.crt ]
   then
-    wget -nv --directory-prefix=/usr/share/ca-certificates/local \
+    wget --append-output="${logdir}/wget-log.txt" -nv --directory-prefix=/usr/share/ca-certificates/local \
       https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt \
       https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.dkg.asc \
       https://support.mayfirst.org/raw-attachment/wiki/faq/security/mfpl-certificate-authority/mfpl.crt.jamie.asc
@@ -536,10 +537,10 @@ function import_pgp_keys() {
   SKS_HASH=$( openssl x509 -in ${CADIR}/${SKS_CA} -noout -hash )
   if [ -n "${SKS_HASH}" ] && [ "${USER}" = "root" ]
   then
-    wget -nv --ca-certificate=/usr/share/ca-certificates/mozilla/Thawte_Premium_Server_CA.crt https://sks-keyservers.net/ca/crl.pem -O "${CADIR}/${SKS_HASH}.r0"
+    wget --append-output="${logdir}/wget-log.txt" -nv --ca-certificate=/usr/share/ca-certificates/mozilla/Thawte_Premium_Server_CA.crt https://sks-keyservers.net/ca/crl.pem -O "${CADIR}/${SKS_HASH}.r0"
     chmod -c 644 "${CADIR}/${SKS_HASH}.r0" | tee -a "${logdir}/file_perms.txt"
   fi
-  sha512sum -c 0<<<"d0a056251372367230782e050612834a2efa2fdd80eeba08e490a770691e4ddd52a744fd3f3882ca4188f625c3554633381ac90de8ea142519166277cadaf7b0  ${CADIR}/${SKS_CA}"
+  sha512sum -c 0<<<"d0a056251372367230782e050612834a2efa2fdd80eeba08e490a770691e4ddd52a744fd3f3882ca4188f625c3554633381ac90de8ea142519166277cadaf7b0  ${CADIR}/${SKS_CA}" 1>/dev/null
   if [ ${?} -ne 0 ]
   then
     echo "${FUNCNAME}(): error: sks-keyservers CA's SHA-512 fingerprint does not match!" 1>&2
@@ -553,8 +554,10 @@ function import_pgp_keys() {
       --keyserver "hkps://hkps.pool.sks-keyservers.net" \
       --keyserver-options ca-cert-file=${CADIR}/${SKS_CA} \
       --keyring "${GPG_KEYRING}" --no-default-keyring \
-      --recv-keys "${PGP_KEY}"
-  done | tee -a "${logdir}/pgp_keys.txt"
+      --recv-keys "${PGP_KEY}" 1>>"${logdir}/pgp_keys.txt"
+    echo -n '.'
+  done
+  echo -n $'\n'
   return 0
 } # import_pgp_keys()
 ################################################################################
