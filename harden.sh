@@ -1311,10 +1311,10 @@ function file_permissions() {
     # CIS 5.3 handles the permissions, this file shouldn't be readable by all users. it contains sensitive information.
     # NOTE: 10.10.2012: CIS 5.3 commented out
     # rotated files... of course this should be done in logrotate.conf.
-    /usr/bin/chmod -c o-rwx	/var/adm/wtmp
+    /usr/bin/chmod -c o-rwx	/var/log/wtmp
     # make the rotated wtmp files group adm readable
-    /usr/bin/chgrp -c root	/var/adm/wtmp[.-]*
-    /usr/bin/chmod -c 0640	/var/adm/wtmp[.-]*
+    /usr/bin/chgrp -c root	/var/log/wtmp[.-]*
+    /usr/bin/chmod -c 0640	/var/log/wtmp[.-]*
 
     # Nessus CIS_Apache_v2_1.audit "1.19 Updating Ownership and Permissions."
     # ...wtf?
