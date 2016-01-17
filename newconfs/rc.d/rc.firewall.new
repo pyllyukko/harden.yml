@@ -165,8 +165,11 @@ function start() {
   ##############################################################################
   # log other incoming packets                                                 #
   ##############################################################################
-  if (( ! ${BLOCK_INCOMING} ))
+  if (( ${BLOCK_INCOMING} ))
   then
+    # make logging the last rule when policy=DROP
+    log_only "DROP POLICY" -A INPUT
+  else
     log_only "NEW" -A INPUT -m state --state NEW
   fi
 
