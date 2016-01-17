@@ -7,6 +7,7 @@ declare -r INT_IF=""
 declare -r INT_NET=""
 declare -r STATE_FILE="/var/state/iptables.state"
 declare -r BLOCK_INCOMING=0
+declare -r ALLOW_PING=0
 declare -a ALLOWED_TCP_PORTS=()
 declare -a ALLOWED_UDP_PORTS=()
 #declare -r EXT="eth1"
@@ -166,6 +167,10 @@ function start() {
 
   if (( ${BLOCK_INCOMING} ))
   then
+    if (( ${ALLOW_PING} ))
+    then
+      iptables -t filter -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
+    fi
     iptables		--table filter --append INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
   else
     # INPUTs that we want to explicitly deny when policy!=DROP
