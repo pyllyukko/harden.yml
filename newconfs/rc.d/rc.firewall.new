@@ -95,6 +95,7 @@ function log_and_drop() {
 ################################################################################
 function set_default_policies() {
   local CHAIN
+  local INPUT_POLICY
 
   echo "[+] rc.firewall ${FUNCNAME}(): setting the default policies"
 
@@ -110,7 +111,8 @@ function set_default_policies() {
   ##############################################################################
   # default policies                                                           #
   ##############################################################################
-  iptables --table filter --policy INPUT	ACCEPT
+  (( ${BLOCK_INCOMING} )) && INPUT_POLICY="DROP" || INPUT_POLICY="ACCEPT"
+  iptables --table filter --policy INPUT	${INPUT_POLICY}
   iptables --table filter --policy FORWARD	DROP
   iptables --table filter --policy OUTPUT	ACCEPT
 
