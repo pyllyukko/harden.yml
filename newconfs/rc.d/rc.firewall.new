@@ -93,6 +93,19 @@ function log_and_drop() {
   return 0
 } # log_and_drop()
 ################################################################################
+function create_logndrop_chain() {
+  iptables -N LOGNDROP
+  iptables \
+    -t filter -A LOGNDROP \
+    --jump	LOG \
+    --log-prefix	"DROP: " \
+    --log-level		"${LOG_PRIORITY}" \
+    --log-tcp-sequence \
+    --log-tcp-options \
+    --log-ip-options
+  iptables -t filter -A LOGNDROP --jump DROP
+} # create_logndrop_chain()
+################################################################################
 function set_default_policies() {
   local CHAIN
 
