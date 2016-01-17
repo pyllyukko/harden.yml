@@ -11,6 +11,7 @@ declare -a ALLOWED_TCP_PORTS=()
 declare -a ALLOWED_UDP_PORTS=()
 #declare -r EXT="eth1"
 umask 077
+export PATH="/usr/sbin:/sbin:/usr/bin:/bin"
 ################################################################################
 function log_and_reject() {
   # $1 = log-prefix
@@ -113,7 +114,7 @@ function set_default_policies() {
   echo "[+] rc.firewall ${FUNCNAME}(): disabling IPv6 traffic..."
   for CHAIN in INPUT OUTPUT FORWARD
   do
-    /usr/sbin/ip6tables -P "${CHAIN}" DROP
+    ip6tables -P "${CHAIN}" DROP
   done
 
   # TODO: localhost? nmap book page 263?
