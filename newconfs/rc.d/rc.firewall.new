@@ -153,17 +153,19 @@ function start() {
     iptables --table filter --append INPUT -i ${INT_IF} ! -s $INT_NET -j LOGNDROP
   fi
 
+  # allowed ports
+  #   - when BLOCK_INCOMING=0 this will make it so, that these are not logged in the end (state=NEW)
+  for ALLOWED_PORT in ${ALLOWED_TCP_PORTS[*]}
+  do
+    iptables -t filter -A INPUT -p tcp -m tcp --dport ${ALLOWED_PORT} -j ACCEPT
+  done
+  for ALLOWED_PORT in ${ALLOWED_UDP_PORTS[*]}
+  do
+    iptables -t filter -A INPUT -p udp -m udp --dport ${ALLOWED_PORT} -j ACCEPT
+  done
+
   if (( ${BLOCK_INCOMING} ))
   then
-    for ALLOWED_PORT in ${ALLOWED_TCP_PORTS[*]}
-    do
-      iptables -t filter -A INPUT -p tcp -m tcp --dport ${ALLOWED_PORT} -j ACCEPT
-    done
-    for ALLOWED_PORT in ${ALLOWED_UDP_PORTS[*]}
-    do
-      iptables -t filter -A INPUT -p udp -m udp --dport ${ALLOWED_PORT} -j ACCEPT
-    done
-
     iptables		--table filter --append INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
   else
     # INPUTs that we want to explicitly deny when policy!=DROP
