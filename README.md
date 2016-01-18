@@ -366,7 +366,7 @@ TODO
 ### Guides to read
 
 * <http://www.nsa.gov/ia/_files/os/redhat/rhel5-guide-i731.pdf>
-* [UNIX and Linux Security Checklist v3.0](http://www.auscert.org.au/5816]
+* [UNIX and Linux Security Checklist v3.0](http://www.auscert.org.au/5816)
 * <http://www.puschitz.com/SecuringLinux.shtml>
 * <http://linuxgazette.net/issue91/kruk.html>
 * <https://www.sans.org/score/unixchecklist.php>
