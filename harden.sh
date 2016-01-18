@@ -2072,9 +2072,8 @@ function configure_basic_auditing() {
   # enable it in grub/lilo
   if [ -f /etc/default/grub ] && ! grep -q '^GRUB_CMDLINE_LINUX=".*audit=1' /etc/default/grub
   then
-    # TODO
-    #sed -i 's/^\(GRUB_CMDLINE_LINUX=".*\)"$/\1 audit=1"/' /etc/default/grub
-    true
+    sed -i 's/^\(GRUB_CMDLINE_LINUX=".*\)"$/\1 audit=1"/' /etc/default/grub
+    echo "NOTICE: /etc/default/grub updated. you need to run \`update-grub' to update the boot loader."
   elif [ -f /etc/lilo.conf ] && ! grep -q '^append=".*audit=1' /etc/lilo.conf
   then
     sed -i 's/^\(append=".*\)"$/\1 audit=1"/' /etc/lilo.conf
