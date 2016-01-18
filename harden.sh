@@ -675,10 +675,10 @@ function user_accounts() {
 
   # remove sync, shutdown & halt from the root group
   # nogroup comes from Debian, where sync belongs to that group
-  #for NAME in sync shutdown halt
-  #do
-  #  /usr/sbin/usermod -g nogroup "${NAME}"
-  #done
+  for NAME in sync shutdown halt
+  do
+    /usr/sbin/usermod -g nogroup "${NAME}"
+  done
 
   echo "creating groups for grsecurity"
   groupadd -g 1001 grsec_proc
