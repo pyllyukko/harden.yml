@@ -60,6 +60,7 @@ function log_only() {
 } # log_only()
 ################################################################################
 function create_logndrop_chain() {
+  local iptablescmd
   ##############################################################################
   # LOG AND DROP PACKETS                                                       #
   ##############################################################################
@@ -75,17 +76,20 @@ function create_logndrop_chain() {
   # More attacks can be detected, and operating                                #
   # systems can be passively fingerprinted                                     #
   ##############################################################################
-  iptables -N LOGNDROP
-  iptables -F LOGNDROP
-  iptables \
-    -t filter -A LOGNDROP \
-    --jump	LOG \
-    --log-prefix	"DROP: " \
-    --log-level		"${LOG_PRIORITY}" \
-    --log-tcp-sequence \
-    --log-tcp-options \
-    --log-ip-options
-  iptables -t filter -A LOGNDROP --jump DROP
+  for iptablescmd in iptables ip6tables
+  do
+    ${iptablescmd} -N LOGNDROP
+    ${iptablescmd} -F LOGNDROP
+    ${iptablescmd} \
+      -t filter -A LOGNDROP \
+      --jump	LOG \
+      --log-prefix	"DROP: " \
+      --log-level		"${LOG_PRIORITY}" \
+      --log-tcp-sequence \
+      --log-tcp-options \
+      --log-ip-options
+    ${iptablescmd}  -t filter -A LOGNDROP --jump DROP
+  done
 } # create_logndrop_chain()
 ################################################################################
 function set_default_policies() {
