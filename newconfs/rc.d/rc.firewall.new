@@ -216,6 +216,13 @@ function stop() {
   # "There must be no  references  to  the chain" ... so we run this last
   echo "[+] rc.firewall ${FUNCNAME}(): deleting (possible) user-defined chains"
   iptables -X
+  # IPv6
+  TABLES=(`cat /proc/net/ip6_tables_names 2>/dev/null`)
+  for TABLE in ${TABLES[*]}
+  do
+    ip6tables --table "${TABLE}" --flush
+    echo "[+] rc.firewall ${FUNCNAME}(): flushing rules from table ${TABLE} (IPv6)"
+  done
   return ${?}
 } # stop()
 ################################################################################
