@@ -120,6 +120,11 @@ function set_default_policies() {
   for CHAIN in INPUT OUTPUT FORWARD
   do
     ip6tables -P "${CHAIN}" DROP
+    # http://www.cipherdyne.org/psad/docs/fwconfig.html
+    if [ "${CHAIN}" != "OUTPUT" ]
+    then
+      ip6tables -A "${CHAIN}" -j LOG
+    fi
   done
 
   # TODO: localhost? nmap book page 263?
