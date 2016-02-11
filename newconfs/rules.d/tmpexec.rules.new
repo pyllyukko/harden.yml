@@ -1,0 +1,3 @@
+auditctl -w /tmp -p x -k tmp-exec
+auditctl -w /dev/shm -p x -k tmp-exec
+auditctl -w /var/tmp -p x -k tmp-exec
