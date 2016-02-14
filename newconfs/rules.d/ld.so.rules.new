@@ -1,0 +1,2 @@
+-w /etc/ld.so.preload -p wa -k ld.so
+-w /etc/ld.so.conf -p wa -k ld.so
