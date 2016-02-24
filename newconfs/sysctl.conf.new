@@ -54,6 +54,9 @@ fs.suid_dumpable = 0
 # https://secure.wikimedia.org/wikibooks/en/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#Larger_entropy_pools
 #kernel.random.poolsize = 8192
 
+# disallow modifying the LDT (Local Descriptor Table)... "can sometimes be abused to exploit some weaknesses of the architecture, opening new vulnerabilities"
+sys.kernel.modify_ldt = 0
+
 # set this to 1, if you don't want the system to reply to ICMP ECHO requests:
 net.ipv4.icmp_echo_ignore_all = 0
 
