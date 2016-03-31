@@ -59,18 +59,18 @@ fi
 mkdir -v tmp
 
 for PKG in \
-  "a/etc-14.2-${ARCH}-5.txz" \
+  "a/etc-14.2-${ARCH}-6.txz" \
   "n/network-scripts-14.2-noarch-1.txz" \
-  'a/sysvinit-scripts-2.0-noarch-26.txz' \
+  'a/sysvinit-scripts-2.0-noarch-30.txz' \
   "a/sysvinit-functions-8.53-${ARCH}-2.txz" \
   "a/shadow-4.2.1-${ARCH}-1.txz" \
   "a/logrotate-3.8.9-${ARCH}-1.txz" \
   "a/sysklogd-1.5.1-${ARCH}-1.txz" \
-  "ap/sudo-1.8.12-${ARCH}-1.txz" \
+  "ap/sudo-1.8.16-${ARCH}-1.txz" \
   'n/sendmail-cf-8.15.2-noarch-2.txz' \
-  "n/openssh-7.1p1-${ARCH}-1.txz" \
-  "n/php-5.6.15-${ARCH}-1.txz" \
-  "n/httpd-2.4.17-${ARCH}-2.txz"
+  "n/openssh-7.2p2-${ARCH}-1.txz" \
+  "n/php-5.6.19-${ARCH}-1.txz" \
+  "n/httpd-2.4.18-${ARCH}-1.txz"
 do
   PKG_BASEN=$( basename "${PKG}" )
   if [ ! -f "${PKG_BASEN}" ]
