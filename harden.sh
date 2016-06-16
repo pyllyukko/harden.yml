@@ -261,6 +261,7 @@ declare -ra PGP_URLS=(
 #   - 0xADEF768480316BDA - Kevin McCarthy's key (mutt)
 #   - 0xD94AA3F0EFE21092 - Ubuntu https://help.ubuntu.com/community/VerifyIsoHowto
 #   - 0xD1AFBCE00F6C91D2 - DNSSEC Manager <dnssec@iana.org>
+#   - 0xBEA8F6E25378AAF8 - OpenWrt signing key
 declare -ra PGP_KEYS=(
   # slackware
   "0x6A4463C040102233"
@@ -324,6 +325,7 @@ declare -ra PGP_KEYS=(
   "0xADEF768480316BDA"
   "0xD94AA3F0EFE21092"
   "0xD1AFBCE00F6C91D2"
+  "0xBEA8F6E25378AAF8"
 )
 # from CIS Apache HTTP Server 2.4 Benchmark v1.1.0 - 12-03-2013
 # 1.2.3-8
