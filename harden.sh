@@ -1945,23 +1945,30 @@ function apply_newconfs() {
 } # apply_newconfs()
 ################################################################################
 function create_ssh_moduli() {
-  local -a keygen_ret=()
+  local i
+  local length
   if [ -f /etc/ssh/moduli.new ]
   then
     rm -v /etc/ssh/moduli.new
   fi
-  ssh-keygen -G /etc/ssh/moduli.tmp -b 4096
-  keygen_ret+=(${?})
-  ssh-keygen -T /etc/ssh/moduli.new -f /etc/ssh/moduli.tmp
-  keygen_ret+=(${?})
+  for i in 2 3 4 6 7 8
+  do
+    length=$[i*1024]
+    if [ -f "/etc/ssh/moduli-${length}.candidates" ]
+    then
+      rm -v "/etc/ssh/moduli-${length}.candidates"
+    fi
+    ssh-keygen -G /etc/ssh/moduli-${length}.candidates -b ${length}
+    ssh-keygen -T /etc/ssh/moduli-${length} -f /etc/ssh/moduli-${length}.candidates
+    cat /etc/ssh/moduli-${length} 1>>/etc/ssh/moduli.new
+  done
   if [ -f /etc/ssh/moduli.new ]
   then
     echo "moduli.new created:"
     ls -l /etc/ssh/moduli.new
   fi
-  rm -v /etc/ssh/moduli.tmp
 
-  return $[ ${keygen_ret[0]} | ${keygen_ret[1]} ]
+  return 0
 } # create_ssh_moduli()
 ################################################################################
 function toggle_usb_authorized_default() {
