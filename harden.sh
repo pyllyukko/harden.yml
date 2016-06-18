@@ -1944,6 +1944,26 @@ function apply_newconfs() {
   popd 1>/dev/null
 } # apply_newconfs()
 ################################################################################
+function create_ssh_moduli() {
+  local -a keygen_ret=()
+  if [ -f /etc/ssh/moduli.new ]
+  then
+    rm -v /etc/ssh/moduli.new
+  fi
+  ssh-keygen -G /etc/ssh/moduli.tmp -b 4096
+  keygen_ret+=(${?})
+  ssh-keygen -T /etc/ssh/moduli.new -f /etc/ssh/moduli.tmp
+  keygen_ret+=(${?})
+  if [ -f /etc/ssh/moduli.new ]
+  then
+    echo "moduli.new created:"
+    ls -l /etc/ssh/moduli.new
+  fi
+  rm -v /etc/ssh/moduli.tmp
+
+  return $[ ${keygen_ret[0]} | ${keygen_ret[1]} ]
+} # create_ssh_moduli()
+################################################################################
 function toggle_usb_authorized_default() {
   local host
   local state
@@ -2166,6 +2186,7 @@ function usage() {
 	  -g		import Slackware, SBo & other PGP keys to trustedkeys.gpg keyring
 	        	(you might also want to run this as a regular user)
 	  -h		this help
+	  -H		create /etc/ssh/moduli.new
 	  -i		disable inetd services
 	  -l		set failure limits (faillog) (default value: ${FAILURE_LIMIT:-10})
 	  -L user	lock account 'user'
@@ -2220,7 +2241,7 @@ then
   echo -e "warning: you should probably be root to run this script\n" 1>&2
 fi
 
-while getopts "aAbcdfFghilL:mMp:P:qrsSuU" OPTION
+while getopts "aAbcdfFghHilL:mMp:P:qrsSuU" OPTION
 do
   case "${OPTION}" in
     "a") configure_apache		;;
@@ -2272,6 +2293,7 @@ do
       usage
       exit 0
     ;;
+    "H") create_ssh_moduli		;;
     "i") disable_inetd_services		;;
     "l") set_failure_limits		;;
     "L") lock_account "${OPTARG}"	;;
