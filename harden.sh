@@ -1971,6 +1971,29 @@ function create_ssh_moduli() {
   return 0
 } # create_ssh_moduli()
 ################################################################################
+function create_banners() {
+  local owner
+
+  echo "${FUNCNAME}(): creating /etc/issue"
+  cat "${CWD}/newconfs/issue.new"	1>/etc/issue
+  read -p 'company/organization/owner? ' owner
+  sed -i 's/\[insert company name here\]/'"${owner}"'/' /etc/issue
+
+  echo "${FUNCNAME}(): creating /etc/issue.net"
+  cp -vf /etc/issue /etc/issue.net
+  echo "Authorized uses only. All activity may be monitored and reported." 1>>/etc/issue.net
+
+  echo "${FUNCNAME}(): creating /etc/motd"
+  cat "${CWD}/newconfs/motd.new"	1>/etc/motd
+
+  {
+    chown -c root:root /etc/motd /etc/issue /etc/issue.net
+    chmod 644 /etc/motd /etc/issue /etc/issue.net
+  } | tee -a "${logdir}/file_perms.txt"
+
+  return 0
+} # create_banners()
+################################################################################
 function toggle_usb_authorized_default() {
   local host
   local state
@@ -2185,6 +2208,7 @@ function usage() {
 	  		  - hardens file permissions
 	  		  - creates hardened fstab.new
 	  -b		toggle USB authorized_default
+	  -B		create legal banners
 	  -c		create limited CA conf
 	  -d		default hardening (misc_settings() & file_permissions())
 
@@ -2248,7 +2272,7 @@ then
   echo -e "warning: you should probably be root to run this script\n" 1>&2
 fi
 
-while getopts "aAbcdfFghHilL:mMp:P:qrsSuU" OPTION
+while getopts "aAbBcdfFghHilL:mMp:P:qrsSuU" OPTION
 do
   case "${OPTION}" in
     "a") configure_apache		;;
@@ -2287,6 +2311,7 @@ do
       (( ${ETC_CHANGED} )) && restart_services
     ;;
     "b") toggle_usb_authorized_default	;;
+    "B") create_banners			;;
     "c") create_limited_ca_list		;;
     "d")
       # default
