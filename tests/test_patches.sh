@@ -45,7 +45,7 @@ then
 else
   ARCH="i486"
 fi
-SLACKWARE_VERSION="current"
+SLACKWARE_VERSION="14.2"
 JUST_EXPLODE=0
 DRY_RUN="--dry-run"
 declare -a RET_VALUES=()
