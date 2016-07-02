@@ -272,6 +272,7 @@ The test is performed against a setup like this:
 | Date		| Slackware version	                             | Packages installed | Lynis version | Tests performed | Hardening index (before) | Hardening index (after) | harden.sh version                        |
 | ------------- | -------------------------------------------------- | ------------------ | ------------- | --------------- | ------------------------ | ----------------------- | ---------------------------------------- |
 | 24.9.2014	| slackware64-14.1	                             | ~135               | 1.6.2         |                 | 43                       | 68 (+25)                | 155ad8536aed9e30197d645031c72d79ad93f3f4 |
+|  2.7.2016	| slackware64-14.2	                             | ~148               | 2.2.0         | 171             | 53                       |                         |                                          |
 
 Notes
 -----
