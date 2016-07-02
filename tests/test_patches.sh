@@ -65,11 +65,11 @@ for PKG in \
   "a/sysvinit-functions-8.53-${ARCH}-2.txz" \
   "a/shadow-4.2.1-${ARCH}-1.txz" \
   "a/logrotate-3.8.9-${ARCH}-1.txz" \
-  "a/sysklogd-1.5.1-${ARCH}-1.txz" \
+  "a/sysklogd-1.5.1-${ARCH}-2.txz" \
   "ap/sudo-1.8.16-${ARCH}-1.txz" \
   'n/sendmail-cf-8.15.2-noarch-2.txz' \
   "n/openssh-7.2p2-${ARCH}-1.txz" \
-  "n/php-5.6.22-${ARCH}-2.txz" \
+  "n/php-5.6.23-${ARCH}-1.txz" \
   "n/httpd-2.4.20-${ARCH}-1.txz"
 do
   PKG_BASEN=$( basename "${PKG}" )
