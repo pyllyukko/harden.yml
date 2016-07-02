@@ -34,6 +34,7 @@ R = R+sha256
 /sbin					R
 /bin					R
 /usr/games				R
+/usr/local/games			R
 ## libexec : Binaries run by other programs
 /usr/libexec				R
 
