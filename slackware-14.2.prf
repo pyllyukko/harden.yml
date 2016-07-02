@@ -41,7 +41,7 @@ config:show_tool_tips:1:
 # ** Skip one or more specific tests **
 # (always ignores scan mode and will make sure the test is skipped)
 #
-# config:test_skip_always:AAAA-1234 BBBB-5678 CCCC-9012:
+config:test_skip_always:AUTH-9262:
 
 
 # ** Define machine role **
