@@ -1210,12 +1210,6 @@ function file_permissions() {
     # rotated files... of course this should be done in logrotate.conf.
     /usr/bin/chmod -c o-rwx	/var/log/wtmp
 
-    # Nessus CIS_Apache_v2_1.audit "1.19 Updating Ownership and Permissions."
-    # ...wtf?
-    #/usr/bin/chmod -c 0044 /etc/httpd
-
-
-
     ##############################################################################
     # from system-hardening-10.2.txt:
     ##############################################################################
