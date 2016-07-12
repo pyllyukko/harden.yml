@@ -35,13 +35,13 @@ config:show_tool_tips:1:
 # Description: How deep the audit should be
 # Values: light, normal or full (default)
 #
-# config:test_scan_mode:full:
+config:test_scan_mode:full:
 
 
 # ** Skip one or more specific tests **
 # (always ignores scan mode and will make sure the test is skipped)
 #
-config:test_skip_always:AUTH-9262 PKGS-7398:
+config:test_skip_always:AUTH-9262 PKGS-7398 PKGS-7308:
 
 
 # ** Define machine role **
