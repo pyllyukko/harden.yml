@@ -14,7 +14,7 @@
 
 [configuration]
 # Profile name, will be used as title/description
-config:profile_name:Default Audit Template:
+config:profile_name:Slackware 14.2 audit profile:
 
 # Number of seconds to pause between every test (0 is no pause)
 config:pause_between_tests:0:
