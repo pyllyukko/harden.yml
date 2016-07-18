@@ -66,6 +66,7 @@ skip-test=PKGS-7308
 # Skip a particular option within a test (when applicable)
 #skip-test=SSH-7408:loglevel
 #skip-test=SSH-7408:permitrootlogin
+skip-test=SSH-7408:port
 
 # Scan type - how deep the audit should be (light, normal or full)
 test-scan-mode=full
