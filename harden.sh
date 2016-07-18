@@ -230,6 +230,7 @@ declare -ra PGP_URLS=(
 #     0xD3E5F56B6D920D30
 #   - 77F95F95 - Werner Koch <wk@gnupg.org> (gnupg-announce@gnupg.org)
 #   - 0x249B39D24F25E3B6 - Werner Koch (dist sig)
+#   - 0x2071B08A33BD3F06 - NIIBE Yutaka (GnuPG Release Key)
 #   - 54FC8640 - Debian security advisory
 #   - 14595A1A - Renaud Deraison (Nessus)
 #   - 15A0A4BC - Mozilla Software Releases <releases@mozilla.org>
@@ -294,6 +295,7 @@ declare -ra PGP_KEYS=(
   "0xD3E5F56B6D920D30"
   "0x4F0540D577F95F95"
   "0x249B39D24F25E3B6"
+  "0x2071B08A33BD3F06"
   "0x1BF83C5E54FC8640"
   "0xF091044D14595A1A"
   "0x057CC3EB15A0A4BC"
