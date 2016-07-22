@@ -250,6 +250,7 @@ declare -ra PGP_URLS=(
 #   - 0x40B8EA2364221D53 - Sourcefire VRT GPG Key (at least ClamAV)
 #   - 0xBB5869F064EA74AB - Chet Ramey / GNU / Bash
 #   - 0x17167CB4EE3A8EED - https://www.apple.com/support/security/pgp/
+#     0x83A3EF8C346CB446
 #   - 0xB88B2FD43DBDC284 - http://software.opensuse.org/132/en
 #   - 0x24C6A8A7F4A80EB5 - https://www.centos.org/keys/#centos-7-signing-key
 #   - 0x409B6B1796C275462A1703113804BB82D39DC0E3 - RVM https://rvm.io/rvm/security
@@ -315,6 +316,7 @@ declare -ra PGP_KEYS=(
   "0x40B8EA2364221D53"
   "0xBB5869F064EA74AB"
   "0x17167CB4EE3A8EED"
+  "0x83A3EF8C346CB446"
   "0xB88B2FD43DBDC284"
   "0x24C6A8A7F4A80EB5"
   "0x409B6B1796C275462A1703113804BB82D39DC0E3"
