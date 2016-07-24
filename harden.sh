@@ -436,8 +436,13 @@ function import_pgp_keys() {
   local SKS_HASH
   local schema
 
-  echo -n "${FUNCNAME}(): importing PGP keys to ${GPG_KEYRING}"
+  cat 0<<-EOF
+	
+	importing PGP keys
+	------------------
+EOF
   # keys with URL
+  echo -n "from URLs (${#PGP_URLS[*]} keys)"
   for URL in ${PGP_URLS[*]}
   do
     schema="${URL%%:*}"
@@ -450,6 +455,7 @@ function import_pgp_keys() {
     /usr/bin/wget --append-output="${logdir}/wget-log.txt" --tries=5 "${URL}" -nv --output-document=- | gpg --logger-fd 1 --keyring "${GPG_KEYRING}" --no-default-keyring --import - &>>"${logdir}/pgp_keys.txt"
     echo -n '.'
   done
+  echo -n $'\n'
 
   # some CAs that are used with HKPS
   #
@@ -491,6 +497,7 @@ function import_pgp_keys() {
     /usr/bin/dpkg -s gnupg-curl &>/dev/null || echo "WARNING: package \`gnupg-curl' not installed!" 1>&2
   fi
   # keys with key ID
+  echo -n "from keyserver (${#PGP_KEYS[*]} keys)"
   for PGP_KEY in ${PGP_KEYS[*]}
   do
     /usr/bin/gpg \
