@@ -485,6 +485,11 @@ function import_pgp_keys() {
     echo "${FUNCNAME}(): error: sks-keyservers CA's SHA-512 fingerprint does not match!" 1>&2
     return 1
   fi
+  # if the distro is Debian, check if gnupg-curl is installed
+  if [ "${DISTRO}" = "debian" ]
+  then
+    /usr/bin/dpkg -s gnupg-curl &>/dev/null || echo "WARNING: package \`gnupg-curl' not installed!" 1>&2
+  fi
   # keys with key ID
   for PGP_KEY in ${PGP_KEYS[*]}
   do
