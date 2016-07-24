@@ -442,7 +442,7 @@ function import_pgp_keys() {
       continue
     fi
     # after importing these keys, we can verify slackware packages with gpgv
-    /usr/bin/wget --append-output="${logdir}/wget-log.txt" --tries=5 "${URL}" -nv --output-document=- | gpg --logger-fd 1 --keyring "${GPG_KEYRING}" --no-default-keyring --import - 1>>"${logdir}/pgp_keys.txt"
+    /usr/bin/wget --append-output="${logdir}/wget-log.txt" --tries=5 "${URL}" -nv --output-document=- | gpg --logger-fd 1 --keyring "${GPG_KEYRING}" --no-default-keyring --import - &>>"${logdir}/pgp_keys.txt"
     echo -n '.'
   done
 
