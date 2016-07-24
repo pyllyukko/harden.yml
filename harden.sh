@@ -486,7 +486,7 @@ function import_pgp_keys() {
     return 1
   fi
   # if the distro is Debian, check if gnupg-curl is installed
-  if [ "${DISTRO}" = "debian" ]
+  if [ "${DISTRO}" = "debian" -o "${DISTRO}" = "raspbian" ]
   then
     /usr/bin/dpkg -s gnupg-curl &>/dev/null || echo "WARNING: package \`gnupg-curl' not installed!" 1>&2
   fi
