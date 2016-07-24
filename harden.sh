@@ -498,7 +498,7 @@ function import_pgp_keys() {
       --keyserver "hkps://hkps.pool.sks-keyservers.net" \
       --keyserver-options ca-cert-file=${CADIR}/${SKS_CA} \
       --keyring "${GPG_KEYRING}" --no-default-keyring \
-      --recv-keys "${PGP_KEY}" 1>>"${logdir}/pgp_keys.txt"
+      --recv-keys "${PGP_KEY}" &>>"${logdir}/pgp_keys.txt"
     echo -n '.'
   done
   echo -n $'\n'
