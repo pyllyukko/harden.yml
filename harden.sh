@@ -381,23 +381,30 @@ function disable_inetd_services() {
   # CIS 2.1 Disable Standard Services
   local SERVICE
 
+  cat 0<<-EOF
+	
+	disabling inetd services
+	------------------------
+EOF
+
   if [ ! -f "${INETDCONF}" ]
   then
-    echo "${FUNCNAME}(): inetd conf file not found!" 1>&2
+    echo "inetd conf file not found!" 1>&2
     return 0
   fi
-
-  echo "${FUNCNAME}(): disabling inetd services"
 
   if [ ! -f "${INETDCONF}.original" ]
   then
     cp -v "${INETDCONF}" "${INETDCONF}.original"
   fi
 
+  echo -n "modifying ${INETDCONF} (${#INETD_SERVICES[*]} services)"
   for SERVICE in ${INETD_SERVICES[*]}
   do
     sed -i 's/^\('"${SERVICE}"'\)/\#\1/' "${INETDCONF}"
+    echo -n '.'
   done
+  echo -n $'\n'
 
   return
 } # disable_inetd_services()
