@@ -119,6 +119,11 @@ esac
 
 # /PATCHES
 
+# determine distro
+if [ -f /etc/os-release ]
+then
+  DISTRO=$( sed -n '/^ID=/s/^ID=//p' /etc/os-release )
+fi
 declare -r SLACKWARE_VERSION=$( sed 's/^.*[[:space:]]\([0-9]\+\.[0-9]\+\).*$/\1/' /etc/slackware-version 2>/dev/null )
 declare -r ETC_PATCH_FILE="harden_etc-${SLACKWARE_VERSION}.patch"
 # these are not declared as integers cause then the ${ ... :-DEFAULT } syntax won't work(?!)
