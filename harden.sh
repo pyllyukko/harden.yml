@@ -2416,6 +2416,7 @@ done
 
 shopt -s nullglob
 logfiles=( ${logdir}/* )
+echo -n $'\n'
 if [ ${#logfiles[*]} -eq 0 ]
 then
   echo "no log files created. removing dir."
