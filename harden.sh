@@ -804,6 +804,7 @@ function create_additional_user_accounts() {
 
   #groupadd -g 213 -r nagios
   #useradd -u 213 -d /dev/null -s /sbin/nologin -g nagios -r nagios
+  #usermod -G nagios -a apache
 
   groupadd -g 220 -r tor
   useradd  -u 220 -g 220 -e 1970-01-02 -c "The Onion Router" -M -d /var/lib/tor -s ${DENY_SHELL} tor
