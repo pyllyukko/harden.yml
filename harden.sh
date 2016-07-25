@@ -2037,21 +2037,23 @@ function toggle_usb_authorized_default() {
 function configure_basic_auditing() {
   local -a stig_rules=()
   local    concat="/bin/cat"
-  local    rules_exist=0
-  local    dotnew=""
+  local    rule_file
+
+  cat 0<<-EOF
+	
+	configuring basic auditing
+	--------------------------
+EOF
 
   if [ ! -x /sbin/auditctl ]
   then
-    echo "${FUNCNAME}(): error: auditctl not found!" 1>&2
+    echo "error: auditctl not found!" 1>&2
     return 1
   fi
-
-  /sbin/auditctl -l | grep -q "^No rules$"
-  if [ ${PIPESTATUS[1]} -ne 0 ]
+  if [ ! -d /etc/audit/rules.d ]
   then
-    echo "${FUNCNAME}(): notice: some rules exist already."
-    rules_exist=1
-    dotnew=".new"
+    echo "error: rules directory \`/etc/audit/rules.d' does not exist!" 1>&2
+    return 1
   fi
 
   # Debian
@@ -2071,20 +2073,12 @@ function configure_basic_auditing() {
 
   if [ ${#stig_rules[*]} -ne 1 ]
   then
-    echo "${FUNCNAME}(): error: stig.rules not found!" 1>&2
+    echo "error: stig.rules not found!" 1>&2
     return 1
   elif [ ! -f ${stig_rules[0]} ]
   then
-    echo "${FUNCNAME}(): error: stig.rules not found!" 1>&2
+    echo "error: stig.rules not found!" 1>&2
     return 1
-  fi
-
-  echo "${FUNCNAME}(): configuring basic auditing..."
-
-  # backup old rules
-  if [ -f /etc/audit/audit.rules ] && [ ! -f /etc/audit/audit.rules.old ]
-  then
-    cp -v /etc/audit/audit.rules /etc/audit/audit.rules.old
   fi
 
   # fix the audit.rules for Slackware:
@@ -2101,32 +2095,38 @@ function configure_basic_auditing() {
     -e 's:^#\(-w /var/log/\)tallylog\( -p wa -k logins\)$:\1faillog\2:' \
     -e 's:^#\(-w /var/\(run\|log\)/[ubw]tmp -p wa -k session\)$:\1:' \
     -e 's:^#\(.*\(-k \|-F key=\)module.*\)$:\1:' \
-    1>/etc/audit/audit.rules${dotnew}
+    1>/etc/audit/rules.d/stig.rules
 
   # fix the UID_MIN
   if [ -n "${UID_MIN}" ]
   then
-    sed -i "s/auid>=500/auid>=${UID_MIN}/" /etc/audit/audit.rules${dotnew}
+    sed -i "s/auid>=500/auid>=${UID_MIN}/" /etc/audit/rules.d/stig.rules
   fi
 
   # set the correct architecture
   if [[ ${ARCH} =~ ^i.86$ ]]
   then
     # disable x86_64 rules
-    sed -i '/^-.*arch=b64/s/^/#/' /etc/audit/audit.rules${dotnew}
+    sed -i '/^-.*arch=b64/s/^/#/' /etc/audit/rules.d/stig.rules
   elif [ "${ARCH}" = "x86_64" ]
   then
     # disable x86 rules
-    sed -i '/^-.*arch=b32/s/^/#/' /etc/audit/audit.rules${dotnew}
+    sed -i '/^-.*arch=b32/s/^/#/' /etc/audit/rules.d/stig.rules
   fi
 
-  if (( ${rules_exist} ))
+  for rule_file in ld.so tmpexec
+  do
+    /bin/cat "${CWD}/newconfs/rules.d/${rule_file}.rules.new" 1>"/etc/audit/rules.d/${rule_file}.rules"
+  done
+
+  # create /etc/audit/audit.rules with augenrules
+  /sbin/augenrules
+  if [ -f /etc/audit/audit.rules.prev ]
   then
-    echo "${FUNCNAME}(): all done. some rule(s) existed, so you need to review the .new file, move it over and run \"/sbin/auditctl -R audit.rules\" manually."
-    ls -l /etc/audit/audit.rules.new
-  else
-    /sbin/auditctl -R /etc/audit/audit.rules${dotnew}
+    echo "NOTICE: previous audit.rules existed and was copied to audit.rules.prev by augenrules:"
+    ls -l /etc/audit/audit.rules.prev
   fi
+  /sbin/auditctl -R /etc/audit/audit.rules
 
   if [ -f /etc/rc.d/rc.auditd ]
   then
