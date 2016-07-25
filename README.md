@@ -328,6 +328,23 @@ You should also consider running [grsecurity](https://grsecurity.net/). Here's f
 * http://sourceforge.net/p/logwatch/bugs/19/
 * A bug in Metasploit's installer, where it assumes that /bin/bash is the default shell for new users (bug #7666 in some hidden Metasploit Pro tracker)
 
+Post-hardening checklist
+------------------------
+
+After running the hardening script, the following actions still need to be performed manually:
+
+- [ ] Set LILO password
+- Install at least the following additional software:
+  - [ ] [audit](https://slackbuilds.org/repository/14.2/system/audit/) (and run ```harden.sh -S``` afterwards)
+  - [ ] [Aide](https://slackbuilds.org/repository/14.2/system/aide/)
+  - [ ] ClamAV
+  - [ ] arpwatch
+- [ ] Make sure NTP is running
+- [ ] Configure remote log host
+- [ ] Add legit users to:
+  - ```/etc/porttime```
+  - To the ```users``` group
+
 TODO
 ----
 
