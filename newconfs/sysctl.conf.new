@@ -74,7 +74,7 @@ kernel.sysrq = 4
 kernel.dmesg_restrict = 1
 
 # https://www.kernel.org/doc/Documentation/sysctl/kernel.txt
-kernel.kptr_restrict = 1
+kernel.kptr_restrict = 2
 kernel.ctrl-alt-del = 0
 
 # if the client doesn't want to talk to us... :)
