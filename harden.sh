@@ -1849,6 +1849,11 @@ function disable_unnecessary_services() {
 } # disable_unnecessary_services()
 ################################################################################
 function create_limited_ca_list() {
+  cat 0<<-EOF
+	
+	Hardening trusted CA certificates
+	---------------------------------
+EOF
   if [ ! -x /usr/sbin/update-ca-certificates ]
   then
     echo "${FUNCNAME}(): ERROR: update-ca-certificates not found!" 1>&2
