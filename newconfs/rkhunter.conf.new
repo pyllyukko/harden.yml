@@ -577,6 +577,8 @@ PKGMGR=NONE
 SCRIPTWHITELIST=/usr/sbin/adduser
 SCRIPTWHITELIST=/usr/bin/ldd
 SCRIPTWHITELIST=/usr/bin/whatis
+SCRIPTWHITELIST=/bin/egrep
+SCRIPTWHITELIST=/bin/fgrep
 
 #
 # Allow the specified file to have the immutable attribute set.
