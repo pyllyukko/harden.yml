@@ -217,6 +217,7 @@ declare -ra PGP_URLS=(
 #   - 0x72B97DB1295029F1 - http://www.openwall.com/signatures/ (295029F1)
 #   - 0x21194EBB165733EA - http://www.wangafu.net/~nickm/ 8D29319A - Nick Mathewson (libevent)
 #   - 6980F8B0 - Breno Silva (ModSecurity)
+#     0xE6DFB08CE8B11277 - Felipe "Zimmerle" Costa
 #   - D679F6CF - Karl Berry <karl@freefriends.org> (gawk)
 #   - BF2EA563 - Fabian Keil, lead developer of privoxy
 #   - 63FEE659 - Erinn Clark (Tor Browser Bundles)
@@ -286,6 +287,7 @@ declare -ra PGP_KEYS=(
 
   "0x21194EBB165733EA"
   "0x8050C35A6980F8B0"
+  "0xE6DFB08CE8B11277"
   "0x9DEB46C0D679F6CF"
   "0x48C5521FBF2EA563"
   "0x416F061063FEE659"
