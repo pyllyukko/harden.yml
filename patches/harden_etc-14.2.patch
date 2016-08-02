@@ -789,10 +789,10 @@ index 65b358b..185de1c 100755
 +  /etc/rc.d/rc.static_arp start
 +fi
 diff --git a/rc.d/rc.syslog b/rc.d/rc.syslog
-index 830ba4c..69e3738 100755
+index 830ba4c..2c821de 100755
 --- a/rc.d/rc.syslog
 +++ b/rc.d/rc.syslog
-@@ -3,7 +3,22 @@
+@@ -3,7 +3,21 @@
  #
  # Written for Slackware Linux by Patrick J. Volkerding <volkerdi@slackware.com>.
  
@@ -810,7 +810,6 @@ index 830ba4c..69e3738 100755
 +}
 +
  syslogd_start() {
-+  umask 077
 +  create_xconsole
    if [ -x /usr/sbin/syslogd -a -x /usr/sbin/klogd ]; then
      echo -n "Starting sysklogd daemons:  "
