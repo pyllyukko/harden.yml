@@ -2214,6 +2214,80 @@ function patch_sendmail() {
   return 0
 } # patch_sendmail()
 ################################################################################
+function check_integrity() {
+  local manifest="${MANIFEST_DIR}/MANIFEST.bz2"
+  local I
+  local FULL_PERM
+  local OWNER_GROUP
+  local SIZE
+  local PATH_NAME
+  local STAT
+  local local_FULL_PERM
+  local local_OWNER_GROUP
+  local local_size
+
+  check_manifest || return 1
+
+  pushd /
+  I=0
+
+  # partly copied from http://www.slackware.com/%7Ealien/tools/restore_fileperms_from_manifest.sh
+  while read line
+  do
+    if [[ ${line} =~ ^.(.{9})\ ([a-z]+/[a-z]+)\ +([0-9]+)\ [0-9]{4}-[0-9]{2}-[0-9]{2}\ [0-9]{2}:[0-9]{2}\ (.+)$ ]]
+    then
+      FULL_PERM="${BASH_REMATCH[1]}"
+      OWNER_GROUP="${BASH_REMATCH[2]//\//:}"
+      SIZE="${BASH_REMATCH[3]}"
+      PATH_NAME="${BASH_REMATCH[4]}"
+    fi
+
+    if [ ! -e "${PATH_NAME}" ]
+    then
+      continue
+    # if it's a link -> skip
+    elif [ -h "${PATH_NAME}" ]
+    then
+      continue
+    fi
+
+    STAT=( $( stat -c"%A %U:%G %s" "${PATH_NAME}" ) )
+    local_FULL_PERM="${STAT[0]:1:9}"
+    local_OWNER_GROUP="${STAT[1]}"
+    local_size="${STAT[2]}"
+
+    if [ -z "${local_OWNER_GROUP}" -o -z "${local_FULL_PERM}" ]
+    then
+      continue
+    fi
+
+    if [ \
+      "${FULL_PERM}"	!= "${local_FULL_PERM}" -o \
+      "${OWNER_GROUP}"	!= "${local_OWNER_GROUP}" ]
+    then
+      echo "Path: ${PATH_NAME}"
+      if [ "${FULL_PERM}" != "${local_FULL_PERM}" ]
+      then
+        printf " %-9s: %-33s, %s\n" "Perm" "${FULL_PERM}" "${local_FULL_PERM}"
+      fi
+      if [ "${OWNER_GROUP}" != "${local_OWNER_GROUP}" ]
+      then
+        printf " %-9s: %-33s, %s\n" "Owner" "${OWNER_GROUP}" "${local_OWNER_GROUP}"
+      fi
+      # the file sizes change during updates, so this is commented out for now...
+      #if [ ${local_size} -ne 0 -a ${SIZE} -ne ${local_size} ]
+      #then
+      #  printf " %-9s: %-33s, %s\n" "Size" ${SIZE} ${local_size}
+      #fi
+      echo -n $'\n'
+    fi
+    ((I++))
+  done 0< <(bzgrep -E "^[d-]" "${manifest}" | sort | uniq)
+  echo "${I} paths checked"
+
+  popd
+} # check_integrity()
+################################################################################
 function usage() {
   cat 0<<-EOF
 	harden.sh -- system hardening script for slackware linux
@@ -2247,6 +2321,7 @@ function usage() {
 	  -h		this help
 	  -H		create /etc/ssh/moduli.new
 	  -i		disable inetd services
+	  -I		check Slackware installation's integrity from MANIFEST (owner & permission)
 	  -l		set failure limits (faillog) (default value: ${FAILURE_LIMIT:-10})
 	  -L user	lock account 'user'
 	  -m		miscellaneous (TODO: remove this? default handles all this)
@@ -2300,7 +2375,7 @@ then
   echo -e "warning: you should probably be root to run this script\n" 1>&2
 fi
 
-while getopts "aAbBcdfFghHilL:mMp:P:qrsSuU" OPTION
+while getopts "aAbBcdfFghHiIlL:mMp:P:qrsSuU" OPTION
 do
   case "${OPTION}" in
     "a") configure_apache		;;
@@ -2355,6 +2430,7 @@ do
     ;;
     "H") create_ssh_moduli		;;
     "i") disable_inetd_services		;;
+    "I") check_integrity		;;
     "l") set_failure_limits		;;
     "L") lock_account "${OPTARG}"	;;
     "m")
