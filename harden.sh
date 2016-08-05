@@ -367,7 +367,7 @@ function check_manifest() {
   then
     return 1
   fi
-  /usr/bin/gpgv "${MANIFEST_DIR}/CHECKSUMS.md5.asc" || return 1
+  /usr/bin/gpgv "${MANIFEST_DIR}/CHECKSUMS.md5.asc" "${MANIFEST_DIR}/CHECKSUMS.md5" || return 1
   pushd "${MANIFEST_DIR}" 1>/dev/null
   fgrep "MANIFEST.bz2" CHECKSUMS.md5 | /bin/md5sum -c
   MD5_RET=${PIPESTATUS[1]}
