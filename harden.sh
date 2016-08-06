@@ -585,6 +585,12 @@ function user_accounts() {
   local USERID
   local USER_HOME_DIR
 
+  cat 0<<-EOF
+	
+	modifying/hardening current user accounts
+	-----------------------------------------
+EOF
+
   if [ ! -x "${DENY_SHELL}" ]
   then
     echo "${FUNCNAME}(): error: invalid \$DENY_SHELL!" 1>&2
@@ -661,8 +667,6 @@ function user_accounts() {
 
   # modify adduser to use 700 as newly created home dirs permission
   sed -i 's/^defchmod=[0-9]\+\(.*\)$/defchmod=700\1/' /usr/sbin/adduser
-
-  echo "${FUNCNAME}(): modifying/hardening current user accounts"
 
   lock_system_accounts
 
@@ -1499,6 +1503,11 @@ function set_failure_limits() {
   # TODO: how do we reset this after successful login?
   # NOTE: Debian has this under /usr/bin
 
+  cat 0<<-EOF
+	
+	setting failure limits
+	----------------------
+EOF
   echo "${FUNCNAME}(): setting the maximum number of login failures for UIDs ${UID_MIN:-1000}-${UID_MAX:-60000} to ${FAILURE_LIMIT:-10}"
 
   # NOTE: from FAILLOG(8): "The maximum failure count should always be 0 for root to prevent a denial of services attack against the system."
