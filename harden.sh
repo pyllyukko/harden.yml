@@ -26,6 +26,8 @@ for PROGRAM in \
   date \
   gawk \
   grep \
+  bzgrep \
+  fgrep \
   ln \
   mkdir \
   mv \
