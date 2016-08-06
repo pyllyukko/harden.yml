@@ -1680,7 +1680,11 @@ function remove_shells() {
   #     entries are added dynamically from doinst.sh scripts
   local SHELL_TO_REMOVE
 
-  echo "${FUNCNAME}(): removing unnecessary shells"
+  cat 0<<-EOF
+	
+	removing unnecessary shells
+	---------------------------
+EOF
 
   # tcsh csh ash ksh zsh	from Slackware
   # es rc esh dash screen	from Debian
