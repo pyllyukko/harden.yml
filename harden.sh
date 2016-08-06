@@ -2456,15 +2456,11 @@ do
             [ -f "/var/run/sshd.pid" ] && [ -x "/etc/rc.d/rc.sshd" ] && \
 	      /etc/rc.d/rc.sshd restart
 	;;
-	"etc") check_and_patch /etc "${ETC_PATCH_FILE}" 1 && ETC_CHANGED=1 ;;
-        "apache") check_and_patch /etc/httpd "${APACHE_PATCH_FILE}" 3 ;;
-	"sendmail")
-          patch_sendmail
-	;;
-	"php") check_and_patch /etc/httpd php_harden.patch 1 ;;
-        "sudoers")
-          check_and_patch /etc	"${SUDOERS_PATCH_FILE}"	1
-        ;;
+	"etc")		check_and_patch /etc "${ETC_PATCH_FILE}" 1 && ETC_CHANGED=1	;;
+        "apache")	check_and_patch /etc/httpd "${APACHE_PATCH_FILE}" 3		;;
+	"sendmail")	patch_sendmail							;;
+	"php")		check_and_patch /etc/httpd php_harden.patch 1			;;
+        "sudoers")	check_and_patch /etc "${SUDOERS_PATCH_FILE}" 1			;;
 	"wipe")
 	  check_and_patch /etc wipe.patch 1
 	  {
