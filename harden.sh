@@ -2485,18 +2485,16 @@ do
 	    [ -f "/var/run/sshd.pid" ] && [ -x "/etc/rc.d/rc.sshd" ] && \
 	      /etc/rc.d/rc.sshd restart
 	;;
-	"etc") check_and_patch /etc "${ETC_PATCH_FILE}" 1 reverse && ETC_CHANGED=1	;;
-        "apache") check_and_patch /etc/httpd "${APACHE_PATCH_FILE}" 3 reverse		;;
-        "sendmail") patch_sendmail reverse						;;
-	"php") check_and_patch /etc/httpd php_harden.patch 1 reverse			;;
-        "sudoers")
-          check_and_patch /etc	"${SUDOERS_PATCH_FILE}"	1 reverse
-        ;;
+	"etc")		check_and_patch /etc "${ETC_PATCH_FILE}" 1 reverse && ETC_CHANGED=1	;;
+        "apache")	check_and_patch /etc/httpd "${APACHE_PATCH_FILE}" 3 reverse		;;
+        "sendmail")	patch_sendmail reverse							;;
+	"php")		check_and_patch /etc/httpd php_harden.patch 1 reverse			;;
+        "sudoers")	check_and_patch /etc	"${SUDOERS_PATCH_FILE}"	1 reverse		;;
 	"wipe")
 	  check_and_patch /etc wipe.patch 1 reverse
           /sbin/init q
 	;;
-	*)     echo "error: unknown patch \`${OPTARG}'!" 1>&2				;;
+	*)		echo "error: unknown patch \`${OPTARG}'!" 1>&2				;;
       esac
     ;;
     "q") quick_harden			;;
