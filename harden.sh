@@ -526,6 +526,11 @@ function lock_system_accounts() {
   local uid
   local password_status
 
+  cat 0<<-EOF
+	
+	locking system accounts
+	-----------------------
+EOF
   # CIS 8.1 Block System Accounts (modified)
   # CIS 3.4 Disable Standard Boot Services (modified) (the user accounts part)
   #
@@ -548,6 +553,7 @@ function lock_system_accounts() {
     fi
     if [ ${uid} -le ${SYS_UID_MAX:-999} ] && [ ${NAME} != 'root' ]
     then
+      printf "%-10s (UID=%s)\n" "${NAME}" "${uid}"
       crontab -l -u "${NAME}" 2>&1 | grep -q "^no crontab for"
       if [ ${PIPESTATUS[1]} -ne 0 ]
       then
