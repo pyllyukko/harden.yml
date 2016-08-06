@@ -579,7 +579,6 @@ function user_accounts() {
   # TODO: for loop through SYS_UID_MIN - SYS_UID_MAX
   # TODO: groups (or are they even necessary?)
 
-  local -i GRPCK_RET
   local uid
   local NAME
   local USERID
@@ -729,22 +728,13 @@ EOF
   groupadd -g 1007 grsec_audit
 
   # this should create the missing entries to /etc/gshadow
+  cat 0<<-EOF
+	
+	### fixing gshadow
+EOF
   if [ -x /usr/sbin/grpck ]
   then
-    echo "${FUNCNAME}(): running \`grpck -r'"
-    /usr/sbin/grpck -r
-    GRPCK_RET=${?}
-    case "${GRPCK_RET}" in
-      2)
-        echo "${FUNCNAME}(): \`grpck -r' returned ${GRPCK_RET} (\"one or more bad group entries\"). running \`/usr/bin/yes | /usr/sbin/grpck'."
-        # NOTE: this could be dangerous. then again, that is the nature of this whole script.
-        /usr/bin/yes | /usr/sbin/grpck
-        echo "${FUNCNAME}(): grpck returned ${PIPESTATUS[1]}"
-      ;;
-      *)
-        echo "${FUNCNAME}(): \`grpck -r' returned ${GRPCK_RET}"
-      ;;
-    esac
+    /usr/bin/yes | /usr/sbin/grpck
   else
     echo "WARNING: grpck not found!" 1>&2
   fi
