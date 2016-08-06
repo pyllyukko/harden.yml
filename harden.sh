@@ -1860,6 +1860,10 @@ EOF
   then
     echo "${FUNCNAME}(): ERROR: update-ca-certificates not found!" 1>&2
     return 1
+  elif [ ! -f /etc/ca-certificates.conf ]
+  then
+    echo "${FUNCNAME}(): ERROR: /etc/ca-certificates.conf not found!" 1>&2
+    return 1
   fi
   if [ ! -f /etc/ca-certificates.conf.original ]
   then
