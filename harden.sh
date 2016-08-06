@@ -2225,7 +2225,7 @@ function patch_sendmail() {
 } # patch_sendmail()
 ################################################################################
 function check_integrity() {
-  local manifest="${MANIFEST_DIR}/MANIFEST.bz2"
+  local    manifest="${MANIFEST_DIR}/MANIFEST.bz2"
   local -i I=0
   local    FULL_PERM
   local    OWNER_GROUP
