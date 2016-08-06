@@ -2226,20 +2226,19 @@ function patch_sendmail() {
 ################################################################################
 function check_integrity() {
   local manifest="${MANIFEST_DIR}/MANIFEST.bz2"
-  local I
-  local FULL_PERM
-  local OWNER_GROUP
-  local SIZE
-  local PATH_NAME
-  local STAT
-  local local_FULL_PERM
-  local local_OWNER_GROUP
-  local local_size
+  local -i I=0
+  local    FULL_PERM
+  local    OWNER_GROUP
+  local    SIZE
+  local    PATH_NAME
+  local -a STAT=()
+  local    local_FULL_PERM
+  local    local_OWNER_GROUP
+  local    local_size
 
   check_manifest || return 1
 
   pushd /
-  I=0
 
   # partly copied from http://www.slackware.com/%7Ealien/tools/restore_fileperms_from_manifest.sh
   while read line
