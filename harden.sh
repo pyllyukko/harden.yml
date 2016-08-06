@@ -1460,7 +1460,11 @@ function create_ftpusers() {
   # NOTE: this should be run periodically, since it's a blacklist and
   #       additional user accounts might be created after this.
 
-  echo "${FUNCNAME}(): adding to /etc/ftpusers:"
+  cat 0<<-EOF
+	
+	creating /etc/ftpusers
+	------------------------
+EOF
   # get the login names
   for NAME in ${NAMES[*]}
   do
