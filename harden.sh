@@ -1950,6 +1950,8 @@ function quick_harden() {
 
   lock_system_accounts
 
+  configure_securetty
+
   return
 } # quick_harden()
 ################################################################################
@@ -2387,6 +2389,26 @@ EOF
   exit 0
 } # usage()
 ################################################################################
+function configure_securetty() {
+  local i
+  cat 0<<-EOF
+	
+	creating /etc/securetty
+	-----------------------
+EOF
+  {
+    echo "console"
+    for i in {1..6}
+    do
+      echo "tty${i}"
+    done
+  } 1>/etc/securetty
+  {
+    chown -c root:root	/etc/securetty
+    chmod -c 400	/etc/securetty
+  } | tee -a "${logdir}/file_perms.txt"
+} # configure_securetty()
+################################################################################
 
 if [ "${USER}" != "root" ]
 then
@@ -2426,6 +2448,7 @@ do
 
       harden_fstab
       configure_basic_auditing
+      configure_securetty
 
       # TODO: after restarting syslog,
       # there might be new log files with wrong permissions.
