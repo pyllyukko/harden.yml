@@ -932,6 +932,12 @@ function harden_fstab() {
   #   Particular file system in the `/etc/fstab' file, as documented in the
   #   Mount man page (man mount).
 
+  cat 0<<-EOF
+	
+	hardening mount options in fstab
+	--------------------------------
+EOF
+
   if [ ! -w /etc ]
   then
     echo "${FUNCNAME}(): error: /etc is not writable. are you sure you are root?" 1>&2
