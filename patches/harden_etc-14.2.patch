@@ -521,7 +521,7 @@ index 8c5df4d..903299c 100644
 +fi
 +
 diff --git a/rc.d/rc.6 b/rc.d/rc.6
-index 610006b..49d51df 100755
+index 76895ac..aac930d 100755
 --- a/rc.d/rc.6
 +++ b/rc.d/rc.6
 @@ -10,6 +10,13 @@
@@ -539,7 +539,7 @@ index 610006b..49d51df 100755
  PATH=/sbin:/etc:/bin:/usr/bin
  
 diff --git a/rc.d/rc.K b/rc.d/rc.K
-index d47f3df..326a71e 100755
+index 794c82a..532d772 100755
 --- a/rc.d/rc.K
 +++ b/rc.d/rc.K
 @@ -117,5 +117,5 @@ echo
@@ -550,7 +550,7 @@ index d47f3df..326a71e 100755
 +telinit -t 1 S
  
 diff --git a/rc.d/rc.M b/rc.d/rc.M
-index a98716b..f35f76a 100755
+index 1d480ca..0c20ea2 100755
 --- a/rc.d/rc.M
 +++ b/rc.d/rc.M
 @@ -46,6 +46,7 @@ else
@@ -561,7 +561,7 @@ index a98716b..f35f76a 100755
  
  # Initialize PCMCIA devices:
  #
-@@ -125,6 +126,7 @@ fi
+@@ -142,6 +143,7 @@ fi
  # Remove stale locks and junk files (must be done after mount -a!)
  /bin/rm -f /var/lock/* /var/spool/uucp/LCK..* /tmp/.X*lock /tmp/core /core 2> /dev/null
  /bin/rm -rf /var/spool/cron/cron.?????? 2> /dev/null
@@ -569,7 +569,7 @@ index a98716b..f35f76a 100755
  
  # Remove stale hunt sockets so the game can start.
  if [ -r /tmp/hunt -o -r /tmp/hunt.stats ]; then
-@@ -268,16 +270,18 @@ if [ -x /sbin/accton -a -r /var/log/pacct ]; then
+@@ -279,16 +281,18 @@ if [ -x /sbin/accton -a -r /var/log/pacct ]; then
  fi
  
  # Start crond (Dillon's crond):
@@ -594,7 +594,7 @@ index a98716b..f35f76a 100755
  
  # Slackware-Mini-Quota-HOWTO:
  # To really activate quotas, you'll need to add 'usrquota' and/or 'grpquota' to
-@@ -372,4 +376,6 @@ if [ -x /etc/rc.d/rc.local ]; then
+@@ -383,4 +387,6 @@ if [ -x /etc/rc.d/rc.local ]; then
    . /etc/rc.d/rc.local
  fi
  
@@ -602,7 +602,7 @@ index a98716b..f35f76a 100755
 +
  # All done.
 diff --git a/rc.d/rc.S b/rc.d/rc.S
-index 50d5967..8416a13 100755
+index 20064e5..3011d29 100755
 --- a/rc.d/rc.S
 +++ b/rc.d/rc.S
 @@ -5,10 +5,17 @@
@@ -624,7 +624,7 @@ index 50d5967..8416a13 100755
  
  # Mount sysfs next, if the kernel supports it:
  if [ -d /sys ]; then
-@@ -349,6 +356,7 @@ rm -f /var/run/* /var/run/*/* /var/run/*/*/* /etc/nologin \
+@@ -389,6 +396,7 @@ rm -f /var/run/* /var/run/*/* /var/run/*/*/* /etc/nologin \
    /tmp/.Xauth* 1> /dev/null 2> /dev/null
    ( cd /var/log/setup/tmp && rm -rf * )
    ( cd /tmp && rm -rf kde-[a-zA-Z]* ksocket-[a-zA-Z]* hsperfdata_[a-zA-Z]* plugtmp* )
@@ -789,12 +789,12 @@ index 65b358b..185de1c 100755
 +  /etc/rc.d/rc.static_arp start
 +fi
 diff --git a/rc.d/rc.syslog b/rc.d/rc.syslog
-index 830ba4c..2c821de 100755
+index f2b51d5..286e134 100755
 --- a/rc.d/rc.syslog
 +++ b/rc.d/rc.syslog
-@@ -3,7 +3,21 @@
- #
- # Written for Slackware Linux by Patrick J. Volkerding <volkerdi@slackware.com>.
+@@ -13,7 +13,21 @@
+ # '-x' = turn off broken EIP translation
+ KLOGD_OPTIONS="-c 3 -x"
  
 +create_xconsole() {
 +  # this function creates the xconsole named pipe.
@@ -813,7 +813,7 @@ index 830ba4c..2c821de 100755
 +  create_xconsole
    if [ -x /usr/sbin/syslogd -a -x /usr/sbin/klogd ]; then
      echo -n "Starting sysklogd daemons:  "
-     echo -n "/usr/sbin/syslogd "
+     echo -n "/usr/sbin/syslogd ${SYSLOGD_OPTIONS};"
 diff --git a/syslog.conf b/syslog.conf
 index 15bc5ee..a50d779 100644
 --- a/syslog.conf
