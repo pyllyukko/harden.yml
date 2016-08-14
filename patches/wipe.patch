@@ -1,5 +1,5 @@
 diff --git a/inittab b/inittab
-index 1934095..91e598e 100644
+index ba6fe79..ccd9c89 100644
 --- a/inittab
 +++ b/inittab
 @@ -31,7 +31,10 @@ si:S:sysinit:/etc/rc.d/rc.S
@@ -13,7 +13,7 @@ index 1934095..91e598e 100644
 +l5:5:wait:/etc/rc.d/rc.5
  
  # What to do at the "Three Finger Salute".
- # ...as suggested in system-hardening-10.2.txt
+ ca::ctrlaltdel:/sbin/shutdown -t5 -r now
 diff --git a/rc.d/rc.2 b/rc.d/rc.2
 new file mode 100755
 index 0000000..39e3091
@@ -158,11 +158,11 @@ index 0000000..0cadc57
 +
 +  /usr/sbin/cryptsetup luksDump "${luks_device}" | grep "^Key Slot"
 +done
-diff --git a/rc.d/rc5.d/KluksHeaderRestore.sh b/rc.d/rc5.d/KluksHeaderRestore.sh
+diff --git a/rc.d/rc2.d/KluksHeaderRestore.sh b/rc.d/rc2.d/KluksHeaderRestore.sh
 new file mode 100755
 index 0000000..25c4199
 --- /dev/null
-+++ b/rc.d/rc5.d/KluksHeaderRestore.sh
++++ b/rc.d/rc2.d/KluksHeaderRestore.sh
 @@ -0,0 +1,92 @@
 +#!/bin/bash
 +
