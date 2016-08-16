@@ -231,6 +231,7 @@ declare -ra PGP_URLS=(
 #   - 4245D46A - Bradley Spengler (spender) (grsecurity)
 #                https://grsecurity.net/contact.php
 #   - 6092693E - https://www.kernel.org/signature.html
+#     79BE3E4300411886 Linus Torvalds
 #   - DDC6C0AD - https://www.torproject.org/torbutton/
 #   - 1FC730C1 - Bitcoin
 #   - 73647CFF - Nico Golde (Debian Advisories)
@@ -298,6 +299,7 @@ declare -ra PGP_KEYS=(
   "0xC976607D9624FCD2"
   #"4245D46A"
   "0x38DBBDC86092693E"
+  "0x79BE3E4300411886"
   "0x1B0CA30CDDC6C0AD"
   "0x29D9EE6B1FC730C1"
   "0x1D87E54973647CFF"
