@@ -358,7 +358,7 @@ TODO
 * some kernel module configurator thingie for /etc/rc.d/rc.modules
 * [LUKS nuke](http://www.kali.org/how-to/nuke-kali-linux-luks/)
 * Provide the ```trustedkeys.gpg``` PGP keys with this tool?
-* Add some functionality, that compares your current file system against Slackware's [MANIFEST](ftp://ftp.slackware.com/pub/slackware/slackware64-14.1/slackware64/MANIFEST.bz2) (something like Alien's [restore\_fileperms\_from\_manifest.sh](http://www.slackware.com/~alien/tools/restore_fileperms_from_manifest.sh))
+* ~~Add some functionality, that compares your current file system against Slackware's [MANIFEST](ftp://ftp.slackware.com/pub/slackware/slackware64-14.1/slackware64/MANIFEST.bz2) (something like Alien's [restore\_fileperms\_from\_manifest.sh](http://www.slackware.com/~alien/tools/restore_fileperms_from_manifest.sh))~~
   * Some HIDS baseline generation from MANIFEST would also be really nice
 * Add [CCE](https://nvd.nist.gov/cce/index.cfm) references?
 * /usr/bin/ch{mod,own} -> from PATH. since Debian has them under /bin
