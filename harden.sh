@@ -233,7 +233,6 @@ declare -ra PGP_URLS=(
 #   - 6092693E - https://www.kernel.org/signature.html
 #     79BE3E4300411886 Linus Torvalds
 #   - DDC6C0AD - https://www.torproject.org/torbutton/
-#   - 1FC730C1 - Bitcoin
 #   - 73647CFF - Nico Golde (Debian Advisories)
 #   - 86FF9C48 - Damien Miller (Personal Key) <djm@mindrot.org> (OpenSSH)
 #     0xD3E5F56B6D920D30
@@ -301,7 +300,6 @@ declare -ra PGP_KEYS=(
   "0x38DBBDC86092693E"
   "0x79BE3E4300411886"
   "0x1B0CA30CDDC6C0AD"
-  "0x29D9EE6B1FC730C1"
   "0x1D87E54973647CFF"
   "0xCE8ECB0386FF9C48"
   "0xD3E5F56B6D920D30"
