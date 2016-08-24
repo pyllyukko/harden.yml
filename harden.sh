@@ -2415,6 +2415,22 @@ EOF
   } | tee -a "${logdir}/file_perms.txt"
 } # configure_securetty()
 ################################################################################
+function configure_core_dumps() {
+  # slackware uses /etc/limits and is configured through limits.new file
+  cat 0<<-EOF
+	
+	configuring core dumps
+	----------------------
+EOF
+  if [ -f /etc/security/limits.conf ]
+  then
+    echo "[+] /etc/security/limits.conf found"
+    sed -i 's/^#\?\*\( \+\)soft\( \+\)core\( \+\)0$/*\1hard\2core\30/' /etc/security/limits.conf
+  else
+    echo "[-] /etc/security/limits.conf NOT found" 1>&2
+  fi
+} # configure_core_dumps()
+################################################################################
 
 if [ "${USER}" != "root" ]
 then
