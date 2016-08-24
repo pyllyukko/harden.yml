@@ -364,7 +364,7 @@ TODO
 * /usr/bin/ch{mod,own} -> from PATH. since Debian has them under /bin
 * Create ```.preharden``` backups (only once?)
 * Java's CAs
-* Some kind of ```make buildworld``` script to rebuild everything with full RELRO, stack canaries, PIE & ```-D_FORTIFY_SOURCE=2```
+* Some kind of ```make buildworld``` script to rebuild everything with full RELRO, stack canaries, [PIE](https://en.wikipedia.org/wiki/Position-independent_code#Position-independent_executables) & ```-D_FORTIFY_SOURCE=2```
 
 ### Auth/user account related
 
