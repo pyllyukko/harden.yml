@@ -596,61 +596,6 @@ EOF
 
   # CUSTOM
 
-  # result from /usr/sbin/pwck -r
-  #
-  # NOTE: if the packages are added on a later date, the user accounts
-  #       will probably be missing.
-  # WARNING! this might lead to unowned files and directories if some of the
-  #          packages are installed afterwards.
-  # NOTE: user lp shouldn't be removed, few devices are owned by this account
-  #
-  # TODO:
-  #   - these users might still have some files/directories on the system
-  #     we should check that before we remove these users, so we don't
-  #     end up with unowned files/directories
-  #
-  # the home directories exist if the packages are installed:
-  # drwxrwxr-x uucp/uucp         0 1993-08-12 21:18 var/spool/uucppublic/
-  # drwxr-xr-x root/root         0 2010-05-15 13:10 usr/games/
-  # drwxr-xr-x root/root         0 2011-04-04 23:07 home/ftp/
-  # drwxrwx--- smmsp/smmsp       0 2002-02-13 19:21 var/spool/clientmqueue/
-  # drwxr-x--- mysql/mysql       0 2011-04-05 17:33 var/lib/mysql/
-  # drwxr-xr-x root/root         0 2010-12-23 18:46 var/run/dbus/
-  # drwxr-xr-x haldaemon/haldaemon 0 2010-11-16 16:55 var/run/hald/
-  #
-  # NOTE: 25.9.2012: disabled, so we don't get any unowned files.
-  #for NAME in uucp games ftp smmsp mysql messagebus haldaemon
-  #do
-  #  USER_HOME_DIR=$( awk -F':' '$1=="'"${NAME}"'"{print$6}' /etc/passwd )
-
-  #  # this could mean the account is already removed...
-  #  if [ -z "${USER_HOME_DIR}" ]
-  #  then
-  #    echo "${FUNCNAME}(): INFO: user '${NAME}' might have already been removed"
-  #    continue
-  #  fi
-
-  #  if [ ! -d "${USER_HOME_DIR}" ]
-  #  then
-  #    echo "${FUNCNAME}(): DEBUG: user '${NAME}': directory '${USER_HOME_DIR}' does not exist"
-  #    /usr/bin/crontab -d -u	"${NAME}"
-  #    /usr/sbin/userdel		"${NAME}"
-  #    /usr/sbin/groupdel	"${NAME}"
-  #  fi
-  #done
-
-  # on slackware 13.37 the user news has /usr/lib/news as home directory which
-  # does not exist. we use an easy way to determine wether the news clients are
-  # installed.
-  #
-  # NOTE: 25.9.2012: disabled, so we don't get any unowned files.
-  #if [ ! -d "/usr/lib/nn" ] && [ ! -d "/var/spool/slrnpull" ]
-  #then
-  #  /usr/bin/crontab -d -u	news
-  #  /usr/sbin/userdel		news
-  #  /usr/sbin/groupdel		news
-  #fi
-
   # change the defaults. this will update /etc/default/useradd.
   # this makes it so, that when a password of a user expires, the account is
   # locked and the user cannot login anymore.
