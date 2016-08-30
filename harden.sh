@@ -626,20 +626,6 @@ EOF
     fi
   done
 
-  # this satisfies CIS Apache Web Server 2.2.0 Benchmark 1.6 "Creating the Apache User and Group Accounts."
-  # from Nessus CIS_Apache_v2_1.audit
-  # NOTE: 25.9.2012: disabled, for consistency's sake.
-  #/usr/sbin/usermod -d /dev/null -s "${DENY_SHELL}" apache
-
-  # currently (13.1) slackware has this in passwd:
-  #   lp:x:4:7:lp:/var/spool/lpd:/bin/false
-  # lprng had this dir back in 11.0, even then it was in pasture/
-  #   drwx------ lp/lp             0 2006-02-03 04:55 var/spool/lpd/
-  if [ ! -d /var/spool/lpd ] && [ -d /var/spool/cups ]
-  then
-    /usr/sbin/usermod -d /var/spool/cups lp
-  fi
-
   # from README.privsep
   # another less tiger warning (pass016w)
   /usr/sbin/usermod -c 'sshd privsep' -d /var/empty sshd
