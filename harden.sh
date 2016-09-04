@@ -2292,7 +2292,10 @@ function usage() {
 	  -c		create limited CA conf
 	  -d		default hardening (misc_settings() & file_permissions())
 
-	  -f		file permissions
+	  -f function	run a function. available functions:
+	  		file_permissions
+	  		password_policies
+	  		sysctl_harden
 	  -F		create/update /etc/ftpusers
 	  -g		import Slackware, SBo & other PGP keys to trustedkeys.gpg keyring
 	        	(you might also want to run this as a regular user)
@@ -2410,7 +2413,7 @@ then
   echo -e "warning: you should probably be root to run this script\n" 1>&2
 fi
 
-while getopts "aAbBcdfFghHiIlL:mMp:P:qrsSuU" OPTION
+while getopts "aAbBcdf:FghHiIlL:mMp:P:qrsSuU" OPTION
 do
   case "${OPTION}" in
     "a") configure_apache		;;
@@ -2457,7 +2460,13 @@ do
       miscellaneous_settings
       file_permissions
     ;;
-    "f") file_permissions		;;
+    "f")
+      case "${OPTARG}" in
+	"file_permissions")	file_permissions		;;
+	"password_policies")	configure_password_policies	;;
+	"sysctl_harden")	sysctl_harden			;;
+      esac
+    ;;
     "F") create_ftpusers		;;
     "g") import_pgp_keys		;;
     "h")
