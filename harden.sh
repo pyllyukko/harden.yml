@@ -591,7 +591,6 @@ function user_accounts() {
   #
   # NOTE: http://www.redhat.com/archives/nahant-list/2007-March/msg00163.html (good thread about halt & shutdown accounts)
   #
-  # TODO: for loop through SYS_UID_MIN - SYS_UID_MAX
   # TODO: groups (or are they even necessary?)
 
   local uid
