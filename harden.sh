@@ -2441,7 +2441,7 @@ EOF
 
   for policy in ${!PASSWORD_POLICIES[*]}
   do
-    sed -i "s/^\(# \?\)\?\(${policy}\)\(\s\+\)[^\s]\+$/\2\3${PASSWORD_POLICIES[${policy}]}/" /etc/login.defs
+    sed -i "s/^\(# \?\)\?\(${policy}\)\(\s\+\)\S\+$/\2\3${PASSWORD_POLICIES[${policy}]}/" /etc/login.defs
   done
 
   useradd -D -f 35
