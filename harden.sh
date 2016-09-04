@@ -2074,6 +2074,7 @@ EOF
   fi
 
   # set the correct architecture
+  # TODO: armv7l etc.?
   if [[ ${ARCH} =~ ^i.86$ ]]
   then
     # disable x86_64 rules
