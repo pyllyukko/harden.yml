@@ -713,7 +713,7 @@ EOF
   echo "[+] restricting the use of at"
   if [ -s "/etc/at.deny" ] && [ ! -f "/etc/at.allow" ]
   then
-    /usr/bin/rm -v	/etc/at.deny
+    rm -v		/etc/at.deny
     /usr/bin/touch	/etc/at.allow
     {
       chown -c root:daemon	/etc/at.allow
@@ -740,7 +740,7 @@ EOF
       #/usr/bin/chmod -c u-s		/usr/bin/crontab
     } | tee -a "${logdir}/file_perms.txt"
   else
-    /usr/bin/rm -v	/etc/cron.deny
+    rm -v		/etc/cron.deny
     /usr/bin/touch	/etc/cron.allow
     chmod og-rwx	/etc/cron.allow | tee -a "${logdir}/file_perms.txt"
   fi
