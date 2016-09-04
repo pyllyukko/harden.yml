@@ -156,6 +156,13 @@ declare -rA grsec_groups=(
   ["grsec_symlinkown"]=1006
   ["grsec_audit"]=1007
 )
+declare -rA PASSWORD_POLICIES=(
+  ["PASS_MAX_DAYS"]=365
+  ["PASS_MIN_DAYS"]=1
+  ["PASS_WARN_AGE"]=30
+  ["ENCRYPT_METHOD"]="SHA512"
+  ["SHA_CRYPT_MIN_ROUNDS"]=500000
+)
 
 # NOLOGIN(8): "It is intended as a replacement shell field for accounts that have been disabled."
 # Slackware default location:
@@ -2367,6 +2374,27 @@ EOF
     echo "[-] /etc/security/limits.conf NOT found" 1>&2
   fi
 } # configure_core_dumps()
+################################################################################
+function configure_password_policies() {
+  local policy
+
+  cat 0<<-EOF
+	
+	configuring password policies
+	-----------------------------
+EOF
+
+  if [ ! -f /etc/login.defs ]
+  then
+    echo "[-] error: /etc/login.defs not found!" 1>&2
+    return 1
+  fi
+
+  for policy in ${!PASSWORD_POLICIES[*]}
+  do
+    sed -i "s/^\(# \?\)\?\(${policy}\)\(\s\+\).*\+$/\2\3${PASSWORD_POLICIES[${policy}]}/" /etc/login.defs
+  done
+} # configure_password_policies()
 ################################################################################
 
 if [ "${USER}" != "root" ]
