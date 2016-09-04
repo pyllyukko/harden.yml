@@ -163,6 +163,7 @@ declare -rA PASSWORD_POLICIES=(
   ["PASS_WARN_AGE"]=30
   ["ENCRYPT_METHOD"]="SHA512"
   ["SHA_CRYPT_MIN_ROUNDS"]=500000
+  ["UMASK"]="077"
 )
 
 # NOLOGIN(8): "It is intended as a replacement shell field for accounts that have been disabled."
