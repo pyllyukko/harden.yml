@@ -1844,6 +1844,28 @@ EOF
   return
 } # create_limited_ca_list()
 ################################################################################
+function sysctl_harden() {
+  cat 0<<-EOF
+	
+	applying sysctl hardening
+	-------------------------
+EOF
+  if [ -f "${CWD}/newconfs/sysctl.conf.new" ]
+  then
+    if [ -d /etc/sysctl.d ] && [ ! -f /etc/sysctl.d/harden.conf ]
+    then
+      # for debian
+      cat "${CWD}/newconfs/sysctl.conf.new" 1>/etc/sysctl.d/harden.conf
+    else
+      # slackware
+      # TODO: add some check if it's already there.
+      cat "${CWD}/newconfs/sysctl.conf.new" 1>>/etc/sysctl.conf
+    fi
+  else
+    echo "[-] WARNING: sysctl.conf.new not found!" 1>&2
+  fi
+} # sysctl_harden()
+################################################################################
 function quick_harden() {
   # this function is designed to do only some basic hardening. so that it can
   # be used in other systems/version that are not directly supported by this
@@ -1858,21 +1880,7 @@ function quick_harden() {
     echo "ALL: ALL EXCEPT localhost" 1>>/etc/hosts.deny
   fi
 
-  # sysctl.conf
-  if [ -f "${CWD}/newconfs/sysctl.conf.new" ]
-  then
-    if [ -d /etc/sysctl.d ] && [ ! -f /etc/sysctl.d/harden.conf ]
-    then
-      # for debian
-      cat "${CWD}/newconfs/sysctl.conf.new" 1>/etc/sysctl.d/harden.conf
-    else
-      # slackware
-      # TODO: add some check if it's already there.
-      cat "${CWD}/newconfs/sysctl.conf.new" 1>>/etc/sysctl.conf
-    fi
-  else
-    echo "WARNING: sysctl.conf.new not found!" 1>&2
-  fi
+  sysctl_harden
 
   echo "ALL:ALL:DENY" >>/etc/suauth
   {
