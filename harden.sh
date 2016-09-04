@@ -640,7 +640,7 @@ EOF
     fi
     if [ $uid -ge ${UID_MIN:-1000} ] && [ $uid != 65534 ]
     then
-      chage -m ${PASS_MIN_DAYS:-1} -M ${PASS_MAX_DAYS:-365} -W ${PASS_WARN_AGE:-30} $NAME
+      chage -m ${PASS_MIN_DAYS:-7} -M ${PASS_MAX_DAYS:-365} -W ${PASS_WARN_AGE:-30} $NAME
     fi
   done
 
