@@ -25,6 +25,7 @@ for PROGRAM in \
   chown \
   date \
   gawk \
+  getent \
   grep \
   bzgrep \
   fgrep \
