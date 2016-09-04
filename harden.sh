@@ -2439,10 +2439,13 @@ EOF
     return 1
   fi
 
+  cp -v /etc/login.defs /etc/login.defs.old
   for policy in ${!PASSWORD_POLICIES[*]}
   do
     sed -i "s/^\(# \?\)\?\(${policy}\)\(\s\+\)\S\+$/\2\3${PASSWORD_POLICIES[${policy}]}/" /etc/login.defs
   done
+  diff /etc/login.defs.old /etc/login.defs
+  rm -v /etc/login.defs.old
 
   useradd -D -f 35
 
