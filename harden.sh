@@ -686,6 +686,17 @@ EOF
 
   create_ftpusers
 
+  restrict_cron
+
+  return 0
+} # user_accounts()
+################################################################################
+function restrict_cron() {
+  cat 0<<-EOF
+	
+	restricting use of cron & at
+	----------------------------
+EOF
   # CIS 7.5 Restrict at/cron To Authorized Users
   #
   # NOTE: Dillon's cron does not support /etc/cron.{allow,deny}
@@ -699,7 +710,7 @@ EOF
   #
   # Slackware's at package creates /etc/at.deny by default, which has blacklisted users. so we're switching
   # from blacklist to (empty) whitelist.
-  echo "restricting the use of at"
+  echo "[+] restricting the use of at"
   if [ -s "/etc/at.deny" ] && [ ! -f "/etc/at.allow" ]
   then
     /usr/bin/rm -v	/etc/at.deny
@@ -710,8 +721,32 @@ EOF
     } | tee -a "${logdir}/file_perms.txt"
   fi
 
+  echo "[+] restricting the use of cron"
+  # dcron
+  if /usr/sbin/crond -h 2>/dev/null | grep -q ^dillon
+  then
+    {
+      # somewhere along the lines of CIS 7.5 Restrict at/cron To Authorized Users
+      #
+      # the dcron's README describes that the use should be limited by a
+      # designated group (CRONTAB_GROUP) as follows:
+      #   -rwx------  0 root   root    32232 Jan  6 18:58 /usr/local/sbin/crond
+      #   -rwsr-x---  0 root   wheel   15288 Jan  6 18:58 /usr/local/bin/crontab
+      # NOTE: alien uses the wheel group here: http://alien.slackbook.org/dokuwiki/doku.php?id=linux:admin
+      /usr/bin/chmod -c 700	/usr/sbin/crond
+      chgrp -c wheel		/usr/bin/crontab
+      chmod -c 4710		/usr/bin/crontab
+      # this line disables cron from everyone else but root:
+      #/usr/bin/chmod -c u-s		/usr/bin/crontab
+    } | tee -a "${logdir}/file_perms.txt"
+  else
+    /usr/bin/rm -v	/etc/cron.deny
+    /usr/bin/touch	/etc/cron.allow
+    chmod og-rwx	/etc/cron.allow | tee -a "${logdir}/file_perms.txt"
+  fi
+
   return 0
-} # user_accounts()
+} # restrict_cron()
 ################################################################################
 function lock_account() {
   if [ -z "${1}" ]
@@ -1217,19 +1252,6 @@ function file_permissions() {
     #/usr/bin/chmod -c ug-s	/usr/bin/at
     /usr/bin/chmod -c u-s	/usr/bin/chfn
     /usr/bin/chmod -c u-s	/usr/bin/chsh
-
-    # somewhere along the lines of CIS 7.5 Restrict at/cron To Authorized Users
-    #
-    # the dcron's README describes that the use should be limited by a
-    # designated group (CRONTAB_GROUP) as follows:
-    #   -rwx------  0 root   root    32232 Jan  6 18:58 /usr/local/sbin/crond
-    #   -rwsr-x---  0 root   wheel   15288 Jan  6 18:58 /usr/local/bin/crontab
-    # NOTE: alien uses the wheel group here: http://alien.slackbook.org/dokuwiki/doku.php?id=linux:admin
-    /usr/bin/chmod -c 700	/usr/sbin/crond
-    chgrp -c wheel		/usr/bin/crontab
-    chmod -c 4710		/usr/bin/crontab
-    # this line disables cron from everyone else but root:
-    #/usr/bin/chmod -c u-s		/usr/bin/crontab
 
     # NOTE: 9.10.2012: these could actually be needed.
     #/usr/bin/chmod -c u-s		/usr/bin/gpasswd
@@ -2298,6 +2320,7 @@ function usage() {
 	  		core_dumps
 	  		file_permissions
 	  		password_policies
+			restrict_cron
 	  		sysctl_harden
 	  -F		create/update /etc/ftpusers
 	  -g		import Slackware, SBo & other PGP keys to trustedkeys.gpg keyring
@@ -2446,6 +2469,7 @@ do
 
       # these should be the last things to run
       file_permissions
+      restrict_cron
 
       harden_fstab
       configure_basic_auditing
@@ -2468,6 +2492,7 @@ do
 	"core_dumps")		configure_core_dumps		;;
 	"file_permissions")	file_permissions		;;
 	"password_policies")	configure_password_policies	;;
+	"restrict_cron")	restrict_cron			;;
 	"sysctl_harden")	sysctl_harden			;;
       esac
     ;;
