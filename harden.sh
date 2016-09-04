@@ -742,7 +742,15 @@ EOF
   else
     rm -v		/etc/cron.deny
     /usr/bin/touch	/etc/cron.allow
-    chmod og-rwx	/etc/cron.allow | tee -a "${logdir}/file_perms.txt"
+    if getent group crontab 1>/dev/null
+    then
+      chmod og-rwx /etc/cron.allow | tee -a "${logdir}/file_perms.txt"
+    else
+      {
+	chown root:crontab /etc/cron.allow
+	chmod 640 /etc/cron.allow
+      } | tee -a "${logdir}/file_perms.txt"
+    fi
   fi
 
   return 0
