@@ -132,9 +132,9 @@ declare -r ETC_PATCH_FILE="harden_etc-${SLACKWARE_VERSION}.patch"
 # these are not declared as integers cause then the ${ ... :-DEFAULT } syntax won't work(?!)
 declare -r UID_MIN=$(		awk '/^UID_MIN/{print$2}'	/etc/login.defs 2>/dev/null )
 declare -r UID_MAX=$(		awk '/^UID_MAX/{print$2}'	/etc/login.defs 2>/dev/null )
-declare -r PASS_MIN_DAYS=$(	awk '/^PASS_MIN_DAYS/{print$2}'	/etc/login.defs 2>/dev/null )
-declare -r PASS_MAX_DAYS=$(	awk '/^PASS_MAX_DAYS/{print$2}'	/etc/login.defs 2>/dev/null )
-declare -r PASS_WARN_AGE=$(	awk '/^PASS_WARN_AGE/{print$2}'	/etc/login.defs 2>/dev/null )
+declare    PASS_MIN_DAYS=$(	awk '/^PASS_MIN_DAYS/{print$2}'	/etc/login.defs 2>/dev/null )
+declare    PASS_MAX_DAYS=$(	awk '/^PASS_MAX_DAYS/{print$2}'	/etc/login.defs 2>/dev/null )
+declare    PASS_WARN_AGE=$(	awk '/^PASS_WARN_AGE/{print$2}'	/etc/login.defs 2>/dev/null )
 declare -r SYS_UID_MAX=$(	awk '/^SYS_UID_MAX/{print$2}'	/etc/login.defs 2>/dev/null )
 declare -r WWWROOT="/var/www"
 declare -i ETC_CHANGED=0
@@ -2445,6 +2445,10 @@ EOF
   done
 
   useradd -D -f 35
+
+  PASS_MIN_DAYS=$( awk '/^PASS_MIN_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
+  PASS_MAX_DAYS=$( awk '/^PASS_MAX_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
+  PASS_WARN_AGE=$( awk '/^PASS_WARN_AGE/{print$2}' /etc/login.defs 2>/dev/null )
 } # configure_password_policies()
 ################################################################################
 
