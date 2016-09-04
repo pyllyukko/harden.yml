@@ -754,7 +754,7 @@ EOF
     fi
   fi
   echo "[+] restricting /etc/cron{tab,.hourly,.daily,.weekly,.monthly,.d}"
-  /usr/bin/chmod -c og-rwx /etc/cron{tab,.hourly,.daily,.weekly,.monthly,.d} | tee -a "${logdir}/file_perms.txt"
+  chmod -c og-rwx /etc/cron{tab,.hourly,.daily,.weekly,.monthly,.d} | tee -a "${logdir}/file_perms.txt"
 
   return 0
 } # restrict_cron()
