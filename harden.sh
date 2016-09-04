@@ -746,8 +746,8 @@ EOF
     if getent group crontab 1>/dev/null
     then
       {
-	chown -c root:crontab /etc/cron.allow
-	chmod -c 640 /etc/cron.allow
+	chown -c root:crontab	/etc/cron.allow
+	chmod -c 640		/etc/cron.allow
       } | tee -a "${logdir}/file_perms.txt"
     else
       chmod -c og-rwx /etc/cron.allow | tee -a "${logdir}/file_perms.txt"
