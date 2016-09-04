@@ -616,14 +616,14 @@ EOF
 
   # change the defaults. this will update /etc/default/useradd.
   # this makes it so, that when a password of a user expires, the account is
-  # locked and the user cannot login anymore.
+  # locked after 35 days and the user cannot login anymore.
   #
   # WARNING: you don't want to set the EXPIRE (-e), since it's an absolute
   # date, and not relative. it's too easy to create accounts that are already
   # locked.
   #
   # see http://tldp.org/HOWTO/Shadow-Password-HOWTO-7.html#ss7.1
-  useradd -D -f 0
+  useradd -D -f 35
 
   # modify adduser to use 700 as newly created home dirs permission
   sed -i 's/^defchmod=[0-9]\+\(.*\)$/defchmod=700\1/' /usr/sbin/adduser
