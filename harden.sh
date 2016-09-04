@@ -753,6 +753,8 @@ EOF
       chmod -c og-rwx /etc/cron.allow | tee -a "${logdir}/file_perms.txt"
     fi
   fi
+  echo "[+] restricting /etc/cron{tab,.hourly,.daily,.weekly,.monthly,.d}"
+  /usr/bin/chmod -c og-rwx /etc/cron{tab,.hourly,.daily,.weekly,.monthly,.d} | tee -a "${logdir}/file_perms.txt"
 
   return 0
 } # restrict_cron()
@@ -1242,7 +1244,6 @@ function file_permissions() {
 
     # "The file may hold encryption keys in plain text."
     /usr/bin/chmod -c 600	/etc/rc.d/rc.wireless.conf
-    /usr/bin/chmod -cR go-rwx	/etc/cron.*
 
     # "The system startup scripts are world readable by default."
     /usr/bin/chmod -cR go-rwx /etc/rc.d/
