@@ -2295,6 +2295,7 @@ function usage() {
 	  -d		default hardening (misc_settings() & file_permissions())
 
 	  -f function	run a function. available functions:
+	  		core_dumps
 	  		file_permissions
 	  		password_policies
 	  		sysctl_harden
@@ -2464,6 +2465,7 @@ do
     ;;
     "f")
       case "${OPTARG}" in
+	"core_dumps")		configure_core_dumps		;;
 	"file_permissions")	file_permissions		;;
 	"password_policies")	configure_password_policies	;;
 	"sysctl_harden")	sysctl_harden			;;
