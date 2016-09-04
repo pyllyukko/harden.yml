@@ -1856,10 +1856,12 @@ EOF
     then
       # for debian
       cat "${CWD}/newconfs/sysctl.conf.new" 1>/etc/sysctl.d/harden.conf
+      echo "[+] written to /etc/sysctl.d/harden.conf"
     else
       # slackware
       # TODO: add some check if it's already there.
       cat "${CWD}/newconfs/sysctl.conf.new" 1>>/etc/sysctl.conf
+      echo "[+] written to /etc/sysctl.conf"
     fi
   else
     echo "[-] WARNING: sysctl.conf.new not found!" 1>&2
