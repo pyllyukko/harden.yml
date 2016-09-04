@@ -147,6 +147,15 @@ declare -a NAMES=( $( cut -d: -f1 /etc/passwd ) )
 auditPATH='/etc/audit'
 logdir=$( mktemp -p /tmp -d harden.sh.XXXXXX )
 CWD=$( realpath $( dirname "${0}" ) )
+declare -rA grsec_groups=(
+  ["grsec_proc"]=1001
+  ["grsec_sockets"]=1002
+  ["grsec_socketc"]=1003
+  ["grsec_socketall"]=1004
+  ["grsec_tpe"]=1005
+  ["grsec_symlinkown"]=1006
+  ["grsec_audit"]=1007
+)
 
 # NOLOGIN(8): "It is intended as a replacement shell field for accounts that have been disabled."
 # Slackware default location:
@@ -581,6 +590,7 @@ function user_accounts() {
   local NAME
   local USERID
   local USER_HOME_DIR
+  local group
 
   cat 0<<-EOF
 	
@@ -647,14 +657,11 @@ EOF
   # restrict adm group
   #gpasswd -R adm
 
-  echo "creating groups for grsecurity"
-  groupadd -g 1001 grsec_proc
-  groupadd -g 1002 grsec_sockets
-  groupadd -g 1003 grsec_socketc
-  groupadd -g 1004 grsec_socketall
-  groupadd -g 1005 grsec_tpe
-  groupadd -g 1006 grsec_symlinkown
-  groupadd -g 1007 grsec_audit
+  echo "[+] creating groups for grsecurity"
+  for group in ${!grsec_groups[*]}
+  do
+    groupadd -g ${grsec_groups[${group}]} ${group}
+  done
 
   # this should create the missing entries to /etc/gshadow
   cat 0<<-EOF
