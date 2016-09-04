@@ -159,7 +159,7 @@ declare -rA grsec_groups=(
 )
 declare -rA PASSWORD_POLICIES=(
   ["PASS_MAX_DAYS"]=365
-  ["PASS_MIN_DAYS"]=1
+  ["PASS_MIN_DAYS"]=7
   ["PASS_WARN_AGE"]=30
   ["ENCRYPT_METHOD"]="SHA512"
   ["SHA_CRYPT_MIN_ROUNDS"]=500000
