@@ -710,9 +710,9 @@ EOF
   #
   # Slackware's at package creates /etc/at.deny by default, which has blacklisted users. so we're switching
   # from blacklist to (empty) whitelist.
-  echo "[+] restricting the use of at"
   if [ -s "/etc/at.deny" ] && [ ! -f "/etc/at.allow" ]
   then
+    echo "[+] restricting the use of at"
     rm -v		/etc/at.deny
     /usr/bin/touch	/etc/at.allow
     {
