@@ -711,6 +711,8 @@ EOF
   #
   # Slackware's at package creates /etc/at.deny by default, which has blacklisted users. so we're switching
   # from blacklist to (empty) whitelist.
+  #
+  # TODO: check whether debian, red hat etc. bring empty /etc/at.deny with the package
   if [ -s "/etc/at.deny" ] && [ ! -f "/etc/at.allow" ]
   then
     echo "[+] restricting the use of at"
