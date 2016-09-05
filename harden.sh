@@ -165,6 +165,33 @@ declare -rA PASSWORD_POLICIES=(
   ["SHA_CRYPT_MIN_ROUNDS"]=500000
   ["UMASK"]="077"
 )
+declare -rA SSHD_CONFIG=(
+  # from hardening guides
+  ["Protocol"]=2
+  ["LogLevel"]="INFO"
+  ["X11Forwarding"]="no"
+  ["MaxAuthTries"]=4
+  ["IgnoreRhosts"]="yes"
+  ["HostbasedAuthentication"]="no"
+  ["PermitRootLogin"]="no"
+  ["PermitEmptyPasswords"]="no"
+  ["PermitUserEnvironment"]="no"
+  # ciphers
+  # mac
+  ["ClientAliveInterval"]=300
+  ["ClientAliveCountMax"]=0
+  ["LoginGraceTime"]=60
+
+  # custom
+  ["PubkeyAuthentication"]="yes"
+  ["UseLogin"]="no"
+  ["StrictModes"]="yes"
+  ["PrintLastLog"]="yes"
+  ["UsePrivilegeSeparation"]="sandbox"
+  # see http://www.openssh.com/txt/draft-miller-secsh-compression-delayed-00.txt
+  ["Compression"]="delayed"
+  ["AllowTcpForwarding"]="no"
+)
 
 # NOLOGIN(8): "It is intended as a replacement shell field for accounts that have been disabled."
 # Slackware default location:
@@ -2454,6 +2481,24 @@ EOF
   PASS_WARN_AGE=$( awk '/^PASS_WARN_AGE/{print$2}' /etc/login.defs 2>/dev/null )
 } # configure_password_policies()
 ################################################################################
+function configure_sshd() {
+  local setting
+  cat 0<<-EOF
+	
+	configuring sshd
+	----------------
+EOF
+  if [ ! -f /etc/ssh/sshd_config ]
+  then
+    echo "[-] error: /etc/ssh/sshd_config not found!" 1>&2
+    return 1
+  fi
+  for setting in ${!SSHD_CONFIG[*]}
+  do
+    sed -i "s/^\(# \?\)\?\(${setting}\)\(\s\+\)\S\+$/\2\3${SSHD_CONFIG[${setting}]}/" /etc/ssh/sshd_config
+  done
+} # configure_sshd()
+################################################################################
 
 if [ "${USER}" != "root" ]
 then
@@ -2514,6 +2559,7 @@ do
 	"file_permissions")	file_permissions		;;
 	"password_policies")	configure_password_policies	;;
 	"restrict_cron")	restrict_cron			;;
+	"sshd_config")		configure_sshd			;;
 	"sysctl_harden")	sysctl_harden			;;
       esac
     ;;
