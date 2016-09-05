@@ -2556,6 +2556,7 @@ do
     ;;
     "f")
       case "${OPTARG}" in
+	"configure_securetty")	configure_securetty		;;
 	"core_dumps")		configure_core_dumps		;;
 	"file_permissions")	file_permissions		;;
 	"password_policies")	configure_password_policies	;;
