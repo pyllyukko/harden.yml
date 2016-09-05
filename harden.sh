@@ -1859,10 +1859,7 @@ function disable_unnecessary_services() {
 
   echo "${FUNCNAME}(): enabling recommended services"
 
-  # CIS 1.4 Enable System Accounting
-  /usr/bin/chmod -c 700 "${SA_RC}" | tee -a "${logdir}/file_perms.txt"
-  # make it store the data a bit longer =)
-  sed -i 's/^\(HISTORY=\).*$/HISTORY=99999/' /etc/sysstat/sysstat
+  enable_sysstat
 
   # CIS 2.2 Configure TCP Wrappers and Firewall to Limit Access (applied)
   #
@@ -1960,11 +1957,7 @@ function quick_harden() {
 
   harden_fstab
 
-  # enable sysstat in Debian
-  if [ -f /etc/default/sysstat ]
-  then
-    sed -i 's/^ENABLED="false"$/ENABLED="true"/' /etc/default/sysstat
-  fi
+  enable_sysstat
 
   create_limited_ca_list
 
@@ -2500,6 +2493,31 @@ EOF
   chmod -c 600 /etc/ssh/sshd_config | tee -a "${logdir}/file_perms.txt"
 } # configure_sshd()
 ################################################################################
+function enable_sysstat() {
+  cat 0<<-EOF
+	
+	enabling system accounting
+	--------------------------
+EOF
+  if [ -f "${SA_RC}" ]
+  then
+    echo "[+] enabling sysstat through ${SA_RC}"
+    # CIS 1.4 Enable System Accounting
+    /usr/bin/chmod -c 700 "${SA_RC}" | tee -a "${logdir}/file_perms.txt"
+  # enable sysstat in Debian
+  elif [ -f /etc/default/sysstat ]
+  then
+    echo "[+] enabling sysstat through /etc/default/sysstat"
+    sed -i 's/^ENABLED="false"$/ENABLED="true"/' /etc/default/sysstat
+  fi
+  if [ -f /etc/sysstat/sysstat ]
+  then
+    echo "[+] setting HISTORY -> 99999"
+    # make it store the data a bit longer =)
+    sed -i 's/^\(HISTORY=\).*$/HISTORY=99999/' /etc/sysstat/sysstat
+  fi
+} # enable_sysstat()
+################################################################################
 
 if [ "${USER}" != "root" ]
 then
@@ -2558,6 +2576,7 @@ do
       case "${OPTARG}" in
 	"configure_securetty")	configure_securetty		;;
 	"core_dumps")		configure_core_dumps		;;
+	"enable_sysstat")	enable_sysstat			;;
 	"file_permissions")	file_permissions		;;
 	"password_policies")	configure_password_policies	;;
 	"restrict_cron")	restrict_cron			;;
