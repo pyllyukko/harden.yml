@@ -2497,6 +2497,7 @@ EOF
   do
     sed -i "s/^\(# \?\)\?\(${setting}\)\(\s\+\)\S\+$/\2\3${SSHD_CONFIG[${setting}]}/" /etc/ssh/sshd_config
   done
+  chmod -c 600 /etc/ssh/sshd_config | tee -a "${logdir}/file_perms.txt"
 } # configure_sshd()
 ################################################################################
 
