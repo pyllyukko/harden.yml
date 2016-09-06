@@ -2364,10 +2364,14 @@ function usage() {
 	  -d		default hardening (misc_settings() & file_permissions())
 
 	  -f function	run a function. available functions:
+	  		configure_securetty
 	  		core_dumps
+	  		disable_unnecessary_systemd_services
+			enable_sysstat
 	  		file_permissions
 	  		password_policies
 			restrict_cron
+			configure_sshd
 	  		sysctl_harden
 	  -F		create/update /etc/ftpusers
 	  -g		import Slackware, SBo & other PGP keys to trustedkeys.gpg keyring
