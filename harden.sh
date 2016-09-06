@@ -1847,15 +1847,7 @@ function disable_unnecessary_services() {
     /usr/bin/chmod -c 600 "${RC}" | tee -a "${logdir}/file_perms.txt"
   done
 
-  # debian systemd
-  if [ -x /bin/systemctl ]
-  then
-    for service in "avahi-daemon" "atd" "cups" "nfs-common" "exim4"
-    do
-      /bin/systemctl stop	"${service}"
-      /bin/systemctl disable	"${service}"
-    done
-  fi
+  disable_unnecessary_systemd_services
 
   echo "${FUNCNAME}(): enabling recommended services"
 
@@ -1871,6 +1863,29 @@ function disable_unnecessary_services() {
 
   return 0
 } # disable_unnecessary_services()
+################################################################################
+function disable_unnecessary_systemd_services() {
+  local service
+
+  cat 0<<-EOF
+	
+	disabling unnecessary systemd services
+	--------------------------------------
+EOF
+  if [ ! -x /bin/systemctl ]
+  then
+    echo '[-] /bin/systemctl not found!' 1>&2
+    return 1
+  fi
+  for service in atd avahi-daemon bind9 bluetooth cups exim4 hciuart ifup@wlan0 nfs-common vsftpd
+  do
+    if /bin/systemctl is-enabled avahi-daemon 1>/dev/null
+    then
+      /bin/systemctl stop	"${service}"
+    fi
+    /bin/systemctl disable	"${service}"
+  done
+} # disable_unnecessary_systemd_services()
 ################################################################################
 function create_limited_ca_list() {
   cat 0<<-EOF
@@ -2576,6 +2591,7 @@ do
       case "${OPTARG}" in
 	"configure_securetty")	configure_securetty		;;
 	"core_dumps")		configure_core_dumps		;;
+	"disable_unnecessary_systemd_services") disable_unnecessary_systemd_services ;;
 	"enable_sysstat")	enable_sysstat			;;
 	"file_permissions")	file_permissions		;;
 	"password_policies")	configure_password_policies	;;
