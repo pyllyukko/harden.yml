@@ -189,6 +189,8 @@ You can also utilize the above grsec groups with [sudo][11], so the allowed user
 
 Some things are added to cron: **TODO**
 
+* [rkhunter](https://github.com/pyllyukko/harden.sh/blob/master/newconfs/cron.d/rkhunter.new)
+
 ##### sysstat
 
 From [sysstat.crond](https://github.com/sysstat/sysstat/blob/master/cron/sysstat.crond.in):
