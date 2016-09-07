@@ -2539,6 +2539,19 @@ EOF
   diff /etc/login.defs.old /etc/login.defs
   rm -v /etc/login.defs.old
 
+  #if [ -f /etc/libuser.conf ]
+  #then
+  #  # TODO: /etc/libuser.conf "crypt_style = sha512"
+  #  true
+  #fi
+
+  # red hat
+  if [ -x /sbin/authconfig ]
+  then
+    # TODO: other settings
+    /sbin/authconfig --passalgo=sha512 --update
+  fi
+
   useradd -D -f 35
 
   PASS_MIN_DAYS=$( awk '/^PASS_MIN_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
