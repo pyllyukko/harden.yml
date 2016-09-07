@@ -1905,7 +1905,7 @@ EOF
   then
     echo '[+] enabling pam_tally2'
     # insert above first occurance of ^auth
-    sed '/^auth/{
+    sed -i '/^auth/{
       iauth       required   pam_tally2.so     onerr=fail audit silent deny=5 unlock_time=900
       # loop through the rest of the file
       :a
