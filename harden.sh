@@ -1887,6 +1887,58 @@ EOF
   done
 } # disable_unnecessary_systemd_services()
 ################################################################################
+function configure_pam() {
+  cat 0<<-EOF
+	
+	configuring PAM
+	---------------
+EOF
+  if [ ! -d /etc/pam.d ]
+  then
+    echo '[-] /etc/pam.d does not exist!' 1>&2
+    return 1
+  fi
+  # if libpam-passwdqc is installed, it is already configured by pam-auth-update
+
+  # enable faillog
+  if [ -f /etc/pam.d/login ] && ! grep -q "pam_tally2" /etc/pam.d/login
+  then
+    echo '[+] enabling pam_tally2'
+    # insert above first occurance of ^auth
+    sed '/^auth/{
+      iauth       required   pam_tally2.so     onerr=fail audit silent deny=5 unlock_time=900
+      # loop through the rest of the file
+      :a
+      $!{
+        # Read the next line of input into the pattern space
+        n
+        # Branch to label a
+        ba
+      }
+    }' /etc/pam.d/login
+  fi
+  # limit password reuse
+  # debian
+  if [ -f /etc/pam.d/common-password ] && ! grep -q "^password.*pam_unix\.so.*remember" /etc/pam.d/common-password
+  then
+    echo '[+] limiting password reuse in /etc/pam.d/common-password'
+    sed -i 's/^\(password.*pam_unix\.so.*\)$/\1 remember=5/' /etc/pam.d/common-password
+  # red hat
+  # NOTE: this should be done in different way, as these configs are wiped by authconfig
+  elif [ -f /etc/pam.d/password-auth -a -f /etc/pam.d/system-auth ] && \
+    ! grep -q "^password.*pam_unix\.so.*remember" /etc/pam.d/password-auth && ! grep -q "^password.*pam_unix\.so.*remember" /etc/pam.d/system-auth
+  then
+    # TODO: remove nullok?
+    echo '[+] limiting password reuse /etc/pam.d/password-auth & /etc/pam.d/system-auth'
+    sed -i 's/^\(password.*pam_unix\.so.*\)$/\1 remember=5/' /etc/pam.d/password-auth /etc/pam.d/system-auth
+  fi
+  #if [ -f /etc/passwdqc.conf ]
+  #then
+  #  # TODO
+  #  true
+  #fi
+} # configure_pam()
+################################################################################
 function create_limited_ca_list() {
   cat 0<<-EOF
 	
@@ -2364,6 +2416,7 @@ function usage() {
 	  -d		default hardening (misc_settings() & file_permissions())
 
 	  -f function	run a function. available functions:
+	  		configure_pam
 	  		configure_securetty
 	  		core_dumps
 	  		disable_unnecessary_systemd_services
@@ -2593,6 +2646,7 @@ do
     ;;
     "f")
       case "${OPTARG}" in
+	"configure_pam")	configure_pam			;;
 	"configure_securetty")	configure_securetty		;;
 	"core_dumps")		configure_core_dumps		;;
 	"disable_unnecessary_systemd_services") disable_unnecessary_systemd_services ;;
