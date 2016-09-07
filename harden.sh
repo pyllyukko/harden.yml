@@ -2552,6 +2552,12 @@ EOF
     /sbin/authconfig --passalgo=sha512 --update
   fi
 
+  #if [ -f /etc/security/pwquality.conf ]
+  #then
+  #  # TODO
+  #  true
+  #fi
+
   useradd -D -f 35
 
   PASS_MIN_DAYS=$( awk '/^PASS_MIN_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
