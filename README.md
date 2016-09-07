@@ -241,6 +241,7 @@ As a workaround, there is also a new runlevel **2** that can be used to safely r
 * Enables ```bootlogd```
 * Makes certain log files [append only](http://www.seifried.org/lasg/logging/)
 * Configures basic auditing based on [stig.rules](https://fedorahosted.org/audit/browser/trunk/contrib/stig.rules) if [audit][5] is installed
+  * NOTE: non-PAM systems don't set the ```loginuid``` properly, so some of the rules don't work when they have ```-F auid!=4294967295```
 * Increase the default log retention period to 26 weeks
 * Increase wtmp log size through logrotate
 
