@@ -1932,6 +1932,11 @@ EOF
     echo '[+] limiting password reuse /etc/pam.d/password-auth & /etc/pam.d/system-auth'
     sed -i 's/^\(password.*pam_unix\.so.*\)$/\1 remember=5/' /etc/pam.d/password-auth /etc/pam.d/system-auth
   fi
+  if [ -f /etc/pam.d/su ] && ! grep -q "^auth.*required.*pam_wheel\.so" /etc/pam.d/su
+  then
+    echo '[+] configuring pam_wheel.so'
+    sed -i 's/^#\s\?\(auth\s\+required\s\+pam_wheel\.so\(\s\+use_uid\)\?\)$/\1/p' /etc/pam.d/su
+  fi
   #if [ -f /etc/passwdqc.conf ]
   #then
   #  # TODO
