@@ -2587,6 +2587,11 @@ EOF
     echo "[+] setting HISTORY -> 99999"
     # make it store the data a bit longer =)
     sed -i 's/^\(HISTORY=\).*$/HISTORY=99999/' /etc/sysstat/sysstat
+  # red hat
+  elif [ -f /etc/sysconfig/sysstat ]
+  then
+    echo "[+] setting HISTORY -> 99999"
+    sed -i 's/^\(HISTORY=\).*$/HISTORY=99999/' /etc/sysconfig/sysstat
   fi
 } # enable_sysstat()
 ################################################################################
