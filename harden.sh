@@ -1935,7 +1935,7 @@ EOF
   if [ -f /etc/pam.d/su ] && ! grep -q "^auth.*required.*pam_wheel\.so" /etc/pam.d/su
   then
     echo '[+] configuring pam_wheel.so'
-    sed -i 's/^#\s\?\(auth\s\+required\s\+pam_wheel\.so\(\s\+use_uid\)\?\)$/\1/p' /etc/pam.d/su
+    sed -i 's/^#\s\?\(auth\s\+required\s\+pam_wheel\.so\(\s\+use_uid\)\?\)$/\1/' /etc/pam.d/su
   fi
   #if [ -f /etc/passwdqc.conf ]
   #then
