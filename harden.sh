@@ -2237,10 +2237,10 @@ EOF
   then
     # disable x86_64 rules
     sed -i '/^-.*arch=b64/s/^/#/' /etc/audit/rules.d/stig.rules
-  elif [ "${ARCH}" = "x86_64" ]
-  then
-    # disable x86 rules
-    sed -i '/^-.*arch=b32/s/^/#/' /etc/audit/rules.d/stig.rules
+  #elif [ "${ARCH}" = "x86_64" ]
+  #then
+  #  # disable x86 rules
+  #  sed -i '/^-.*arch=b32/s/^/#/' /etc/audit/rules.d/stig.rules
   fi
 
   for rule_file in ld.so tmpexec
