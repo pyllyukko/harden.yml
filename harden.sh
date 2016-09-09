@@ -1460,7 +1460,7 @@ EOF
   do
     if [ "x${DIR}" != "x/" ]
     then
-      /usr/bin/chmod -c 700 ${DIR} | tee -a "${logdir}/file_perms.txt"
+      chmod -c 700 ${DIR} | tee -a "${logdir}/file_perms.txt"
     fi
   done
 
