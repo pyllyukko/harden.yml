@@ -2436,12 +2436,14 @@ function usage() {
 	  -d		default hardening (misc_settings() & file_permissions())
 
 	  -f function	run a function. available functions:
+	  		configure_modprobe.d
 	  		configure_pam
 	  		configure_securetty
 	  		core_dumps
 	  		disable_unnecessary_systemd_services
 			enable_sysstat
 	  		file_permissions
+	  		lock_system_accounts
 	  		password_policies
 			restrict_cron
 			configure_sshd
@@ -2697,6 +2699,7 @@ do
 	"disable_unnecessary_systemd_services") disable_unnecessary_systemd_services ;;
 	"enable_sysstat")	enable_sysstat			;;
 	"file_permissions")	file_permissions		;;
+	"lock_system_accounts")	lock_system_accounts		;;
 	"password_policies")	configure_password_policies	;;
 	"restrict_cron")	restrict_cron			;;
 	"sshd_config")		configure_sshd			;;
