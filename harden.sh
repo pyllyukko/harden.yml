@@ -1683,14 +1683,6 @@ EOF
       chmod -c 640	/var/log/boot
     } | tee -a "${logdir}/file_perms.txt"
   fi
-
-  # Debian specific
-  # http://wiki.debian.org/bootlogd
-  if [ -f /etc/debian_version ]
-  then
-    echo '[+] setting BOOTLOGD_ENABLE=yes in /etc/default/bootlogd'
-    echo "BOOTLOGD_ENABLE=yes" 1>>/etc/default/bootlogd
-  fi
 } # enable_bootlog()
 ################################################################################
 function remove_shells() {
