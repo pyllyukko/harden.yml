@@ -976,6 +976,7 @@ EOF
 	os="debian"
       else
 	os="unknown"
+      bind_mount_found=0
     }
     # partly from system-hardening-10.2.txt
     # strict settings for filesystems mounted under /mnt
@@ -1025,6 +1026,13 @@ EOF
     ){
       $4 = $4 ",nosuid,nodev,noexec"
     }
+    ( \
+      $1 == "/tmp" && \
+      $2 == "/var/tmp" && \
+      $4 == "bind" \
+    ){
+      bind_mount_found=1
+    }
     $3 == "swap" {
       # FSTAB(5): "For swap partitions, this field should be specified as "none"."
       $2 = "none"
@@ -1051,6 +1059,9 @@ EOF
 	    printf "%-16s %-16s %-11s %-16s %-3s %s\n", $1, $2, $3, $4, $5, $6
 	    break
 	}
+    }END{
+      if(!bind_mount_found)
+	printf "/tmp /var/tmp none bind 0 0\n"
     }' /etc/fstab 1>/etc/fstab.new
 
   if [ -f /etc/fstab.new ]
