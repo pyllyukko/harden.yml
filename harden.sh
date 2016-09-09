@@ -2046,6 +2046,12 @@ function apply_newconfs() {
   local    subdir
   local -a sha256sums
 
+  cat 0<<-EOF
+	
+	applying .new confs
+	-------------------
+EOF
+
   pushd /etc 1>/dev/null || {
     echo "${FUNCNAME}(): error!" 1>&2
     return 1
@@ -2060,17 +2066,17 @@ function apply_newconfs() {
       if [ ! -f "${subdir}/${basename%.new}" ]
       then
 	# if not, move the .new into place
-        echo "creating new file \`${subdir}/${basename%.new}'"
+        echo "[+] creating new file \`${subdir}/${basename%.new}'"
 	cat "${newconf}" 1>"${subdir}/${basename%.new}"
       elif
 	sha256sums=( $( sha256sum "${subdir}/${basename%.new}" "${newconf}" | awk '{print$1}' ) )
 	[ "${sha256sums[0]}" != "${sha256sums[1]}" ]
       then
-	echo "file \`${subdir}/${basename%.new}' exists. creating \`${subdir}/${basename}'."
+	echo "[+] file \`${subdir}/${basename%.new}' exists. creating \`${subdir}/${basename}'."
 	# leave the .new file for the admin to consider
 	cat "${newconf}" 1>"${subdir}/${basename}"
       else
-	echo "${FUNCNAME}(): DEBUG: file \`${subdir}/${basename%.new}' exists"
+	echo "[+] file \`${subdir}/${basename%.new}' exists"
       fi
     done
   done
