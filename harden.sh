@@ -2004,6 +2004,7 @@ function quick_harden() {
   # script.
   #
   # TODO: under construction
+  local func
 
   # configure TCP wrappers
   grep -q "^ALL" /etc/hosts.deny
@@ -2012,30 +2013,32 @@ function quick_harden() {
     echo "ALL: ALL EXCEPT localhost" 1>>/etc/hosts.deny
   fi
 
-  sysctl_harden
-
   echo "ALL:ALL:DENY" >>/etc/suauth
   {
     chown -c root:root	/etc/suauth
     chmod -c 400	/etc/suauth
   } | tee -a "${logdir}/file_perms.txt"
 
-  set_failure_limits
-
-  create_ftpusers
-
-  # tested 24.9.2012 against Debian
-  remove_shells
-
-  harden_fstab
-
-  enable_sysstat
-
-  create_limited_ca_list
-
-  lock_system_accounts
-
-  configure_securetty
+  for func in \
+    sysctl_harden \
+    set_failure_limits \
+    create_ftpusers \
+    remove_shells \
+    harden_fstab \
+    enable_sysstat \
+    create_limited_ca_list \
+    lock_system_accounts \
+    configure_securetty \
+    configure_pam \
+    configure_core_dumps \
+    disable_unnecessary_systemd_services \
+    configure_password_policies \
+    restrict_cron \
+    configure_sshd
+  do
+    ${func}
+  done
+  apply_newconfs modprobe.d
 
   return
 } # quick_harden()
