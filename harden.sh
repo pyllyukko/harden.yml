@@ -2309,6 +2309,10 @@ EOF
     /bin/systemctl enable auditd
   fi
 
+  # TODO: make into an array
+  #echo '[+] configuring auditd.conf'
+  #sed -i 's/^space_left_action.*/space_left_action = email/' /etc/audit/auditd.conf
+
   # enable it in grub/lilo
   if [ -f /etc/default/grub ] && ! grep -q '^GRUB_CMDLINE_LINUX=".*audit=1' /etc/default/grub
   then
