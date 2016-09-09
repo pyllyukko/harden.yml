@@ -1448,14 +1448,14 @@ function user_home_directories_permissions() {
 	setting permissions of home directories
 	---------------------------------------
 EOF
-  if [ -z "${UID_MIN}" ]
+  if [ -z "${UID_MIN}" -o -z "${UID_MAX}" ]
   then
-    echo '[-] error: UID_MIN not known' 1>&2
+    echo '[-] error: UID_MIN or UID_MAX not known' 1>&2
     return 1
   fi
   # 8.7 User Home Directories Should Be Mode 750 or More Restrictive (modified)
   for DIR in \
-    $( awk -F: -v uid_min=${UID_MIN} '($3 >= uid_min) { print $6 }' /etc/passwd ) \
+    $( awk -F: -v uid_min=${UID_MIN} -v uid_max=${UID_MAX} '($3 >= uid_min && $3 <= uid_max) { print $6 }' /etc/passwd ) \
     /root
   do
     if [ "x${DIR}" != "x/" ]
