@@ -2057,8 +2057,13 @@ EOF
     return 1
   }
   shopt -s nullglob
-  for subdir in . cron.d logrotate.d rc.d modprobe.d
+  for subdir in ${*}
   do
+    if [ ! -d "${CWD}/newconfs/${subdir}" ]
+    then
+      echo "[-] error: ${subdir} directory does not exist!" 1>&2
+      continue
+    fi
     for newconf in ${CWD}/newconfs/${subdir}/*.new
     do
       basename=$( basename "${newconf}" )
@@ -2649,7 +2654,7 @@ do
       create_limited_ca_list
       import_pgp_keys
       check_and_patch /etc	"${ETC_PATCH_FILE}"	1 && ETC_CHANGED=1
-      apply_newconfs
+      apply_newconfs . cron.d logrotate.d rc.d modprobe.d
       check_and_patch /etc	"${SUDOERS_PATCH_FILE}"	1
       check_and_patch /etc	"${SSH_PATCH_FILE}"	1
 
