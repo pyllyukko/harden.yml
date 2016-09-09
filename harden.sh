@@ -1659,9 +1659,24 @@ EOF
     true
   }
 
+  enable_bootlog
+
+  # make run-parts print "$SCRIPT failed." to stderr, so cron can mail this info to root.
+  sed -i 's/\(echo "\$SCRIPT failed."\)$/\1 1>\&2/' /usr/bin/run-parts
+
+  return 0
+} # miscellaneous settings()
+################################################################################
+function enable_bootlog() {
+  cat 0<<-EOF
+	
+	enabling bootlog
+	----------------
+EOF
   # https://www.linuxquestions.org/questions/slackware-14/how-to-activate-bootlogd-918962/
   if [ ! -f /var/log/boot ]
   then
+    echo '[+] creating /var/log/boot'
     touch /var/log/boot
     {
       chown -c root:adm	/var/log/boot
@@ -1673,14 +1688,10 @@ EOF
   # http://wiki.debian.org/bootlogd
   if [ -f /etc/debian_version ]
   then
+    echo '[+] setting BOOTLOGD_ENABLE=yes in /etc/default/bootlogd'
     echo "BOOTLOGD_ENABLE=yes" 1>>/etc/default/bootlogd
   fi
-
-  # make run-parts print "$SCRIPT failed." to stderr, so cron can mail this info to root.
-  sed -i 's/\(echo "\$SCRIPT failed."\)$/\1 1>\&2/' /usr/bin/run-parts
-
-  return 0
-} # miscellaneous settings()
+} # enable_bootlog()
 ################################################################################
 function remove_shells() {
   # see SHELLS(5)
@@ -2035,7 +2046,8 @@ function quick_harden() {
     configure_password_policies \
     restrict_cron \
     configure_sshd \
-    configure_basic_auditing
+    configure_basic_auditing \
+    enable_bootlog
   do
     ${func}
   done
@@ -2441,6 +2453,7 @@ function usage() {
 	  		configure_securetty
 	  		core_dumps
 	  		disable_unnecessary_systemd_services
+	  		enable_bootlog
 			enable_sysstat
 	  		file_permissions
 	  		lock_system_accounts
@@ -2697,6 +2710,7 @@ do
 	"configure_securetty")	configure_securetty		;;
 	"core_dumps")		configure_core_dumps		;;
 	"disable_unnecessary_systemd_services") disable_unnecessary_systemd_services ;;
+	"enable_bootlog")	enable_bootlog			;;
 	"enable_sysstat")	enable_sysstat			;;
 	"file_permissions")	file_permissions		;;
 	"lock_system_accounts")	lock_system_accounts		;;
