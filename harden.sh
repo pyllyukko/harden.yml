@@ -2034,7 +2034,8 @@ function quick_harden() {
     disable_unnecessary_systemd_services \
     configure_password_policies \
     restrict_cron \
-    configure_sshd
+    configure_sshd \
+    configure_basic_auditing
   do
     ${func}
   done
