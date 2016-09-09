@@ -1443,9 +1443,19 @@ function user_home_directories_permissions() {
   # this has been split into it's own function, since it relates to both
   # "hardening categories", user accounts & file permissions.
   local DIR
+  cat 0<<-EOF
+	
+	setting permissions of home directories
+	---------------------------------------
+EOF
+  if [ -z "${UID_MIN}" ]
+  then
+    echo '[-] error: UID_MIN not known' 1>&2
+    return 1
+  fi
   # 8.7 User Home Directories Should Be Mode 750 or More Restrictive (modified)
   for DIR in \
-    $( awk -F: '($3 >= 500) { print $6 }' /etc/passwd ) \
+    $( awk -F: -v uid_min=${UID_MIN} '($3 >= uid_min) { print $6 }' /etc/passwd ) \
     /root
   do
     if [ "x${DIR}" != "x/" ]
@@ -2050,7 +2060,8 @@ function quick_harden() {
     restrict_cron \
     configure_sshd \
     configure_basic_auditing \
-    enable_bootlog
+    enable_bootlog \
+    user_home_directories_permissions
   do
     ${func}
   done
@@ -2470,6 +2481,7 @@ function usage() {
 			restrict_cron
 			configure_sshd
 	  		sysctl_harden
+	  		homedir_perms
 	  -F		create/update /etc/ftpusers
 	  -g		import Slackware, SBo & other PGP keys to trustedkeys.gpg keyring
 	        	(you might also want to run this as a regular user)
@@ -2727,6 +2739,7 @@ do
 	"restrict_cron")	restrict_cron			;;
 	"sshd_config")		configure_sshd			;;
 	"sysctl_harden")	sysctl_harden			;;
+	"homedir_perms")	user_home_directories_permissions ;;
       esac
     ;;
     "F") create_ftpusers		;;
