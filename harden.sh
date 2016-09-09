@@ -1508,7 +1508,7 @@ function set_failure_limits() {
 	setting failure limits
 	----------------------
 EOF
-  echo "${FUNCNAME}(): setting the maximum number of login failures for UIDs ${UID_MIN:-1000}-${UID_MAX:-60000} to ${FAILURE_LIMIT:-10}"
+  echo "[+] setting the maximum number of login failures for UIDs ${UID_MIN:-1000}-${UID_MAX:-60000} to ${FAILURE_LIMIT:-10}"
 
   # NOTE: from FAILLOG(8): "The maximum failure count should always be 0 for root to prevent a denial of services attack against the system."
   # TODO: for important user accounts, the limits should be -l $((60*10)) -m 1
