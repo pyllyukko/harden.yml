@@ -1210,6 +1210,8 @@ function file_permissions() {
     /usr/bin/chown -c root:root		/etc/lilo.conf
     /usr/bin/chmod -c 600		/etc/lilo.conf
 
+    # TODO: grub & general Debian support for this whole function
+
     # CIS 8.13 Limit Access To The Root Account From su
     /usr/bin/chown -c root:root		/etc/suauth
     /usr/bin/chmod -c 400		/etc/suauth
