@@ -2250,14 +2250,24 @@ EOF
   #   - Enable auditing of faillog (change tallylog -> faillog, as we don't have PAM)
   #   - Enable session files logging ([ubw]tmp)
   #   - Enable kernel module logging
-  ${concat} "${stig_rules[0]}" | sed \
-    -e 's:^\(-w /etc/security/opasswd -p wa -k identity\)$:#\1:' \
-    -e 's:^\(-w /etc/sysconfig/network -p wa -k system-locale\)$:#\1:' \
-    -e 's:^#\(-w /var/log/lastlog -p wa -k logins\)$:\1:' \
-    -e 's:^#\(-w /var/log/\)tallylog\( -p wa -k logins\)$:\1faillog\2:' \
-    -e 's:^#\(-w /var/\(run\|log\)/[ubw]tmp -p wa -k session\)$:\1:' \
-    -e 's:^#\(.*\(-k \|-F key=\)module.*\)$:\1:' \
-    1>/etc/audit/rules.d/stig.rules
+  if [ "${DISTRO}" = "slackware" ]
+  then
+    ${concat} "${stig_rules[0]}" | sed \
+      -e 's:^\(-w /etc/security/opasswd -p wa -k identity\)$:#\1:' \
+      -e 's:^\(-w /etc/sysconfig/network -p wa -k system-locale\)$:#\1:' \
+      -e 's:^#\(-w /var/log/lastlog -p wa -k logins\)$:\1:' \
+      -e 's:^#\(-w /var/log/\)tallylog\( -p wa -k logins\)$:\1faillog\2:' \
+      -e 's:^#\(-w /var/\(run\|log\)/[ubw]tmp -p wa -k session\)$:\1:' \
+      -e 's:^#\(.*\(-k \|-F key=\)module.*\)$:\1:' \
+      1>/etc/audit/rules.d/stig.rules
+  else
+    ${concat} "${stig_rules[0]}" | sed \
+      -e 's:^#\(-w /var/log/lastlog -p wa -k logins\)$:\1:' \
+      -e 's:^#\(-w /var/log/tallylog -p wa -k logins\)$:\1:' \
+      -e 's:^#\(-w /var/\(run\|log\)/[ubw]tmp -p wa -k session\)$:\1:' \
+      -e 's:^#\(.*\(-k \|-F key=\)module.*\)$:\1:' \
+      1>/etc/audit/rules.d/stig.rules
+  fi
 
   # fix the UID_MIN
   if [ -n "${UID_MIN}" ]
