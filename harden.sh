@@ -596,7 +596,7 @@ EOF
     then
       continue
     fi
-    if [ ${uid} -le ${SYS_UID_MAX:-999} ] && [ ${NAME} != 'root' ]
+    if [ ${uid} -le ${SYS_UID_MAX:-999} ] && [ ${NAME} != 'root' ] && [ ${NAME} != 'Debian-gdm' ]
     then
       printf "%-10s (UID=%s)\n" "${NAME}" "${uid}"
       crontab -l -u "${NAME}" 2>&1 | grep -q "^no crontab for"
