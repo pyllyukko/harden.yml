@@ -192,6 +192,11 @@ declare -rA SSHD_CONFIG=(
   ["Compression"]="delayed"
   ["AllowTcpForwarding"]="no"
 )
+declare -rA AUDITD_CONFIG=(
+  ["space_left_action"]="email"
+  ["action_mail_acct"]="root"
+  ["max_log_file_action"]="keep_logs"
+)
 
 # NOLOGIN(8): "It is intended as a replacement shell field for accounts that have been disabled."
 # Slackware default location:
@@ -2311,9 +2316,11 @@ EOF
     /bin/systemctl enable auditd
   fi
 
-  # TODO: make into an array
-  #echo '[+] configuring auditd.conf'
-  #sed -i 's/^space_left_action.*/space_left_action = email/' /etc/audit/auditd.conf
+  echo '[+] configuring auditd.conf'
+  for setting in ${!AUDITD_CONFIG[*]}
+  do
+    sed -i "s/^\(# \?\)\?\(${setting}\)\(\s\+=\s\+\)\S\+$/\2\3${AUDITD_CONFIG[${setting}]}/" /etc/audit/auditd.conf
+  done
 
   # enable it in grub/lilo
   if [ -f /etc/default/grub ] && ! grep -q '^GRUB_CMDLINE_LINUX=".*audit=1' /etc/default/grub
