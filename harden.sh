@@ -603,7 +603,7 @@ EOF
     fi
     if [ ${uid} -le ${SYS_UID_MAX:-999} ] && [ ${NAME} != 'root' ] && [ ${NAME} != 'Debian-gdm' ]
     then
-      printf "%-10s (UID=%s)\n" "${NAME}" "${uid}"
+      printf "%-17s (UID=%s)\n" "${NAME}" "${uid}"
       crontab -l -u "${NAME}" 2>&1 | grep -q "^no crontab for"
       if [ ${PIPESTATUS[1]} -ne 0 ]
       then
