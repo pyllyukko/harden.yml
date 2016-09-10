@@ -2264,6 +2264,7 @@ EOF
     ${concat} "${stig_rules[0]}" | sed \
       -e 's:^\(-w /etc/sysconfig/network -p wa -k system-locale\)$:#\1:' \
       -e 's:^#\(-w /var/log/lastlog -p wa -k logins\)$:\1:' \
+      -e '/^-w \/var\/log\/lastlog -p wa -k logins$/i-w /var/log/faillog -p wa -k logins' \
       -e 's:^#\(-w /var/log/tallylog -p wa -k logins\)$:\1:' \
       -e 's:^#\(-w /var/\(run\|log\)/[ubw]tmp -p wa -k session\)$:\1:' \
       -e 's:^#\(.*\(-k \|-F key=\)module.*\)$:\1:' \
