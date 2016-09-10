@@ -2747,6 +2747,12 @@ EOF
     do
       /usr/sbin/aa-enforce ${profile}
     done
+    # more details at https://github.com/pyllyukko/harden.sh/wiki/apparmor
+    echo '[+] setting few troublesome profiles back to complain mode'
+    for profile in "sbin.dhclient" "usr.sbin.sshd" "usr.bin.man"
+    do
+      /usr/sbin/aa-complain /etc/apparmor.d/${profile}
+    done
   else
     echo '[-] /usr/sbin/aa-enforce not found. is apparmor-utils package installed?' 1>&2
     return 1
