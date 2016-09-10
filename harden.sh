@@ -2068,7 +2068,8 @@ function quick_harden() {
     configure_sshd \
     configure_basic_auditing \
     enable_bootlog \
-    user_home_directories_permissions
+    user_home_directories_permissions \
+    enable_apparmor
   do
     ${func}
   done
