@@ -2713,6 +2713,13 @@ EOF
     echo '[-] error: /etc/init.d/apparmor not found!' 1>&2
     return 1
   fi
+  if [ -x /usr/sbin/aa-enforce ]
+  then
+    echo '[+] setting AppArmor profiles to enforce mode'
+    /usr/sbin/aa-enforce /etc/apparmor.d/*
+  else
+    echo '[-] /usr/sbin/aa-enforce not found. is apparmor-utils package installed?' 1>&2
+  fi
   if ! grep -q '^GRUB_CMDLINE_LINUX=".*apparmor' /etc/default/grub
   then
     echo '[+] enabling AppArmor in /etc/default/grub'
