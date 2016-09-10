@@ -2498,6 +2498,7 @@ function usage() {
 	  		configure_securetty
 	  		core_dumps
 	  		disable_unnecessary_systemd_services
+	  		enable_apparmor
 	  		enable_bootlog
 			enable_sysstat
 	  		file_permissions
@@ -2695,6 +2696,30 @@ EOF
   fi
 } # enable_sysstat()
 ################################################################################
+function enable_apparmor() {
+  cat 0<<-EOF
+	
+	enabling AppArmor
+	-----------------
+EOF
+  if [ ! -f /etc/default/grub ]
+  then
+    echo '[-] error: /etc/default/grub not found!' 1>&2
+    return 1
+  fi
+  if [ ! -f /etc/init.d/apparmor ]
+  then
+    echo '[-] error: /etc/init.d/apparmor not found!' 1>&2
+    return 1
+  fi
+  if ! grep -q '^GRUB_CMDLINE_LINUX=".*apparmor' /etc/default/grub
+  then
+    echo '[+] enabling AppArmor in /etc/default/grub'
+    sed -i 's/^\(GRUB_CMDLINE_LINUX=".*\)"$/\1 apparmor=1 security=apparmor"/' /etc/default/grub
+    echo "NOTICE: /etc/default/grub updated. you need to run \`update-grub' or \`grub2-install' to update the boot loader."
+  fi
+} # enable_apparmor()
+################################################################################
 
 if [ "${USER}" != "root" ]
 then
@@ -2756,6 +2781,7 @@ do
 	"configure_securetty")	configure_securetty		;;
 	"core_dumps")		configure_core_dumps		;;
 	"disable_unnecessary_systemd_services") disable_unnecessary_systemd_services ;;
+	"enable_apparmor")	enable_apparmor			;;
 	"enable_bootlog")	enable_bootlog			;;
 	"enable_sysstat")	enable_sysstat			;;
 	"file_permissions")	file_permissions		;;
