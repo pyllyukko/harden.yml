@@ -336,7 +336,8 @@ Post-hardening checklist
 
 After running the hardening script, the following actions still need to be performed manually:
 
-- [ ] Set LILO password
+- [ ] Set LILO/GRUB password
+  - [ ] Update LILO/GRUB with ```lilo``` || ```update-grub```
 - Install at least the following additional software:
   - [ ] [audit](https://slackbuilds.org/repository/14.2/system/audit/) (and run ```harden.sh -S``` afterwards)
   - [ ] [Aide](https://slackbuilds.org/repository/14.2/system/aide/)
