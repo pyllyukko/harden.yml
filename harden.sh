@@ -604,7 +604,7 @@ EOF
     if [ ${uid} -le ${SYS_UID_MAX:-999} ] && [ ${NAME} != 'root' ] && [ ${NAME} != 'Debian-gdm' ]
     then
       printf "%-17s (UID=%s)\n" "${NAME}" "${uid}"
-      crontab -l -u "${NAME}" 2>&1 | grep -q "^no crontab for"
+      crontab -l -u "${NAME}" 2>&1 | grep -q "^\(no crontab for\|The user \S\+ cannot use this program (crontab)\)"
       if [ ${PIPESTATUS[1]} -ne 0 ]
       then
         echo "${FUNCNAME}(): WARNING: the user \`${NAME}' has some cronjobs! should it be so?" 1>&2
