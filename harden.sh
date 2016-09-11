@@ -2173,11 +2173,13 @@ function create_banners() {
     chmod 644 /etc/motd /etc/issue /etc/issue.net
   } | tee -a "${logdir}/file_perms.txt"
 
-  #if [ -f /etc/gdm3/greeter.dconf-defaults ]
-  #then
-  #  # TODO
-  #  true
-  #fi
+  if [ -f /etc/gdm3/greeter.dconf-defaults ]
+  then
+    sed -i \
+      -e 's/^.*banner-message-enable=.*$/banner-message-enable=true/' \
+      -e "s/^.*banner-message-text=.*$/banner-message-text='Authorized uses only.'/" \
+      /etc/gdm3/greeter.dconf-defaults
+  fi
 
   return 0
 } # create_banners()
