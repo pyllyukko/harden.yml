@@ -2156,16 +2156,22 @@ function create_ssh_moduli() {
 function create_banners() {
   local owner
 
-  echo "${FUNCNAME}(): creating /etc/issue"
+  cat 0<<-EOF
+	
+	creating banners
+	----------------
+EOF
+
+  echo "[+] creating /etc/issue"
   cat "${CWD}/newconfs/issue.new"	1>/etc/issue
   read -p 'company/organization/owner? ' owner
   sed -i 's/\[insert company name here\]/'"${owner}"'/' /etc/issue
 
-  echo "${FUNCNAME}(): creating /etc/issue.net"
+  echo "[+] creating /etc/issue.net"
   cp -vf /etc/issue /etc/issue.net
   echo "Authorized uses only. All activity may be monitored and reported." 1>>/etc/issue.net
 
-  echo "${FUNCNAME}(): creating /etc/motd"
+  echo "[+] creating /etc/motd"
   cat "${CWD}/newconfs/motd.new"	1>/etc/motd
 
   {
@@ -2175,6 +2181,7 @@ function create_banners() {
 
   if [ -f /etc/gdm3/greeter.dconf-defaults ]
   then
+    echo "[+] configuring banner to gdm3"
     sed -i \
       -e 's/^.*banner-message-enable=.*$/banner-message-enable=true/' \
       -e "s/^.*banner-message-text=.*$/banner-message-text='Authorized uses only.'/" \
