@@ -2723,7 +2723,7 @@ EOF
   then
     echo '[+] copying extra profiles from /usr/share/doc/apparmor-profiles/extras'
     pushd /usr/share/doc/apparmor-profiles/extras 1>/dev/null
-    cp -v *.* /etc/apparmor.d/
+    cp -v -n *.* /etc/apparmor.d/
     popd 1>/dev/null
   fi
   if ! grep -q '^GRUB_CMDLINE_LINUX=".*apparmor' /etc/default/grub
