@@ -2489,7 +2489,6 @@ function usage() {
 	  		  - hardens file permissions
 	  		  - creates hardened fstab.new
 	  -b		toggle USB authorized_default
-	  -B		create legal banners
 	  -c		create limited CA conf
 	  -d		default hardening (misc_settings() & file_permissions())
 
@@ -2499,15 +2498,16 @@ function usage() {
 	  		configure_pam
 	  		configure_securetty
 	  		core_dumps
+	  		create_banners
 	  		disable_unnecessary_systemd_services
 	  		enable_apparmor
 	  		enable_bootlog
-			enable_sysstat
+	  		enable_sysstat
 	  		file_permissions
 	  		lock_system_accounts
 	  		password_policies
-			restrict_cron
-			configure_sshd
+	  		restrict_cron
+	  		configure_sshd
 	  		sysctl_harden
 	  		homedir_perms
 	  -F		create/update /etc/ftpusers
@@ -2765,7 +2765,7 @@ then
   echo -e "warning: you should probably be root to run this script\n" 1>&2
 fi
 
-while getopts "aAbBcdf:FghHiIlL:mMp:P:qrsSuU" OPTION
+while getopts "aAbcdf:FghHiIlL:mMp:P:qrsSuU" OPTION
 do
   case "${OPTION}" in
     "a") configure_apache		;;
@@ -2806,7 +2806,6 @@ do
       (( ${ETC_CHANGED} )) && restart_services
     ;;
     "b") toggle_usb_authorized_default	;;
-    "B") create_banners			;;
     "c") create_limited_ca_list		;;
     "d")
       # default
@@ -2819,6 +2818,7 @@ do
 	"configure_modprobe.d")	apply_newconfs modprobe.d	;;
 	"configure_pam")	configure_pam			;;
 	"configure_securetty")	configure_securetty		;;
+	"create_banners")	create_banners			;;
 	"core_dumps")		configure_core_dumps		;;
 	"disable_unnecessary_systemd_services") disable_unnecessary_systemd_services ;;
 	"enable_apparmor")	enable_apparmor			;;
