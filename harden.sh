@@ -165,6 +165,13 @@ declare -rA PASSWORD_POLICIES=(
   ["SHA_CRYPT_MIN_ROUNDS"]=500000
   ["UMASK"]="077"
 )
+declare -rA PWQUALITY_SETTINGS=(
+  ["minlen"]="14"
+  ["dcredit"]="-1"
+  ["ucredit"]="-1"
+  ["ocredit"]="-1"
+  ["lcredit"]="-1"
+)
 declare -rA SSHD_CONFIG=(
   # from hardening guides
   ["Protocol"]=2
@@ -1919,6 +1926,7 @@ EOF
 } # disable_unnecessary_systemd_services()
 ################################################################################
 function configure_pam() {
+  local setting
   cat 0<<-EOF
 	
 	configuring PAM
@@ -1967,6 +1975,16 @@ EOF
   then
     echo '[+] configuring pam_wheel.so'
     sed -i 's/^#\s\?\(auth\s\+required\s\+pam_wheel\.so\(\s\+use_uid\)\?\)$/\1/' /etc/pam.d/su
+  fi
+
+  # red hat uses pwquality instead of cracklib||passwdqc
+  if [ -f /etc/security/pwquality.conf ]
+  then
+    echo '[+] configuring pwquality'
+    for setting in ${!PWQUALITY_SETTINGS[*]}
+    do
+      sed -i "s/^\(# \?\)\?\(${setting}\)\(\s*=\s*\)\S\+$/\2\3${PWQUALITY_SETTINGS[${setting}]}/" /etc/security/pwquality.conf
+    done
   fi
   #if [ -f /etc/passwdqc.conf ]
   #then
@@ -2644,12 +2662,6 @@ EOF
     # TODO: other settings
     /sbin/authconfig --passalgo=sha512 --update
   fi
-
-  #if [ -f /etc/security/pwquality.conf ]
-  #then
-  #  # TODO
-  #  true
-  #fi
 
   useradd -D -f 35
 
