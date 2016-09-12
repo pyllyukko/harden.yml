@@ -1458,6 +1458,11 @@ function file_permissions() {
 ################################################################################
 function file_permissions2() {
   local FILE
+  cat 0<<-EOF
+	
+	hardening file permissions
+	--------------------------
+EOF
   # new RH/Debian safe file permissions function
   {
     for FILE in ${!FILE_PERMS[*]}
