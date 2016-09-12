@@ -2228,6 +2228,12 @@ EOF
       /etc/gdm3/greeter.dconf-defaults
   fi
 
+  if [ -f /etc/ssh/sshd_config ]
+  then
+    echo "[+] configuring banner to sshd"
+    sed -i "s/^\(# \?\)\?\(Banner\)\(\s\+\)\S\+$/\2\3\/etc\/issue.net/" /etc/ssh/sshd_config
+  fi
+
   return 0
 } # create_banners()
 ################################################################################
