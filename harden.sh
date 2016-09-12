@@ -204,6 +204,9 @@ declare -rA AUDITD_CONFIG=(
   ["action_mail_acct"]="root"
   ["max_log_file_action"]="keep_logs"
 )
+declare -rA FILE_PERMS=(
+  ["/boot/grub/grub.cfg"]="og-rwx"
+)
 
 # NOLOGIN(8): "It is intended as a replacement shell field for accounts that have been disabled."
 # Slackware default location:
@@ -1453,6 +1456,20 @@ function file_permissions() {
   return 0
 } # file_permissions()
 ################################################################################
+function file_permissions2() {
+  local FILE
+  # new RH/Debian safe file permissions function
+  {
+    for FILE in ${!FILE_PERMS[*]}
+    do
+      if [ -f "${FILE}" ]
+      then
+	chmod -c ${FILE_PERMS[${FILE}]} ${FILE}
+      fi
+    done
+  } | tee -a "${logdir}/file_perms.txt"
+} # file_permissions2()
+################################################################################
 function user_home_directories_permissions() {
   # this has been split into it's own function, since it relates to both
   # "hardening categories", user accounts & file permissions.
@@ -2531,6 +2548,7 @@ function usage() {
 	  		enable_bootlog
 	  		enable_sysstat
 	  		file_permissions
+	  		file_permissions2
 	  		lock_system_accounts
 	  		password_policies
 	  		restrict_cron
@@ -2846,6 +2864,7 @@ do
 	"enable_bootlog")	enable_bootlog			;;
 	"enable_sysstat")	enable_sysstat			;;
 	"file_permissions")	file_permissions		;;
+	"file_permissions2")	file_permissions2		;;
 	"lock_system_accounts")	lock_system_accounts		;;
 	"password_policies")	configure_password_policies	;;
 	"restrict_cron")	restrict_cron			;;
