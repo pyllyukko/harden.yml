@@ -1999,6 +1999,19 @@ EOF
     sed -i 's/^#\s\?\(auth\s\+required\s\+pam_wheel\.so\(\s\+use_uid\)\?\)$/\1/' /etc/pam.d/su
   fi
 
+  echo '[+] configuring default behaviour via /etc/pam.d/other'
+  cat 0<<-EOF 1>/etc/pam.d/other
+	# deny all access by default and log to syslog
+	auth      required   pam_deny.so
+	auth      required   pam_warn.so
+	account   required   pam_deny.so
+	account   required   pam_warn.so
+	password  required   pam_deny.so
+	password  required   pam_warn.so
+	session   required   pam_deny.so
+	session   required   pam_warn.so
+EOF
+
   # red hat uses pwquality instead of cracklib||passwdqc
   if [ -f /etc/security/pwquality.conf ]
   then
