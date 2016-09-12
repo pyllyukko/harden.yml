@@ -2315,6 +2315,16 @@ EOF
       -e 's:^#\(-w /var/\(run\|log\)/[ubw]tmp -p wa -k session\)$:\1:' \
       -e 's:^#\(.*\(-k \|-F key=\)module.*\)$:\1:' \
       1>/etc/audit/rules.d/stig.rules
+  elif [ "${DISTRO}" = "debian" -o "${DISTRO}" = "raspbian" ]
+    # /etc/sysconfig/network -> /etc/network
+    ${concat} "${stig_rules[0]}" | sed \
+      -e 's:^-w /etc/sysconfig/network -p wa -k system-locale$:-w /etc/network -p wa -k system-locale:' \
+      -e 's:^#\(-w /var/log/lastlog -p wa -k logins\)$:\1:' \
+      -e '/^-w \/var\/log\/lastlog -p wa -k logins$/i-w /var/log/faillog -p wa -k logins' \
+      -e 's:^#\(-w /var/log/tallylog -p wa -k logins\)$:\1:' \
+      -e 's:^#\(-w /var/\(run\|log\)/[ubw]tmp -p wa -k session\)$:\1:' \
+      -e 's:^#\(.*\(-k \|-F key=\)module.*\)$:\1:' \
+      1>/etc/audit/rules.d/stig.rules
   else
     ${concat} "${stig_rules[0]}" | sed \
       -e 's:^\(-w /etc/sysconfig/network -p wa -k system-locale\)$:#\1:' \
