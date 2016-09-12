@@ -2316,6 +2316,7 @@ EOF
       -e 's:^#\(.*\(-k \|-F key=\)module.*\)$:\1:' \
       1>/etc/audit/rules.d/stig.rules
   elif [ "${DISTRO}" = "debian" -o "${DISTRO}" = "raspbian" ]
+  then
     # /etc/sysconfig/network -> /etc/network
     ${concat} "${stig_rules[0]}" | sed \
       -e 's:^-w /etc/sysconfig/network -p wa -k system-locale$:-w /etc/network -p wa -k system-locale:' \
