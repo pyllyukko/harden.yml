@@ -2203,13 +2203,14 @@ function create_banners() {
 EOF
 
   echo "[+] creating /etc/issue"
-  cat "${CWD}/newconfs/issue.new"	1>/etc/issue
-  read -p 'company/organization/owner? ' owner
-  sed -i 's/\[insert company name here\]/'"${owner}"'/' /etc/issue
+  #cat "${CWD}/newconfs/issue.new"	1>/etc/issue
+  #read -p 'company/organization/owner? ' owner
+  #sed -i 's/\[insert company name here\]/'"${owner}"'/' /etc/issue
+  echo "Authorized uses only. All activity may be monitored and reported." 1>/etc/issue
 
   echo "[+] creating /etc/issue.net"
   cp -vf /etc/issue /etc/issue.net
-  echo "Authorized uses only. All activity may be monitored and reported." 1>>/etc/issue.net
+  #echo "Authorized uses only. All activity may be monitored and reported." 1>>/etc/issue.net
 
   echo "[+] creating /etc/motd"
   cat "${CWD}/newconfs/motd.new"	1>/etc/motd
