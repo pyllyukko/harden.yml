@@ -61,6 +61,9 @@ sys.kernel.modify_ldt = 0
 # set this to 1, if you don't want the system to reply to ICMP ECHO requests:
 net.ipv4.icmp_echo_ignore_all = 0
 
+# don't log RFC-1122 non-compliant ICMP responses
+net.ipv4.icmp_ignore_bogus_error_responses = 1
+
 # 0 - disable sysrq completely
 # 4 - enable control of keyboard (SAK, unraw)
 #
