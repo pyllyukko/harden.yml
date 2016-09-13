@@ -2122,7 +2122,8 @@ function quick_harden() {
     configure_basic_auditing \
     enable_bootlog \
     user_home_directories_permissions \
-    enable_apparmor
+    enable_apparmor \
+    aa_enforce
   do
     ${func}
   done
