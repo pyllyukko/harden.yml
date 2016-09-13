@@ -2091,8 +2091,7 @@ function quick_harden() {
   local func
 
   # configure TCP wrappers
-  grep -q "^ALL" /etc/hosts.deny
-  if [ ${?} -ne 0 ]
+  if ! grep -q "^ALL" /etc/hosts.deny
   then
     echo "ALL: ALL EXCEPT localhost" 1>>/etc/hosts.deny
   fi
