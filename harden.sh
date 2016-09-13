@@ -222,7 +222,7 @@ else
   DENY_SHELL=
 fi
 # man FAILLOG(8)
-declare -i FAILURE_LIMIT=10
+declare -i FAILURE_LIMIT=5
 declare -r CERTS_DIR="/etc/ssl/certs"
 
 # from CIS 2.1 Disable Standard Services
@@ -1552,20 +1552,18 @@ EOF
 } # create_ftpusers()
 ################################################################################
 function set_failure_limits() {
+  local i
+  local j=1
   # from system-hardening-10.2.txt (modified)
   # the UID_MIN and UID_MAX values are from /etc/login.defs
-  # disables user accounts after 10 failed logins
-  #
-  # TODO: periodic
-  # TODO: how do we reset this after successful login?
-  # NOTE: Debian has this under /usr/bin
+  # locks user accounts after 5 failed logins
 
   cat 0<<-EOF
 	
 	setting failure limits
 	----------------------
 EOF
-  echo "[+] setting the maximum number of login failures for UIDs ${UID_MIN:-1000}-${UID_MAX:-60000} to ${FAILURE_LIMIT:-10}"
+  echo "[+] setting the maximum number of login failures for UIDs ${UID_MIN:-1000}-${UID_MAX:-60000} to ${FAILURE_LIMIT:-5}"
 
   # NOTE: from FAILLOG(8): "The maximum failure count should always be 0 for root to prevent a denial of services attack against the system."
   # TODO: for important user accounts, the limits should be -l $((60*10)) -m 1
@@ -1589,12 +1587,12 @@ EOF
 
   if [ -s /var/log/faillog ]
   then
-    faillog -l $((60*5)) -m 1 -u root
-  else
-    faillog -m 1 -u root
-    faillog -l $((60*5)) -u root
+    j=2
   fi
-  faillog -a -l 0 -m ${FAILURE_LIMIT:-10} -u ${UID_MIN:-1000}-${UID_MAX:-60000}
+  for ((i=0; i<${j}; i++))
+  do
+    faillog -a -l $((60*15)) -m ${FAILURE_LIMIT:-5} -u ${UID_MIN:-1000}-${UID_MAX:-60000}
+  done
   return ${?}
 } # set_failure_limits()
 ################################################################################
