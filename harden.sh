@@ -2319,43 +2319,37 @@ EOF
     return 1
   fi
 
-  # fix the audit.rules for Slackware:
-  #   - Slackware does not have old passwords (opasswd)
-  #   - Slackware does not have /etc/sysconfig/network
+  # common for all distros
   #   - Enable auditing of lastlog
-  #   - Enable auditing of faillog (change tallylog -> faillog, as we don't have PAM)
   #   - Enable session files logging ([ubw]tmp)
+  #   - Add faillog auditing above lastlog
   #   - Enable kernel module logging
+  #   - Enable auditing of tallylog
+  ${concat} "${stig_rules[0]}" | sed \
+    -e '/^#-w \/var\/log\/lastlog -p wa -k logins$/s/^#//' \
+    -e '/^#-w \/var\/\(run\|log\)\/[ubw]tmp -p wa -k session$/s/^#//' \
+    -e '/^-w \/var\/log\/lastlog -p wa -k logins$/i-w /var/log/faillog -p wa -k logins' \
+    -e '/^#.*\(-k \|-F key=\)module.*$/s/^#//' \
+    -e '/^#-w \/var\/log\/tallylog -p wa -k logins$/s/^#//' \
+    1>/etc/audit/rules.d/stig.rules
+  # distro specific
   if [ "${DISTRO}" = "slackware" ]
   then
-    ${concat} "${stig_rules[0]}" | sed \
-      -e 's:^\(-w /etc/security/opasswd -p wa -k identity\)$:#\1:' \
-      -e 's:^\(-w /etc/sysconfig/network -p wa -k system-locale\)$:#\1:' \
-      -e 's:^#\(-w /var/log/lastlog -p wa -k logins\)$:\1:' \
-      -e 's:^#\(-w /var/log/\)tallylog\( -p wa -k logins\)$:\1faillog\2:' \
-      -e 's:^#\(-w /var/\(run\|log\)/[ubw]tmp -p wa -k session\)$:\1:' \
-      -e 's:^#\(.*\(-k \|-F key=\)module.*\)$:\1:' \
-      1>/etc/audit/rules.d/stig.rules
+    # fix the audit.rules for Slackware:
+    #   - Slackware does not have old passwords (opasswd)
+    #   - Slackware does not have /etc/sysconfig/network
+    #   - Slackware does not have pam_tally
+    sed -i \
+      -e '/^-w \/etc\/security\/opasswd -p wa -k identity$/s/^/#/' \
+      -e '/^-w \/etc\/sysconfig\/network -p wa -k system-locale$/s/^/#/' \
+      -e '/^-w \/var\/log\/tallylog -p wa -k logins$/s/^/#/' \
+      /etc/audit/rules.d/stig.rules
   elif [ "${DISTRO}" = "debian" -o "${DISTRO}" = "raspbian" ]
   then
     # /etc/sysconfig/network -> /etc/network
-    ${concat} "${stig_rules[0]}" | sed \
+    sed -i \
       -e 's:^-w /etc/sysconfig/network -p wa -k system-locale$:-w /etc/network -p wa -k system-locale:' \
-      -e 's:^#\(-w /var/log/lastlog -p wa -k logins\)$:\1:' \
-      -e '/^-w \/var\/log\/lastlog -p wa -k logins$/i-w /var/log/faillog -p wa -k logins' \
-      -e 's:^#\(-w /var/log/tallylog -p wa -k logins\)$:\1:' \
-      -e 's:^#\(-w /var/\(run\|log\)/[ubw]tmp -p wa -k session\)$:\1:' \
-      -e 's:^#\(.*\(-k \|-F key=\)module.*\)$:\1:' \
-      1>/etc/audit/rules.d/stig.rules
-  else
-    ${concat} "${stig_rules[0]}" | sed \
-      -e 's:^\(-w /etc/sysconfig/network -p wa -k system-locale\)$:#\1:' \
-      -e 's:^#\(-w /var/log/lastlog -p wa -k logins\)$:\1:' \
-      -e '/^-w \/var\/log\/lastlog -p wa -k logins$/i-w /var/log/faillog -p wa -k logins' \
-      -e 's:^#\(-w /var/log/tallylog -p wa -k logins\)$:\1:' \
-      -e 's:^#\(-w /var/\(run\|log\)/[ubw]tmp -p wa -k session\)$:\1:' \
-      -e 's:^#\(.*\(-k \|-F key=\)module.*\)$:\1:' \
-      1>/etc/audit/rules.d/stig.rules
+      /etc/audit/rules.d/stig.rules
   fi
 
   # fix the UID_MIN
