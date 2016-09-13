@@ -2097,12 +2097,6 @@ function quick_harden() {
     echo "ALL: ALL EXCEPT localhost" 1>>/etc/hosts.deny
   fi
 
-  echo "ALL:ALL:DENY" >>/etc/suauth
-  {
-    chown -c root:root	/etc/suauth
-    chmod -c 400	/etc/suauth
-  } | tee -a "${logdir}/file_perms.txt"
-
   for func in \
     sysctl_harden \
     set_failure_limits \
