@@ -1966,8 +1966,8 @@ EOF
   then
     echo '[+] enabling pam_tally2'
     # insert above first occurance of ^auth
-    sed -i '/^auth/{
-      iauth       required   pam_tally2.so     onerr=fail audit silent deny=5 unlock_time=900
+    sed -i "/^auth/{
+      iauth       required   pam_tally2.so     onerr=fail audit silent deny=${FAILURE_LIMIT} unlock_time=900
       # loop through the rest of the file
       :a
       $!{
@@ -1976,7 +1976,7 @@ EOF
         # Branch to label a
         ba
       }
-    }' /etc/pam.d/login
+    }" /etc/pam.d/login
   fi
   # limit password reuse
   # debian
