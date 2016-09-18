@@ -132,9 +132,6 @@ declare -r ETC_PATCH_FILE="harden_etc-${SLACKWARE_VERSION}.patch"
 # these are not declared as integers cause then the ${ ... :-DEFAULT } syntax won't work(?!)
 declare -r UID_MIN=$(		awk '/^UID_MIN/{print$2}'	/etc/login.defs 2>/dev/null )
 declare -r UID_MAX=$(		awk '/^UID_MAX/{print$2}'	/etc/login.defs 2>/dev/null )
-declare    PASS_MIN_DAYS=$(	awk '/^PASS_MIN_DAYS/{print$2}'	/etc/login.defs 2>/dev/null )
-declare    PASS_MAX_DAYS=$(	awk '/^PASS_MAX_DAYS/{print$2}'	/etc/login.defs 2>/dev/null )
-declare    PASS_WARN_AGE=$(	awk '/^PASS_WARN_AGE/{print$2}'	/etc/login.defs 2>/dev/null )
 declare -r SYS_UID_MAX=$(	awk '/^SYS_UID_MAX/{print$2}'	/etc/login.defs 2>/dev/null )
 declare -r WWWROOT="/var/www"
 declare -i ETC_CHANGED=0
@@ -418,6 +415,12 @@ if [ -n "${SLACKWARE_VERSION}" ]
 then
   MANIFEST_DIR="${CWD}/manifests/${SLACKWARE}-${SLACKWARE_VERSION}"
 fi
+################################################################################
+function read_password_policy() {
+  PASS_MIN_DAYS=$( awk '/^PASS_MIN_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
+  PASS_MAX_DAYS=$( awk '/^PASS_MAX_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
+  PASS_WARN_AGE=$( awk '/^PASS_WARN_AGE/{print$2}' /etc/login.defs 2>/dev/null )
+} # read_password_policy()
 ################################################################################
 function check_manifest() {
   local MD5_RET
@@ -728,9 +731,7 @@ function configure_password_policy_for_existing_users() {
 	------------------------------------------------
 EOF
   NAMES=( $( cut -d: -f1 /etc/passwd ) )
-  PASS_MIN_DAYS=$( awk '/^PASS_MIN_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
-  PASS_MAX_DAYS=$( awk '/^PASS_MAX_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
-  PASS_WARN_AGE=$( awk '/^PASS_WARN_AGE/{print$2}' /etc/login.defs 2>/dev/null )
+  read_password_policy
   for NAME in ${NAMES[*]}
   do
     uid=$( id -u $NAME )
@@ -744,7 +745,6 @@ EOF
       chage -m ${PASS_MIN_DAYS:-7} -M ${PASS_MAX_DAYS:-365} -W ${PASS_WARN_AGE:-30} $NAME
     fi
   done
-
 } # configure_password_policy_for_existing_users()
 ################################################################################
 function restrict_cron() {
@@ -2720,9 +2720,7 @@ EOF
 
   configure_password_policy_for_existing_users
 
-  PASS_MIN_DAYS=$( awk '/^PASS_MIN_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
-  PASS_MAX_DAYS=$( awk '/^PASS_MAX_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
-  PASS_WARN_AGE=$( awk '/^PASS_WARN_AGE/{print$2}' /etc/login.defs 2>/dev/null )
+  read_password_policy
 } # configure_password_policies()
 ################################################################################
 function configure_sshd() {
@@ -2840,6 +2838,8 @@ if [ "${USER}" != "root" ]
 then
   echo -e "warning: you should probably be root to run this script\n" 1>&2
 fi
+
+read_password_policy
 
 while getopts "aAbcdf:FghHiIlL:mMp:P:qrsSuU" OPTION
 do
