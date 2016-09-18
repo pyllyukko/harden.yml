@@ -636,10 +636,6 @@ function user_accounts() {
   #
   # TODO: groups (or are they even necessary?)
 
-  local uid
-  local NAME
-  local USERID
-  local USER_HOME_DIR
   local group
 
   cat 0<<-EOF
@@ -672,19 +668,7 @@ EOF
 
   lock_system_accounts
 
-  # CIS 8.3 Set Account Expiration Parameters On Active Accounts
-  for NAME in ${NAMES[*]}
-  do
-    uid=$( id -u $NAME )
-    if [ -z "${uid}" ]
-    then
-      continue
-    fi
-    if [ $uid -ge ${UID_MIN:-1000} ] && [ $uid != 65534 ]
-    then
-      chage -m ${PASS_MIN_DAYS:-7} -M ${PASS_MAX_DAYS:-365} -W ${PASS_WARN_AGE:-30} $NAME
-    fi
-  done
+  configure_password_policy_for_existing_users
 
   # from README.privsep
   # another less tiger warning (pass016w)
@@ -733,6 +717,35 @@ EOF
 
   return 0
 } # user_accounts()
+################################################################################
+function configure_password_policy_for_existing_users() {
+  local NAME
+  local uid
+  # CIS 8.3 Set Account Expiration Parameters On Active Accounts
+  cat 0<<-EOF
+	
+	configuring password policies for existing users
+	------------------------------------------------
+EOF
+  NAMES=( $( cut -d: -f1 /etc/passwd ) )
+  PASS_MIN_DAYS=$( awk '/^PASS_MIN_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
+  PASS_MAX_DAYS=$( awk '/^PASS_MAX_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
+  PASS_WARN_AGE=$( awk '/^PASS_WARN_AGE/{print$2}' /etc/login.defs 2>/dev/null )
+  for NAME in ${NAMES[*]}
+  do
+    uid=$( id -u $NAME )
+    if [ -z "${uid}" ]
+    then
+      continue
+    fi
+    if [ $uid -ge ${UID_MIN:-1000} ] && [ $uid -le ${UID_MAX:-60000} ]
+    then
+      echo "  UID ${uid}"
+      chage -m ${PASS_MIN_DAYS:-7} -M ${PASS_MAX_DAYS:-365} -W ${PASS_WARN_AGE:-30} $NAME
+    fi
+  done
+
+} # configure_password_policy_for_existing_users()
 ################################################################################
 function restrict_cron() {
   cat 0<<-EOF
@@ -2704,6 +2717,8 @@ EOF
   fi
 
   useradd -D -f 35
+
+  configure_password_policy_for_existing_users
 
   PASS_MIN_DAYS=$( awk '/^PASS_MIN_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
   PASS_MAX_DAYS=$( awk '/^PASS_MAX_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
