@@ -2699,6 +2699,10 @@ EOF
   for policy in ${!PASSWORD_POLICIES[*]}
   do
     sed -i "s/^\(# \?\)\?\(${policy}\)\(\s\+\)\S\+$/\2\3${PASSWORD_POLICIES[${policy}]}/" /etc/login.defs
+    if ! grep -q "^${policy}\s\+${PASSWORD_POLICIES[${policy}]}$"
+    then
+      echo "[-] failed to set ${policy}"
+    fi
   done
   diff /etc/login.defs.old /etc/login.defs
   rm -v /etc/login.defs.old
