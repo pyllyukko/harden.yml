@@ -162,6 +162,7 @@ declare -rA PASSWORD_POLICIES=(
   ["SHA_CRYPT_MIN_ROUNDS"]=500000
   ["UMASK"]="077"
 )
+password_inactive=-1
 declare -rA PWQUALITY_SETTINGS=(
   ["minlen"]="14"
   ["dcredit"]="-1"
@@ -664,7 +665,7 @@ EOF
   # locked.
   #
   # see http://tldp.org/HOWTO/Shadow-Password-HOWTO-7.html#ss7.1
-  useradd -D -f 35
+  useradd -D -f ${password_inactive}
 
   # modify adduser to use 700 as newly created home dirs permission
   sed -i 's/^defchmod=[0-9]\+\(.*\)$/defchmod=700\1/' /usr/sbin/adduser
@@ -742,7 +743,7 @@ EOF
     if [ $uid -ge ${UID_MIN:-1000} ] && [ $uid -le ${UID_MAX:-60000} ]
     then
       echo "  UID ${uid}"
-      chage -m ${PASS_MIN_DAYS:-7} -M ${PASS_MAX_DAYS:-365} -W ${PASS_WARN_AGE:-30} $NAME
+      chage -m ${PASS_MIN_DAYS:-7} -M ${PASS_MAX_DAYS:-365} -W ${PASS_WARN_AGE:-30} -I ${password_inactive} $NAME
     fi
   done
 } # configure_password_policy_for_existing_users()
@@ -2720,7 +2721,7 @@ EOF
     /sbin/authconfig --passalgo=sha512 --update
   fi
 
-  useradd -D -f 35
+  useradd -D -f ${password_inactive}
 
   configure_password_policy_for_existing_users
 
