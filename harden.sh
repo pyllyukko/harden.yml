@@ -2032,6 +2032,10 @@ EOF
     for setting in ${!PWQUALITY_SETTINGS[*]}
     do
       sed -i "s/^\(# \?\)\?\(${setting}\)\(\s*=\s*\)\S\+$/\2\3${PWQUALITY_SETTINGS[${setting}]}/" /etc/security/pwquality.conf
+      if ! grep -q "^${setting}\s*=\s*${PWQUALITY_SETTINGS[${setting}]}$" /etc/security/pwquality.conf
+      then
+	echo "[-] failed to set ${setting}"
+      fi
     done
   fi
   #if [ -f /etc/passwdqc.conf ]
