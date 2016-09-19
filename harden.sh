@@ -2743,6 +2743,10 @@ EOF
   for setting in ${!SSHD_CONFIG[*]}
   do
     sed -i "s/^\(# \?\)\?\(${setting}\)\(\s\+\)\S\+$/\2\3${SSHD_CONFIG[${setting}]}/" /etc/ssh/sshd_config
+    if ! grep -q "^${setting}\s\+${SSHD_CONFIG[${setting}]}$" /etc/ssh/sshd_config
+    then
+      echo "[-] failed to set ${setting}"
+    fi
   done
   chmod -c 600 /etc/ssh/sshd_config | tee -a "${logdir}/file_perms.txt"
 } # configure_sshd()
