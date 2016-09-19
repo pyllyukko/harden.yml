@@ -2131,7 +2131,7 @@ function quick_harden() {
   do
     ${func}
   done
-  apply_newconfs modprobe.d
+  apply_newconfs modprobe.d profile.d
 
   return
 } # quick_harden()
