@@ -709,7 +709,7 @@ EOF
   then
     /usr/bin/yes | /usr/sbin/grpck
   else
-    echo "WARNING: grpck not found!" 1>&2
+    echo "[-] WARNING: grpck not found!" 1>&2
   fi
 
   set_failure_limits
