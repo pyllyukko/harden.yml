@@ -2917,6 +2917,10 @@ do
 	"sshd_config")		configure_sshd			;;
 	"sysctl_harden")	sysctl_harden			;;
 	"homedir_perms")	user_home_directories_permissions ;;
+	*)
+	  echo "[-] unknown function" 1>&2
+	  exit 1
+	;;
       esac
     ;;
     "F") create_ftpusers		;;
