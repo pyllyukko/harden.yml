@@ -2588,7 +2588,7 @@ function usage() {
 	  		lock_system_accounts
 	  		password_policies
 	  		restrict_cron
-	  		configure_sshd
+	  		sshd_config
 	  		sysctl_harden
 	  		homedir_perms
 	  -F		create/update /etc/ftpusers
