@@ -204,6 +204,7 @@ declare -rA AUDITD_CONFIG=(
 )
 declare -rA FILE_PERMS=(
   ["/boot/grub/grub.cfg"]="og-rwx"
+  ["/etc/ssh/sshd_config"]="600"
 )
 
 # NOLOGIN(8): "It is intended as a replacement shell field for accounts that have been disabled."
@@ -2748,7 +2749,7 @@ EOF
       echo "[-] failed to set ${setting}"
     fi
   done
-  chmod -c 600 /etc/ssh/sshd_config | tee -a "${logdir}/file_perms.txt"
+  chmod -c ${FILE_PERMS["/etc/ssh/sshd_config"]} /etc/ssh/sshd_config | tee -a "${logdir}/file_perms.txt"
 } # configure_sshd()
 ################################################################################
 function enable_sysstat() {
