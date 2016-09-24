@@ -1004,6 +1004,8 @@ EOF
 	os="slackware"
       else if(system("test -f /etc/debian_version")==0)
 	os="debian"
+      else if(system("test -f /etc/centos-release")==0)
+	os="centos"
       else
 	os="unknown"
       bind_mount_found=0
@@ -1082,6 +1084,9 @@ EOF
 	  case "debian":
 	    # debian format
 	    printf "%-15s %-15s %-7s %-15s %-7s %s\n", $1, $2, $3, $4, $5, $6
+	    break
+	  case "centos":
+	    printf "%-41s %-23s %-7s %-15s %s %s\n", $1, $2, $3, $4, $5, $6
 	    break
 	  case "slackware":
 	  default:
