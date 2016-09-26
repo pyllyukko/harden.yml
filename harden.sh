@@ -1988,7 +1988,7 @@ EOF
       iauth       required   pam_tally2.so     onerr=fail audit silent deny=${FAILURE_LIMIT} unlock_time=900
       # loop through the rest of the file
       :a
-      $!{
+      \$!{
         # Read the next line of input into the pattern space
         n
         # Branch to label a
