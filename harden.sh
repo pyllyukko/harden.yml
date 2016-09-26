@@ -1101,7 +1101,7 @@ EOF
 
   if [ -f /etc/fstab.new ]
   then
-    echo "${FUNCNAME}(): /etc/fstab.new created"
+    echo "[+] /etc/fstab.new created"
   fi
 
   return ${?}
