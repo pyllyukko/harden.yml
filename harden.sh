@@ -2088,7 +2088,7 @@ function sysctl_harden() {
 EOF
   if [ -f "${CWD}/newconfs/sysctl.conf.new" ]
   then
-    if [ -d /etc/sysctl.d ] && [ ! -f /etc/sysctl.d/harden.conf ]
+    if [ -d /etc/sysctl.d ]
     then
       # for debian
       cat "${CWD}/newconfs/sysctl.conf.new" 1>/etc/sysctl.d/harden.conf
