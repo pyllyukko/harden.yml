@@ -2589,6 +2589,7 @@ function usage() {
 	  		configure_securetty
 	  		core_dumps
 	  		create_banners
+	  		disable_ipv6
 	  		disable_unnecessary_systemd_services
 	  		enable_apparmor
 	  		enable_bootlog
@@ -2852,6 +2853,19 @@ EOF
   fi
 } # aa_enforce()
 ################################################################################
+function disable_ipv6() {
+  cat 0<<-EOF
+	
+	disabling IPv6
+	--------------
+EOF
+  if [ -f /etc/default/grub ] && ! grep -q '^GRUB_CMDLINE_LINUX=".*ipv6.disable=1' /etc/default/grub
+  then
+    echo '[+] configuring /etc/default/grub'
+    sed -i 's/^\(GRUB_CMDLINE_LINUX=".*\)"$/\1 ipv6.disable=1"/' /etc/default/grub
+  fi
+} # disable_ipv6()
+################################################################################
 
 if [ "${USER}" != "root" ]
 then
@@ -2915,6 +2929,7 @@ do
 	"configure_securetty")	configure_securetty		;;
 	"create_banners")	create_banners			;;
 	"core_dumps")		configure_core_dumps		;;
+	"disable_ipv6")		disable_ipv6			;;
 	"disable_unnecessary_systemd_services") disable_unnecessary_systemd_services ;;
 	"enable_apparmor")	enable_apparmor			;;
 	"enable_bootlog")	enable_bootlog			;;
