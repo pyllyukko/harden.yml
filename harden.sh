@@ -2657,6 +2657,7 @@ EOF
 } # usage()
 ################################################################################
 function configure_securetty() {
+  # https://www.debian.org/doc/manuals/securing-debian-howto/ch4.en.html#s-restrict-console-login
   local i
   cat 0<<-EOF
 	
