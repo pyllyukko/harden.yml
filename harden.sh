@@ -2007,9 +2007,14 @@ EOF
   elif [ -f /etc/pam.d/password-auth -a -f /etc/pam.d/system-auth ] && \
     ! grep -q "^password.*pam_unix\.so.*remember" /etc/pam.d/password-auth && ! grep -q "^password.*pam_unix\.so.*remember" /etc/pam.d/system-auth
   then
-    # TODO: remove nullok?
     echo '[+] limiting password reuse /etc/pam.d/password-auth & /etc/pam.d/system-auth'
     sed -i 's/^\(password.*pam_unix\.so.*\)$/\1 remember=5/' /etc/pam.d/password-auth /etc/pam.d/system-auth
+  fi
+  if [ -f /etc/pam.d/common-auth ] && grep -q 'nullok' /etc/pam.d/common-auth
+  then
+    # TODO: remove nullok
+    #echo '[+] removing nullok from /etc/pam.d/common-auth'
+    true
   fi
   if [ -f /etc/pam.d/su ] && ! grep -q "^auth.*required.*pam_wheel\.so" /etc/pam.d/su
   then
