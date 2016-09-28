@@ -1105,7 +1105,7 @@ EOF
     }END{
       if(!bind_mount_found)
 	printf "/tmp /var/tmp none bind 0 0\n"
-      if(!proc_mount_found&&os!="slackware"
+      if(!proc_mount_found&&os!="slackware")
 	printf "proc /proc proc defaults,hidepid=2 0 0\n"
     }' /etc/fstab 1>/etc/fstab.new
 
