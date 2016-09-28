@@ -2345,12 +2345,14 @@ EOF
   #   - Add faillog auditing above lastlog
   #   - Enable kernel module logging
   #   - Enable auditing of tallylog
+  #   - remove delete stuff (too excessive)
   ${concat} "${stig_rules[0]}" | sed \
     -e '/^#-w \/var\/log\/lastlog -p wa -k logins$/s/^#//' \
     -e '/^#-w \/var\/\(run\|log\)\/[ubw]tmp -p wa -k session$/s/^#//' \
     -e '/^-w \/var\/log\/lastlog -p wa -k logins$/i-w /var/log/faillog -p wa -k logins' \
     -e '/^#.*\(-k \|-F key=\)module.*$/s/^#//' \
     -e '/^#-w \/var\/log\/tallylog -p wa -k logins$/s/^#//' \
+    -e '/^[^#].*-k delete/s/^/#/' \
     1>/etc/audit/rules.d/stig.rules
   # distro specific
   if [ "${DISTRO}" = "slackware" ]
