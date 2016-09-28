@@ -1009,6 +1009,7 @@ EOF
       else
 	os="unknown"
       bind_mount_found=0
+      proc_mount_found=0
     }
     # partly from system-hardening-10.2.txt
     # strict settings for filesystems mounted under /mnt
@@ -1065,6 +1066,13 @@ EOF
     ){
       bind_mount_found=1
     }
+    ( \
+      $1 == "proc" && \
+      $2 == "/proc" && \
+      $4 == "proc" \
+    ){
+      proc_mount_found=1
+    }
     $3 == "swap" {
       # FSTAB(5): "For swap partitions, this field should be specified as "none"."
       $2 = "none"
@@ -1097,6 +1105,8 @@ EOF
     }END{
       if(!bind_mount_found)
 	printf "/tmp /var/tmp none bind 0 0\n"
+      if(!proc_mount_found&&os!="slackware"
+	printf "proc /proc proc defaults,hidepid=2 0 0\n"
     }' /etc/fstab 1>/etc/fstab.new
 
   if [ -f /etc/fstab.new ]
