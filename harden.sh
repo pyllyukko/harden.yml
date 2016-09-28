@@ -2012,9 +2012,8 @@ EOF
   fi
   if [ -f /etc/pam.d/common-auth ] && grep -q 'nullok' /etc/pam.d/common-auth
   then
-    # TODO: remove nullok
-    #echo '[+] removing nullok from /etc/pam.d/common-auth'
-    true
+    echo '[+] removing nullok from /etc/pam.d/common-auth'
+    sed -i 's/\s\+nullok\(_secure\)\?//' /etc/pam.d/common-auth
   fi
   if [ -f /etc/pam.d/su ] && ! grep -q "^auth.*required.*pam_wheel\.so" /etc/pam.d/su
   then
