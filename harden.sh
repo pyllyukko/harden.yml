@@ -2132,6 +2132,7 @@ function quick_harden() {
     enable_sysstat \
     create_limited_ca_list \
     lock_system_accounts \
+    configure_apt \
     configure_securetty \
     configure_pam \
     configure_core_dumps \
@@ -2591,6 +2592,7 @@ function usage() {
 
 	  -f function	run a function. available functions:
 	  		aa_enforce
+	  		configure_apt
 	  		configure_modprobe.d
 	  		configure_pam
 	  		configure_securetty
@@ -2874,6 +2876,20 @@ EOF
   fi
 } # disable_ipv6()
 ################################################################################
+function configure_apt() {
+  cat 0<<-EOF
+	
+	disabling suggested packages in APT
+	-----------------------------------
+EOF
+  if [ -d /etc/apt/apt.conf.d ]
+  then
+    echo 'APT::Install-Suggests "false";' 1>/etc/apt/apt.conf.d/99suggested
+  else
+    echo '[-] /etc/apt/apt.conf.d not found. maybe this is not Debian based host.'
+  fi
+} # configure_apt()
+################################################################################
 
 if [ "${USER}" != "root" ]
 then
@@ -2932,6 +2948,7 @@ do
     "f")
       case "${OPTARG}" in
 	"aa_enforce")		aa_enforce			;;
+	"configure_apt")	configure_apt			;;
 	"configure_modprobe.d")	apply_newconfs modprobe.d	;;
 	"configure_pam")	configure_pam			;;
 	"configure_securetty")	configure_securetty		;;
