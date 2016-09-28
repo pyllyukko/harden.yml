@@ -616,7 +616,10 @@ EOF
     then
       continue
     fi
-    if [ ${uid} -le ${SYS_UID_MAX:-999} ] && [ ${NAME} != 'root' ] && [ ${NAME} != 'Debian-gdm' ]
+    if [ ${uid} -le ${SYS_UID_MAX:-999} ] && \
+      [ ${NAME} != 'root' ] && \
+      [ ${NAME} != 'Debian-gdm' ] && \
+      [ ${NAME} != 'daemon' ]
     then
       printf "%-17s (UID=%s)\n" "${NAME}" "${uid}"
       crontab -l -u "${NAME}" 2>&1 | grep -q "^\(no crontab for\|The user \S\+ cannot use this program (crontab)\)"
