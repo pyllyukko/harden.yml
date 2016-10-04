@@ -2069,8 +2069,9 @@ EOF
     sed -i '/auth\s\+required\s\+pam_wheel\.so\(\s\+use_uid\)\?$/s/^#\s*//' /etc/pam.d/su
   fi
 
-  if [ -f /etc/security/namespace.conf ]
+  if [ -f /etc/security/namespace.conf -a ! -f /etc/redhat-release ]
   then
+    # WARNING: this is not completely tested with CentOS!
     echo '[+] configuring polyinstation (pam_namespace)'
     sed -i \
       -e 's/^#\/tmp.*$/\/tmp     \/tmp\/tmp-inst\/         level      root/' \
