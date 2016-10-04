@@ -2080,7 +2080,7 @@ EOF
       /etc/pam.d/login \
       /etc/pam.d/gdm-password \
       /etc/pam.d/sshd \
-      lightdm
+      /etc/pam.d/lightdm
     do
       if [ -f ${file} ] && ! grep -q '^session\s\+required\s\+pam_namespace\.so' ${file}
       then
