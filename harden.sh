@@ -1998,6 +1998,8 @@ EOF
 ################################################################################
 function configure_pam() {
   local setting
+  local file
+
   cat 0<<-EOF
 	
 	configuring PAM
@@ -2065,6 +2067,26 @@ EOF
   then
     echo '[+] configuring pam_wheel.so'
     sed -i '/auth\s\+required\s\+pam_wheel\.so\(\s\+use_uid\)\?$/s/^#\s*//' /etc/pam.d/su
+  fi
+
+  if [ -f /etc/security/namespace.conf ]
+  then
+    echo '[+] configuring polyinstation (pam_namespace)'
+    sed -i \
+      -e 's/^#\/tmp.*$/\/tmp     \/tmp\/tmp-inst\/         level      root/' \
+      -e '/^#\/var\/tmp/s/^#\(.*\),adm$/\1/' \
+      /etc/security/namespace.conf
+    for file in \
+      /etc/pam.d/login \
+      /etc/pam.d/gdm-password \
+      /etc/pam.d/sshd \
+      lightdm
+    do
+      if [ -f ${file} ] && ! grep -q '^session\s\+required\s\+pam_namespace\.so' ${file}
+      then
+	echo 'session    required   pam_namespace.so' 1>>${file}
+      fi
+    done
   fi
 
   echo '[+] configuring default behaviour via /etc/pam.d/other'
