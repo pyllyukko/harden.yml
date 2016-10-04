@@ -2053,7 +2053,7 @@ EOF
   elif [ -f /etc/pam.d/password-auth -a -f /etc/pam.d/system-auth ] && \
     ! grep -q "^password.*pam_unix\.so.*remember" /etc/pam.d/password-auth && ! grep -q "^password.*pam_unix\.so.*remember" /etc/pam.d/system-auth
   then
-    echo '[+] limiting password reuse /etc/pam.d/password-auth & /etc/pam.d/system-auth'
+    echo '[+] limiting password reuse in /etc/pam.d/password-auth & /etc/pam.d/system-auth'
     sed -i 's/^\(password.*pam_unix\.so.*\)$/\1 remember=5/' /etc/pam.d/password-auth /etc/pam.d/system-auth
   fi
   if [ -f /etc/pam.d/common-auth ] && grep -q 'nullok' /etc/pam.d/common-auth
