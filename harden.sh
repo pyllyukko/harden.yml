@@ -1078,8 +1078,10 @@ EOF
     ( \
       $1 == "proc" && \
       $2 == "/proc" && \
-      $4 == "proc" \
+      $3 == "proc" \
     ){
+      if($4 !~ /hidepid/)
+        $4 = $4 ",hidepid=2"
       proc_mount_found=1
     }
     $3 == "swap" {
