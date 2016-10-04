@@ -2001,23 +2001,30 @@ EOF
   # if libpam-passwdqc is installed, it is already configured by pam-auth-update
 
   # enable faillog
-  if [ -f /etc/pam.d/login ] && ! grep -q "pam_tally2" /etc/pam.d/login
+  if [ -f /etc/pam.d/login ]
   then
-    echo '[+] enabling pam_tally2'
-    # insert above first occurance of ^auth
-    sed -i "/^auth/{
-      iauth       required   pam_tally2.so     onerr=fail audit silent deny=${FAILURE_LIMIT} unlock_time=900
-      # loop through the rest of the file
-      :a
-      \$!{
-        # Read the next line of input into the pattern space
-        n
-        # Branch to label a
-        ba
-      }
-    }" /etc/pam.d/login
-    echo '[+] enabling pam_access'
-    sed -i '/account\s\+required\s\+pam_access\.so/s/^#\s*//' /etc/pam.d/login
+    if ! grep -q "pam_tally2" /etc/pam.d/login
+    then
+      echo '[+] enabling pam_tally2'
+      # insert above first occurance of ^auth
+      sed -i "/^auth/{
+        iauth       required   pam_tally2.so     onerr=fail audit silent deny=${FAILURE_LIMIT} unlock_time=900
+        # loop through the rest of the file
+        :a
+        \$!{
+          # Read the next line of input into the pattern space
+          n
+          # Branch to label a
+          ba
+        }
+      }" /etc/pam.d/login
+    fi
+    if ! grep -q "^account\s\+required\s\+pam_access\.so$" /etc/pam.d/login
+    then
+      echo '[+] enabling pam_access'
+      sed -i '/account\s\+required\s\+pam_access\.so/s/^#\s*//' /etc/pam.d/login
+      # TODO: configure some reasonable defaults to /etc/security/access.conf
+    fi
   fi
   # limit password reuse
   # debian
