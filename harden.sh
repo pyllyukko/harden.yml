@@ -1830,6 +1830,16 @@ EOF
 
   create_environment_for_restricted_shell
 
+  # Debian
+  # don't use dash as the default shell
+  # there's some weird bug when using PAM's polyinstation
+  if [ -x /usr/bin/debconf-set-selections -a \
+       -x /usr/sbin/dpkg-reconfigure ]
+  then
+    echo 'dash    dash/sh boolean false' | debconf-set-selections -v
+    dpkg-reconfigure -f noninteractive dash
+  fi
+
   # add rbash to shells
   # NOTE: restricted shells shouldn't be listed in /etc/shells!!!
   # see man pages su & chsh, plus chsh.c for reasons why...
