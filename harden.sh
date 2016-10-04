@@ -479,6 +479,12 @@ EOF
 function create_environment_for_restricted_shell () {
   local PRG
 
+  cat 0<<-EOF
+	
+	populating ${RBINDIR}
+	-----------${RBINDIR//?/-}
+EOF
+
   if [ ! -d "${RBINDIR}" ]
   then
     mkdir -pv "${RBINDIR}"
@@ -490,7 +496,7 @@ function create_environment_for_restricted_shell () {
 
   #rm -v "${RBINDIR}/"*
 
-  pushd "${RBINDIR}" || return 1
+  pushd "${RBINDIR}" 1>/dev/null || return 1
 
   for PRG in /bin/{cat,cp,df,du,id,ls,mkdir,mv,uname,who} /usr/bin/{chage,passwd,printenv,uptime}
   do
@@ -499,7 +505,7 @@ function create_environment_for_restricted_shell () {
   ln -sv /usr/bin/vim	rvim
   ln -sv /usr/bin/view	rview
 
-  popd
+  popd 1>/dev/null
 
   return
 } # create_environment_for_restricted_shell()
