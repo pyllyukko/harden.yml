@@ -2016,6 +2016,8 @@ EOF
         ba
       }
     }" /etc/pam.d/login
+    echo '[+] enabling pam_access'
+    sed -i '/account\s\+required\s\+pam_access\.so/s/^#\s*//' /etc/pam.d/login
   fi
   # limit password reuse
   # debian
