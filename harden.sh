@@ -1567,7 +1567,7 @@ function create_ftpusers() {
   cat 0<<-EOF
 	
 	creating /etc/ftpusers
-	------------------------
+	----------------------
 EOF
   # get the login names
   for NAME in ${NAMES[*]}
@@ -1819,7 +1819,7 @@ EOF
   # see "RESTRICTED SHELL" on BASH(1)
   if [ ! -h /bin/rbash ]
   then
-    echo "${FUNCNAME}(): creating rbash link for restricted bash"
+    echo "[+] creating rbash link for restricted bash"
     pushd /bin
     ln -sv bash rbash && useradd -D -s /bin/rbash
     popd
