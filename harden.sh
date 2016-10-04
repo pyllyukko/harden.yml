@@ -1008,15 +1008,15 @@ EOF
   gawk '
     BEGIN{
       if(system("grep -q raspbian /etc/os-release")==0)
-	os="raspbian"
+        os="raspbian"
       else if(system("test -f /etc/slackware-version")==0)
-	os="slackware"
+        os="slackware"
       else if(system("test -f /etc/debian_version")==0)
-	os="debian"
+        os="debian"
       else if(system("test -f /etc/centos-release")==0)
-	os="centos"
+        os="centos"
       else
-	os="unknown"
+        os="unknown"
       bind_mount_found=0
       proc_mount_found=0
     }
@@ -1093,31 +1093,31 @@ EOF
     {
       # formatting from /usr/lib/setup/SeTpartitions of slackware installer
       if($0 ~ /^#/)
-	print
+        print
       else
-	switch(os) {
-	  case "raspbian":
-	    # raspbian format
-	    printf "%-15s %-15s %-7s %-17s %-7s %s\n", $1, $2, $3, $4, $5, $6
-	    break
-	  case "debian":
-	    # debian format
-	    printf "%-15s %-15s %-7s %-15s %-7s %s\n", $1, $2, $3, $4, $5, $6
-	    break
-	  case "centos":
-	    printf "%-41s %-23s %-7s %-15s %s %s\n", $1, $2, $3, $4, $5, $6
-	    break
-	  case "slackware":
-	  default:
-	    # slackware format
-	    printf "%-16s %-16s %-11s %-16s %-3s %s\n", $1, $2, $3, $4, $5, $6
-	    break
-	}
+        switch(os) {
+          case "raspbian":
+            # raspbian format
+            printf "%-15s %-15s %-7s %-17s %-7s %s\n", $1, $2, $3, $4, $5, $6
+            break
+          case "debian":
+            # debian format
+            printf "%-15s %-15s %-7s %-15s %-7s %s\n", $1, $2, $3, $4, $5, $6
+            break
+          case "centos":
+            printf "%-41s %-23s %-7s %-15s %s %s\n", $1, $2, $3, $4, $5, $6
+            break
+          case "slackware":
+          default:
+            # slackware format
+            printf "%-16s %-16s %-11s %-16s %-3s %s\n", $1, $2, $3, $4, $5, $6
+            break
+        }
     }END{
       if(!bind_mount_found)
-	printf "/tmp /var/tmp none bind 0 0\n"
+        printf "/tmp /var/tmp none bind 0 0\n"
       if(!proc_mount_found&&os!="slackware")
-	printf "proc /proc proc defaults,hidepid=2 0 0\n"
+        printf "proc /proc proc defaults,hidepid=2 0 0\n"
     }' /etc/fstab 1>/etc/fstab.new
 
   if [ -f /etc/fstab.new ]
