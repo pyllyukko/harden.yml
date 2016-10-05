@@ -2921,7 +2921,7 @@ EOF
     done
     # more details at https://github.com/pyllyukko/harden.sh/wiki/apparmor
     echo '[+] setting few troublesome profiles back to complain mode'
-    for profile in "sbin.dhclient" "usr.sbin.sshd" "usr.bin.man" "etc.cron.daily.logrotate" "usr.bin.wireshark"
+    for profile in "sbin.dhclient" "usr.sbin.sshd" "usr.bin.man" "etc.cron.daily.logrotate" "usr.bin.wireshark" "usr.bin.passwd" "usr.sbin.userdel"
     do
       /usr/sbin/aa-complain /etc/apparmor.d/${profile}
     done
