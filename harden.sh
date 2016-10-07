@@ -2958,6 +2958,20 @@ EOF
   fi
 } # configure_apt()
 ################################################################################
+function disable_gdm3_user_list() {
+  cat 0<<-EOF
+	
+	disabling user list in GDM
+	--------------------------
+EOF
+
+  if [ ! -f /etc/gdm3/greeter.dconf-defaults ]
+  then
+    echo '[-] /etc/gdm3/greeter.dconf-defaults not found'
+  fi
+  sed -i '/disable-user-list=true$/s/^#\s*//' /etc/gdm3/greeter.dconf-defaults
+} # disable_gdm3_user_list()
+################################################################################
 
 if [ "${USER}" != "root" ]
 then
