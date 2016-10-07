@@ -2961,15 +2961,21 @@ EOF
 function disable_gdm3_user_list() {
   cat 0<<-EOF
 	
-	disabling user list in GDM
-	--------------------------
+	disabling user list in display manager
+	--------------------------------------
 EOF
 
-  if [ ! -f /etc/gdm3/greeter.dconf-defaults ]
+  if [ -f /etc/gdm3/greeter.dconf-defaults ]
   then
-    echo '[-] /etc/gdm3/greeter.dconf-defaults not found'
+    echo '[+] configuring /etc/gdm3/greeter.dconf-defaults'
+    sed -i '/disable-user-list=true$/s/^#\s*//' /etc/gdm3/greeter.dconf-defaults
+  elif [ -f /etc/lightdm/lightdm.conf ]
+  then
+    echo '[+] configuring /etc/lightdm/lightdm.conf'
+    sed -i '/^greeter-hide-users=/s/=.*$/=true/' /etc/lightdm/lightdm.conf
+  else
+    echo '[-] display manager greeter config not found'
   fi
-  sed -i '/disable-user-list=true$/s/^#\s*//' /etc/gdm3/greeter.dconf-defaults
 } # disable_gdm3_user_list()
 ################################################################################
 
