@@ -2499,6 +2499,10 @@ EOF
   then
     sed -i 's/^\(append=".*\)"$/\1 audit=1"/' /etc/lilo.conf
     echo "NOTICE: /etc/lilo.conf updated. you need to run \`lilo' to update the boot loader."
+  # raspbian
+  elif [ -f /boot/cmdline.txt ] && ! grep -q 'audit=1' /boot/cmdline.txt
+  then
+    sed -i 's/$/ audit=1/' /boot/cmdline.txt
   fi
 } # configure_basic_auditing()
 ################################################################################
