@@ -2945,6 +2945,11 @@ EOF
   then
     echo '[+] configuring /etc/default/grub'
     sed -i 's/^\(GRUB_CMDLINE_LINUX=".*\)"$/\1 ipv6.disable=1"/' /etc/default/grub
+  # raspbian
+  elif [ -f /boot/cmdline.txt ] && ! grep -q 'ipv6\.disable=1' /boot/cmdline.txt
+  then
+    echo '[+] configuring /boot/cmdline.txt'
+    sed -i 's/$/ ipv6.disable=1/' /boot/cmdline.txt
   fi
 } # disable_ipv6()
 ################################################################################
