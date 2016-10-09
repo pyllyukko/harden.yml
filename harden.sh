@@ -2186,6 +2186,7 @@ function quick_harden() {
   local func
 
   # configure TCP wrappers
+  # TODO: make into separate function
   if ! grep -q "^ALL" /etc/hosts.deny
   then
     echo "ALL: ALL EXCEPT localhost" 1>>/etc/hosts.deny
@@ -2272,6 +2273,7 @@ EOF
 } # apply_newconfs()
 ################################################################################
 function create_ssh_moduli() {
+  # WARNING: takes a LONG time!
   local i
   local length
   if [ -f /etc/ssh/moduli.new ]
@@ -2882,6 +2884,7 @@ function enable_apparmor() {
 	enabling AppArmor
 	-----------------
 EOF
+  # TODO: if [ -f /boot/cmdline.txt ]
   if [ ! -f /etc/default/grub ]
   then
     echo '[-] error: /etc/default/grub not found!' 1>&2
