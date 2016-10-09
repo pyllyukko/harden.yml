@@ -2069,7 +2069,7 @@ EOF
     sed -i '/auth\s\+required\s\+pam_wheel\.so\(\s\+use_uid\)\?$/s/^#\s*//' /etc/pam.d/su
   fi
 
-  if [ -f /etc/security/namespace.conf -a ! -f /etc/redhat-release ]
+  if [ -f /etc/security/namespace.conf ] && [ "${DISTRO}" = "debian" -o "${DISTRO}" = "raspbian" ]
   then
     # WARNING: this is not completely tested with CentOS!
     echo '[+] configuring polyinstation (pam_namespace)'
