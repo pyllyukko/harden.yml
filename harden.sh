@@ -2212,11 +2212,13 @@ function quick_harden() {
     enable_bootlog \
     user_home_directories_permissions \
     enable_apparmor \
-    aa_enforce
+    aa_enforce \
+    disable_gdm3_user_list
   do
     ${func}
   done
   apply_newconfs modprobe.d profile.d
+  # TODO: chmod tmout.sh
 
   return
 } # quick_harden()
