@@ -2010,9 +2010,9 @@ EOF
     echo '[-] /etc/pam.d does not exist!' 1>&2
     return 1
   fi
-  # if libpam-passwdqc is installed, it is already configured by pam-auth-update
+  # NOTE: if libpam-passwdqc is installed, it is already configured by pam-auth-update
 
-  # enable faillog
+  # enable faillog (pam_tally2)
   if [ -f /etc/pam.d/login ]
   then
     if ! grep -q "pam_tally2" /etc/pam.d/login
@@ -2031,11 +2031,15 @@ EOF
         }
       }" /etc/pam.d/login
     fi
+
+    # pam_access
     if ! grep -q "^account\s\+required\s\+pam_access\.so$" /etc/pam.d/login
     then
       echo '[+] enabling pam_access'
       sed -i '/account\s\+required\s\+pam_access\.so/s/^#\s*//' /etc/pam.d/login
     fi
+
+    # access.conf
     # the checksum is the same both for Debian & CentOS
     #if sha512sum -c 0<<<"a32865fc0d8700ebb63e01fa998c3c92dca7bda2f6a34c5cca0a8a59a5406eef439167add8a15424b82812674312fc225fd26331579d5625a6d1c4cf833a922f  /etc/security/access.conf" &>/dev/null
     #then
@@ -2044,6 +2048,7 @@ EOF
     #  # TODO: /etc/pam.d/crond in CentOS
     #fi
   fi
+
   # limit password reuse
   # debian
   if [ -f /etc/pam.d/common-password ] && ! grep -q "^password.*pam_unix\.so.*remember" /etc/pam.d/common-password
@@ -2058,17 +2063,22 @@ EOF
     echo '[+] limiting password reuse in /etc/pam.d/password-auth & /etc/pam.d/system-auth'
     sed -i 's/^\(password.*pam_unix\.so.*\)$/\1 remember=5/' /etc/pam.d/password-auth /etc/pam.d/system-auth
   fi
+
+  # disallow empty passwords
   if [ -f /etc/pam.d/common-auth ] && grep -q 'nullok' /etc/pam.d/common-auth
   then
     echo '[+] removing nullok from /etc/pam.d/common-auth'
     sed -i 's/\s\+nullok\(_secure\)\?//' /etc/pam.d/common-auth
   fi
+
+  # !su
   if [ -f /etc/pam.d/su ] && ! grep -q "^auth.*required.*pam_wheel\.so" /etc/pam.d/su
   then
     echo '[+] configuring pam_wheel.so'
     sed -i '/auth\s\+required\s\+pam_wheel\.so\(\s\+use_uid\)\?$/s/^#\s*//' /etc/pam.d/su
   fi
 
+  # pam_namespace
   if [ -f /etc/security/namespace.conf ] && [ "${DISTRO}" = "debian" -o "${DISTRO}" = "raspbian" ]
   then
     # WARNING: this is not completely tested with CentOS!
@@ -2090,12 +2100,14 @@ EOF
     done
   fi
 
+  # pam_umask
   if [ -f /etc/pam.d/common-session ] && ! grep -q 'pam_umask\.so' /etc/pam.d/common-session
   then
     echo '[+] enabling pam_umask in /etc/pam.d/common-session'
     echo 'session optional pam_umask.so' 1>>/etc/pam.d/common-session
   fi
 
+  # /etc/pam.d/other
   echo '[+] configuring default behaviour via /etc/pam.d/other'
   cat 0<<-EOF 1>/etc/pam.d/other
 	# deny all access by default and log to syslog
