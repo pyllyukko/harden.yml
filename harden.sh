@@ -2090,6 +2090,12 @@ EOF
     done
   fi
 
+  if [ -f /etc/pam.d/common-session ] && ! grep -q 'pam_umask\.so' /etc/pam.d/common-session
+  then
+    echo '[+] enabling pam_umask in /etc/pam.d/common-session'
+    echo 'session optional pam_umask.so' 1>>/etc/pam.d/common-session
+  fi
+
   echo '[+] configuring default behaviour via /etc/pam.d/other'
   cat 0<<-EOF 1>/etc/pam.d/other
 	# deny all access by default and log to syslog
