@@ -2033,11 +2033,15 @@ EOF
     fi
 
     # pam_access
-    if ! grep -q "^account\s\+required\s\+pam_access\.so$" /etc/pam.d/login
-    then
-      echo '[+] enabling pam_access'
-      sed -i '/account\s\+required\s\+pam_access\.so/s/^#\s*//' /etc/pam.d/login
-    fi
+    for file in /etc/pam.d/login /etc/pam.d/sshd
+    do
+      # TODO: nodefgroup
+      if ! grep -q "^account\s\+required\s\+pam_access\.so$" "${file}"
+      then
+        echo "[+] enabling pam_access in ${file}"
+        sed -i '/account\s\+required\s\+pam_access\.so/s/^#\s*//' "${file}"
+      fi
+    done
 
     # access.conf
     # the checksum is the same both for Debian & CentOS
