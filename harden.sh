@@ -2036,7 +2036,7 @@ EOF
     for file in /etc/pam.d/login /etc/pam.d/sshd
     do
       # TODO: nodefgroup
-      if ! grep -q "^account\s\+required\s\+pam_access\.so$" "${file}"
+      if grep -q "account\s\+required\s\+pam_access\.so$" "${file}"
       then
         echo "[+] enabling pam_access in ${file}"
         sed -i '/account\s\+required\s\+pam_access\.so/s/^#\s*//' "${file}"
