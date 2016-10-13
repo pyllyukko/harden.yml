@@ -2042,12 +2042,14 @@ EOF
 
     # access.conf
     # the checksum is the same both for Debian & CentOS
-    #if sha512sum -c 0<<<"a32865fc0d8700ebb63e01fa998c3c92dca7bda2f6a34c5cca0a8a59a5406eef439167add8a15424b82812674312fc225fd26331579d5625a6d1c4cf833a922f  /etc/security/access.conf" &>/dev/null
-    #then
-    #  echo '[+] configuring /etc/security/access.conf'
-    #  sed -i 's/^#-:ALL EXCEPT wheel shutdown sync:LOCAL$/-:ALL EXCEPT root users:LOCAL/' /etc/security/access.conf
-    #  # TODO: /etc/pam.d/crond in CentOS
-    #fi
+    if sha512sum -c 0<<<"a32865fc0d8700ebb63e01fa998c3c92dca7bda2f6a34c5cca0a8a59a5406eef439167add8a15424b82812674312fc225fd26331579d5625a6d1c4cf833a922f  /etc/security/access.conf" &>/dev/null
+    then
+      echo '[+] configuring /etc/security/access.conf'
+      sed -i \
+	-e '/^# All other users should be denied to get access from all sources./i+ : root : LOCAL\n- : ALL : cron crond\n+ : (users) : ALL' \
+        -e '/- : ALL : ALL$/s/^#\s*//' \
+        /etc/security/access.conf
+    fi
   fi
 
   # limit password reuse
