@@ -2980,6 +2980,7 @@ EOF
 } # disable_ipv6()
 ################################################################################
 function configure_apt() {
+  local suite
   cat 0<<-EOF
 	
 	disabling suggested packages in APT
@@ -2990,6 +2991,17 @@ EOF
     echo 'APT::Install-Suggests "false";' 1>/etc/apt/apt.conf.d/99suggested
   else
     echo '[-] /etc/apt/apt.conf.d not found. maybe this is not Debian based host.'
+  fi
+
+  # configure suite for better results
+  if [ -x /usr/bin/lsb_release -a -f /etc/default/debsecan ]
+  then
+    suite=$( lsb_release -c -s )
+    if [ -n "${suite}" ]
+    then
+      echo '[+] configuring suite to /etc/default/debsecan'
+      sed -i "s/^SUITE=.*\$/SUITE=${suite}/" /etc/default/debsecan
+    fi
   fi
 } # configure_apt()
 ################################################################################
