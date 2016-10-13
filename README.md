@@ -86,6 +86,7 @@ What does it do?
    * GID 1005 for [CONFIG\_GRKERNSEC\_TPE\_TRUSTED\_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_TPE-trusted_users)
    * GID 1006 for [CONFIG\_GRKERNSEC\_SYMLINKOWN\_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_users_with_kernel-enforced_SymlinksIfOwnerMatch)
    * GID 1007 for [GRKERNSEC\_AUDIT\_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_auditing) (not in use)
+ * Even though we use [user private groups](https://en.wikipedia.org/wiki/File_system_permissions#User_private_group), the ```users``` group is used to define which users are allowed to login interactively
 
 You can also utilize the above grsec groups with [sudo][11], so the allowed users don't have the permissions by default:
 
