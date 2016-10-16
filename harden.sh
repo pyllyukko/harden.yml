@@ -3025,6 +3025,12 @@ EOF
   else
     echo '[-] display manager greeter config not found'
   fi
+  # https://wiki.ubuntu.com/LightDM#Disabling_Guest_Login
+  if [ -d /etc/lightdm/lightdm.conf.d ]
+  then
+    echo '[+] disallowing guest sessions in LightDM'
+    echo -e '[Seat:*]\nallow-guest=false' 1>/etc/lightdm/lightdm.conf.d/50-disallow-guest.conf
+  fi
 } # disable_gdm3_user_list()
 ################################################################################
 
