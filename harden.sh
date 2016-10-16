@@ -325,6 +325,7 @@ declare -ra PGP_URLS=(
 #   - 0x6887935AB297B391 - sukhbir@torproject.org (Tor messenger)
 #   - 0xADEF768480316BDA - Kevin McCarthy's key (mutt)
 #   - 0xD94AA3F0EFE21092 - Ubuntu https://help.ubuntu.com/community/VerifyIsoHowto
+#   - 0x46181433FBB75451 - Ubuntu
 #   - 0xD1AFBCE00F6C91D2 - DNSSEC Manager <dnssec@iana.org>
 #   - 0xBEA8F6E25378AAF8 - OpenWrt signing key
 #   - 0xF6947DAB68E7B931 - Hannes von Haugwitz's key (Aide)
@@ -393,6 +394,7 @@ declare -ra PGP_KEYS=(
   "0x6887935AB297B391"
   "0xADEF768480316BDA"
   "0xD94AA3F0EFE21092"
+  "0x46181433FBB75451"
   "0xD1AFBCE00F6C91D2"
   "0xBEA8F6E25378AAF8"
   "0xF6947DAB68E7B931"
