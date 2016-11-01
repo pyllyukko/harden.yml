@@ -1751,6 +1751,8 @@ EOF
     # TODO: newLoginCommand
   }
 
+  # TODO: Xwrapper.config
+
   [ -f /etc/X11/xdm/Xresources ] && {
     #echo "xlogin*unsecureGreeting: This is an unsecure session" 1>>/etc/X11/xdm/Xresources
     #echo "xlogin*allowRootLogin: false" 1>>/etc/X11/xdm/Xresources
