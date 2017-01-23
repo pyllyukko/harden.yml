@@ -170,6 +170,12 @@ declare -rA PWQUALITY_SETTINGS=(
   ["ocredit"]="-1"
   ["lcredit"]="-1"
 )
+# TODO:
+#   - PubkeyAcceptedKeyTypes
+#   - HostKeyAlgorithms
+#   - Ciphers
+#   - MACs
+#   - KEX
 declare -rA SSHD_CONFIG=(
   # from hardening guides
   ["Protocol"]=2
@@ -196,6 +202,7 @@ declare -rA SSHD_CONFIG=(
   # see http://www.openssh.com/txt/draft-miller-secsh-compression-delayed-00.txt
   ["Compression"]="delayed"
   ["AllowTcpForwarding"]="no"
+  ["FingerprintHash"]="sha256"
 )
 declare -rA AUDITD_CONFIG=(
   ["space_left_action"]="email"
