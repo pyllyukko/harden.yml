@@ -966,6 +966,7 @@ function remove_packages() {
 
   echo "${FUNCNAME}(): removing potentially dangerous packages"
 
+  # TODO: if -x removepkg && apt-get stuff
   {
     # CIS 7.1 Disable rhosts Support
     /sbin/removepkg netkit-rsh 2>/dev/null
@@ -1245,6 +1246,7 @@ function file_permissions() {
     # 9.10.2012: added gshadow to the list
     /usr/bin/chown -c root:root		/etc/passwd /etc/group
     /usr/bin/chmod -c 644		/etc/passwd /etc/group
+    # NOTE: when using grsec's RBAC, if shadow is read-only passwd will require CAP_DAC_OVERRIDE
     /usr/bin/chown -c root:shadow	/etc/shadow /etc/gshadow
     /usr/bin/chmod -c 440		/etc/shadow /etc/gshadow
 
@@ -2005,6 +2007,12 @@ EOF
     fi
     /bin/systemctl disable	"${service}"
   done
+
+  if [ -f /etc/xdg/autostart/zeitgeist-datahub.desktop ]
+  then
+    true
+  fi
+  # TODO: apt-get remove zeitgeist-datahub zeitgeist-core xul-ext-ubufox
 } # disable_unnecessary_systemd_services()
 ################################################################################
 function configure_pam() {
@@ -2063,6 +2071,14 @@ EOF
     fi
   fi
 
+  # TODO: fail delay
+
+  # TODO: enable pam_lastlog in common-session
+  if [ -f /etc/pam.d/common-session ] && ! grep -q '^session\s\+optional\s\+pam_lastlog\.so' /etc/pam.d/common-session
+  then
+    true
+  fi
+
   # limit password reuse
   # debian
   if [ -f /etc/pam.d/common-password ] && ! grep -q "^password.*pam_unix\.so.*remember" /etc/pam.d/common-password
@@ -2079,6 +2095,7 @@ EOF
   fi
 
   # disallow empty passwords
+  # TODO: CentOS
   if [ -f /etc/pam.d/common-auth ] && grep -q 'nullok' /etc/pam.d/common-auth
   then
     echo '[+] removing nullok from /etc/pam.d/common-auth'
@@ -2805,6 +2822,7 @@ EOF
   then
     echo "[+] /etc/security/limits.conf found"
     sed -i 's/^#\?\*\( \+\)soft\( \+\)core\( \+\)0$/*\1hard\2core\30/' /etc/security/limits.conf
+    # TODO: nproc - max number of processes
   else
     echo "[-] /etc/security/limits.conf NOT found" 1>&2
   fi
@@ -2842,6 +2860,8 @@ EOF
   #  # TODO: /etc/libuser.conf "crypt_style = sha512"
   #  true
   #fi
+
+  # TODO: /etc/pam.d/common-password
 
   # red hat
   if [ -x /sbin/authconfig ]
@@ -2990,6 +3010,16 @@ EOF
   fi
 } # disable_ipv6()
 ################################################################################
+function configure_iptables_persistent() {
+  # TODO
+  true
+} # configure_iptables_persistent()
+################################################################################
+function enable_selinux() {
+  # TODO
+  true
+} # enable_selinux()
+################################################################################
 function configure_apt() {
   local suite
   cat 0<<-EOF
@@ -3041,6 +3071,11 @@ EOF
     echo -e '[Seat:*]\nallow-guest=false' 1>/etc/lightdm/lightdm.conf.d/50-disallow-guest.conf
   fi
 } # disable_gdm3_user_list()
+################################################################################
+function configure_umask() {
+  true
+  # TODO
+} # configure_umask()
 ################################################################################
 
 if [ "${USER}" != "root" ]
