@@ -336,6 +336,7 @@ declare -ra PGP_URLS=(
 #   - 0xD1AFBCE00F6C91D2 - DNSSEC Manager <dnssec@iana.org>
 #   - 0xBEA8F6E25378AAF8 - OpenWrt signing key
 #   - 0xF6947DAB68E7B931 - Hannes von Haugwitz's key (Aide)
+#   - 0x9DFE2648B43434E4 - PuTTY Releases
 declare -ra PGP_KEYS=(
   # slackware
   "0x6A4463C040102233"
@@ -405,6 +406,7 @@ declare -ra PGP_KEYS=(
   "0xD1AFBCE00F6C91D2"
   "0xBEA8F6E25378AAF8"
   "0xF6947DAB68E7B931"
+  "0x9DFE2648B43434E4"
 )
 # from CIS Apache HTTP Server 2.4 Benchmark v1.1.0 - 12-03-2013
 # 1.2.3-8
