@@ -339,6 +339,7 @@ declare -ra PGP_URLS=(
 #   - 0x9DFE2648B43434E4 - PuTTY Releases
 #   - 0x3C17DA8B8A16544F - Hashcat signing key
 #   - 0xD9B0577BD93E98FC - Milan Broz <gmazyland@gmail.com> (cryptsetup)
+#   - 0x04D041E8171901CC - julien.voisin @ dustri.org (https://mat.boum.org/)
 declare -ra PGP_KEYS=(
   # slackware
   "0x6A4463C040102233"
@@ -411,6 +412,7 @@ declare -ra PGP_KEYS=(
   "0x9DFE2648B43434E4"
   "0x3C17DA8B8A16544F"
   "0xD9B0577BD93E98FC"
+  "0x04D041E8171901CC"
 )
 # from CIS Apache HTTP Server 2.4 Benchmark v1.1.0 - 12-03-2013
 # 1.2.3-8
