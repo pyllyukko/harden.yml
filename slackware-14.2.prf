@@ -27,6 +27,9 @@
 #
 #################################################################################
 
+# Use colored output
+colors=yes
+
 # Compressed uploads (set to zero when errors with uploading occur)
 compressed-uploads=yes
 
@@ -77,6 +80,9 @@ skip-test=SSH-7408:port
 # Scan type - how deep the audit should be (light, normal or full)
 test-scan-mode=full
 
+# Upload data to central server
+upload=no
+
 # The hostname/IP address to receive the data
 upload-server=
 
@@ -113,6 +119,7 @@ verbose=no
 #################################################################################
 
 # Lynis Plugins (some are for Lynis Enterprise users only)
+plugin=authentication
 plugin=compliance
 plugin=configuration
 plugin=control-panels
@@ -136,8 +143,6 @@ plugin=software
 plugin=system-integrity
 plugin=systemd
 plugin=users
-
-
 
 
 #################################################################################
@@ -177,6 +182,9 @@ config-data=sysctl;security.bsd.unprivileged_proc_debug;0;1;Unprivileged process
 config-data=sysctl;security.bsd.unprivileged_read_msgbuf;0;1;Unprivileged processes can not read the kernel message buffer;sysctl -a;-;category:security;
 
 # Kernel
+config-data=sysctl;fs.suid_dumpable;0;1;Restrict core dumps;sysctl -a;url:https;//www.kernel.org/doc/Documentation/sysctl/fs.txt;category:security;
+config-data=sysctl;fs.protected_hardlinks;1;1;Restrict hardlink creation behavior;sysctl -a;url:https;//www.kernel.org/doc/Documentation/sysctl/fs.txt;category:security;
+config-data=sysctl;fs.protected_symlinks;1;1;Restrict symlink following behavior;sysctl -a;url:https;//www.kernel.org/doc/Documentation/sysctl/fs.txt;category:security;
 #config-data=sysctl;kern.randompid=2345;Randomize PID numbers with a specific modulus;sysctl -a;-;category:security;
 config-data=sysctl;kern.sugid_coredump;0;1;No description;sysctl -a;url:https;//kernel.org/doc/Documentation/sysctl/kernel.txt;category:security;
 config-data=sysctl;kernel.core_setuid_ok;0;1;No description;sysctl -a;url:https;//kernel.org/doc/Documentation/sysctl/kernel.txt;category:security;
@@ -289,7 +297,7 @@ openldap:slapd.conf:owner:ldap-root:
 #################################################################################
 
 # Locations where to search for SSL certificates
-ssl-certificate-paths=/etc/letsencrypt:/etc/pki:/etc/ssl:/usr/local/share/ca-certificates:/var/www:/srv/www
+ssl-certificate-paths=/etc/apache2:/etc/dovecot:/etc/httpd:/etc/letsencrypt:/etc/pki:/etc/postfix:/etc/ssl:/opt/psa/var/certificates:/usr/local/psa/var/certificates:/usr/local/share/ca-certificates:/var/www:/srv/www
 
 
 #################################################################################
@@ -404,9 +412,12 @@ permdir:/root/.ssh:rwx------:root:-:WARN:
 # Automatic Updating
 # -------------------
 #
-# These settings are required when using the lynis update functionality.
+# These settings can be used to create an option to do automatic updates.
 # By specifying local paths and your update server, the tool can do an update
 # check, compare versions and download a new version.
+#
+# If you installed Lynis as a package, then update via your package manager. See
+# https://packages.cisofy.com for more information.
 #
 #################################################################################
 
