@@ -68,8 +68,11 @@ skip-plugins=no
 
 # Skip a test (one per line)
 #skip-test=SSH-7408
+# "Install a PAM module for password strength testing" - Slackware doesn't use PAM
 skip-test=AUTH-9262
+# "Install a package audit tool" - no such tool available
 skip-test=PKGS-7398
+# "Check RPM database" - Slackware has RPM binary, but it's not used
 skip-test=PKGS-7308
 
 # Skip a particular option within a test (when applicable)
