@@ -17,7 +17,6 @@ for PROGRAM in \
   awk \
   cat \
   cp \
-  faillog \
   id \
   usermod \
   grpck \
@@ -1625,6 +1624,11 @@ function set_failure_limits() {
 	setting failure limits
 	----------------------
 EOF
+  if ! hash faillog 2>/dev/null
+  then
+    echo "[-] faillog binary not found" 1>&2
+    return 1
+  fi
   echo "[+] setting the maximum number of login failures for UIDs ${UID_MIN:-1000}-${UID_MAX:-60000} to ${FAILURE_LIMIT:-5}"
 
   # NOTE: from FAILLOG(8): "The maximum failure count should always be 0 for root to prevent a denial of services attack against the system."
