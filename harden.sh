@@ -2086,6 +2086,12 @@ EOF
   fi
 
   # TODO: fail delay
+  # add 10 second delay to all failed authentication events
+  # http://www.linux-pam.org/Linux-PAM-html/sag-pam_faildelay.html
+  #if ! grep -q "pam_faildelay\.so" /etc/pam.d/common-auth
+  #then
+  #  sed '/^# here are the per-package modules (the "Primary" block)$/aauth  optional  pam_faildelay.so  delay=10000000' /etc/pam.d/common-auth
+  #fi
 
   # TODO: enable pam_lastlog in common-session
   if [ -f /etc/pam.d/common-session ] && ! grep -q '^session\s\+optional\s\+pam_lastlog\.so' /etc/pam.d/common-session
