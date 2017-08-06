@@ -260,6 +260,7 @@ declare -ra PGP_URLS=(
   "https://cisofy.com/files/cisofy-software.pub"
   "https://keys.qubes-os.org/keys/qubes-release-2-signing-key.asc"
   "https://bitcoin.org/laanwj-releases.asc"
+  "https://keybase.io/docs/server_security/code_signing_key.asc"
 )
 
 # other PGP keys:
