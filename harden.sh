@@ -2031,6 +2031,7 @@ EOF
 } # disable_unnecessary_systemd_services()
 ################################################################################
 function configure_pam() {
+  # https://github.com/pyllyukko/harden.sh/wiki/PAM
   local setting
   local file
 
