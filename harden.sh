@@ -2095,10 +2095,14 @@ EOF
   #  sed '/^# here are the per-package modules (the "Primary" block)$/aauth  optional  pam_faildelay.so  delay=10000000' /etc/pam.d/common-auth
   #fi
 
-  # TODO: enable pam_lastlog in common-session
-  if [ -f /etc/pam.d/common-session ] && ! grep -q '^session\s\+optional\s\+pam_lastlog\.so' /etc/pam.d/common-session
+  if [ -f /etc/pam.d/lightdm ] && ! grep -q '^session\s\+optional\s\+pam_lastlog\.so' /etc/pam.d/lightdm
   then
-    true
+    echo '[+] enabling pam_lastlog in /etc/pam.d/lightdm'
+    echo 'session    optional   pam_lastlog.so' 1>> /etc/pam.d/lightdm
+  elif [ -f /etc/pam.d/gdm-password ] && ! grep -q '^session\s\+optional\s\+pam_lastlog\.so' /etc/pam.d/gdm-password
+  then
+    echo '[+] enabling pam_lastlog in /etc/pam.d/gdm-password'
+    echo 'session optional        pam_lastlog.so' 1>> /etc/pam.d/gdm-password
   fi
 
   # limit password reuse
