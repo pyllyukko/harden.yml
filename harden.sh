@@ -2087,13 +2087,13 @@ EOF
     fi
   fi
 
-  # TODO: fail delay
   # add 10 second delay to all failed authentication events
   # http://www.linux-pam.org/Linux-PAM-html/sag-pam_faildelay.html
-  #if ! grep -q "pam_faildelay\.so" /etc/pam.d/common-auth
-  #then
-  #  sed '/^# here are the per-package modules (the "Primary" block)$/aauth  optional  pam_faildelay.so  delay=10000000' /etc/pam.d/common-auth
-  #fi
+  if [ -f /etc/pam.d/common-auth ] && ! grep -q "pam_faildelay\.so" /etc/pam.d/common-auth
+  then
+    echo '[+] enabling pam_faildelay in /etc/pam.d/common-auth'
+    sed -i '/^# here are the per-package modules (the "Primary" block)$/aauth\toptional\t\t\tpam_faildelay.so delay=10000000' /etc/pam.d/common-auth
+  fi
 
   if [ -f /etc/pam.d/lightdm ] && ! grep -q '^session\s\+optional\s\+pam_lastlog\.so' /etc/pam.d/lightdm
   then
