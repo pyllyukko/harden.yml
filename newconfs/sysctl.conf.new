@@ -88,9 +88,6 @@ kernel.dmesg_restrict = 1
 kernel.kptr_restrict = 2
 kernel.ctrl-alt-del = 0
 
-# if the client doesn't want to talk to us... :)
-net.ipv4.tcp_synack_retries = 0
-
 # TODO: shared_media?!?
 # https://tools.ietf.org/html/rfc1620
 
