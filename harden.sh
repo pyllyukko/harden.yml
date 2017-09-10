@@ -342,6 +342,7 @@ declare -ra PGP_URLS=(
 #   - 0x04D041E8171901CC - julien.voisin @ dustri.org (https://mat.boum.org/)
 #   - 0xABCA792D54BF70F2 - Immunity Debugger (Immunity Inc.)
 #   - 0xFE22C6FD83135D45 - Felix Geyer (KeePassX)
+#   - 0392335A78083894A4301C43236E8A58C6DB4512 - Max Kellermann (Music Player Daemon)
 declare -ra PGP_KEYS=(
   # slackware
   "0x6A4463C040102233"
@@ -417,6 +418,7 @@ declare -ra PGP_KEYS=(
   "0x04D041E8171901CC"
   "0xABCA792D54BF70F2"
   "0x164C70512F7929476764AB56FE22C6FD83135D45"
+  "0x0392335A78083894A4301C43236E8A58C6DB4512"
 )
 # from CIS Apache HTTP Server 2.4 Benchmark v1.1.0 - 12-03-2013
 # 1.2.3-8
