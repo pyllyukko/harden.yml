@@ -579,7 +579,7 @@ EOF
   # for regular users
   elif [ "${USER}" != "root" ] && [ ! -f "${CADIR}/${SKS_CA}" ]
   then
-    echo "${FUNCNAME}(): error: sks-keyservers CA not available. can not continue! try to run this as root to install the CA." 1>&2
+    echo "[-] error: sks-keyservers CA not available. can not continue! try to run this as root to install the CA." 1>&2
     return 1
   fi
   # get the CRL
@@ -594,13 +594,13 @@ EOF
   sha512sum -c 0<<<"d0a056251372367230782e050612834a2efa2fdd80eeba08e490a770691e4ddd52a744fd3f3882ca4188f625c3554633381ac90de8ea142519166277cadaf7b0  ${CADIR}/${SKS_CA}" 1>/dev/null
   if [ ${?} -ne 0 ]
   then
-    echo "${FUNCNAME}(): error: sks-keyservers CA's SHA-512 fingerprint does not match!" 1>&2
+    echo "[-] error: sks-keyservers CA's SHA-512 fingerprint does not match!" 1>&2
     return 1
   fi
   # if the distro is Debian, check if gnupg-curl is installed
   if [ "${DISTRO}" = "debian" -o "${DISTRO}" = "raspbian" ]
   then
-    /usr/bin/dpkg -s gnupg-curl &>/dev/null || echo "WARNING: package \`gnupg-curl' not installed!" 1>&2
+    /usr/bin/dpkg -s gnupg-curl &>/dev/null || echo "[-] WARNING: package \`gnupg-curl' not installed!" 1>&2
   fi
   # keys with key ID
   echo -n "from keyserver (${#PGP_KEYS[*]} keys)"
