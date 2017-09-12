@@ -573,6 +573,7 @@ EOF
   if [ "${USER}" = "root" ] && [ ! -f "${CADIR}/${SKS_CA}" ]
   then
     # https://www.sks-keyservers.net/verify_tls.php
+    echo "[+] dropping SKS certificate to ${CADIR}"
     cat "${CWD}/certificates/${SKS_CA}" 1>"${CADIR}/${SKS_CA}"
     chmod -c 644 "${CADIR}/${SKS_CA}" | tee -a "${logdir}/file_perms.txt"
   # for regular users
@@ -585,9 +586,11 @@ EOF
   SKS_HASH=$( openssl x509 -in ${CADIR}/${SKS_CA} -noout -hash )
   if [ -n "${SKS_HASH}" ] && [ "${USER}" = "root" ]
   then
+    echo "[+] fetching SKS CRL to ${CADIR}/${SKS_HASH}.r0"
     wget --append-output="${logdir}/wget-log.txt" -nv --ca-certificate=/usr/share/ca-certificates/mozilla/Thawte_Premium_Server_CA.crt https://sks-keyservers.net/ca/crl.pem -O "${CADIR}/${SKS_HASH}.r0"
     chmod -c 644 "${CADIR}/${SKS_HASH}.r0" | tee -a "${logdir}/file_perms.txt"
   fi
+  echo "[+] verifying SKS CA"
   sha512sum -c 0<<<"d0a056251372367230782e050612834a2efa2fdd80eeba08e490a770691e4ddd52a744fd3f3882ca4188f625c3554633381ac90de8ea142519166277cadaf7b0  ${CADIR}/${SKS_CA}" 1>/dev/null
   if [ ${?} -ne 0 ]
   then
