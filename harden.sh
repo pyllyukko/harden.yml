@@ -328,6 +328,7 @@ declare -ra PGP_URLS=(
 #   - 0x00CCB587DDBEF0E1 - The Irssi project <staff@irssi.org>
 #   - 1E453B2CE87BEE2F7DFE99661E34A1828E207901 - LEAP (https://bitmask.net/en/install/signature-verification)
 #   - 0xC29D97ED198D22A3 - https://openvpn.net/index.php/open-source/documentation/sig.html
+#   - 0x12F5F7B42F2B01E7 - OpenVPN 2.4.3+
 #   - 0x1AF51CE72993D5F9 - Mixmaster 3.x Code Release Signing Key
 #   - 0x6887935AB297B391 - sukhbir@torproject.org (Tor messenger)
 #   - 0xADEF768480316BDA - Kevin McCarthy's key (mutt)
@@ -404,6 +405,7 @@ declare -ra PGP_KEYS=(
   "0x00CCB587DDBEF0E1"
   "0x1E453B2CE87BEE2F7DFE99661E34A1828E207901"
   "0xC29D97ED198D22A3"
+  "0x12F5F7B42F2B01E7"
   "0x1AF51CE72993D5F9"
   "0x6887935AB297B391"
   "0xADEF768480316BDA"
