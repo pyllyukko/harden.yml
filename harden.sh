@@ -2077,7 +2077,7 @@ EOF
     then
       echo '[+] enabling pam_tally2'
       # insert above first occurance of ^auth
-      sed -i "/^auth/{
+      regex="/^auth/{
         iauth       required   pam_tally2.so     onerr=fail audit silent deny=${FAILURE_LIMIT} unlock_time=900
         # loop through the rest of the file
         :a
@@ -2087,7 +2087,8 @@ EOF
           # Branch to label a
           ba
         }
-      }" /etc/pam.d/login
+      }"
+      sed_with_diff "${regex}" "/etc/pam.d/login"
     fi
 
     # pam_access
