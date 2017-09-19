@@ -2299,27 +2299,27 @@ function quick_harden() {
   fi
 
   for func in \
-    sysctl_harden \
-    set_failure_limits \
-    create_ftpusers \
-    remove_shells \
-    harden_fstab \
-    enable_sysstat \
-    create_limited_ca_list \
-    lock_system_accounts \
-    configure_apt \
-    configure_securetty \
-    configure_pam \
-    configure_core_dumps \
+    sysctl_harden                        \
+    set_failure_limits                   \
+    create_ftpusers                      \
+    remove_shells                        \
+    harden_fstab                         \
+    enable_sysstat                       \
+    create_limited_ca_list               \
+    lock_system_accounts                 \
+    configure_apt                        \
+    configure_securetty                  \
+    configure_pam                        \
+    configure_core_dumps                 \
     disable_unnecessary_systemd_services \
-    configure_password_policies \
-    restrict_cron \
-    configure_sshd \
-    configure_basic_auditing \
-    enable_bootlog \
-    user_home_directories_permissions \
-    enable_apparmor \
-    aa_enforce \
+    configure_password_policies          \
+    restrict_cron                        \
+    configure_sshd                       \
+    configure_basic_auditing             \
+    enable_bootlog                       \
+    user_home_directories_permissions    \
+    enable_apparmor                      \
+    aa_enforce                           \
     disable_gdm3_user_list
   do
     ${func}
