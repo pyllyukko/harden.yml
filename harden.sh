@@ -2043,6 +2043,7 @@ function configure_pam() {
   # https://github.com/pyllyukko/harden.sh/wiki/PAM
   local setting
   local file
+  local regex
 
   cat 0<<-EOF
 	
@@ -2134,7 +2135,9 @@ EOF
   if [ -f /etc/pam.d/common-auth ] && grep -q 'nullok' /etc/pam.d/common-auth
   then
     echo '[+] removing nullok from /etc/pam.d/common-auth'
-    sed -i 's/\s\+nullok\(_secure\)\?//' /etc/pam.d/common-auth
+    regex='s/\s\+nullok\(_secure\)\?//'
+    diff /etc/pam.d/common-auth <(sed "${regex}" /etc/pam.d/common-auth)
+    sed -i "${regex}" /etc/pam.d/common-auth
   fi
 
   # !su
