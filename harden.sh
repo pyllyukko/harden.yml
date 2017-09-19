@@ -553,7 +553,7 @@ EOF
     schema="${URL%%:*}"
     if [ "${schema}" != "https" ]
     then
-      echo "WARNING: refusing to download PGP key as schema!=https" 1>&2
+      echo "[-] WARNING: refusing to download PGP key as schema!=https" 1>&2
       continue
     fi
     # after importing these keys, we can verify slackware packages with gpgv
@@ -659,12 +659,12 @@ EOF
       crontab -l -u "${NAME}" 2>&1 | grep -q "^\(no crontab for\|The user \S\+ cannot use this program (crontab)\)"
       if [ ${PIPESTATUS[1]} -ne 0 ]
       then
-        echo "${FUNCNAME}(): WARNING: the user \`${NAME}' has some cronjobs! should it be so?" 1>&2
+        echo "[-] WARNING: the user \`${NAME}' has some cronjobs! should it be so?" 1>&2
       fi
       password_status=$( /usr/bin/passwd -S "${NAME}" | awk '{print$2}' )
       if [ "${password_status}" != "L" ]
       then
-        echo "${FUNCNAME}(): WARNING: the account \`${NAME}' is not locked properly!" 1>&2
+        echo "[-] WARNING: the account \`${NAME}' is not locked properly!" 1>&2
       fi
       /usr/sbin/usermod -e 1970-01-02 -L -s "${DENY_SHELL}" "${NAME}"
     fi
@@ -688,7 +688,7 @@ EOF
 
   if [ ! -x "${DENY_SHELL}" ]
   then
-    echo "${FUNCNAME}(): error: invalid \$DENY_SHELL!" 1>&2
+    echo "[-] error: invalid \$DENY_SHELL!" 1>&2
     return 1
   fi
 
@@ -856,15 +856,16 @@ EOF
 } # restrict_cron()
 ################################################################################
 function lock_account() {
+  echo "[+] locking account \"${1}\""
   if [ -z "${1}" ]
   then
-    echo "${FUNCNAME}(): error!" 1>&2
+    echo "[-] error!" 1>&2
     return 1
   fi
   id -u "${1}" &>/dev/null
   if [ ${?} -ne 0 ]
   then
-    echo "${FUNCNAME}(): no such user!" 1>&2
+    echo "[-] no such user!" 1>&2
     return 1
   fi
   /usr/sbin/usermod -e 1970-01-02 -L -s "${DENY_SHELL}" "${1}"
@@ -934,12 +935,12 @@ function check_and_patch() {
   local -i RET
 
   [ ! -d "${DIR_TO_PATCH}" ] && {
-    echo "${FUNCNAME}(): error: directory \`${DIR_TO_PATCH}' does not exist!" 1>&2
+    echo "[-] error: directory \`${DIR_TO_PATCH}' does not exist!" 1>&2
     return 1
   }
 
   [ ! -f "${PATCH_FILE}" ] && {
-    echo "${FUNCNAME}(): error: patch file \`${PATCH_FILE}' does not exist!" 1>&2
+    echo "[-] error: patch file \`${PATCH_FILE}' does not exist!" 1>&2
     return 1
   }
   #pushd "${1}" || return 1
@@ -954,7 +955,7 @@ function check_and_patch() {
     PATCH_RET=${PIPESTATUS[0]} GREP_RET=${PIPESTATUS[1]}
     if [ ${PATCH_RET} -ne 0 ] || [ ${GREP_RET} -eq 0 ]
     then
-      echo "${FUNCNAME}(): error: patch dry-run didn't work out, maybe the patch has already been reversed?" 1>&2
+      echo "[-] error: patch dry-run didn't work out, maybe the patch has already been reversed?" 1>&2
       return 1
     fi
     # if everything was ok, apply the patch
@@ -968,7 +969,7 @@ function check_and_patch() {
     PATCH_RET=${PIPESTATUS[0]} GREP_RET=${PIPESTATUS[1]}
     if [ ${PATCH_RET} -ne 0 ] || [ ${GREP_RET} -eq 0 ]
     then
-      echo "${FUNCNAME}(): error: patch dry-run didn't work out, maybe the patch has already been applied?" 1>&2
+      echo "[-] error: patch dry-run didn't work out, maybe the patch has already been applied?" 1>&2
       return 1
     fi
     echo "DEBUG: patch would happen"
@@ -1026,11 +1027,11 @@ EOF
 
   if [ ! -w /etc ]
   then
-    echo "${FUNCNAME}(): error: /etc is not writable. are you sure you are root?" 1>&2
+    echo "[-] error: /etc is not writable. are you sure you are root?" 1>&2
     return 1
   elif [ ! -f /etc/fstab ]
   then
-    echo "${FUNCNAME}(): error: /etc/fstab doesn't exist?!?" 1>&2
+    echo "[-] error: /etc/fstab doesn't exist?!?" 1>&2
     return 1
   fi
   # TODO: /tmp and maybe the /var/tmp binding from NSA 2.2.1.4
@@ -2237,11 +2238,11 @@ function create_limited_ca_list() {
 EOF
   if [ ! -x /usr/sbin/update-ca-certificates ]
   then
-    echo "${FUNCNAME}(): ERROR: update-ca-certificates not found!" 1>&2
+    echo "[-] ERROR: update-ca-certificates not found!" 1>&2
     return 1
   elif [ ! -f /etc/ca-certificates.conf ]
   then
-    echo "${FUNCNAME}(): ERROR: /etc/ca-certificates.conf not found!" 1>&2
+    echo "[-] ERROR: /etc/ca-certificates.conf not found!" 1>&2
     return 1
   fi
   if [ ! -f /etc/ca-certificates.conf.original ]
@@ -2343,7 +2344,7 @@ function apply_newconfs() {
 EOF
 
   pushd /etc 1>/dev/null || {
-    echo "${FUNCNAME}(): error!" 1>&2
+    echo "[-] error!" 1>&2
     return 1
   }
   shopt -s nullglob
@@ -2484,12 +2485,12 @@ EOF
 
   if [ ! -x /sbin/auditctl ]
   then
-    echo "error: auditctl not found!" 1>&2
+    echo "[-] error: auditctl not found!" 1>&2
     return 1
   fi
   if [ ! -d /etc/audit/rules.d ]
   then
-    echo "error: rules directory \`/etc/audit/rules.d' does not exist!" 1>&2
+    echo "[-] error: rules directory \`/etc/audit/rules.d' does not exist!" 1>&2
     return 1
   fi
 
@@ -2510,11 +2511,11 @@ EOF
 
   if [ ${#stig_rules[*]} -ne 1 ]
   then
-    echo "error: stig.rules not found!" 1>&2
+    echo "[-] error: stig.rules not found!" 1>&2
     return 1
   elif [ ! -f ${stig_rules[0]} ]
   then
-    echo "error: stig.rules not found!" 1>&2
+    echo "[-] error: stig.rules not found!" 1>&2
     return 1
   fi
 
@@ -3137,7 +3138,7 @@ function configure_umask() {
 
 if [ "${USER}" != "root" ]
 then
-  echo -e "warning: you should probably be root to run this script\n" 1>&2
+  echo -e "[-] warning: you should probably be root to run this script\n" 1>&2
 fi
 
 read_password_policy
