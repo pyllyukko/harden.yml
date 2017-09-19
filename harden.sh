@@ -2104,10 +2104,12 @@ EOF
     if sha512sum -c 0<<<"a32865fc0d8700ebb63e01fa998c3c92dca7bda2f6a34c5cca0a8a59a5406eef439167add8a15424b82812674312fc225fd26331579d5625a6d1c4cf833a921f  /etc/security/access.conf" &>/dev/null
     then
       echo '[+] configuring /etc/security/access.conf'
-      sed -i \
-	-e '/^# All other users should be denied to get access from all sources./i+ : root : LOCAL\n- : ALL : cron crond\n+ : (users) : ALL' \
-        -e '/- : ALL : ALL$/s/^#\s*//' \
-        /etc/security/access.conf
+      for regex in \
+        '/^# All other users should be denied to get access from all sources./i+ : root : LOCAL\n- : ALL : cron crond\n+ : (users) : ALL' \
+        '/- : ALL : ALL$/s/^#\s*//'
+      do
+        sed_with_diff "${regex}" "/etc/security/access.conf"
+      done
     fi
   fi
 
@@ -2167,10 +2169,12 @@ EOF
   then
     # WARNING: this is not completely tested with CentOS!
     echo '[+] configuring polyinstation (pam_namespace)'
-    sed -i \
-      -e 's/^#\/tmp.*$/\/tmp     \/tmp\/tmp-inst\/         level      root/' \
-      -e '/^#\/var\/tmp/s/^#\(.*\),adm$/\1/' \
-      /etc/security/namespace.conf
+    for regex in \
+      's/^#\/tmp.*$/\/tmp     \/tmp\/tmp-inst\/         level      root/' \
+      '/^#\/var\/tmp/s/^#\(.*\),adm$/\1/'
+    do
+      sed_with_regex "${regex}" "/etc/security/namespace.conf"
+    done
     for file in \
       /etc/pam.d/login \
       /etc/pam.d/gdm-password \
