@@ -2039,6 +2039,19 @@ EOF
   # TODO: apt-get remove zeitgeist-datahub zeitgeist-core xul-ext-ubufox
 } # disable_unnecessary_systemd_services()
 ################################################################################
+function sed_with_diff() {
+  # $1 = regex $2 = file
+  local ret
+  diff "${2}" <(sed "${1}" "${2}")
+  ret=${?}
+  if [ ${ret} -ne 1 ]
+  then
+    echo "[-] error: diff returned ${ret}" 1>&2
+    return 1
+  fi
+  sed -i "${1}" "${2}"
+} # sed_with_diff()
+################################################################################
 function configure_pam() {
   # https://github.com/pyllyukko/harden.sh/wiki/PAM
   local setting
@@ -2135,9 +2148,7 @@ EOF
   if [ -f /etc/pam.d/common-auth ] && grep -q 'nullok' /etc/pam.d/common-auth
   then
     echo '[+] removing nullok from /etc/pam.d/common-auth'
-    regex='s/\s\+nullok\(_secure\)\?//'
-    diff /etc/pam.d/common-auth <(sed "${regex}" /etc/pam.d/common-auth)
-    sed -i "${regex}" /etc/pam.d/common-auth
+    sed_with_diff 's/\s\+nullok\(_secure\)\?//' "/etc/pam.d/common-auth"
   fi
 
   # !su
