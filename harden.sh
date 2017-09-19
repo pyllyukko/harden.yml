@@ -2115,7 +2115,7 @@ EOF
   if [ -f /etc/pam.d/common-auth ] && ! grep -q "pam_faildelay\.so" /etc/pam.d/common-auth
   then
     echo '[+] enabling pam_faildelay in /etc/pam.d/common-auth'
-    sed -i '/^# here are the per-package modules (the "Primary" block)$/aauth\toptional\t\t\tpam_faildelay.so delay=10000000' /etc/pam.d/common-auth
+    sed_with_diff '/^# here are the per-package modules (the "Primary" block)$/aauth\toptional\t\t\tpam_faildelay.so delay=10000000' "/etc/pam.d/common-auth"
   fi
 
   if [ -f /etc/pam.d/lightdm ] && ! grep -q '^session\s\+optional\s\+pam_lastlog\.so' /etc/pam.d/lightdm
@@ -2133,14 +2133,17 @@ EOF
   if [ -f /etc/pam.d/common-password ] && ! grep -q "^password.*pam_unix\.so.*remember" /etc/pam.d/common-password
   then
     echo '[+] limiting password reuse in /etc/pam.d/common-password'
-    sed -i 's/^\(password.*pam_unix\.so.*\)$/\1 remember=5/' /etc/pam.d/common-password
+    sed_with_diff 's/^\(password.*pam_unix\.so.*\)$/\1 remember=5/' "/etc/pam.d/common-password"
   # red hat
   # NOTE: this should be done in different way, as these configs are wiped by authconfig
   elif [ -f /etc/pam.d/password-auth -a -f /etc/pam.d/system-auth ] && \
     ! grep -q "^password.*pam_unix\.so.*remember" /etc/pam.d/password-auth && ! grep -q "^password.*pam_unix\.so.*remember" /etc/pam.d/system-auth
   then
-    echo '[+] limiting password reuse in /etc/pam.d/password-auth & /etc/pam.d/system-auth'
-    sed -i 's/^\(password.*pam_unix\.so.*\)$/\1 remember=5/' /etc/pam.d/password-auth /etc/pam.d/system-auth
+    for file in "/etc/pam.d/password-auth" "/etc/pam.d/system-auth"
+    do
+      echo "[+] limiting password reuse in ${file}"
+      sed_with_diff 's/^\(password.*pam_unix\.so.*\)$/\1 remember=5/' "${file}"
+    done
   fi
 
   # disallow empty passwords
@@ -2155,7 +2158,7 @@ EOF
   if [ -f /etc/pam.d/su ] && ! grep -q "^auth.*required.*pam_wheel\.so" /etc/pam.d/su
   then
     echo '[+] configuring pam_wheel.so'
-    sed -i '/auth\s\+required\s\+pam_wheel\.so\(\s\+use_uid\)\?$/s/^#\s*//' /etc/pam.d/su
+    sed_with_diff '/auth\s\+required\s\+pam_wheel\.so\(\s\+use_uid\)\?$/s/^#\s*//' "/etc/pam.d/su"
   fi
 
   # pam_namespace
@@ -2207,7 +2210,7 @@ EOF
     echo '[+] configuring pwquality'
     for setting in ${!PWQUALITY_SETTINGS[*]}
     do
-      sed -i "s/^\(# \?\)\?\(${setting}\)\(\s*=\s*\)\S\+$/\2\3${PWQUALITY_SETTINGS[${setting}]}/" /etc/security/pwquality.conf
+      sed_with_diff "s/^\(# \?\)\?\(${setting}\)\(\s*=\s*\)\S\+$/\2\3${PWQUALITY_SETTINGS[${setting}]}/" "/etc/security/pwquality.conf"
       if ! grep -q "^${setting}\s*=\s*${PWQUALITY_SETTINGS[${setting}]}$" /etc/security/pwquality.conf
       then
 	echo "[-] failed to set ${setting}"
