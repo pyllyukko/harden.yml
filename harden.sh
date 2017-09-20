@@ -2199,7 +2199,7 @@ EOF
       's/^#\/tmp.*$/\/tmp     \/tmp\/tmp-inst\/         level      root/' \
       '/^#\/var\/tmp/s/^#\(.*\),adm$/\1/'
     do
-      sed_with_regex "${regex}" "/etc/security/namespace.conf"
+      sed_with_diff "${regex}" "/etc/security/namespace.conf"
     done
     for file in \
       /etc/pam.d/login \
