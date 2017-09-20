@@ -2122,7 +2122,7 @@ EOF
     if [ -f /etc/pam.d/common-account ] && ! grep -q "account\s\+required\s\+pam_access\.so" /etc/pam.d/common-account
     then
       echo '[+] enabling pam_access in /etc/pam.d/common-account'
-      echo 'account required pam_access.so nodefgroup' 1>>/etc/pam.d/common-account
+      sed_with_diff '$ a account required pam_access.so nodefgroup' "/etc/pam.d/common-account"
     fi
 
     # access.conf
@@ -2150,11 +2150,11 @@ EOF
   if [ -f /etc/pam.d/lightdm ] && ! grep -q '^session\s\+optional\s\+pam_lastlog\.so' /etc/pam.d/lightdm
   then
     echo '[+] enabling pam_lastlog in /etc/pam.d/lightdm'
-    echo 'session    optional   pam_lastlog.so' 1>> /etc/pam.d/lightdm
+    sed_with_diff '$ a session    optional   pam_lastlog.so' /etc/pam.d/lightdm
   elif [ -f /etc/pam.d/gdm-password ] && ! grep -q '^session\s\+optional\s\+pam_lastlog\.so' /etc/pam.d/gdm-password
   then
     echo '[+] enabling pam_lastlog in /etc/pam.d/gdm-password'
-    echo 'session optional        pam_lastlog.so' 1>> /etc/pam.d/gdm-password
+    sed_with_diff '$ a session optional        pam_lastlog.so' /etc/pam.d/gdm-password
   fi
 
   # limit password reuse
@@ -2209,7 +2209,7 @@ EOF
     do
       if [ -f ${file} ] && ! grep -q '^session\s\+required\s\+pam_namespace\.so' ${file}
       then
-	echo 'session    required   pam_namespace.so' 1>>${file}
+	sed_with_diff '$ a session    required   pam_namespace.so' "${file}"
       fi
     done
   fi
@@ -2218,7 +2218,7 @@ EOF
   if [ -f /etc/pam.d/common-session ] && ! grep -q 'pam_umask\.so' /etc/pam.d/common-session
   then
     echo '[+] enabling pam_umask in /etc/pam.d/common-session'
-    echo 'session optional pam_umask.so' 1>>/etc/pam.d/common-session
+    sed_with_diff '$ a session optional pam_umask.so' "/etc/pam.d/common-session"
   fi
 
   # /etc/pam.d/other
