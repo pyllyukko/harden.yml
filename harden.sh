@@ -2040,6 +2040,29 @@ EOF
   # TODO: apt-get remove zeitgeist-datahub zeitgeist-core xul-ext-ubufox
 } # disable_unnecessary_systemd_services()
 ################################################################################
+function mkpatch() {
+  local    _basename=$( basename "${1}" )
+  local -i i=1
+  # no previous file with same basename
+  if [ ! -f "${logdir}/${_basename}.patch" -a ! -f "${logdir}/${_basename}-${i}.patch" ]
+  then
+    echo "${logdir}/${_basename}.patch"
+  # one previous file with same basename
+  elif [ -f "${logdir}/${_basename}.patch" -a ! -f "${logdir}/${_basename}-${i}.patch" ]
+  then
+    mv "${logdir}/${_basename}.patch" "${logdir}/${_basename}-${i}.patch"
+    echo  "${logdir}/${_basename}-$((++i)).patch"
+  # several previous files with same basename
+  elif [ ! -f "${logdir}/${_basename}.patch" -a -f "${logdir}/${_basename}-${i}.patch" ]
+  then
+    while [ -f "${logdir}/${_basename}-$((++i)).patch" ]
+    do
+      true
+    done
+    echo  "${logdir}/${_basename}-${i}.patch"
+  fi
+} # mkpatch()
+################################################################################
 function sed_with_diff() {
   # $1 = regex $2 = file
   local ret
