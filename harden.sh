@@ -2066,10 +2066,12 @@ function mkpatch() {
 function sed_with_diff() {
   # $1 = regex $2 = file
   local ret
-  diff "${2}" <(sed "${1}" "${2}")
+  local patchfilename="$(mkpatch "${2}")"
+  diff -u "${2}" <(sed "${1}" "${2}") 1>"${patchfilename}"
   ret=${?}
   if [ ${ret} -ne 1 ]
   then
+    rm "${patchfilename}"
     echo "[-] error: diff returned ${ret}" 1>&2
     return 1
   fi
