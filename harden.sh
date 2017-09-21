@@ -2040,6 +2040,14 @@ EOF
   # TODO: apt-get remove zeitgeist-datahub zeitgeist-core xul-ext-ubufox
 } # disable_unnecessary_systemd_services()
 ################################################################################
+function gnome_settings() {
+  # Settings -> Privacy -> Usage & History -> Recently Used
+  gsettings set org.gnome.desktop.privacy remember-recent-files false
+  gsettings set org.gnome.desktop.privacy recent-files-max-age  1
+  # TODO: Clear Recent History
+  gsettings set org.gnome.system.location enabled false
+} # gnome_settings()
+################################################################################
 function mkpatch() {
   local    _basename=$( basename "${1}" )
   local -i i=1
