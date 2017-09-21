@@ -38,6 +38,7 @@ for PROGRAM in \
   shred \
   mktemp \
   tee \
+  diff \
   stat
 do
   if ! hash "${PROGRAM}" 2>/dev/null
