@@ -262,6 +262,11 @@ function read_password_policy() {
   PASS_MIN_DAYS=$( awk '/^PASS_MIN_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
   PASS_MAX_DAYS=$( awk '/^PASS_MAX_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
   PASS_WARN_AGE=$( awk '/^PASS_WARN_AGE/{print$2}' /etc/login.defs 2>/dev/null )
+  if [ -z "${PASS_MIN_DAYS}" -o -z "${PASS_MAX_DAYS}" -o -z "${PASS_WARN_AGE}" ]
+  then
+    echo "[-] warning: couldn't determine PASS_* from /etc/login.defs"
+    return 1
+  fi
 } # read_password_policy()
 ################################################################################
 function check_manifest() {
