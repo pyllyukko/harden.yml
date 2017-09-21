@@ -14,31 +14,31 @@ shopt -s extglob
 set -u
 export PATH="/usr/sbin:/sbin:/usr/bin:/bin"
 for PROGRAM in \
-  awk \
-  cat \
-  cp \
-  id \
+  awk     \
+  cat     \
+  cp      \
+  id      \
   usermod \
-  grpck \
-  chmod \
-  chown \
-  date \
-  gawk \
-  getent \
-  grep \
-  bzgrep \
-  fgrep \
-  ln \
-  mkdir \
-  mv \
+  grpck   \
+  chmod   \
+  chown   \
+  date    \
+  gawk    \
+  getent  \
+  grep    \
+  bzgrep  \
+  fgrep   \
+  ln      \
+  mkdir   \
+  mv      \
   openssl \
-  patch \
-  rm \
-  sed \
-  shred \
-  mktemp \
-  tee \
-  diff \
+  patch   \
+  rm      \
+  sed     \
+  shred   \
+  mktemp  \
+  tee     \
+  diff    \
   stat
 do
   if ! hash "${PROGRAM}" 2>/dev/null
