@@ -43,7 +43,7 @@ for PROGRAM in \
 do
   if ! hash "${PROGRAM}" 2>/dev/null
   then
-    printf "error: command not found in PATH: %s\n" "${PROGRAM}" >&2
+    printf "[-] error: command not found in PATH: %s\n" "${PROGRAM}" >&2
     exit 1
   fi
 done
@@ -223,7 +223,7 @@ elif [ -x /usr/sbin/nologin ]
 then
   DENY_SHELL="/usr/sbin/nologin"
 else
-  echo "warning: can't find nologin!" 1>&2
+  echo "[-] warning: can't find nologin!" 1>&2
   DENY_SHELL=
 fi
 # man FAILLOG(8)
