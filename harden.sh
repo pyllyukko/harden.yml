@@ -2682,15 +2682,15 @@ function usage() {
 	      wipe **HIGHLY EXPERIMENTAL AND DANGEROUS**
 
 	  -q	"quick harden" - just some generic stuff that should work on any system
-	  	  - creates a deny all TCP wrappers rule
-	  	  - creates sysctl.conf
-	  	  - configures /etc/suauth to disallow the use of su
-	  	  - sets failure limits
-	  	  - creates ftpusers
-	  	  - removes unnecessary shells
-	  	  - creates hardened fstab.new
-		  - creates limited CA list
-		  - lock system accounts
+	          - creates a deny all TCP wrappers rule
+	          - creates sysctl.conf
+	          - configures /etc/suauth to disallow the use of su
+	          - sets failure limits
+	          - creates ftpusers
+	          - removes unnecessary shells
+	          - creates hardened fstab.new
+	          - creates limited CA list
+	          - lock system accounts
 	  -r	remove unnecessary shells
 	  -s	disable unnecessary services (also enables few recommended ones)
 	  -S	configure basic auditing using the stig.rules
