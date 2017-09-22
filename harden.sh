@@ -2668,13 +2668,6 @@ function usage() {
 	    available patches:
 	      ssh
 	      etc
-	        the etc patch assumes that you have at least the following packages installed:
-	          network-scripts
-	          sysvinit-scripts
-	          etc
-	          shadow
-	          logrotate
-	          sysklogd
 	      apache
 	      sendmail
 	      php
