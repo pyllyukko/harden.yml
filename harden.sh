@@ -2980,7 +2980,7 @@ EOF
   elif [ -f /etc/lightdm/lightdm.conf ]
   then
     echo '[+] disabling user list in /etc/lightdm/lightdm.conf'
-    sed_with_diff '/^greeter-hide-users=/s/=.*$/=true/' /etc/lightdm/lightdm.conf
+    sed_with_diff 's/^#\?\(greeter-hide-users\)=.*$/\1=true/' /etc/lightdm/lightdm.conf
 
     # https://freedesktop.org/wiki/Software/LightDM/CommonConfiguration/#disablingguestlogin
     echo '[+] setting allow-guest=false in /etc/lightdm/lightdm.conf'
