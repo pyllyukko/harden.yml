@@ -2648,6 +2648,7 @@ function usage() {
 	  		sshd_config
 	  		sysctl_harden
 	  		homedir_perms
+	  		disable_gdm3_user_list
 	  -F		create/update /etc/ftpusers
 	  -g		import Slackware, SBo & other PGP keys to trustedkeys.gpg keyring
 	        	(you might also want to run this as a regular user)
@@ -2961,11 +2962,11 @@ EOF
   if [ -f /etc/gdm3/greeter.dconf-defaults ]
   then
     echo '[+] configuring /etc/gdm3/greeter.dconf-defaults'
-    sed -i '/disable-user-list=true$/s/^#\s*//' /etc/gdm3/greeter.dconf-defaults
+    sed_with_diff '/disable-user-list=true$/s/^#\s*//' /etc/gdm3/greeter.dconf-defaults
   elif [ -f /etc/lightdm/lightdm.conf ]
   then
     echo '[+] configuring /etc/lightdm/lightdm.conf'
-    sed -i '/^greeter-hide-users=/s/=.*$/=true/' /etc/lightdm/lightdm.conf
+    sed_with_diff '/^greeter-hide-users=/s/=.*$/=true/' /etc/lightdm/lightdm.conf
   else
     echo '[-] display manager greeter config not found'
   fi
@@ -3059,6 +3060,7 @@ do
 	"sshd_config")		configure_sshd			;;
 	"sysctl_harden")	sysctl_harden			;;
 	"homedir_perms")	user_home_directories_permissions ;;
+	"disable_gdm3_user_list") disable_gdm3_user_list        ;;
 	*)
 	  echo "[-] unknown function" 1>&2
 	  exit 1
