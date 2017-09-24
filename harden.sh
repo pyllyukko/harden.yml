@@ -2299,6 +2299,7 @@ EOF
       sed_with_diff "${regex}" /etc/gdm3/greeter.dconf-defaults
     done
   fi
+  # TODO: lightdm
 
   if [ -f /etc/ssh/sshd_config ]
   then
@@ -2966,6 +2967,7 @@ EOF
   then
     echo '[+] configuring /etc/gdm3/greeter.dconf-defaults'
     sed_with_diff '/disable-user-list=true$/s/^#\s*//' /etc/gdm3/greeter.dconf-defaults
+    # TODO: go through the rest of /etc/gdm3/greeter.dconf-defaults
   elif [ -f /etc/lightdm/lightdm.conf ]
   then
     echo '[+] configuring /etc/lightdm/lightdm.conf'
@@ -2979,6 +2981,7 @@ EOF
     echo '[+] disallowing guest sessions in LightDM'
     echo -e '[Seat:*]\nallow-guest=false' 1>/etc/lightdm/lightdm.conf.d/50-disallow-guest.conf
   fi
+  # TODO: greeter-allow-guest in /etc/lightdm/lightdm.conf (in Pi)
 } # disable_gdm3_user_list()
 ################################################################################
 function configure_umask() {
