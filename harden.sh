@@ -2972,6 +2972,9 @@ EOF
   then
     echo '[+] configuring /etc/lightdm/lightdm.conf'
     sed_with_diff '/^greeter-hide-users=/s/=.*$/=true/' /etc/lightdm/lightdm.conf
+    # https://freedesktop.org/wiki/Software/LightDM/CommonConfiguration/#disablingguestlogin
+    echo '[+] setting allow-guest=false in /etc/lightdm/lightdm.conf'
+    sed_with_diff 's/^#\?\(allow-guest\)=.*/\1=false/p' /etc/lightdm/lightdm.conf
   else
     echo '[-] display manager greeter config not found'
   fi
