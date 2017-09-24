@@ -2968,19 +2968,20 @@ EOF
 function disable_gdm3_user_list() {
   cat 0<<-EOF
 	
-	disabling user list in display manager
-	--------------------------------------
+	configuring display manager(s)
+	------------------------------
 EOF
 
   if [ -f /etc/gdm3/greeter.dconf-defaults ]
   then
-    echo '[+] configuring /etc/gdm3/greeter.dconf-defaults'
+    echo '[+] disabling user list in /etc/gdm3/greeter.dconf-defaults'
     sed_with_diff '/disable-user-list=true$/s/^#\s*//' /etc/gdm3/greeter.dconf-defaults
     # TODO: go through the rest of /etc/gdm3/greeter.dconf-defaults
   elif [ -f /etc/lightdm/lightdm.conf ]
   then
-    echo '[+] configuring /etc/lightdm/lightdm.conf'
+    echo '[+] disabling user list in /etc/lightdm/lightdm.conf'
     sed_with_diff '/^greeter-hide-users=/s/=.*$/=true/' /etc/lightdm/lightdm.conf
+
     # https://freedesktop.org/wiki/Software/LightDM/CommonConfiguration/#disablingguestlogin
     echo '[+] setting allow-guest=false in /etc/lightdm/lightdm.conf'
     sed_with_diff 's/^#\?\(allow-guest\)=.*/\1=false/' /etc/lightdm/lightdm.conf
