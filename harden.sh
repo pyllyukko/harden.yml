@@ -2031,9 +2031,9 @@ EOF
       sed_with_diff "${regex}" "/etc/security/namespace.conf"
     done
     for file in \
-      /etc/pam.d/login \
+      /etc/pam.d/login        \
       /etc/pam.d/gdm-password \
-      /etc/pam.d/sshd \
+      /etc/pam.d/sshd         \
       /etc/pam.d/lightdm
     do
       if [ -f ${file} ] && ! grep -q '^session\s\+required\s\+pam_namespace\.so' ${file}
