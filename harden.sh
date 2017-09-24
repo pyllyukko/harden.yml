@@ -203,10 +203,17 @@ declare -rA SSHD_CONFIG=(
   ["AllowTcpForwarding"]="no"
   ["FingerprintHash"]="sha256"
 )
+# ^key = value$
 declare -rA AUDITD_CONFIG=(
   ["space_left_action"]="email"
   ["action_mail_acct"]="root"
   ["max_log_file_action"]="keep_logs"
+)
+# ^#\?key=value$
+declare -rA LIGHTDM_CONFIG=(
+  ["greeter-hide-users"]="true"
+  # https://freedesktop.org/wiki/Software/LightDM/CommonConfiguration/#disablingguestlogin
+  ["allow-guest"]="false"
 )
 declare -rA FILE_PERMS=(
   ["/boot/grub/grub.cfg"]="og-rwx"
@@ -2966,6 +2973,8 @@ EOF
 } # configure_apt()
 ################################################################################
 function disable_gdm3_user_list() {
+  local setting
+  local value
   cat 0<<-EOF
 	
 	configuring display manager(s)
@@ -2979,12 +2988,12 @@ EOF
     # TODO: go through the rest of /etc/gdm3/greeter.dconf-defaults
   elif [ -f /etc/lightdm/lightdm.conf ]
   then
-    echo '[+] disabling user list in /etc/lightdm/lightdm.conf'
-    sed_with_diff 's/^#\?\(greeter-hide-users\)=.*$/\1=true/' /etc/lightdm/lightdm.conf
-
-    # https://freedesktop.org/wiki/Software/LightDM/CommonConfiguration/#disablingguestlogin
-    echo '[+] setting allow-guest=false in /etc/lightdm/lightdm.conf'
-    sed_with_diff 's/^#\?\(allow-guest\)=.*/\1=false/' /etc/lightdm/lightdm.conf
+    for setting in ${!LIGHTDM_CONFIG[*]}
+    do
+      value="${LIGHTDM_CONFIG[${setting}]}"
+      echo "[+] setting ${setting} to ${value} in /etc/lightdm/lightdm.conf"
+      sed_with_diff "s/^#\?\(${setting}\)=.*$/\1=${value}/" /etc/lightdm/lightdm.conf
+    done
   else
     echo '[-] display manager greeter config not found'
   fi
