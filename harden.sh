@@ -2371,6 +2371,11 @@ EOF
   then
     stig_rules[0]="/usr/share/doc/auditd/examples/stig.rules.gz"
     concat="/bin/zcat"
+  # Kali
+  elif [ -f /usr/share/doc/auditd/examples/rules/30-stig.rules.gz ]
+  then
+    stig_rules[0]="/usr/share/doc/auditd/examples/rules/30-stig.rules.gz"
+    concat="/bin/zcat"
   # Slackware
   elif [ -f /etc/slackware-version ]
   then
