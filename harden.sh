@@ -2263,6 +2263,7 @@ function create_ssh_moduli() {
 ################################################################################
 function create_banners() {
   local owner
+  local regex
 
   cat 0<<-EOF
 	
@@ -2291,10 +2292,12 @@ EOF
   if [ -f /etc/gdm3/greeter.dconf-defaults ]
   then
     echo "[+] configuring banner to gdm3"
-    sed -i \
-      -e 's/^.*banner-message-enable=.*$/banner-message-enable=true/' \
-      -e "s/^.*banner-message-text=.*$/banner-message-text='Authorized uses only.'/" \
-      /etc/gdm3/greeter.dconf-defaults
+    for regex in \
+      's/^.*banner-message-enable=.*$/banner-message-enable=true/' \
+      "s/^.*banner-message-text=.*$/banner-message-text='Authorized uses only.'/"
+    do
+      sed_with_diff "${regex}" /etc/gdm3/greeter.dconf-defaults
+    done
   fi
 
   if [ -f /etc/ssh/sshd_config ]
