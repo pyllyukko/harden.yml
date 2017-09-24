@@ -2470,23 +2470,23 @@ EOF
   for setting in ${!AUDITD_CONFIG[*]}
   do
     # ^key = value$
-    sed -i "s/^\(# \?\)\?\(${setting}\)\(\s\+=\s\+\)\S\+$/\2\3${AUDITD_CONFIG[${setting}]}/" /etc/audit/auditd.conf
+    sed_with_diff "s/^\(# \?\)\?\(${setting}\)\(\s\+=\s\+\)\S\+$/\2\3${AUDITD_CONFIG[${setting}]}/" /etc/audit/auditd.conf
   done
 
   # enable it in grub/lilo
   if [ -f /etc/default/grub ] && ! grep -q '^GRUB_CMDLINE_LINUX=".*audit=1' /etc/default/grub
   then
     # example: https://wiki.debian.org/AppArmor/HowToUse#Enable_AppArmor
-    sed -i 's/^\(GRUB_CMDLINE_LINUX=".*\)"$/\1 audit=1"/' /etc/default/grub
+    sed_with_diff 's/^\(GRUB_CMDLINE_LINUX=".*\)"$/\1 audit=1"/' /etc/default/grub
     echo "NOTICE: /etc/default/grub updated. you need to run \`update-grub' or \`grub2-install' to update the boot loader."
   elif [ -f /etc/lilo.conf ] && ! grep -q '^append=".*audit=1' /etc/lilo.conf
   then
-    sed -i 's/^\(append=".*\)"$/\1 audit=1"/' /etc/lilo.conf
+    sed_with_diff 's/^\(append=".*\)"$/\1 audit=1"/' /etc/lilo.conf
     echo "NOTICE: /etc/lilo.conf updated. you need to run \`lilo' to update the boot loader."
   # raspbian
   elif [ -f /boot/cmdline.txt ] && ! grep -q 'audit=1' /boot/cmdline.txt
   then
-    sed -i 's/$/ audit=1/' /boot/cmdline.txt
+    sed_with_diff 's/$/ audit=1/' /boot/cmdline.txt
   fi
 } # configure_basic_auditing()
 ################################################################################
