@@ -203,13 +203,11 @@ declare -rA SSHD_CONFIG=(
   ["AllowTcpForwarding"]="no"
   ["FingerprintHash"]="sha256"
 )
-# ^key = value$
 declare -rA AUDITD_CONFIG=(
   ["space_left_action"]="email"
   ["action_mail_acct"]="root"
   ["max_log_file_action"]="keep_logs"
 )
-# ^#\?key=value$
 declare -rA LIGHTDM_CONFIG=(
   ["greeter-hide-users"]="true"
   # https://freedesktop.org/wiki/Software/LightDM/CommonConfiguration/#disablingguestlogin
@@ -2471,6 +2469,7 @@ EOF
   echo '[+] configuring auditd.conf'
   for setting in ${!AUDITD_CONFIG[*]}
   do
+    # ^key = value$
     sed -i "s/^\(# \?\)\?\(${setting}\)\(\s\+=\s\+\)\S\+$/\2\3${AUDITD_CONFIG[${setting}]}/" /etc/audit/auditd.conf
   done
 
@@ -2992,6 +2991,7 @@ EOF
     do
       value="${LIGHTDM_CONFIG[${setting}]}"
       echo "[+] setting ${setting} to ${value} in /etc/lightdm/lightdm.conf"
+      # ^#\?key=value$
       sed_with_diff "s/^#\?\(${setting}\)=.*$/\1=${value}/" /etc/lightdm/lightdm.conf
     done
   else
