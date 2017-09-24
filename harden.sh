@@ -1901,7 +1901,16 @@ function sed_with_diff() {
   if [ ${ret} -ne 1 ]
   then
     rm "${patchfilename}"
-    echo "[-] error: diff returned ${ret}" 1>&2
+    case "${ret}" in
+      # "Exit status is 0 if inputs are the same"
+      0)
+        echo "[-] warning: diff returned ${ret}. already configured?" 1>&2
+      ;;
+      # "2 if trouble"
+      *)
+        echo "[-] error: diff returned ${ret}" 1>&2
+      ;;
+    esac
     return 1
   fi
   sed -i "${1}" "${2}"
