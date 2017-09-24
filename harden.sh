@@ -2449,6 +2449,7 @@ EOF
   #  sed -i '/^-.*arch=b32/s/^/#/' /etc/audit/rules.d/stig.rules
   fi
 
+  # drop in few custom rules
   for rule_file in ld.so tmpexec
   do
     /bin/cat "${CWD}/newconfs/rules.d/${rule_file}.rules.new" 1>"/etc/audit/rules.d/${rule_file}.rules"
@@ -2461,8 +2462,10 @@ EOF
     echo "NOTICE: previous audit.rules existed and was copied to audit.rules.prev by augenrules:"
     ls -l /etc/audit/audit.rules.prev
   fi
+  # read rules from file
   /sbin/auditctl -R /etc/audit/audit.rules
 
+  # enable the service
   if [ -f /etc/rc.d/rc.auditd ]
   then
     chmod -c 700 /etc/rc.d/rc.auditd | tee -a "${logdir}/file_perms.txt"
