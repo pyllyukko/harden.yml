@@ -33,9 +33,9 @@ ROOTDIR="./"
 . ${CWD}/../libexec/pam.sh || exit 1
 configure_core_dumps
 cat "${logdir}/limits.conf.patch"
-sed -i 2d "${logdir}/limits.conf.patch"
+sed -i 1,2d "${logdir}/limits.conf.patch"
 cat "${logdir}/limits.conf.patch"
-sha512sum -c 0<<<"e89bd9ab2004ae5cc3ddd9614d2d48deb7e12ed589fa988cf17e5f55a363d2d775a9d94ded48aa18de56387cb4fc1833e145cda79273e725d636166c30d36711  ${logdir}/limits.conf.patch"
+sha512sum -c 0<<<"d32faaa96ee8d0a34b92ef746d230afe054cb9a1856b180e5896e85dba28e5c9f40a93ebcddd16ebae369428ae1c6ee581131b3a2f3686bce6911c28f5ea50de  ${logdir}/limits.conf.patch"
 test_results+=(${?})
 
 rm -rf "${logdir}"
