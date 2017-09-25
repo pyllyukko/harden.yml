@@ -2754,7 +2754,7 @@ EOF
   if [ -f /etc/security/limits.conf ]
   then
     echo "[+] /etc/security/limits.conf found"
-    sed -i 's/^#\?\*\( \+\)soft\( \+\)core\( \+\)0$/*\1hard\2core\30/' /etc/security/limits.conf
+    sed_with_diff 's/^#\?\*\( \+\)soft\( \+\)core\( \+\)0$/*\1hard\2core\30/' /etc/security/limits.conf
     # TODO: nproc - max number of processes
   else
     echo "[-] /etc/security/limits.conf NOT found" 1>&2
