@@ -10,7 +10,7 @@ declare -rA files=(
   ["/etc/pam.d/su"]="${files['/etc/pam.d/login']}"
 )
 
-#rm -fr    "${CWD}/debian"
+rm -fr    "${CWD}/debian"
 mkdir -pv "${CWD}/debian"
 pushd     "${CWD}/debian" || exit 1
 for file in ${!files[*]}
