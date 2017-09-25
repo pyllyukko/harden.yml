@@ -23,3 +23,12 @@ do
   ar vx "${filename}"
   tar xvf data.tar.?z ".${file}"
 done
+
+logdir=$( mktemp -p /tmp -d harden.sh.XXXXXX ) || exit 1
+. ${CWD}/../libexec/utils.sh || exit 1
+. ${CWD}/../libexec/pam.sh || exit 1
+ROOTDIR="./"
+configure_core_dumps
+sed -i 2d "${logdir}/limits.conf.patch"
+sha512sum -c 0<<<"e89bd9ab2004ae5cc3ddd9614d2d48deb7e12ed589fa988cf17e5f55a363d2d775a9d94ded48aa18de56387cb4fc1833e145cda79273e725d636166c30d36711  ${logdir}/limits.conf.patch"
+rm -rf "${logdir}"
