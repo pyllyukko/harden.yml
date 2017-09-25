@@ -1919,6 +1919,7 @@ function sed_with_diff() {
     return 1
   fi
   sed -i "${1}" "${2}"
+  return ${?}
 } # sed_with_diff()
 ################################################################################
 function configure_pam() {
@@ -2751,14 +2752,15 @@ function configure_core_dumps() {
 	configuring core dumps
 	----------------------
 EOF
-  if [ -f /etc/security/limits.conf ]
+  if [ ! -f /etc/security/limits.conf ]
   then
-    echo "[+] /etc/security/limits.conf found"
-    sed_with_diff 's/^#\?\*\( \+\)soft\( \+\)core\( \+\)0$/*\1hard\2core\30/' /etc/security/limits.conf
-    # TODO: nproc - max number of processes
-  else
     echo "[-] /etc/security/limits.conf NOT found" 1>&2
+    return 1
   fi
+  echo "[+] /etc/security/limits.conf found"
+  sed_with_diff 's/^#\?\*\( \+\)soft\( \+\)core\( \+\)0$/*\1hard\2core\30/' /etc/security/limits.conf
+  return ${?}
+  # TODO: nproc - max number of processes
 } # configure_core_dumps()
 ################################################################################
 function configure_password_policies() {
