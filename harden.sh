@@ -39,7 +39,8 @@ for PROGRAM in \
   mktemp  \
   tee     \
   diff    \
-  stat
+  stat    \
+  realpath
 do
   if ! hash "${PROGRAM}" 2>/dev/null
   then
