@@ -1,6 +1,8 @@
 #!/bin/bash
 # UNDER CONSTRUCTION!
 CWD=$( realpath $( dirname "${0}" ) )
+declare -i ret=0
+declare -a test_results=()
 declare -r arch="amd64"
 declare -rA files=(
   ["/etc/security/limits.conf"]="http://ftp.debian.org/debian/pool/main/p/pam/libpam-modules_1.1.8-3.6_${arch}.deb"
@@ -26,9 +28,18 @@ done
 
 logdir=$( mktemp -p /tmp -d harden.sh.XXXXXX ) || exit 1
 . ${CWD}/../libexec/utils.sh || exit 1
-. ${CWD}/../libexec/pam.sh || exit 1
 ROOTDIR="./"
+
+. ${CWD}/../libexec/pam.sh || exit 1
 configure_core_dumps
 sed -i 2d "${logdir}/limits.conf.patch"
 sha512sum -c 0<<<"e89bd9ab2004ae5cc3ddd9614d2d48deb7e12ed589fa988cf17e5f55a363d2d775a9d94ded48aa18de56387cb4fc1833e145cda79273e725d636166c30d36711  ${logdir}/limits.conf.patch"
+test_results+=(${?})
+
 rm -rf "${logdir}"
+for ((i=0; i<${#test_results[*]}; i++))
+do
+  echo "test ${i}: ${test_results[${i}]}"
+  ((ret|=${test_results[${i}]}))
+done
+exit ${ret}
