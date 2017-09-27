@@ -1,7 +1,6 @@
 addons:
   apt:
     packages:
-    - coreutils
     - realpath
 language: node_js
 node_js:
