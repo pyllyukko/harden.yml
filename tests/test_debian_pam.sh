@@ -8,6 +8,7 @@ declare -rA files=(
   ["/etc/security/limits.conf"]="http://ftp.debian.org/debian/pool/main/p/pam/libpam-modules_1.1.8-3.6_${arch}.deb"
   ["/etc/pam.d/login"]="http://security.debian.org/debian-security/pool/updates/main/s/shadow/login_4.1.5.1-1+deb7u1_${arch}.deb"
   ["/etc/pam.d/su"]="${files['/etc/pam.d/login']}"
+  ["/etc/pam.d/lightdm"]="http://ftp.debian.org/debian/pool/main/l/lightdm/lightdm_1.18.3-1_${arch}.deb"
 )
 
 rm -fr    "${CWD}/debian"
@@ -45,6 +46,9 @@ sed -i 1,2d "${logdir}/su.patch"
 sha512sum -c 0<<<"2205c05499695d3bf434f5080a078f57d3ba1bed8aa4bbfda9c57fb3b045aee5c907df98760e91dfba7bfd54750f7c75e2958da9d01bda2004697d72b2dd0742  ${logdir}/su.patch"
 test_results+=(${?})
 sha512sum -c 0<<<"c15fa34ee8bcea3c49fb1ffe0be01d4fe645aed9c498f65a6bc815a6b0ea911ed4d15727e34f93323b113905365565e304e2e608dd9a52663a90443598fb8a0c  etc/pam.d/other"
+test_results+=(${?})
+sed -i 1,2d "${logdir}/lightdm.patch"
+sha512sum -c 0<<<"e0c1541a0ca76b556f9089fe239629a8b5be772c3332d2bc42af7c106b1c6c8eca81f8d6d955087b53e3d2d280dffe24b1fb6533eb15b3dd66f89a228b08378e  ${logdir}/lightdm.patch"
 test_results+=(${?})
 
 rm -rf "${logdir}"
