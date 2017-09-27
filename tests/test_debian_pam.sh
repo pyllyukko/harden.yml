@@ -37,6 +37,16 @@ sed -i 1,2d "${logdir}/limits.conf.patch"
 sha512sum -c 0<<<"d32faaa96ee8d0a34b92ef746d230afe054cb9a1856b180e5896e85dba28e5c9f40a93ebcddd16ebae369428ae1c6ee581131b3a2f3686bce6911c28f5ea50de  ${logdir}/limits.conf.patch"
 test_results+=(${?})
 
+configure_pam
+sed -i 1,2d "${logdir}/login.patch"
+sha512sum -c 0<<<"38b42b5509cacfce36747de15d6383a8adb7b74109c8bc534ec67700b83bddf8e6fbfab8af9463271876d934fce884f84ff8d76363ff811bb989a23818800faf  ${logdir}/login.patch"
+test_results+=(${?})
+sed -i 1,2d "${logdir}/su.patch"
+sha512sum -c 0<<<"2205c05499695d3bf434f5080a078f57d3ba1bed8aa4bbfda9c57fb3b045aee5c907df98760e91dfba7bfd54750f7c75e2958da9d01bda2004697d72b2dd0742  ${logdir}/su.patch"
+test_results+=(${?})
+sha512sum -c 0<<<"c15fa34ee8bcea3c49fb1ffe0be01d4fe645aed9c498f65a6bc815a6b0ea911ed4d15727e34f93323b113905365565e304e2e608dd9a52663a90443598fb8a0c  etc/pam.d/other"
+test_results+=(${?})
+
 rm -rf "${logdir}"
 for ((i=0; i<${#test_results[*]}; i++))
 do
