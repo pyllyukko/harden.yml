@@ -10,6 +10,7 @@ declare -rA files=(
   ["/etc/pam.d/login"]="http://security.debian.org/debian-security/pool/updates/main/s/shadow/login_4.1.5.1-1+deb7u1_${arch}.deb"
   ["/etc/pam.d/su"]="${files['/etc/pam.d/login']}"
   ["/etc/pam.d/lightdm"]="http://ftp.debian.org/debian/pool/main/l/lightdm/lightdm_1.18.3-1_${arch}.deb"
+  ["/etc/pam.d/sshd"]="http://ftp.debian.org/debian/pool/main/o/openssh/openssh-server_7.4p1-10+deb9u1_${arch}.deb"
 )
 function check_patch() {
   sed -i 1,2d "${1}"
@@ -54,6 +55,7 @@ check_patch "${logdir}/login-2.patch"     ce28a2586edb8531a0acdc3148e35c45dbdaca
 check_patch "${logdir}/lightdm-2.patch"   aedcede80773b778eccf8c01ad6770134aaeb32c501980d5297b9a6d86bd66be906a767cb7ad697a9f8064b990c109178f3a94f9a3917a5b0fd2ab01eac608cd
 check_patch "${logdir}/namespace.conf-1.patch" 2ee0ca57beae509099a15d53c4e3bc7929df8e2e6e1492ce067fa374b0da552da3c21b9a489a7dad56cafe949cd7f196584965edc233132c81b1488ab0b9c4eb
 check_patch "${logdir}/namespace.conf-2.patch" 6764d82657efed74369c906a3ceedb3ad4d0c1ed0bd1d525adf8340471a46883d4c6edf70932e356fd36e9020873ebb4cdea62bd782a7c9f8668889831e51883
+check_patch "${logdir}/sshd.patch"        9880cc693f7208486e86cfcec3088d541f6049fce186b3c590aae3e92bcffbd13ce50f2fb79b70765fd7646efabdc43c77d43b2b64f81affe97e3276b8ea91b9
 
 rm -rf "${logdir}"
 for ((i=0; i<${#test_results[*]}; i++))
