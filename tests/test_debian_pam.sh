@@ -5,10 +5,8 @@ declare -i ret=0
 declare -a test_results=()
 declare -r arch="amd64"
 declare -rA files=(
-  ["/etc/security/limits.conf"]="http://ftp.debian.org/debian/pool/main/p/pam/libpam-modules_1.1.8-3.6_${arch}.deb"
-  ["/etc/security/namespace.conf"]="${files['/etc/security/limits.conf']}"
-  ["/etc/pam.d/login"]="http://security.debian.org/debian-security/pool/updates/main/s/shadow/login_4.1.5.1-1+deb7u1_${arch}.deb"
-  ["/etc/pam.d/su"]="${files['/etc/pam.d/login']}"
+  ["/etc/security"]="http://ftp.debian.org/debian/pool/main/p/pam/libpam-modules_1.1.8-3.6_${arch}.deb"
+  ["/etc/pam.d"]="http://security.debian.org/debian-security/pool/updates/main/s/shadow/login_4.1.5.1-1+deb7u1_${arch}.deb"
   ["/etc/pam.d/lightdm"]="http://ftp.debian.org/debian/pool/main/l/lightdm/lightdm_1.18.3-1_${arch}.deb"
   ["/etc/pam.d/sshd"]="http://ftp.debian.org/debian/pool/main/o/openssh/openssh-server_7.4p1-10+deb9u1_${arch}.deb"
 )
