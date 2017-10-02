@@ -10,6 +10,7 @@ declare -rA files=(
   ["/etc/pam.d/lightdm"]="http://ftp.debian.org/debian/pool/main/l/lightdm/lightdm_1.18.3-1_${arch}.deb"
   ["/etc/pam.d/sshd"]="http://ftp.debian.org/debian/pool/main/o/openssh/openssh-server_7.4p1-10+deb9u1_${arch}.deb"
   ["/usr/share/pam"]="http://ftp.debian.org/debian/pool/main/p/pam/libpam-runtime_1.1.8-3.6_all.deb"
+  ["/etc/pam.d/gdm-password"]="http://ftp.debian.org/debian/pool/main/g/gdm3/gdm3_3.22.3-3_${arch}.deb"
 )
 function check_patch() {
   sed -i 1,2d "${1}"
@@ -60,6 +61,8 @@ check_patch "${logdir}/sshd.patch"        9880cc693f7208486e86cfcec3088d541f6049
 check_patch "${logdir}/common-account.patch" 821da2f6b977e91871bd7cfc114ca291dbc9b4088ef928d6a70922663be36913fd32df2b54a08ba3adf640f1d07c15fc33dba024cc3ea36743b57baa67f2bfda
 check_patch "${logdir}/common-auth.patch" eb767d2ad9d776cc496a2aa41c1caf8650fd8372f751698b3b7e1717997c88f6e8290a42e0f6d9c95e4a48ca2655abcf6efdcca06d2bbf0b24b9eca356bd7b54
 check_patch "${logdir}/common-session.patch" a549e42a96228c4468bae898bf07871ded9af476d7789b809d740f181d44536abbcb6fa52e3ed2fbc17da1c5e4c7891e03a181086f31562b217f7bd3c53f4d88
+check_patch "${logdir}/gdm-password-1.patch" f7d22ae4161458e60e79ce58d0e0456c24cb324d0244bccabf4352858a3a3f75aa007c05ace4787bfacd0b3108f606c35828347406b5845dbc3d44e6774e92f3
+check_patch "${logdir}/gdm-password-2.patch" 8e8058b1faec3999af7b26360ef1b82fa77a33002cc8a27f87b07740035b1ab6751186832ea981e14fb8da2dac9a6da564afc17e223f2026f2976305db7bdd43
 
 rm -rf "${logdir}"
 for ((i=0; i<${#test_results[*]}; i++))
