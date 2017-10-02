@@ -91,7 +91,8 @@ EOF
   then
     echo '[+] enabling pam_lastlog in /etc/pam.d/lightdm'
     sed_with_diff '$ a session    optional   pam_lastlog.so' ${ROOTDIR:-/}etc/pam.d/lightdm
-  elif [ -f ${ROOTDIR:-/}etc/pam.d/gdm-password ] && ! grep -q '^session\s\+optional\s\+pam_lastlog\.so' ${ROOTDIR:-/}etc/pam.d/gdm-password
+  fi
+  if [ -f ${ROOTDIR:-/}etc/pam.d/gdm-password ] && ! grep -q '^session\s\+optional\s\+pam_lastlog\.so' ${ROOTDIR:-/}etc/pam.d/gdm-password
   then
     echo '[+] enabling pam_lastlog in /etc/pam.d/gdm-password'
     sed_with_diff '$ a session optional        pam_lastlog.so' ${ROOTDIR:-/}etc/pam.d/gdm-password
