@@ -32,6 +32,8 @@ do
   ar vx "${filename}"
   tar xvf data.tar.?z ".${file}"
 done
+# these are only the templates, but we can test few changes with these anyways
+cp -v usr/share/pam/common-{account,auth,session} etc/pam.d
 
 logdir=$( mktemp -p /tmp -d harden.sh.XXXXXX ) || exit 1
 . ${CWD}/../libexec/utils.sh || exit 1
@@ -55,6 +57,9 @@ check_patch "${logdir}/lightdm-2.patch"   aedcede80773b778eccf8c01ad6770134aaeb3
 check_patch "${logdir}/namespace.conf-1.patch" 2ee0ca57beae509099a15d53c4e3bc7929df8e2e6e1492ce067fa374b0da552da3c21b9a489a7dad56cafe949cd7f196584965edc233132c81b1488ab0b9c4eb
 check_patch "${logdir}/namespace.conf-2.patch" 6764d82657efed74369c906a3ceedb3ad4d0c1ed0bd1d525adf8340471a46883d4c6edf70932e356fd36e9020873ebb4cdea62bd782a7c9f8668889831e51883
 check_patch "${logdir}/sshd.patch"        9880cc693f7208486e86cfcec3088d541f6049fce186b3c590aae3e92bcffbd13ce50f2fb79b70765fd7646efabdc43c77d43b2b64f81affe97e3276b8ea91b9
+check_patch "${logdir}/common-account.patch" 821da2f6b977e91871bd7cfc114ca291dbc9b4088ef928d6a70922663be36913fd32df2b54a08ba3adf640f1d07c15fc33dba024cc3ea36743b57baa67f2bfda
+check_patch "${logdir}/common-auth.patch" eb767d2ad9d776cc496a2aa41c1caf8650fd8372f751698b3b7e1717997c88f6e8290a42e0f6d9c95e4a48ca2655abcf6efdcca06d2bbf0b24b9eca356bd7b54
+check_patch "${logdir}/common-session.patch" a549e42a96228c4468bae898bf07871ded9af476d7789b809d740f181d44536abbcb6fa52e3ed2fbc17da1c5e4c7891e03a181086f31562b217f7bd3c53f4d88
 
 rm -rf "${logdir}"
 for ((i=0; i<${#test_results[*]}; i++))
