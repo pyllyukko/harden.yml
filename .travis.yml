@@ -1,0 +1,9 @@
+addons:
+  apt:
+    packages:
+    - realpath
+language: node_js
+node_js:
+  - "node"
+script:
+  - bash tests/test_debian_pam.sh
