@@ -276,26 +276,6 @@ function read_password_policy() {
   fi
 } # read_password_policy()
 ################################################################################
-function check_manifest() {
-  local MD5_RET
-  if [ ! -f "${MANIFEST_DIR}/CHECKSUMS.md5" ] || \
-     [ ! -f "${MANIFEST_DIR}/CHECKSUMS.md5.asc" ] || \
-     [ ! -f "${MANIFEST_DIR}/MANIFEST.bz2" ]
-  then
-    return 1
-  fi
-  /usr/bin/gpgv "${MANIFEST_DIR}/CHECKSUMS.md5.asc" "${MANIFEST_DIR}/CHECKSUMS.md5" || return 1
-  pushd "${MANIFEST_DIR}" 1>/dev/null
-  fgrep "MANIFEST.bz2" CHECKSUMS.md5 | /bin/md5sum -c
-  MD5_RET=${PIPESTATUS[1]}
-  popd 1>/dev/null
-  if [ ${MD5_RET} -ne 0 ]
-  then
-    return 1
-  fi
-  return 0
-} # check_manifest()
-################################################################################
 function disable_inetd_services() {
   # CIS 2.1 Disable Standard Services
   local SERVICE
@@ -2348,7 +2328,7 @@ function check_integrity() {
   local    local_OWNER_GROUP
   local    local_size
 
-  check_manifest || return 1
+  make -f ${CWD}/Makefile slackware="${SLACKWARE}" slackware_version="${SLACKWARE_VERSION}" "${manifest}" || return 1
 
   pushd /
 
