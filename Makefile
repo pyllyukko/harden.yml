@@ -22,6 +22,7 @@ bash_syntax:
 /etc/ca-certificates.conf: $(CWD)/newconfs/ca-certificates.conf.new FORCE
 	/usr/bin/install -m 644 $< $@
 
+.PHONY: FORCE
 FORCE:
 
 $(CWD)/manifests/$(slackware)-$(slackware_version)/:
