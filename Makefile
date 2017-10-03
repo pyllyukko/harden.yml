@@ -12,3 +12,11 @@ debian_pam:
 bash_syntax:
 	bash -O extglob -n $(CWD)/harden.sh
 	$(foreach i,$(wildcard $(CWD)/libexec/*.sh),bash -n $(i);)
+
+/etc/ssl/certs/ca-certificates.crt: /etc/ca-certificates.conf
+	/usr/sbin/update-ca-certificates --verbose --fresh
+
+/etc/ca-certificates.conf: $(CWD)/newconfs/ca-certificates.conf.new FORCE
+	/usr/bin/install -m 644 $< $@
+
+FORCE:

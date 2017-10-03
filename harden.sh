@@ -1878,6 +1878,7 @@ function gnome_settings() {
 . ${CWD}/libexec/utils.sh
 ################################################################################
 function create_limited_ca_list() {
+  local -i ret
   cat 0<<-EOF
 	
 	Hardening trusted CA certificates
@@ -1901,10 +1902,10 @@ EOF
   then
     rm -v /etc/ssl/certs/ssl-cert-snakeoil.pem
   fi
-  cat "${CWD}/newconfs/ca-certificates.conf.new" 1>/etc/ca-certificates.conf
-  /usr/sbin/update-ca-certificates --verbose --fresh | tee "${logdir}/ca_certificates.txt"
+  make -f ${CWD}/Makefile /etc/ssl/certs/ca-certificates.crt | tee "${logdir}/ca_certificates.txt"
+  ret=${PIPESTATUS[0]}
 
-  return
+  return ${ret}
 } # create_limited_ca_list()
 ################################################################################
 function sysctl_harden() {
