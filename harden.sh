@@ -2007,34 +2007,6 @@ EOF
   popd 1>/dev/null
 } # apply_newconfs()
 ################################################################################
-function create_ssh_moduli() {
-  # WARNING: takes a LONG time!
-  local i
-  local length
-  if [ -f /etc/ssh/moduli.new ]
-  then
-    rm -v /etc/ssh/moduli.new
-  fi
-  for i in 2 3 4 6 7 8
-  do
-    length=$[i*1024]
-    if [ -f "/etc/ssh/moduli-${length}.candidates" ]
-    then
-      rm -v "/etc/ssh/moduli-${length}.candidates"
-    fi
-    ssh-keygen -G /etc/ssh/moduli-${length}.candidates -b ${length}
-    ssh-keygen -T /etc/ssh/moduli-${length} -f /etc/ssh/moduli-${length}.candidates
-    cat /etc/ssh/moduli-${length} 1>>/etc/ssh/moduli.new
-  done
-  if [ -f /etc/ssh/moduli.new ]
-  then
-    echo "moduli.new created:"
-    ls -l /etc/ssh/moduli.new
-  fi
-
-  return 0
-} # create_ssh_moduli()
-################################################################################
 function create_banners() {
   local owner
   local regex
@@ -2440,7 +2412,6 @@ function usage() {
 	  -g		import Slackware, SBo & other PGP keys to trustedkeys.gpg keyring
 	        	(you might also want to run this as a regular user)
 	  -h		this help
-	  -H		create /etc/ssh/moduli.new
 	  -i		disable inetd services
 	  -I		check Slackware installation's integrity from MANIFEST (owner & permission)
 	  -l		set failure limits (faillog) (default value: ${FAILURE_LIMIT:-10})
@@ -2477,6 +2448,12 @@ function usage() {
 	  -S	configure basic auditing using the stig.rules
 	  -u	harden user accounts
 	  -U	create additional user accounts (SBo related)
+
+	Make targets:
+
+	  /etc/ssh/moduli.new
+	  /etc/ssl/certs/ca-certificates.crt
+	  manifest
 EOF
   # print functions
   #declare -f 2>/dev/null | sed -n '/^.* () $/s/^/  /p'
@@ -2854,7 +2831,6 @@ do
       usage
       exit 0
     ;;
-    "H") create_ssh_moduli		;;
     "i") disable_inetd_services		;;
     "I") check_integrity		;;
     "l") set_failure_limits		;;
