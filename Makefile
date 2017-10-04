@@ -49,10 +49,13 @@ $(foreach l,$(bits),$(eval $(call make-moduli-candidates-target,$l)))
 /etc/audit/audit.rules: FORCE
 	/sbin/augenrules
 
+#/etc/%: $(CWD)/newconfs/% FORCE
+#	/usr/bin/install -m 600 $< $@
+
 /etc/suauth.new: $(CWD)/newconfs/suauth.new FORCE
 	/usr/bin/install -m 400 $< $@
 
-/etc/suauth: /etc/suauth.new
+/etc/%: /etc/%.new
 	if [ -f $@ ]; then cmp $@ $< && rm -v $< || true; else mv -v $< $@; fi
 
 $(CWD)/manifests/$(slackware)-$(slackware_version)/:
