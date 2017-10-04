@@ -53,7 +53,7 @@ unset PROGRAM
 #   - rc.modules.local
 #   - rc.modules-2.6.33.4
 #   - rc.modules-2.6.33.4-smp
-declare -r SA_RC="/etc/rc.d/rc.sysstat"
+. ${CWD}/libexec/sysstat.sh
 SERVICES_WHITELIST=(
   /etc/rc.d/rc.0
   /etc/rc.d/rc.4
@@ -2554,36 +2554,6 @@ EOF
   done
   chmod -c ${FILE_PERMS["/etc/ssh/sshd_config"]} /etc/ssh/sshd_config | tee -a "${logdir}/file_perms.txt"
 } # configure_sshd()
-################################################################################
-function enable_sysstat() {
-  cat 0<<-EOF
-	
-	enabling system accounting
-	--------------------------
-EOF
-  if [ -f "${SA_RC}" ]
-  then
-    echo "[+] enabling sysstat through ${SA_RC}"
-    # CIS 1.4 Enable System Accounting
-    /usr/bin/chmod -c 700 "${SA_RC}" | tee -a "${logdir}/file_perms.txt"
-  # enable sysstat in Debian
-  elif [ -f /etc/default/sysstat ]
-  then
-    echo "[+] enabling sysstat through /etc/default/sysstat"
-    sed -i 's/^ENABLED="false"$/ENABLED="true"/' /etc/default/sysstat
-  fi
-  if [ -f /etc/sysstat/sysstat ]
-  then
-    echo "[+] setting HISTORY -> 99999"
-    # make it store the data a bit longer =)
-    sed -i 's/^\(HISTORY=\).*$/HISTORY=99999/' /etc/sysstat/sysstat
-  # red hat
-  elif [ -f /etc/sysconfig/sysstat ]
-  then
-    echo "[+] setting HISTORY -> 99999"
-    sed -i 's/^\(HISTORY=\).*$/HISTORY=99999/' /etc/sysconfig/sysstat
-  fi
-} # enable_sysstat()
 ################################################################################
 function enable_apparmor() {
   cat 0<<-EOF
