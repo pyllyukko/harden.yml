@@ -25,6 +25,23 @@ bash_syntax:
 .PHONY: FORCE
 FORCE:
 
+define make-moduli-candidates-target
+$1: /etc/ssh/moduli-$1.candidates
+/etc/ssh/moduli-$1.candidates:
+	ssh-keygen -G $$@ -b $1
+endef
+# 1024 is only for testing, it is not included in the final moduli
+bits := 1024 2048 3072 4096 6144 7168 8192
+modulis := /etc/ssh/moduli-2048 /etc/ssh/moduli-3072 /etc/ssh/moduli-4096 /etc/ssh/moduli-6144 /etc/ssh/moduli-7168 /etc/ssh/moduli-8192
+$(foreach l,$(bits),$(eval $(call make-moduli-candidates-target,$l)))
+
+# TODO: remove .candidates
+/etc/ssh/moduli-%: /etc/ssh/moduli-%.candidates
+	ssh-keygen -T $@ -f $<
+
+/etc/ssh/moduli.new: $(modulis)
+	cat $^ 1>$@
+
 $(CWD)/manifests/$(slackware)-$(slackware_version)/:
 	mkdir -pv $@
 
