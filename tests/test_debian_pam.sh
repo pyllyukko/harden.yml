@@ -1,8 +1,6 @@
 #!/bin/bash
 # UNDER CONSTRUCTION!
 CWD=$( realpath $( dirname "${0}" ) )
-declare -i ret=0
-declare -a test_results=()
 declare -r arch="amd64"
 declare -rA files=(
   ["/etc/security"]="http://ftp.debian.org/debian/pool/main/p/pam/libpam-modules_1.1.8-3.6_${arch}.deb"
@@ -46,9 +44,5 @@ check_patch "${logdir}/gdm-password-1.patch" f7d22ae4161458e60e79ce58d0e0456c24c
 check_patch "${logdir}/gdm-password-2.patch" 8e8058b1faec3999af7b26360ef1b82fa77a33002cc8a27f87b07740035b1ab6751186832ea981e14fb8da2dac9a6da564afc17e223f2026f2976305db7bdd43
 
 rm -rf "${logdir}"
-for ((i=0; i<${#test_results[*]}; i++))
-do
-  echo "test ${i}: ${test_results[${i}]}"
-  ((ret|=${test_results[${i}]}))
-done
+get_ret
 exit ${ret}

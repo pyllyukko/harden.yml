@@ -1,4 +1,4 @@
-tests = bash_syntax debian_pam
+tests = bash_syntax debian_pam sysstat
 CWD = $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 slackware = slackware64
 slackware_version = 14.2
@@ -10,6 +10,10 @@ tests: $(tests)
 .PHONY: debian_pam
 debian_pam:
 	bash $(CWD)/tests/test_debian_pam.sh
+
+.PHONY: sysstat
+sysstat:
+	bash $(CWD)/tests/test_sysstat.sh
 
 .PHONY: bash_syntax
 bash_syntax:
