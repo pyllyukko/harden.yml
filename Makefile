@@ -42,6 +42,9 @@ $(foreach l,$(bits),$(eval $(call make-moduli-candidates-target,$l)))
 /etc/ssh/moduli.new: $(modulis)
 	cat $^ 1>$@
 
+/etc/audit/audit.rules: FORCE
+	/sbin/augenrules
+
 $(CWD)/manifests/$(slackware)-$(slackware_version)/:
 	mkdir -pv $@
 
