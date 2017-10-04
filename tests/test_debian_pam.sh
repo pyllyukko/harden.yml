@@ -12,27 +12,8 @@ declare -rA files=(
   ["/usr/share/pam"]="http://ftp.debian.org/debian/pool/main/p/pam/libpam-runtime_1.1.8-3.6_all.deb"
   ["/etc/pam.d/gdm-password"]="http://ftp.debian.org/debian/pool/main/g/gdm3/gdm3_3.22.3-3_${arch}.deb"
 )
-function check_patch() {
-  sed -i 1,2d "${1}"
-  sha512sum -c 0<<<"${2}  ${1}"
-  test_results+=(${?})
-} # check_patch()
-
-rm -fr    "${CWD}/debian"
-mkdir -pv "${CWD}/debian"
-pushd     "${CWD}/debian" || exit 1
-for file in ${!files[*]}
-do
-  url="${files[${file}]}"
-  filename="${url##*/}"
-  if [ ! -f "./${filename}" ]
-  then
-    wget -nv "${url}"
-  fi
-  rm -v data.tar.?z
-  ar vx "${filename}"
-  tar xvf data.tar.?z ".${file}"
-done
+. ${CWD}/test_utils.sh || exit 1
+extract_files
 # these are only the templates, but we can test few changes with these anyways
 cp -v usr/share/pam/common-{account,auth,session} etc/pam.d
 
