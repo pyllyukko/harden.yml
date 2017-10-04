@@ -53,6 +53,7 @@ unset PROGRAM
 #   - rc.modules.local
 #   - rc.modules-2.6.33.4
 #   - rc.modules-2.6.33.4-smp
+CWD=$( realpath $( dirname "${0}" ) )
 . ${CWD}/libexec/sysstat.sh
 SERVICES_WHITELIST=(
   /etc/rc.d/rc.0
@@ -144,7 +145,6 @@ declare -r SKS_CA="sks-keyservers.netCA.pem"
 declare -a NAMES=( $( cut -d: -f1 /etc/passwd ) )
 auditPATH='/etc/audit'
 logdir=$( mktemp -p /tmp -d harden.sh.XXXXXX )
-CWD=$( realpath $( dirname "${0}" ) )
 declare -rA grsec_groups=(
   ["grsec_proc"]=1001
   ["grsec_sockets"]=1002
