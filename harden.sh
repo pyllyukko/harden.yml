@@ -491,7 +491,6 @@ function configure_password_policy_for_existing_users() {
 	configuring password policies for existing users
 	------------------------------------------------
 EOF
-  NAMES=( $( cut -d: -f1 /etc/passwd ) )
   read_password_policy
   for NAME in ${NAMES[*]}
   do
@@ -2624,6 +2623,10 @@ function configure_umask() {
 if [ "${USER}" != "root" ]
 then
   echo -e "[-] warning: you should probably be root to run this script\n" 1>&2
+fi
+if [ ${#NAMES[*]} -eq 0 ]
+then
+  echo '[-] warning: NAMES array not populated' 1>&2
 fi
 
 read_password_policy
