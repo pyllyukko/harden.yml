@@ -2413,17 +2413,11 @@ EOF
     return 1
   fi
 
-  cp -v /etc/login.defs /etc/login.defs.old
   for policy in ${!PASSWORD_POLICIES[*]}
   do
-    sed -i "s/^\(# \?\)\?\(${policy}\)\(\s\+\)\S\+$/\2\3${PASSWORD_POLICIES[${policy}]}/" /etc/login.defs
-    if ! grep -q "^${policy}\s\+${PASSWORD_POLICIES[${policy}]}$" /etc/login.defs
-    then
-      echo "[-] failed to set ${policy}"
-    fi
+    printf "[+] %-20s -> %s\n" ${policy} ${PASSWORD_POLICIES[${policy}]}
+    sed_with_diff "s/^\(# \?\)\?\(${policy}\)\(\s\+\)\S\+$/\2\3${PASSWORD_POLICIES[${policy}]}/" /etc/login.defs
   done
-  diff /etc/login.defs.old /etc/login.defs
-  rm -v /etc/login.defs.old
 
   #if [ -f /etc/libuser.conf ]
   #then
