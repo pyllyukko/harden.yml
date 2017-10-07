@@ -62,6 +62,9 @@ $(foreach l,$(bits),$(eval $(call make-moduli-candidates-target,$l)))
 /etc/securetty: /etc/securetty.new
 	mv -fv $< $@
 
+/etc/fstab.new: $(CWD)/libexec/fstab.awk FORCE
+	/usr/bin/gawk -f $< /etc/fstab 1>$@
+
 /etc/%: /etc/%.new
 	if [ -f $@ ]; then cmp $@ $< && rm -v $< || true; else mv -v $< $@; fi
 
