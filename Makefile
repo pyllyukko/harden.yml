@@ -68,6 +68,7 @@ $(foreach l,$(bits),$(eval $(call make-moduli-candidates-target,$l)))
 /etc/%: /etc/%.new
 	if [ -f $@ ]; then cmp $@ $< && rm -v $< || true; else mv -v $< $@; fi
 
+# TODO: chmod in debian is in /bin
 /var/log/pacct:
 	/usr/bin/touch $@
 	/usr/bin/chmod -c 600 $@
