@@ -2367,6 +2367,7 @@ function usage() {
 
 	  /etc/ssh/moduli.new
 	  /etc/ssl/certs/ca-certificates.crt
+	  /etc/securetty
 	  manifest
 EOF
   # print functions

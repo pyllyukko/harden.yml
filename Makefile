@@ -55,6 +55,13 @@ $(foreach l,$(bits),$(eval $(call make-moduli-candidates-target,$l)))
 /etc/suauth.new: $(CWD)/newconfs/suauth.new FORCE
 	/usr/bin/install -m 400 $< $@
 
+/etc/securetty.new: $(CWD)/newconfs/securetty.new FORCE
+	/usr/bin/install -m 400 $< $@
+
+# always overwrite securetty
+/etc/securetty: /etc/securetty.new
+	mv -fv $< $@
+
 /etc/%: /etc/%.new
 	if [ -f $@ ]; then cmp $@ $< && rm -v $< || true; else mv -v $< $@; fi
 
