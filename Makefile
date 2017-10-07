@@ -46,6 +46,15 @@ $(foreach l,$(bits),$(eval $(call make-moduli-candidates-target,$l)))
 /etc/ssh/moduli.new: $(modulis)
 	cat $^ 1>$@
 
+/etc/ssh/ssh_host_rsa_key:
+	/usr/bin/ssh-keygen -b 8192 -t rsa -f $@ -N ''
+
+/etc/ssh/ssh_host_ecdsa_key:
+	/usr/bin/ssh-keygen -b 521 -t ecdsa -f $@ -N ''
+
+/etc/ssh/ssh_host_ed25519_key:
+	/usr/bin/ssh-keygen -t ed25519 -f $@ -N ''
+
 /etc/audit/audit.rules: FORCE
 	/sbin/augenrules
 

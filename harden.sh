@@ -2252,6 +2252,7 @@ function usage() {
 	Make targets:
 
 	  /etc/ssh/moduli.new
+	  /etc/ssh/ssh_host_{rsa,ecdsa,ed25519}_key
 	  /etc/ssl/certs/ca-certificates.crt
 	  /etc/securetty
 	  /etc/fstab.new
