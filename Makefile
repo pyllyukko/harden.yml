@@ -65,6 +65,10 @@ $(foreach l,$(bits),$(eval $(call make-moduli-candidates-target,$l)))
 /etc/%: /etc/%.new
 	if [ -f $@ ]; then cmp $@ $< && rm -v $< || true; else mv -v $< $@; fi
 
+/var/log/pacct:
+	/usr/bin/touch $@
+	/usr/bin/chmod -c 600 $@
+
 $(CWD)/manifests/$(slackware)-$(slackware_version)/:
 	mkdir -pv $@
 
