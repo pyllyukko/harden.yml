@@ -2538,7 +2538,6 @@ do
       create_limited_ca_list
       import_pgp_keys
       check_and_patch /etc	"${ETC_PATCH_FILE}"	1 && ETC_CHANGED=1
-      # TODO: fix /etc/moduli.new and possible others
       apply_newconfs . cron.d logrotate.d rc.d modprobe.d
       check_and_patch /etc	"${SUDOERS_PATCH_FILE}"	1
       check_and_patch /etc	"${SSH_PATCH_FILE}"	1
