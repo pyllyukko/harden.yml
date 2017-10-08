@@ -1,7 +1,6 @@
 #!/bin/bash
 declare GPG_KEYRING="trustedkeys.gpg"
 # more info about these PGP keys:
-#   - http://nmap.org/book/install.html#inst-integrity
 #   - http://www.cipherdyne.org/contact.html
 #   - http://www.nongnu.org/tiger/key.html & http://savannah.nongnu.org/users/jfs
 #   - http://www.atagar.com/pgp.php
@@ -12,7 +11,6 @@ declare GPG_KEYRING="trustedkeys.gpg"
 #   - https://cisofy.com/documentation/lynis/#no-installation
 #   - https://wiki.qubes-os.org/wiki/VerifyingSignatures
 declare -ra PGP_URLS=(
-  "https://svn.nmap.org/nmap/docs/nmap_gpgkeys.txt"
   "https://www.cipherdyne.org/signing_key"
   "https://savannah.nongnu.org/people/viewgpg.php?user_id=7475"
   "https://www.atagar.com/resources/damianJohnson.asc"
@@ -107,6 +105,7 @@ declare -ra PGP_URLS=(
 #   - 0xABCA792D54BF70F2 - Immunity Debugger (Immunity Inc.)
 #   - 0xFE22C6FD83135D45 - Felix Geyer (KeePassX)
 #   - 0392335A78083894A4301C43236E8A58C6DB4512 - Max Kellermann (Music Player Daemon)
+#   - 0x01AF9F036B9355D0 - nmap https://nmap.org/book/install.html#inst-integrity
 declare -ra PGP_KEYS=(
   # slackware
   "0x6A4463C040102233"
@@ -184,6 +183,7 @@ declare -ra PGP_KEYS=(
   "0xABCA792D54BF70F2"
   "0x164C70512F7929476764AB56FE22C6FD83135D45"
   "0x0392335A78083894A4301C43236E8A58C6DB4512"
+  "0x01AF9F036B9355D0"
 )
 function import_pgp_keys() {
   local URL
