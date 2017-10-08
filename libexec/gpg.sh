@@ -1,15 +1,11 @@
 #!/bin/bash
 declare GPG_KEYRING="trustedkeys.gpg"
 # more info about these PGP keys:
-#   - http://www.cipherdyne.org/contact.html
-#   - http://www.atagar.com/pgp.php
 #   - https://tails.boum.org/download/index.en.html#verify
 #   - TODO: http://www.snort.org/snort-downloads#pgp
 #   - https://www.kali.org/downloads/
 #   - https://wiki.qubes-os.org/wiki/VerifyingSignatures
 declare -ra PGP_URLS=(
-  "https://www.cipherdyne.org/signing_key"
-  "https://www.atagar.com/resources/damianJohnson.asc"
   "https://tails.boum.org/tails-signing.key"
   "https://sourceforge.net/projects/apcupsd/files/apcupsd%20Public%20Key/Current%20Public%20Key/apcupsd.pub/download"
   "https://www.kali.org/archive-key.asc"
@@ -100,6 +96,8 @@ declare -ra PGP_URLS=(
 #   - 0xB1A9DD82DC814B09 - jfs (Tiger's author) http://www.nongnu.org/tiger/key.html & http://savannah.nongnu.org/users/jfs
 #   - 0x0AFFEC2F816F0300 - Michael Kershaw (Dragorn) (Kismet's author)
 #   - 0x90C8019E36C2E964 - Wladimir J. van der Laan (Bitcoin Core binary release signing key)
+#   - 0x0445B7AB9ABBEEC6 - Arm's author https://www.atagar.com/pgp.php
+#   - 0x4D6644A9DA036904BDA2CB90E6C9E3350D3E7410 - Michael Rash (Signing key for cipherdyne.org projects)
 declare -ra PGP_KEYS=(
   # slackware
   "0x6A4463C040102233"
@@ -181,6 +179,8 @@ declare -ra PGP_KEYS=(
   "0xB1A9DD82DC814B09"
   "0x0AFFEC2F816F0300"
   "0x90C8019E36C2E964"
+  "0x0445B7AB9ABBEEC6"
+  "0x4D6644A9DA036904BDA2CB90E6C9E3350D3E7410"
 )
 function import_pgp_keys() {
   local URL
