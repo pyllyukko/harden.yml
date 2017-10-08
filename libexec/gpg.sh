@@ -16,7 +16,6 @@ declare -ra PGP_URLS=(
   "https://www.atagar.com/resources/damianJohnson.asc"
   "https://www.kismetwireless.net/dragorn.gpg"
   "https://tails.boum.org/tails-signing.key"
-  "https://grsecurity.net/spender-gpg-key.asc"
   "https://sourceforge.net/projects/apcupsd/files/apcupsd%20Public%20Key/Current%20Public%20Key/apcupsd.pub/download"
   "https://www.kali.org/archive-key.asc"
   "https://cisofy.com/files/cisofy-software.pub"
@@ -51,8 +50,6 @@ declare -ra PGP_URLS=(
 #   - 6294BE9B - http://www.debian.org/CD/verify
 #   - 9624FCD2 - Ryan Barnett (OWASP Core Rule Set Project Leader) <rbarnett@trustwave.com>
 #                https://www.owasp.org/index.php/Category:OWASP_ModSecurity_Core_Rule_Set_Project#Download
-#   - 4245D46A - Bradley Spengler (spender) (grsecurity)
-#                https://grsecurity.net/contact.php
 #   - 6092693E - https://www.kernel.org/signature.html
 #     79BE3E4300411886 Linus Torvalds
 #   - DDC6C0AD - https://www.torproject.org/torbutton/
@@ -130,7 +127,6 @@ declare -ra PGP_KEYS=(
   "0x4E2C6E8793298290"
   "0xDA87E80D6294BE9B"
   "0xC976607D9624FCD2"
-  #"4245D46A"
   "0x38DBBDC86092693E"
   "0x79BE3E4300411886"
   "0x1B0CA30CDDC6C0AD"
