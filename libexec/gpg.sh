@@ -8,7 +8,6 @@ declare GPG_KEYRING="trustedkeys.gpg"
 #   - https://tails.boum.org/download/index.en.html#verify
 #   - TODO: http://www.snort.org/snort-downloads#pgp
 #   - https://www.kali.org/downloads/
-#   - https://cisofy.com/documentation/lynis/#no-installation
 #   - https://wiki.qubes-os.org/wiki/VerifyingSignatures
 declare -ra PGP_URLS=(
   "https://www.cipherdyne.org/signing_key"
@@ -18,7 +17,6 @@ declare -ra PGP_URLS=(
   "https://tails.boum.org/tails-signing.key"
   "https://sourceforge.net/projects/apcupsd/files/apcupsd%20Public%20Key/Current%20Public%20Key/apcupsd.pub/download"
   "https://www.kali.org/archive-key.asc"
-  "https://cisofy.com/files/cisofy-software.pub"
   "https://keys.qubes-os.org/keys/qubes-release-2-signing-key.asc"
   "https://bitcoin.org/laanwj-releases.asc"
   "https://keybase.io/docs/server_security/code_signing_key.asc"
@@ -103,6 +101,7 @@ declare -ra PGP_URLS=(
 #   - 0xFE22C6FD83135D45 - Felix Geyer (KeePassX)
 #   - 0392335A78083894A4301C43236E8A58C6DB4512 - Max Kellermann (Music Player Daemon)
 #   - 0x01AF9F036B9355D0 - nmap https://nmap.org/book/install.html#inst-integrity
+#   - 0x429A566FD5B79251 - CISOfy (Software Signing Key) https://cisofy.com/documentation/lynis/#no-installation
 declare -ra PGP_KEYS=(
   # slackware
   "0x6A4463C040102233"
