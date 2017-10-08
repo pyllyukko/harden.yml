@@ -22,5 +22,21 @@ do
   ((ret|=${gpg_ret}))
 done
 
+tmpdir=$( mktemp -p /tmp -d harden.sh.XXXXXX ) || exit 1
+pushd ${tmpdir} || exit 1
+
+# test that you can actually verify stuff with the keys
+nmap_version="7.60"
+wget -nv https://nmap.org/dist/nmap-${nmap_version}.tar.bz2 https://nmap.org/dist/sigs/nmap-${nmap_version}.tar.bz2.asc
+gpg --keyring ${keyring} --no-default-keyring --verify nmap-${nmap_version}.tar.bz2.asc nmap-${nmap_version}.tar.bz2
+((ret|=${?}))
+
+lynis_version="2.5.5"
+wget -nv https://cisofy.com/files/lynis-${lynis_version}.tar.gz https://cisofy.com/files/lynis-${lynis_version}.tar.gz.asc
+gpg --keyring ${keyring} --no-default-keyring --verify lynis-${lynis_version}.tar.gz.asc lynis-${lynis_version}.tar.gz
+((ret|=${?}))
+
+popd
+rm -rfv "${tmpdir}"
 rm -v "${GPG_KEYRING}"{,~}
 exit ${ret}
