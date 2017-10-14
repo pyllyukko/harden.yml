@@ -71,7 +71,6 @@ declare -ra PGP_URLS=(
 #   - 0xB88B2FD43DBDC284 - http://software.opensuse.org/132/en
 #   - 0x24C6A8A7F4A80EB5 - https://www.centos.org/keys/#centos-7-signing-key
 #   - 0x409B6B1796C275462A1703113804BB82D39DC0E3 - RVM https://rvm.io/rvm/security
-#   - 0x4623E8F745953F23 - http://deb.mempo.org/
 #   - 0x00CCB587DDBEF0E1 - The Irssi project <staff@irssi.org>
 #   - 1E453B2CE87BEE2F7DFE99661E34A1828E207901 - LEAP (https://bitmask.net/en/install/signature-verification)
 #   - 0xC29D97ED198D22A3 - https://openvpn.net/index.php/open-source/documentation/sig.html
@@ -154,7 +153,6 @@ declare -ra PGP_KEYS=(
   "0xB88B2FD43DBDC284"
   "0x24C6A8A7F4A80EB5"
   "0x409B6B1796C275462A1703113804BB82D39DC0E3"
-  "0x4623E8F745953F23"
   "0x00CCB587DDBEF0E1"
   "0x1E453B2CE87BEE2F7DFE99661E34A1828E207901"
   "0xC29D97ED198D22A3"
