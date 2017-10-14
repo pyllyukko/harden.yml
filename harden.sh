@@ -1860,15 +1860,21 @@ function toggle_usb_authorized_default() {
   local host
   local state
 
+  cat 0<<-EOF
+	
+	USB authorized_default
+	----------------------
+EOF
+
   for host in /sys/bus/usb/devices/usb*
   do
     read state 0<"${host}/authorized_default"
     ((state^=1))
     if (( ${state} ))
     then
-      echo "setting ${host} to authorized_default"
+      echo "[+] setting ${host} to authorized_default"
     else
-      echo "setting ${host} to !authorized"
+      echo "[+] setting ${host} to !authorized"
     fi
     echo "${state}" > ${host}/authorized_default
   done
