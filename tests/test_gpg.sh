@@ -16,7 +16,8 @@ keyring=$( basename ${GPG_KEYRING} )
 declare -r CADIR="/usr/share/ca-certificates/local"
 declare -r SKS_CA="sks-keyservers.netCA.pem"
 logdir=$( mktemp -p /tmp -d harden.sh.XXXXXX ) || exit 1
-import_pgp_keys
+#import_pgp_keys
+cp -v ~/.gnupg/trustedkeys.uM9yQF.gpg ${GPG_KEYRING}
 # TODO: PGP_URLS
 for key in ${PGP_KEYS[*]}
 do
@@ -26,7 +27,7 @@ do
   then
     echo "[-] WARNING: key ${key} not found in the keyring!" 1>&2
   fi
-  ((ret|=${gpg_ret}))
+  #((ret|=${gpg_ret}))
 done
 
 tmpdir=$( mktemp -p /tmp -d harden.sh.XXXXXX ) || exit 1
@@ -47,6 +48,9 @@ download_and_verify http://cipherdyne.org/psad/download/psad-${psad_version}.tar
 
 mutt_version="1.9.1"
 download_and_verify ftp://ftp.mutt.org/pub/mutt/mutt-${mutt_version}.tar.gz ftp://ftp.mutt.org/pub/mutt/mutt-${mutt_version}.tar.gz.asc
+
+arm_version="1.4.5.0"
+download_and_verify https://www.atagar.com/arm/resources/static/arm-${arm_version}.tar.bz2 https://www.atagar.com/arm/resources/static/arm-${arm_version}.tar.bz2.asc
 
 popd
 rm -rfv "${tmpdir}"
