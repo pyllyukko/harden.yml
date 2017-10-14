@@ -21,6 +21,7 @@ cp -v ~/.gnupg/trustedkeys.uM9yQF.gpg ${GPG_KEYRING}
 # TODO: PGP_URLS
 for key in ${PGP_KEYS[*]}
 do
+  # TODO: check if revoked
   gpg --keyring ${keyring} --no-default-keyring --list-keys ${key} 1>/dev/null
   gpg_ret=${?}
   if [ ${gpg_ret} -ne 0 ]
@@ -51,6 +52,9 @@ download_and_verify ftp://ftp.mutt.org/pub/mutt/mutt-${mutt_version}.tar.gz ftp:
 
 arm_version="1.4.5.0"
 download_and_verify https://www.atagar.com/arm/resources/static/arm-${arm_version}.tar.bz2 https://www.atagar.com/arm/resources/static/arm-${arm_version}.tar.bz2.asc
+
+modsecurity_version="2.9.2"
+download_and_verify https://www.modsecurity.org/tarball/2.9.2/modsecurity-2.9.2.tar.gz https://www.modsecurity.org/tarball/2.9.2/modsecurity-2.9.2.tar.gz.asc
 
 popd
 rm -rfv "${tmpdir}"
