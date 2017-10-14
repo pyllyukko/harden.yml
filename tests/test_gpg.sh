@@ -1,5 +1,12 @@
 #!/bin/bash
 declare -i ret=0
+function download_and_verify() {
+  # $1 = file $2 = sig file
+  wget -nv "${1}" "${2}"
+  ((ret|=${?}))
+  gpg --keyring ${keyring} --no-default-keyring --verify $( basename "${2}" ) $( basename "${1}" )
+  ((ret|=${?}))
+} # download_and_verify()
 CWD=$( realpath $( dirname "${0}" ) )
 . ${CWD}/../libexec/gpg.sh || exit 1
 GPG_KEYRING=$( TMPDIR=~/.gnupg mktemp -t trustedkeys.XXXXXX ) || exit 1
@@ -27,24 +34,19 @@ pushd ${tmpdir} || exit 1
 
 # test that you can actually verify stuff with the keys
 nmap_version="7.60"
-wget -nv https://nmap.org/dist/nmap-${nmap_version}.tar.bz2 https://nmap.org/dist/sigs/nmap-${nmap_version}.tar.bz2.asc
-gpg --keyring ${keyring} --no-default-keyring --verify nmap-${nmap_version}.tar.bz2.asc nmap-${nmap_version}.tar.bz2
-((ret|=${?}))
+download_and_verify https://nmap.org/dist/nmap-${nmap_version}.tar.bz2 https://nmap.org/dist/sigs/nmap-${nmap_version}.tar.bz2.asc
 
 lynis_version="2.5.5"
-wget -nv https://cisofy.com/files/lynis-${lynis_version}.tar.gz https://cisofy.com/files/lynis-${lynis_version}.tar.gz.asc
-gpg --keyring ${keyring} --no-default-keyring --verify lynis-${lynis_version}.tar.gz.asc lynis-${lynis_version}.tar.gz
-((ret|=${?}))
+download_and_verify https://cisofy.com/files/lynis-${lynis_version}.tar.gz https://cisofy.com/files/lynis-${lynis_version}.tar.gz.asc
 
 tiger_version="3.2.3"
-wget -nv http://download.savannah.nongnu.org/releases/tiger/tiger-${tiger_version}.tar.gz http://download.savannah.gnu.org/releases/tiger/tiger-${tiger_version}.tar.gz.sig
-gpg --keyring ${keyring} --no-default-keyring --verify tiger-${tiger_version}.tar.gz.asc tiger-${tiger_version}.tar.gz
-((ret|=${?}))
+download_and_verify http://download.savannah.nongnu.org/releases/tiger/tiger-${tiger_version}.tar.gz http://download.savannah.gnu.org/releases/tiger/tiger-${tiger_version}.tar.gz.sig
 
 psad_version="2.4.5"
-wget -nv http://cipherdyne.org/psad/download/psad-${psad_version}.tar.bz2 http://cipherdyne.org/psad/download/psad-${psad_version}.tar.bz2.asc
-gpg --keyring ${keyring} --no-default-keyring --verify psad-${psad_version}.tar.bz2.asc psad-${psad_version}.tar.bz2
-((ret|=${?}))
+download_and_verify http://cipherdyne.org/psad/download/psad-${psad_version}.tar.bz2 http://cipherdyne.org/psad/download/psad-${psad_version}.tar.bz2.asc
+
+mutt_version="1.9.1"
+download_and_verify ftp://ftp.mutt.org/pub/mutt/mutt-${mutt_version}.tar.gz ftp://ftp.mutt.org/pub/mutt/mutt-${mutt_version}.tar.gz.asc
 
 popd
 rm -rfv "${tmpdir}"
