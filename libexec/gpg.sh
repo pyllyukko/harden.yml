@@ -36,10 +36,13 @@ declare -ra PGP_KEYS=(
   "0x9DEB46C0D679F6CF"
   # Fabian Keil, lead developer of privoxy
   "0x48C5521FBF2EA563"
-  # Erinn Clark (Tor Browser Bundles) https://www.torproject.org/docs/signing-keys.html.en
-  "0x416F061063FEE659"
+  # Nick Mathewson <nickm@torproject.org>
+  "0x6AFEE6D49E92B601"
   # Tor Browser Developers (signing key) <torbrowser@torproject.org>
   "0x4E2C6E8793298290"
+  # Erinn Clark (Tor Browser Bundles) https://www.torproject.org/docs/signing-keys.html.en
+  # TODO: remove?
+  "0x416F061063FEE659"
   # http://www.debian.org/CD/verify
   "0xDA87E80D6294BE9B"
   # Ryan Barnett (OWASP Core Rule Set Project Leader) <rbarnett@trustwave.com>
@@ -103,6 +106,7 @@ declare -ra PGP_KEYS=(
   # Chet Ramey / GNU / Bash
   "0xBB5869F064EA74AB"
   # https://www.apple.com/support/security/pgp/
+  # TODO: remove? (expired)
   "0x17167CB4EE3A8EED"
   # Apple Product Security
   "0x83A3EF8C346CB446"
@@ -116,9 +120,9 @@ declare -ra PGP_KEYS=(
   "0x00CCB587DDBEF0E1"
   # LEAP (https://bitmask.net/en/install/signature-verification)
   "0x1E453B2CE87BEE2F7DFE99661E34A1828E207901"
-  # https://openvpn.net/index.php/open-source/documentation/sig.html
+  # Samuli Seppänen <samuli@openvpn.net> https://openvpn.net/index.php/open-source/documentation/sig.html
   "0xC29D97ED198D22A3"
-  # OpenVPN 2.4.3+
+  # OpenVPN - Security Mailing List <security@openvpn.net> (OpenVPN 2.4.3+)
   "0x12F5F7B42F2B01E7"
   # Mixmaster 3.x Code Release Signing Key
   "0x1AF51CE72993D5F9"
