@@ -39,9 +39,8 @@ bits := 1024 2048 3072 4096 6144 7680 8192
 modulis := /etc/ssh/moduli-2048 /etc/ssh/moduli-3072 /etc/ssh/moduli-4096 /etc/ssh/moduli-6144 /etc/ssh/moduli-7680 /etc/ssh/moduli-8192
 $(foreach l,$(bits),$(eval $(call make-moduli-candidates-target,$l)))
 
-# TODO: remove .candidates
 /etc/ssh/moduli-%: /etc/ssh/moduli-%.candidates
-	ssh-keygen -T $@ -f $<
+	ssh-keygen -T $@ -f $< && rm -v $<
 
 /etc/ssh/moduli.new: $(modulis)
 	cat $^ 1>$@
