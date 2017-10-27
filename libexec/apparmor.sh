@@ -27,6 +27,8 @@ EOF
     pushd /usr/share/doc/apparmor-profiles/extras 1>/dev/null
     cp -v -n *.* /etc/apparmor.d/
     popd 1>/dev/null
+  else
+    echo "[-] extra profiles not found. try installing \`apparmor-profiles'."
   fi
   if ! grep -q '^GRUB_CMDLINE_LINUX=".*apparmor' /etc/default/grub
   then
