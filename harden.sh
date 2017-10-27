@@ -55,6 +55,10 @@ unset PROGRAM
 #   - rc.modules-2.6.33.4-smp
 CWD=$( realpath $( dirname "${0}" ) )
 . ${CWD}/libexec/sysstat.sh
+. ${CWD}/libexec/utils.sh
+. ${CWD}/libexec/pam.sh
+. ${CWD}/libexec/apparmor.sh
+. ${CWD}/libexec/gpg.sh
 SERVICES_WHITELIST=(
   /etc/rc.d/rc.0
   /etc/rc.d/rc.4
@@ -242,8 +246,6 @@ declare -a INETD_SERVICES=(echo discard daytime chargen time ftp telnet comsat s
 
 # ...plus some extras
 INETD_SERVICES+=(pop3 imap2 netbios-ssn netbios-ns)
-
-. ${CWD}/libexec/gpg.sh
 
 # from CIS Apache HTTP Server 2.4 Benchmark v1.1.0 - 12-03-2013
 # 1.2.3-8
@@ -1656,8 +1658,6 @@ function gnome_settings() {
   gsettings set org.gnome.system.location enabled false
 } # gnome_settings()
 ################################################################################
-. ${CWD}/libexec/utils.sh
-################################################################################
 function create_limited_ca_list() {
   local -i ret
   cat 0<<-EOF
@@ -2291,8 +2291,6 @@ EOF
   } | tee -a "${logdir}/file_perms.txt"
 } # configure_securetty()
 ################################################################################
-. ${CWD}/libexec/pam.sh
-################################################################################
 function configure_password_policies() {
   local policy
 
@@ -2358,8 +2356,6 @@ EOF
   done
   chmod -c ${FILE_PERMS["/etc/ssh/sshd_config"]} /etc/ssh/sshd_config | tee -a "${logdir}/file_perms.txt"
 } # configure_sshd()
-################################################################################
-. ${CWD}/libexec/apparmor.sh
 ################################################################################
 function disable_ipv6() {
   cat 0<<-EOF
