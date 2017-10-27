@@ -31,7 +31,7 @@ EOF
   if ! grep -q '^GRUB_CMDLINE_LINUX=".*apparmor' /etc/default/grub
   then
     echo '[+] enabling AppArmor in /etc/default/grub'
-    sed -i 's/^\(GRUB_CMDLINE_LINUX=".*\)"$/\1 apparmor=1 security=apparmor"/' /etc/default/grub
+    sed_with_diff 's/^\(GRUB_CMDLINE_LINUX=".*\)"$/\1 apparmor=1 security=apparmor"/' /etc/default/grub
     echo "NOTICE: /etc/default/grub updated. you need to run \`update-grub' or \`grub2-install' to update the boot loader."
   fi
 } # enable_apparmor()
