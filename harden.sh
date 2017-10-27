@@ -2358,67 +2358,7 @@ EOF
   chmod -c ${FILE_PERMS["/etc/ssh/sshd_config"]} /etc/ssh/sshd_config | tee -a "${logdir}/file_perms.txt"
 } # configure_sshd()
 ################################################################################
-function enable_apparmor() {
-  cat 0<<-EOF
-	
-	enabling AppArmor
-	-----------------
-EOF
-  # TODO: if [ -f /boot/cmdline.txt ]
-  if [ ! -f /etc/default/grub ]
-  then
-    echo '[-] error: /etc/default/grub not found!' 1>&2
-    return 1
-  fi
-  if [ ! -f /etc/init.d/apparmor ]
-  then
-    echo '[-] error: /etc/init.d/apparmor not found!' 1>&2
-    return 1
-  fi
-  if [ ! -d /etc/apparmor.d ]
-  then
-    echo '[-] error: /etc/apparmor.d not found!' 1>&2
-    return 1
-  fi
-  if [ -d /usr/share/doc/apparmor-profiles/extras ]
-  then
-    echo '[+] copying extra profiles from /usr/share/doc/apparmor-profiles/extras'
-    pushd /usr/share/doc/apparmor-profiles/extras 1>/dev/null
-    cp -v -n *.* /etc/apparmor.d/
-    popd 1>/dev/null
-  fi
-  if ! grep -q '^GRUB_CMDLINE_LINUX=".*apparmor' /etc/default/grub
-  then
-    echo '[+] enabling AppArmor in /etc/default/grub'
-    sed -i 's/^\(GRUB_CMDLINE_LINUX=".*\)"$/\1 apparmor=1 security=apparmor"/' /etc/default/grub
-    echo "NOTICE: /etc/default/grub updated. you need to run \`update-grub' or \`grub2-install' to update the boot loader."
-  fi
-} # enable_apparmor()
-################################################################################
-function aa_enforce() {
-  local profile
-  cat 0<<-EOF
-	
-	setting AppArmor profiles to enforce mode
-	-----------------------------------------
-EOF
-  if [ -x /usr/sbin/aa-enforce ]
-  then
-    for profile in /etc/apparmor.d/*.*
-    do
-      /usr/sbin/aa-enforce ${profile}
-    done
-    # more details at https://github.com/pyllyukko/harden.sh/wiki/apparmor
-    echo '[+] setting few troublesome profiles back to complain mode'
-    for profile in "sbin.dhclient" "usr.sbin.sshd" "usr.bin.man" "etc.cron.daily.logrotate" "usr.bin.wireshark" "usr.bin.passwd" "usr.sbin.userdel"
-    do
-      /usr/sbin/aa-complain /etc/apparmor.d/${profile}
-    done
-  else
-    echo '[-] /usr/sbin/aa-enforce not found. is apparmor-utils package installed?' 1>&2
-    return 1
-  fi
-} # aa_enforce()
+. ${CWD}/libexec/apparmor.sh
 ################################################################################
 function disable_ipv6() {
   cat 0<<-EOF
