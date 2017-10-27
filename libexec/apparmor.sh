@@ -30,6 +30,7 @@ EOF
   else
     echo "[-] extra profiles not found. try installing \`apparmor-profiles'."
   fi
+  # http://wiki.apparmor.net/index.php/Distro_debian#In_Stock_Debian
   if ! grep -q '^GRUB_CMDLINE_LINUX=".*apparmor' /etc/default/grub
   then
     echo '[+] enabling AppArmor in /etc/default/grub'

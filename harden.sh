@@ -204,6 +204,7 @@ declare -rA SSHD_CONFIG=(
   ["AllowTcpForwarding"]="no"
   ["FingerprintHash"]="sha256"
 )
+# TODO: http://wiki.apparmor.net/index.php/Distro_debian#Tuning_logs
 declare -rA AUDITD_CONFIG=(
   ["space_left_action"]="email"
   ["action_mail_acct"]="root"
