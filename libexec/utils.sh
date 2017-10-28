@@ -63,3 +63,28 @@ function check_for_conf_file() {
 function print_topic() {
   echo -e "\n${1}\n${1//?/-}"
 } # print_topic()
+function get_lynis_hardening_index() {
+  if [ ! -d ${LYNIS_DIR} ]
+  then
+    echo "[-] couldn't find Lynis" 1>&2
+    return 1
+  fi
+  if [ ! -r /var/log/lynis.log ]
+  then
+    echo "[-] /var/log/lynis.log not readable" 1>&2
+    return 1
+  fi
+  pushd ${LYNIS_DIR} 1>/dev/null || return 1
+  # TODO: "[ Press ENTER to continue, or CTRL+C to cancel ]"
+  ./lynis -q --tests-from-group ${1} 1>/dev/null
+  popd 1>/dev/null
+  grep -o 'Hardening index.*' /var/log/lynis.log
+} # get_lynis_hardening_index()
+function compare_lynis_scores() {
+  if [ "${1}" = "${2}" ]
+  then
+    echo "[-] Lynis score did not change: ${2}" 1>&2
+  else
+    echo "[+] Lynis score: ${2}"
+  fi
+} # compare_lynis_scores()
