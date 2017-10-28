@@ -2153,6 +2153,7 @@ function usage() {
 	  		configure_modprobe.d
 	  		configure_pam
 	  		configure_securetty
+	  		configure_umask
 	  		core_dumps
 	  		create_banners
 	  		disable_ipv6
@@ -2401,8 +2402,21 @@ EOF
 } # disable_gdm3_user_list()
 ################################################################################
 function configure_umask() {
-  true
-  # TODO
+  cat 0<<-EOF
+	
+	configuring umask
+	-----------------
+EOF
+  if [ -f /etc/bash.bashrc ]
+  then
+    if ! grep -q '^umask 077$' /etc/bash.bashrc
+    then
+      echo '[+] configuring umask to /etc/bash.bashrc'
+      sed_with_diff '$a umask 077' /etc/bash.bashrc
+    fi
+  fi
+  make -f ${CWD}/Makefile /etc/profile.d/umask.sh
+  # TODO: pam
 } # configure_umask()
 ################################################################################
 
@@ -2487,6 +2501,7 @@ do
 	"sysctl_harden")	sysctl_harden			;;
 	"homedir_perms")	user_home_directories_permissions ;;
 	"disable_gdm3_user_list") disable_gdm3_user_list        ;;
+	"configure_umask")	configure_umask			;;
 	*)
 	  echo "[-] unknown function" 1>&2
 	  exit 1
