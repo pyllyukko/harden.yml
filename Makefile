@@ -26,6 +26,16 @@ bash_syntax:
 /etc/ca-certificates.conf: $(CWD)/newconfs/ca-certificates.conf.new FORCE
 	/usr/bin/install -m 644 $< $@
 
+/etc/motd: $(CWD)/newconfs/motd.new FORCE
+	/usr/bin/install -m 644 $< $@
+
+/etc/issue: FORCE
+	@echo "Authorized uses only. All activity may be monitored and reported." 1>$@
+	@chmod -c 644 $@
+
+/etc/issue.net: /etc/issue FORCE
+	@cp -vf $< $@
+
 .PHONY: FORCE
 FORCE:
 
