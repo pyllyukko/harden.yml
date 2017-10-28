@@ -33,7 +33,7 @@ bash_syntax:
 	@echo "Authorized uses only. All activity may be monitored and reported." 1>$@
 	@chmod -c 644 $@
 
-/etc/issue.net: /etc/issue FORCE
+/etc/issue.net: /etc/issue
 	@cp -vf $< $@
 
 .PHONY: FORCE
