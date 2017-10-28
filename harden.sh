@@ -2154,6 +2154,7 @@ function usage() {
 	  		configure_pam
 	  		configure_securetty
 	  		configure_umask
+	  		configure_shells
 	  		core_dumps
 	  		create_banners
 	  		disable_ipv6
@@ -2401,6 +2402,13 @@ EOF
   # TODO: greeter-allow-guest in /etc/lightdm/lightdm.conf (in Pi)
 } # disable_gdm3_user_list()
 ################################################################################
+function configure_shells() {
+  configure_umask
+  remove_shells
+  make -f ${CWD}/Makefile /etc/profile.d/tmout.sh
+  # TODO: rbash
+} # configure_shells()
+################################################################################
 function configure_umask() {
   cat 0<<-EOF
 	
@@ -2511,6 +2519,7 @@ do
 	"homedir_perms")	user_home_directories_permissions ;;
 	"disable_gdm3_user_list") disable_gdm3_user_list        ;;
 	"configure_umask")	configure_umask			;;
+	"configure_shells")	configure_shells		;;
 	*)
 	  echo "[-] unknown function" 1>&2
 	  exit 1
