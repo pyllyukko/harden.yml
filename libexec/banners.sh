@@ -16,11 +16,6 @@ EOF
     make -f ${CWD}/Makefile ${file}
   done
 
-  {
-    chown -c root:root /etc/motd /etc/issue /etc/issue.net
-    chmod 644 /etc/motd /etc/issue /etc/issue.net
-  } | tee -a "${logdir}/file_perms.txt"
-
   if [ -f /etc/gdm3/greeter.dconf-defaults ]
   then
     echo "[+] configuring banner to gdm3"
