@@ -2407,6 +2407,15 @@ function configure_umask() {
 	configuring umask
 	-----------------
 EOF
+  # TODO: utilize configure_password_policies()
+  if [ -f /etc/login.defs ]
+  then
+    echo "[+] configuring /etc/login.defs"
+    local policy="UMASK"
+    sed_with_diff "s/^\(# \?\)\?\(${policy}\)\(\s\+\)\S\+$/\2\3${PASSWORD_POLICIES[${policy}]}/" /etc/login.defs
+  else
+    echo "[-] /etc/login.defs not found" 1>&2
+  fi
   if [ -f /etc/bash.bashrc ]
   then
     if ! grep -q '^umask 077$' /etc/bash.bashrc
@@ -2416,7 +2425,7 @@ EOF
     fi
   fi
   make -f ${CWD}/Makefile /etc/profile.d/umask.sh
-  # TODO: pam
+  configure_pam_umask
 } # configure_umask()
 ################################################################################
 

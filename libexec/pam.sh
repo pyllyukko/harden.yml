@@ -18,6 +18,14 @@ EOF
   # TODO: nproc - max number of processes
 } # configure_core_dumps()
 ################################################################################
+function configure_pam_umask() {
+  if [ -f ${ROOTDIR:-/}etc/pam.d/common-session ] && ! grep -q 'pam_umask\.so' ${ROOTDIR:-/}etc/pam.d/common-session
+  then
+    echo '[+] enabling pam_umask in /etc/pam.d/common-session'
+    sed_with_diff '$ a session optional pam_umask.so' "${ROOTDIR:-/}etc/pam.d/common-session"
+  fi
+} # configure_pam_umask()
+################################################################################
 function configure_pam() {
   # https://github.com/pyllyukko/harden.sh/wiki/PAM
   local setting
@@ -156,11 +164,7 @@ EOF
   fi
 
   # pam_umask
-  if [ -f ${ROOTDIR:-/}etc/pam.d/common-session ] && ! grep -q 'pam_umask\.so' ${ROOTDIR:-/}etc/pam.d/common-session
-  then
-    echo '[+] enabling pam_umask in /etc/pam.d/common-session'
-    sed_with_diff '$ a session optional pam_umask.so' "${ROOTDIR:-/}etc/pam.d/common-session"
-  fi
+  configure_pam_umask
 
   # /etc/pam.d/other
   echo '[+] configuring default behaviour via /etc/pam.d/other'
