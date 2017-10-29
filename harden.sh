@@ -437,6 +437,10 @@ function user_accounts() {
 
   # from README.privsep
   # another less tiger warning (pass016w)
+  cat 0<<-EOF
+	
+	### configuring sshd account
+EOF
   /usr/sbin/usermod -c 'sshd privsep' -d /var/empty sshd
 
   user_home_directories_permissions
