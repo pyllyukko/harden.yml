@@ -3,6 +3,7 @@ CWD = $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 slackware = slackware64
 slackware_version = 14.2
 manifest_files = $(CWD)/manifests/$(slackware)-$(slackware_version)/CHECKSUMS.md5 $(CWD)/manifests/$(slackware)-$(slackware_version)/CHECKSUMS.md5.asc $(CWD)/manifests/$(slackware)-$(slackware_version)/MANIFEST.bz2
+SHELL=/bin/bash
 
 .PHONY: tests
 tests: $(tests)
