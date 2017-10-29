@@ -415,7 +415,20 @@ function user_accounts() {
     return 1
   fi
 
+  set_failure_limits
+  create_ftpusers
+  restrict_cron
+  lock_system_accounts
+  configure_password_policy_for_existing_users
+  user_home_directories_permissions
+
   # CUSTOM
+
+  cat 0<<-EOF
+	
+	miscellaneous
+	-------------
+EOF
 
   # change the defaults. this will update /etc/default/useradd.
   # this makes it so, that when a password of a user expires, the account is
@@ -426,33 +439,21 @@ function user_accounts() {
   # locked.
   #
   # see http://tldp.org/HOWTO/Shadow-Password-HOWTO-7.html#ss7.1
+  echo '[+] setting the default password inactivity period'
   useradd -D -f ${password_inactive}
 
   # modify adduser to use 700 as newly created home dirs permission
   # grep for the line, as Debian uses different adduser (written in Perl)
   if grep -q ^defchmod /usr/sbin/adduser
   then
-    cat 0<<-EOF
-	
-	### settings defchmod in /usr/sbin/adduser
-EOF
+    echo '[+] settings defchmod in /usr/sbin/adduser'
     sed_with_diff 's/^defchmod=[0-9]\+\(.*\)$/defchmod=700\1/' /usr/sbin/adduser
   fi
 
-  lock_system_accounts
-
-  configure_password_policy_for_existing_users
-
   # from README.privsep
   # another less tiger warning (pass016w)
-  cat 0<<-EOF
-	
-	### configuring sshd account
-EOF
+  echo '[+] configuring sshd account'
   /usr/sbin/usermod -c 'sshd privsep' -d /var/empty sshd
-
-  user_home_directories_permissions
-
 
   # CUSTOM
 
@@ -463,6 +464,7 @@ EOF
   # default members in Slack14.0:
   #   adm:x:4:root,adm,daemon
   #usermod -G daemon daemon
+  echo '[+] removing daemon from adm group'
   gpasswd -d daemon adm
 
   # restrict adm group
@@ -475,22 +477,13 @@ EOF
   #done
 
   # this should create the missing entries to /etc/gshadow
-  cat 0<<-EOF
-	
-	### fixing gshadow
-EOF
+  echo '[+] fixing gshadow'
   if [ -x /usr/sbin/grpck ]
   then
     /usr/bin/yes | /usr/sbin/grpck
   else
     echo "[-] WARNING: grpck not found!" 1>&2
   fi
-
-  set_failure_limits
-
-  create_ftpusers
-
-  restrict_cron
 
   return 0
 } # user_accounts()
@@ -1235,7 +1228,7 @@ EOF
       # add the name to ftpusers only if it's not already in there.
       # this should work whether the ftpusers file exists already or not.
       grep -q "^${NAME}$" /etc/ftpusers 2>/dev/null || {
-	echo "  \`${NAME}'"
+	echo "[+] adding \`${NAME}'"
 	echo "${NAME}" 1>> /etc/ftpusers
       }
     fi
