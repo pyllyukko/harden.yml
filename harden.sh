@@ -429,7 +429,15 @@ function user_accounts() {
   useradd -D -f ${password_inactive}
 
   # modify adduser to use 700 as newly created home dirs permission
-  sed_with_diff 's/^defchmod=[0-9]\+\(.*\)$/defchmod=700\1/' /usr/sbin/adduser
+  # grep for the line, as Debian uses different adduser (written in Perl)
+  if grep -q ^defchmod /usr/sbin/adduser
+  then
+    cat 0<<-EOF
+	
+	### settings defchmod in /usr/sbin/adduser
+EOF
+    sed_with_diff 's/^defchmod=[0-9]\+\(.*\)$/defchmod=700\1/' /usr/sbin/adduser
+  fi
 
   lock_system_accounts
 
