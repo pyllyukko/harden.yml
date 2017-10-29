@@ -150,6 +150,20 @@ plugin=users
 
 #################################################################################
 #
+# Lynis Enterprise options
+#
+#################################################################################
+
+# Provide the name of the customer/client
+system-customer-name=
+
+# Provide tags (tags=db,production,ssn-1304)
+tags=
+
+
+
+#################################################################################
+#
 # Configuration (Old Style) - will be replaced in phases
 #
 #################################################################################
@@ -193,6 +207,7 @@ config-data=sysctl;kern.sugid_coredump;0;1;No description;sysctl -a;url:https;//
 config-data=sysctl;kernel.core_setuid_ok;0;1;No description;sysctl -a;url:https;//kernel.org/doc/Documentation/sysctl/kernel.txt;category:security;
 config-data=sysctl;kernel.core_uses_pid;1;1;No description;sysctl -a;url:https;//kernel.org/doc/Documentation/sysctl/kernel.txt;category:security;
 config-data=sysctl;kernel.ctrl-alt-del;0;1;No description;sysctl -a;url:https;//kernel.org/doc/Documentation/sysctl/kernel.txt;category:security;
+config-data=sysctl;kernel.dmesg_restrict;1;1;Restrict use of dmesg;sysctl -a;url:https;//kernel.org/doc/Documentation/sysctl/kernel.txt;category:security;
 config-data=sysctl;kernel.exec-shield-randomize;1;1;No description;sysctl -a;url:https;//kernel.org/doc/Documentation/sysctl/kernel.txt;category:security;
 config-data=sysctl;kernel.exec-shield;1;1;No description;sysctl -a;url:https;//kernel.org/doc/Documentation/sysctl/kernel.txt;category:security;
 config-data=sysctl;kernel.kptr_restrict;2;1;Restrict access to kernel symbols;sysctl -a;url:https;//kernel.org/doc/Documentation/sysctl/kernel.txt;category:security;
