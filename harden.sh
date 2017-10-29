@@ -152,15 +152,15 @@ declare -r SKS_CA="sks-keyservers.netCA.pem"
 declare -a NAMES=( $( cut -d: -f1 /etc/passwd ) )
 auditPATH='/etc/audit'
 logdir=$( mktemp -p /tmp -d harden.sh.XXXXXX )
-declare -rA grsec_groups=(
-  ["grsec_proc"]=1001
-  ["grsec_sockets"]=1002
-  ["grsec_socketc"]=1003
-  ["grsec_socketall"]=1004
-  ["grsec_tpe"]=1005
-  ["grsec_symlinkown"]=1006
-  ["grsec_audit"]=1007
-)
+#declare -rA grsec_groups=(
+#  ["grsec_proc"]=1001
+#  ["grsec_sockets"]=1002
+#  ["grsec_socketc"]=1003
+#  ["grsec_socketall"]=1004
+#  ["grsec_tpe"]=1005
+#  ["grsec_symlinkown"]=1006
+#  ["grsec_audit"]=1007
+#)
 declare -rA PASSWORD_POLICIES=(
   ["PASS_MAX_DAYS"]=365
   ["PASS_MIN_DAYS"]=7
@@ -462,11 +462,11 @@ EOF
   # restrict adm group
   #gpasswd -R adm
 
-  echo "[+] creating groups for grsecurity"
-  for group in ${!grsec_groups[*]}
-  do
-    groupadd -g ${grsec_groups[${group}]} ${group}
-  done
+  #echo "[+] creating groups for grsecurity"
+  #for group in ${!grsec_groups[*]}
+  #do
+  #  groupadd -g ${grsec_groups[${group}]} ${group}
+  #done
 
   # this should create the missing entries to /etc/gshadow
   cat 0<<-EOF
