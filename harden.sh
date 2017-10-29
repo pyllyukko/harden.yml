@@ -2432,6 +2432,11 @@ EOF
       sed_with_diff '$a umask 077' /etc/bash.bashrc
     fi
   fi
+  if [ -f /etc/init.d/functions ]
+  then
+    echo '[+] configuring umask to /etc/init.d/functions'
+    sed_with_diff 's/^umask [0-9]\+$/umask 077/' /etc/init.d/functions
+  fi
   make -f ${CWD}/Makefile /etc/profile.d/umask.sh
   configure_pam_umask
 } # configure_umask()
