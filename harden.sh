@@ -429,7 +429,7 @@ function user_accounts() {
   useradd -D -f ${password_inactive}
 
   # modify adduser to use 700 as newly created home dirs permission
-  sed -i 's/^defchmod=[0-9]\+\(.*\)$/defchmod=700\1/' /usr/sbin/adduser
+  sed_with_diff 's/^defchmod=[0-9]\+\(.*\)$/defchmod=700\1/' /usr/sbin/adduser
 
   lock_system_accounts
 
