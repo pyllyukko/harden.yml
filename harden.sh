@@ -533,6 +533,12 @@ function harden_fstab() {
     echo "[+] /etc/fstab.new created"
   fi
 
+  # there's no point in doing the comparison, but we'll print the score anyway
+  (( ${LYNIS_TESTS} )) && {
+    local LYNIS_SCORE=$( get_lynis_hardening_index filesystems )
+    echo "[*] Lynis score: ${LYNIS_SCORE}"
+  }
+
   return ${?}
 } # harden_fstab()
 ################################################################################
