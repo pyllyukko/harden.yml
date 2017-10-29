@@ -1736,7 +1736,7 @@ function quick_harden() {
     sysctl_harden                        \
     set_failure_limits                   \
     create_ftpusers                      \
-    remove_shells                        \
+    configure_shells                     \
     harden_fstab                         \
     enable_sysstat                       \
     create_limited_ca_list               \
