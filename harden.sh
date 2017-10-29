@@ -409,12 +409,6 @@ function user_accounts() {
 
   local group
 
-  cat 0<<-EOF
-	
-	modifying/hardening current user accounts
-	-----------------------------------------
-EOF
-
   if [ ! -x "${DENY_SHELL}" ]
   then
     echo "[-] error: invalid \$DENY_SHELL!" 1>&2
@@ -508,7 +502,7 @@ EOF
     fi
     if [ $uid -ge ${UID_MIN:-1000} ] && [ $uid -le ${UID_MAX:-60000} ]
     then
-      echo "  UID ${uid}"
+      echo "[+] UID ${uid}"
       chage -m ${PASS_MIN_DAYS:-7} -M ${PASS_MAX_DAYS:-365} -W ${PASS_WARN_AGE:-30} -I ${password_inactive} $NAME
     fi
   done
