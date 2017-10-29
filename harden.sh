@@ -225,6 +225,7 @@ declare -rA LIGHTDM_CONFIG=(
 declare -rA FILE_PERMS=(
   ["/boot/grub/grub.cfg"]="og-rwx"
   ["/etc/ssh/sshd_config"]="600"
+  ["/etc/lilo.conf"]="600"
 )
 
 # NOLOGIN(8): "It is intended as a replacement shell field for accounts that have been disabled."
