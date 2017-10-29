@@ -2407,7 +2407,6 @@ function configure_shells() {
   configure_umask
   remove_shells
   make -f ${CWD}/Makefile /etc/profile.d/tmout.sh
-  # TODO: rbash
 } # configure_shells()
 ################################################################################
 function configure_umask() {
