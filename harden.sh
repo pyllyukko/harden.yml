@@ -1748,6 +1748,7 @@ function quick_harden() {
     user_home_directories_permissions    \
     enable_apparmor                      \
     aa_enforce                           \
+    user_accounts                        \
     disable_gdm3_user_list
   do
     ${func}
