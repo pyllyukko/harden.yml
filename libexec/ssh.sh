@@ -54,6 +54,7 @@ declare -rA SSH_CONFIG=(
 function configure_sshd() {
   local setting
   print_topic "configuring sshd"
+  (( ${LYNIS_TESTS} )) && local LYNIS_SCORE_BEFORE=$( get_lynis_hardening_index ssh )
   check_for_conf_file "/etc/ssh/sshd_config" || return 1
   for setting in ${!SSHD_CONFIG[*]}
   do
@@ -65,6 +66,10 @@ function configure_sshd() {
     fi
   done
   chmod -c ${FILE_PERMS["/etc/ssh/sshd_config"]} /etc/ssh/sshd_config | tee -a "${logdir}/file_perms.txt"
+  (( ${LYNIS_TESTS} )) && {
+    local LYNIS_SCORE_AFTER=$( get_lynis_hardening_index ssh )
+    compare_lynis_scores "${LYNIS_SCORE_BEFORE}" "${LYNIS_SCORE_AFTER}"
+  }
 } # configure_sshd()
 ################################################################################
 function configure_ssh() {
