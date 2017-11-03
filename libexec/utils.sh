@@ -95,7 +95,7 @@ function check_lynis_tests() {
   pushd ${LYNIS_DIR} 1>/dev/null || return 1
   for i in ${*}
   do
-    ./lynis show details "${i}" | grep 'Hardening:' | grep -v 'assigned maximum number of hardening points for this item'
+    ./lynis show details "${i}" | grep 'Hardening:' | grep -q -v 'assigned maximum number of hardening points for this item'
     if [ ${PIPESTATUS[2]} -ne 1 ]
     then
       echo "[-] partial score for test ${i}"
