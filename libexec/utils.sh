@@ -76,7 +76,7 @@ function get_lynis_hardening_index() {
   fi
   pushd ${LYNIS_DIR} 1>/dev/null || return 1
   # TODO: "[ Press ENTER to continue, or CTRL+C to cancel ]"
-  ./lynis -q --tests-from-group ${1} 1>/dev/null
+  ./lynis -q --skip-plugins --tests-from-group ${1} 1>/dev/null
   popd 1>/dev/null
   grep -o 'Hardening index.*' /var/log/lynis.log
 } # get_lynis_hardening_index()
