@@ -168,6 +168,7 @@ declare -rA PASSWORD_POLICIES=(
   ["ENCRYPT_METHOD"]="SHA512"
   ["SHA_CRYPT_MIN_ROUNDS"]=500000
   ["UMASK"]="077"
+  ["FAILLOG_ENAB"]="yes"
 )
 password_inactive=-1
 declare -rA PWQUALITY_SETTINGS=(
