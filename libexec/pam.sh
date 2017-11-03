@@ -27,6 +27,8 @@ function configure_pam() {
   local regex
   local NAME
 
+  (( ${LYNIS_TESTS} )) && local LYNIS_SCORE_BEFORE=$( get_lynis_hardening_index authentication )
+
   configure_password_policies
 
   print_topic "configuring PAM"
@@ -135,4 +137,9 @@ EOF
   #  # TODO
   #  true
   #fi
+
+  (( ${LYNIS_TESTS} )) && {
+    local LYNIS_SCORE_AFTER=$( get_lynis_hardening_index authentication )
+    compare_lynis_scores "${LYNIS_SCORE_BEFORE}" "${LYNIS_SCORE_AFTER}"
+  }
 } # configure_pam()
