@@ -1379,6 +1379,7 @@ function configure_shells() {
   (( ${LYNIS_TESTS} )) && {
     local LYNIS_SCORE_AFTER=$( get_lynis_hardening_index shells )
     compare_lynis_scores "${LYNIS_SCORE_BEFORE}" "${LYNIS_SCORE_AFTER}"
+    check_lynis_tests SHLL-6220 SHLL-6230
   }
 } # configure_shells()
 ################################################################################

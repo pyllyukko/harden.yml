@@ -88,3 +88,24 @@ function compare_lynis_scores() {
     echo "[+] Lynis score: ${2}"
   fi
 } # compare_lynis_scores()
+################################################################################
+function check_lynis_tests() {
+  local    i
+  local -i max=0
+  pushd ${LYNIS_DIR} 1>/dev/null || return 1
+  for i in ${*}
+  do
+    ./lynis show details "${i}" | grep 'Hardening:' | grep -v 'assigned maximum number of hardening points for this item'
+    if [ ${PIPESTATUS[2]} -ne 1 ]
+    then
+      echo "[-] partial score for test ${i}"
+    else
+      ((max++))
+    fi
+  done
+  popd 1>/dev/null
+  if [ ${max} -eq ${#} ]
+  then
+    echo "[+] max score for all ${#} tests"
+  fi
+} # check_lynis_tests()
