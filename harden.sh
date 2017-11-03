@@ -824,6 +824,7 @@ function create_limited_ca_list() {
 ################################################################################
 function sysctl_harden() {
   print_topic "applying sysctl hardening"
+  (( ${LYNIS_TESTS} )) && local LYNIS_SCORE_BEFORE=$( get_lynis_hardening_index kernel_hardening )
   if [ -f "${CWD}/newconfs/sysctl.d/sysctl.conf.new" ]
   then
     if [ -d /etc/sysctl.d ]
@@ -841,6 +842,11 @@ function sysctl_harden() {
     echo "[-] WARNING: sysctl.conf.new not found!" 1>&2
   fi
   /sbin/sysctl --system
+  (( ${LYNIS_TESTS} )) && {
+    local LYNIS_SCORE_AFTER=$( get_lynis_hardening_index kernel_hardening )
+    compare_lynis_scores "${LYNIS_SCORE_BEFORE}" "${LYNIS_SCORE_AFTER}"
+    check_lynis_tests KRNL-6000
+  }
 } # sysctl_harden()
 ################################################################################
 function configure_tcp_wrappers() {
