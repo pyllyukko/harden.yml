@@ -69,15 +69,15 @@ function get_lynis_hardening_index() {
     echo "[-] couldn't find Lynis" 1>&2
     return 1
   fi
+  pushd ${LYNIS_DIR} 1>/dev/null || return 1
+  # TODO: "[ Press ENTER to continue, or CTRL+C to cancel ]"
+  ./lynis -q --skip-plugins --tests-from-group ${1} 1>/dev/null
+  popd 1>/dev/null
   if [ ! -r /var/log/lynis.log ]
   then
     echo "[-] /var/log/lynis.log not readable" 1>&2
     return 1
   fi
-  pushd ${LYNIS_DIR} 1>/dev/null || return 1
-  # TODO: "[ Press ENTER to continue, or CTRL+C to cancel ]"
-  ./lynis -q --skip-plugins --tests-from-group ${1} 1>/dev/null
-  popd 1>/dev/null
   grep -o 'Hardening index.*' /var/log/lynis.log
 } # get_lynis_hardening_index()
 function compare_lynis_scores() {
