@@ -200,6 +200,11 @@ EOF
   if gpg --version | head -1 | grep -q '^gpg (GnuPG) 2\.'
   then
     # keys with key ID
+    if [ ! -x /usr/bin/dirmngr ]
+    then
+      echo '[-] error: dirmngr not found!' 1>&2
+      return 1
+    fi
     echo -n "from keyserver (${#PGP_KEYS[*]} keys)"
     for PGP_KEY in ${PGP_KEYS[*]}
     do
