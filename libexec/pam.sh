@@ -32,6 +32,8 @@ function configure_pam() {
   local file
   local regex
 
+  configure_password_policies
+
   cat 0<<-EOF
 	
 	configuring PAM
