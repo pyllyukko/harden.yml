@@ -141,5 +141,6 @@ EOF
   (( ${LYNIS_TESTS} )) && {
     local LYNIS_SCORE_AFTER=$( get_lynis_hardening_index authentication )
     compare_lynis_scores "${LYNIS_SCORE_BEFORE}" "${LYNIS_SCORE_AFTER}"
+    check_lynis_tests AUTH-9262 AUTH-9286 AUTH-9328 AUTH-9408
   }
 } # configure_pam()
