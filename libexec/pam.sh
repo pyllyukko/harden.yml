@@ -90,7 +90,7 @@ EOF
       echo '[*] NOTE: be sure to add regular users to the "users" group!'
       for NAME in $( awk -F: -v uid_min=${UID_MIN:-1000} '$3>=uid_min{print$1}' /etc/passwd )
       do
-	if ! groups "${NAME}" | grep -q "users"
+	if ! id "${NAME}" | fgrep -q "(users)"
 	then
 	  echo "[-] WARNING: user \`${NAME}' does not belong to group \"users\"!" 1>&2
 	fi
