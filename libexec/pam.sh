@@ -31,6 +31,7 @@ function configure_pam() {
   local setting
   local file
   local regex
+  local NAME
 
   configure_password_policies
 
@@ -85,6 +86,14 @@ EOF
         '/- : ALL : ALL$/s/^#\s*//'
       do
         sed_with_diff "${regex}" "${ROOTDIR:-/}etc/security/access.conf"
+      done
+      echo '[*] NOTE: be sure to add regular users to the "users" group!'
+      for NAME in $( awk -F: -v uid_min=${UID_MIN:-1000} '$3>=uid_min{print$1}' /etc/passwd )
+      do
+	if ! groups "${NAME}" | grep -q "users"
+	then
+	  echo "[-] WARNING: user \`${NAME}' does not belong to group \"users\"!" 1>&2
+	fi
       done
     fi
   fi
