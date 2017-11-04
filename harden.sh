@@ -1715,6 +1715,7 @@ EOF
   else
     echo "[-] WARNING: sysctl.conf.new not found!" 1>&2
   fi
+  # TODO: make the settings effective
 } # sysctl_harden()
 ################################################################################
 function configure_tcp_wrappers() {
