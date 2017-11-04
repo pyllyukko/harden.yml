@@ -2355,6 +2355,7 @@ function configure_apt() {
 EOF
   if [ -d /etc/apt/apt.conf.d ]
   then
+    echo '[+] creating /etc/apt/apt.conf.d/99suggested'
     echo 'APT::Install-Suggests "false";' 1>/etc/apt/apt.conf.d/99suggested
   else
     echo '[-] /etc/apt/apt.conf.d not found. maybe this is not Debian based host.'
