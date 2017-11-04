@@ -1100,6 +1100,7 @@ function configure_basic_auditing() {
   then
     sed_with_diff 's/$/ audit=1/' /boot/cmdline.txt
   fi
+  # TODO: Lynis ACCT-9628
 } # configure_basic_auditing()
 ################################################################################
 function enable_pacct() {
