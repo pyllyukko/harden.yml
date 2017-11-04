@@ -1455,9 +1455,10 @@ EOF
     tcsh csh ash ksh zsh \
     es rc esh dash screen
   do
-    sed -i '/^\/bin\/'"${SHELL_TO_REMOVE}"'$/d'		/etc/shells
-    # for Debian
-    sed -i '/^\/usr\/bin\/'"${SHELL_TO_REMOVE}"'$/d'	/etc/shells
+    fgrep -q "/${SHELL_TO_REMOVE}" /etc/shells && {
+      echo "[+] removing ${SHELL_TO_REMOVE}"
+      sed_with_diff '/^\/\(usr\/\)\?bin\/'"${SHELL_TO_REMOVE}"'$/d' /etc/shells
+    }
   done
 
   # this is so that we can use this on other systems too...
@@ -1481,14 +1482,13 @@ EOF
     useradd -D -s /bin/rbash
   fi
 
-  create_environment_for_restricted_shell
-
   # Debian
   # don't use dash as the default shell
   # there's some weird bug when using PAM's polyinstation
   if [ -x /usr/bin/debconf-set-selections -a \
        -x /usr/sbin/dpkg-reconfigure ]
   then
+    echo '[+] dash!=bash'
     echo 'dash    dash/sh boolean false' | debconf-set-selections -v
     dpkg-reconfigure -f noninteractive dash
   fi
@@ -1502,6 +1502,8 @@ EOF
   #  echo "adding rbash to shells"
   #  echo "/bin/rbash" 1>>/etc/shells
   #}
+
+  create_environment_for_restricted_shell
 
   return 0
 } # remove_shells()
