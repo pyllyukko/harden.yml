@@ -40,6 +40,7 @@ for PROGRAM in \
   tee     \
   diff    \
   stat    \
+  make    \
   realpath
 do
   if ! hash "${PROGRAM}" 2>/dev/null
