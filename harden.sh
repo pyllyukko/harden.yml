@@ -1717,6 +1717,27 @@ EOF
   fi
 } # sysctl_harden()
 ################################################################################
+function configure_tcp_wrappers() {
+  cat 0<<-EOF
+	
+	configuring TCP wrappers
+	------------------------
+EOF
+  if [ -f /etc/hosts.deny ]
+  then
+    if ! grep -q "^ALL" /etc/hosts.deny
+    then
+      echo '[+] writing to /etc/hosts.deny'
+      sed_with_diff '$a ALL: ALL EXCEPT localhost' /etc/hosts.deny
+    else
+      echo '[-] "ALL" rule already exists in /etc/hosts.deny'
+    fi
+  else
+    echo '[+] creating /etc/hosts.deny'
+    echo "ALL: ALL EXCEPT localhost" 1>/etc/hosts.deny
+  fi
+} # configure_tcp_wrappers()
+################################################################################
 function quick_harden() {
   # this function is designed to do only some basic hardening. so that it can
   # be used in other systems/version that are not directly supported by this
@@ -1725,14 +1746,8 @@ function quick_harden() {
   # TODO: under construction
   local func
 
-  # configure TCP wrappers
-  # TODO: make into separate function
-  if ! grep -q "^ALL" /etc/hosts.deny
-  then
-    echo "ALL: ALL EXCEPT localhost" 1>>/etc/hosts.deny
-  fi
-
   for func in \
+    configure_tcp_wrappers               \
     sysctl_harden                        \
     configure_shells                     \
     harden_fstab                         \
@@ -2151,6 +2166,7 @@ function usage() {
 	  		configure_securetty
 	  		configure_umask
 	  		configure_shells
+	  		configure_tcp_wrappers
 	  		core_dumps
 	  		create_banners
 	  		disable_ipv6
@@ -2510,6 +2526,7 @@ do
 	"disable_gdm3_user_list") disable_gdm3_user_list        ;;
 	"configure_umask")	configure_umask			;;
 	"configure_shells")	configure_shells		;;
+	"configure_tcp_wrappers") configure_tcp_wrappers	;;
 	*)
 	  echo "[-] unknown function" 1>&2
 	  exit 1
