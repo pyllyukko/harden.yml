@@ -1,0 +1,36 @@
+# grsecurity
+kernel.grsecurity.linking_restrictions = 1
+kernel.grsecurity.deter_bruteforce = 1
+kernel.grsecurity.fifo_restrictions = 1
+kernel.grsecurity.ptrace_readexec = 1
+kernel.grsecurity.consistent_setxid = 1
+kernel.grsecurity.rwxmap_logging = 1
+kernel.grsecurity.signal_logging = 1
+kernel.grsecurity.forkfail_logging = 1
+kernel.grsecurity.timechange_logging = 1
+kernel.grsecurity.chroot_deny_shmat = 1
+kernel.grsecurity.chroot_deny_unix = 1
+kernel.grsecurity.chroot_deny_mount = 1
+kernel.grsecurity.chroot_deny_fchdir = 1
+kernel.grsecurity.chroot_deny_chroot = 1
+kernel.grsecurity.chroot_deny_pivot = 1
+kernel.grsecurity.chroot_enforce_chdir = 1
+kernel.grsecurity.chroot_deny_chmod = 1
+kernel.grsecurity.chroot_deny_mknod = 1
+kernel.grsecurity.chroot_restrict_nice = 1
+kernel.grsecurity.chroot_caps = 1
+kernel.grsecurity.chroot_deny_sysctl = 1
+kernel.grsecurity.tpe = 1
+kernel.grsecurity.tpe_gid = 1005
+kernel.grsecurity.tpe_invert = 1
+kernel.grsecurity.tpe_restrict_all = 1
+kernel.grsecurity.audit_mount = 1
+kernel.grsecurity.dmesg = 1
+kernel.grsecurity.chroot_findtask = 1
+kernel.grsecurity.resource_logging = 1
+kernel.grsecurity.audit_ptrace = 1
+kernel.grsecurity.harden_ptrace = 1
+kernel.grsecurity.romount_protect = 0
+
+# lock it
+kernel.grsecurity.grsec_lock = 1

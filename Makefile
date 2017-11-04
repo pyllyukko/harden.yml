@@ -98,7 +98,7 @@ $(foreach l,$(bits),$(eval $(call make-moduli-candidates-target,$l)))
 	/usr/bin/touch $@
 	/usr/bin/chmod -c 600 $@
 
-/etc/sysctl.d/harden.conf: $(CWD)/newconfs/sysctl.conf.new FORCE | /etc/sysctl.d
+/etc/sysctl.d/harden.conf: $(CWD)/newconfs/sysctl.d/sysctl.conf.new FORCE | /etc/sysctl.d
 	/usr/bin/install -m 600 $< $@
 
 $(CWD)/manifests/$(slackware)-$(slackware_version)/:
