@@ -2408,9 +2408,15 @@ EOF
 } # disable_gdm3_user_list()
 ################################################################################
 function configure_shells() {
+  cat 0<<-EOF
+	
+	configuring shells
+	------------------
+EOF
+  echo '[+] creating /etc/profile.d/tmout.sh'
+  make -f ${CWD}/Makefile /etc/profile.d/tmout.sh
   configure_umask
   remove_shells
-  make -f ${CWD}/Makefile /etc/profile.d/tmout.sh
 } # configure_shells()
 ################################################################################
 function configure_umask() {
