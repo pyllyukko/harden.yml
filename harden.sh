@@ -1767,6 +1767,7 @@ function quick_harden() {
     enable_apparmor                      \
     aa_enforce                           \
     user_accounts                        \
+    set_usb_authorized_default           \
     disable_gdm3_user_list
   do
     ${func}
@@ -1824,6 +1825,27 @@ EOF
   done
   popd 1>/dev/null
 } # apply_newconfs()
+################################################################################
+function set_usb_authorized_default() {
+  cat 0<<-EOF
+	
+	setting USB authorized_default -> 0
+	-----------------------------------
+EOF
+  if [ "${DISTRO}" = "debian" -o "${DISTRO}" = "raspbian" ]
+  then
+    if [ -f /etc/rc.local ]
+    then
+      echo '[-] /etc/rc.local already exists (appending not implemented yet)'
+    else
+      # this is launched by rc-local.service
+      make -f ${CWD}/Makefile /etc/rc.local
+    fi
+  else
+    echo '[-] this is only for Debian (for now)'
+    return 1
+  fi
+} # set_usb_authorized_default()
 ################################################################################
 function toggle_usb_authorized_default() {
   local host
@@ -2186,6 +2208,7 @@ function usage() {
 	  		sysctl_harden
 	  		homedir_perms
 	  		disable_gdm3_user_list
+	  		set_usb_authorized_default
 	  -F		create/update /etc/ftpusers
 	  -g		import Slackware, SBo & other PGP keys to trustedkeys.gpg keyring
 	        	(you might also want to run this as a regular user)
@@ -2538,6 +2561,7 @@ do
 	"configure_umask")	configure_umask			;;
 	"configure_shells")	configure_shells		;;
 	"configure_tcp_wrappers") configure_tcp_wrappers	;;
+	"set_usb_authorized_default") set_usb_authorized_default ;;
 	*)
 	  echo "[-] unknown function" 1>&2
 	  exit 1
