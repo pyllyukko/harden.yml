@@ -1837,6 +1837,7 @@ EOF
     if [ -f /etc/rc.local ]
     then
       echo '[-] /etc/rc.local already exists (appending not implemented yet)'
+      return 1
     else
       # this is launched by rc-local.service
       make -f ${CWD}/Makefile /etc/rc.local
