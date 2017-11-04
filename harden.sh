@@ -421,7 +421,6 @@ function user_accounts() {
   create_ftpusers
   restrict_cron
   lock_system_accounts
-  configure_password_policy_for_existing_users
   user_home_directories_permissions
 
   # CUSTOM
