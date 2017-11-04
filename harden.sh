@@ -1699,7 +1699,7 @@ function sysctl_harden() {
 	applying sysctl hardening
 	-------------------------
 EOF
-  if [ -f "${CWD}/newconfs/sysctl.conf.new" ]
+  if [ -f "${CWD}/newconfs/sysctl.d/sysctl.conf.new" ]
   then
     if [ -d /etc/sysctl.d ]
     then
