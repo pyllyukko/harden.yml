@@ -1734,13 +1734,10 @@ function quick_harden() {
 
   for func in \
     sysctl_harden                        \
-    set_failure_limits                   \
-    create_ftpusers                      \
     configure_shells                     \
     harden_fstab                         \
     enable_sysstat                       \
     create_limited_ca_list               \
-    lock_system_accounts                 \
     configure_apt                        \
     configure_securetty                  \
     configure_pam                        \
@@ -1749,7 +1746,6 @@ function quick_harden() {
     configure_sshd                       \
     configure_basic_auditing             \
     enable_bootlog                       \
-    user_home_directories_permissions    \
     enable_apparmor                      \
     aa_enforce                           \
     user_accounts                        \
