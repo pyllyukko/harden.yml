@@ -1771,7 +1771,7 @@ function quick_harden() {
   do
     ${func}
   done
-  apply_newconfs modprobe.d profile.d
+  apply_newconfs modprobe.d
   # TODO: chmod tmout.sh
 
   return
