@@ -1746,7 +1746,6 @@ function quick_harden() {
     configure_pam                        \
     configure_core_dumps                 \
     disable_unnecessary_systemd_services \
-    restrict_cron                        \
     configure_sshd                       \
     configure_basic_auditing             \
     enable_bootlog                       \
