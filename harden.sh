@@ -1773,7 +1773,6 @@ function quick_harden() {
   do
     ${func}
   done
-  # TODO: chmod tmout.sh
 
   return
 } # quick_harden()
