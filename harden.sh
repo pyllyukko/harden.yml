@@ -2142,7 +2142,7 @@ function usage() {
 	options:
 
 	  -a		apache
-	  -A		all
+	  -A		all (for Slackware)
 	  		  - hardens user accounts
 	  		  - removes unnecessary packages
 	  		  - removes unnecessary shells
