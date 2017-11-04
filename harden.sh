@@ -1768,15 +1768,29 @@ function quick_harden() {
     aa_enforce                           \
     user_accounts                        \
     set_usb_authorized_default           \
+    configure_modprobe.d                 \
     disable_gdm3_user_list
   do
     ${func}
   done
-  apply_newconfs modprobe.d
   # TODO: chmod tmout.sh
 
   return
 } # quick_harden()
+################################################################################
+function configure_modprobe.d() {
+  local file
+  cat 0<<-EOF
+	
+	configuring modprobe
+	--------------------
+EOF
+  for file in "CIS.conf" "firewire.conf"
+  do
+    echo "[+] ${file}"
+    make -f ${CWD}/Makefile /etc/modprobe.d/${file}
+  done
+} # configure_modprobe.d()
 ################################################################################
 function apply_newconfs() {
   local    newconf
@@ -2540,7 +2554,7 @@ do
       case "${OPTARG}" in
 	"aa_enforce")		aa_enforce			;;
 	"configure_apt")	configure_apt			;;
-	"configure_modprobe.d")	apply_newconfs modprobe.d	;;
+	"configure_modprobe.d")	configure_modprobe.d		;;
 	"configure_pam")	configure_pam			;;
 	"configure_securetty")	configure_securetty		;;
 	"create_banners")	create_banners			;;

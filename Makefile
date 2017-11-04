@@ -93,6 +93,12 @@ $(foreach l,$(bits),$(eval $(call make-moduli-candidates-target,$l)))
 /etc/rc.local.new: $(CWD)/newconfs/debian/rc.local.new FORCE
 	/usr/bin/install -m 700 $< $@
 
+/etc/modprobe.d/CIS.conf: $(CWD)/newconfs/modprobe.d/CIS.conf.new FORCE
+	/usr/bin/install -m 600 $< $@
+
+/etc/modprobe.d/firewire.conf: $(CWD)/newconfs/modprobe.d/firewire.conf.new FORCE
+	/usr/bin/install -m 600 $< $@
+
 /etc/%: /etc/%.new
 	if [ -f $@ ]; then cmp $@ $< && rm -v $< || true; else mv -v $< $@; fi
 
