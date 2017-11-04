@@ -90,6 +90,9 @@ $(foreach l,$(bits),$(eval $(call make-moduli-candidates-target,$l)))
 /etc/fstab.new: $(CWD)/libexec/fstab.awk FORCE
 	/usr/bin/gawk -f $< /etc/fstab 1>$@
 
+/etc/rc.local.new: $(CWD)/newconfs/debian/rc.local.new FORCE
+	/usr/bin/install -m 700 $< $@
+
 /etc/%: /etc/%.new
 	if [ -f $@ ]; then cmp $@ $< && rm -v $< || true; else mv -v $< $@; fi
 
