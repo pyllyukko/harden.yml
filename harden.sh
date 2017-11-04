@@ -2309,10 +2309,11 @@ EOF
   fi
   for setting in ${!SSHD_CONFIG[*]}
   do
+    printf "[+] %-23s -> %s\n" ${setting} ${SSHD_CONFIG[${setting}]}
     sed_with_diff "s/^\(# \?\)\?\(${setting}\)\(\s\+\)\S\+$/\2\3${SSHD_CONFIG[${setting}]}/" /etc/ssh/sshd_config
     if ! grep -q "^${setting}\s\+${SSHD_CONFIG[${setting}]}$" /etc/ssh/sshd_config
     then
-      echo "[-] failed to set ${setting}"
+      echo "[-] failed to set ${setting}" 1>&2
     fi
   done
   chmod -c ${FILE_PERMS["/etc/ssh/sshd_config"]} /etc/ssh/sshd_config | tee -a "${logdir}/file_perms.txt"
