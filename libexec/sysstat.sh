@@ -33,6 +33,7 @@ EOF
     ((ret|=${?}))
   else
     echo '[-] sysstat config not found' 1>&2
+    ret=1
   fi
   return ${ret}
 } # enable_sysstat()
