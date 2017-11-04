@@ -3,6 +3,8 @@ harden.sh
 
 This is a script and a set of patch files to [harden](https://en.wikipedia.org/wiki/Hardening_%28computing%29) your [Slackware Linux](http://www.slackware.com/) installation.
 
+[![asciicast](https://asciinema.org/a/lBaPJhg3KAsp470y9eyLQ2bbA.png)](https://asciinema.org/a/lBaPJhg3KAsp470y9eyLQ2bbA)
+
 Why I made this
 ---------------
 
