@@ -31,6 +31,8 @@ EOF
     echo "[+] setting HISTORY -> 99999"
     sed_with_diff 's/^\(HISTORY=\).*$/HISTORY=99999/' ${ROOTDIR:-/}etc/sysconfig/sysstat
     ((ret|=${?}))
+  else
+    echo '[-] sysstat config not found' 1>&2
   fi
   return ${ret}
 } # enable_sysstat()
