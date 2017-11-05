@@ -2223,16 +2223,20 @@ function usage() {
 	  		homedir_perms
 	  		disable_gdm3_user_list
 	  		set_usb_authorized_default
-	  -F		create/update /etc/ftpusers
+	  		remove_shells
+	  		create_ftpusers
+	  		disable_inetd_services
+	  		set_failure_limits
+	  		harden_fstab (you can also run "make /etc/fstab.new")
+	  		user_accounts
+	  		configure_basic_auditing
+	  		disable_unnecessary_services
 	  -g		import Slackware, SBo & other PGP keys to trustedkeys.gpg keyring
 	        	(you might also want to run this as a regular user)
 	  -h		this help
-	  -i		disable inetd services
 	  -I		check Slackware installation's integrity from MANIFEST (owner & permission)
-	  -l		set failure limits (faillog) (default value: ${FAILURE_LIMIT:-10})
 	  -L user	lock account 'user'
 	  -m		miscellaneous (TODO: remove this? default handles all this)
-	  -M		fstab hardening (nodev, nosuid & noexec stuff)
 
 	  patching:
 
@@ -2258,10 +2262,6 @@ function usage() {
 	          - creates hardened fstab.new
 	          - creates limited CA list
 	          - lock system accounts
-	  -r	remove unnecessary shells
-	  -s	disable unnecessary services (also enables few recommended ones)
-	  -S	configure basic auditing using the stig.rules
-	  -u	harden user accounts
 	  -U	create additional user accounts (SBo related)
 
 	Make targets:
@@ -2502,7 +2502,7 @@ fi
 
 read_password_policy
 
-while getopts "aAbcdf:FghHiIlL:mMp:P:qrsSuU" OPTION
+while getopts "aAbcdf:ghIL:mp:P:qU" OPTION
 do
   case "${OPTION}" in
     "a") configure_apache		;;
@@ -2576,27 +2576,31 @@ do
 	"configure_shells")	configure_shells		;;
 	"configure_tcp_wrappers") configure_tcp_wrappers	;;
 	"set_usb_authorized_default") set_usb_authorized_default ;;
+	"remove_shells")        remove_shells                   ;;
+	"create_ftpusers")      create_ftpusers                 ;;
+	"disable_inetd_services") disable_inetd_services        ;;
+	"set_failure_limits")   set_failure_limits              ;;
+	"harden_fstab")         harden_fstab                    ;;
+	"user_accounts")        user_accounts                   ;;
+	"configure_basic_auditing") configure_basic_auditing    ;;
+	"disable_unnecessary_services") disable_unnecessary_services ;;
 	*)
 	  echo "[-] unknown function" 1>&2
 	  exit 1
 	;;
       esac
     ;;
-    "F") create_ftpusers		;;
     "g") import_pgp_keys		;;
     "h")
       usage
       exit 0
     ;;
-    "i") disable_inetd_services		;;
     "I") check_integrity		;;
-    "l") set_failure_limits		;;
     "L") lock_account "${OPTARG}"	;;
     "m")
       # TODO: remove?
       miscellaneous_settings
     ;;
-    "M") harden_fstab			;;
     "p")
       case "${OPTARG}" in
 	"ssh")
@@ -2643,10 +2647,6 @@ do
       esac
     ;;
     "q") quick_harden			;;
-    "r") remove_shells			;;
-    "s") disable_unnecessary_services	;;
-    "S") configure_basic_auditing	;;
-    "u") user_accounts			;;
     "U") create_additional_user_accounts ;;
   esac
 done
