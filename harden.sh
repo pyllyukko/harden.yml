@@ -2195,7 +2195,6 @@ function usage() {
 	  		  - creates hardened fstab.new
 	  -b		toggle USB authorized_default
 	  -c		create limited CA conf
-	  -d		default hardening (misc_settings() & file_permissions())
 
 	  -f function	run a function. available functions:
 	  		aa_enforce
@@ -2502,7 +2501,7 @@ fi
 
 read_password_policy
 
-while getopts "aAbcdf:ghIL:mp:P:qU" OPTION
+while getopts "aAbcf:ghIL:mp:P:qU" OPTION
 do
   case "${OPTION}" in
     "a") configure_apache		;;
@@ -2544,11 +2543,6 @@ do
     ;;
     "b") toggle_usb_authorized_default	;;
     "c") create_limited_ca_list		;;
-    "d")
-      # default
-      miscellaneous_settings
-      file_permissions
-    ;;
     "f")
       case "${OPTARG}" in
 	"aa_enforce")		aa_enforce			;;
