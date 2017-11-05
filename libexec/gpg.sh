@@ -197,7 +197,7 @@ EOF
   echo -n $'\n'
 
   # if GnuPG is new enough, it uses dirmngr and all the SKS CA stuff is unnecessary.
-  if gpg --version | head -1 | grep -q '^gpg (GnuPG) 2\.'
+  if gpg --version | head -1 | grep -q '^gpg (GnuPG) 2\.[^0]'
   then
     # keys with key ID
     if [ ! -x /usr/bin/dirmngr ]
