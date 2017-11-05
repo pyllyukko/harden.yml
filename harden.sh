@@ -41,6 +41,7 @@ for PROGRAM in \
   diff    \
   stat    \
   make    \
+  wget    \
   realpath
 do
   if ! hash "${PROGRAM}" 2>/dev/null
