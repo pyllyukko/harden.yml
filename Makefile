@@ -102,7 +102,8 @@ $(foreach l,$(bits),$(eval $(call make-moduli-candidates-target,$l)))
 # TODO: chmod in debian is in /bin
 /var/log/pacct:
 	/usr/bin/touch $@
-	/usr/bin/chmod -c 600 $@
+	/usr/bin/chmod -c 640 $@
+	/usr/bin/chgrp adm $@
 
 /etc/sysctl.d/harden.conf: $(CWD)/newconfs/sysctl.d/sysctl.conf.new FORCE | /etc/sysctl.d
 	/usr/bin/install -m 600 $< $@

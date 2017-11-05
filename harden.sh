@@ -1330,17 +1330,6 @@ EOF
   # from system-hardening-10.2.txt:
   ##############################################################################
 
-  # Account processing is turned on by /etc/rc.d/rc.M.  However, the log file
-  # doesn't exist.
-  if [ ! -f /var/log/pacct ]
-  then
-    touch /var/log/pacct
-    {
-      chgrp -c adm /var/log/pacct
-      chmod -c 640 /var/log/pacct
-    } | tee -a "${logdir}/file_perms.txt"
-  fi
-
   # man 1 xfs
   if [ -f "/etc/X11/fs/config" ]
   then
@@ -2172,6 +2161,30 @@ function check_integrity() {
   popd
 } # check_integrity()
 ################################################################################
+function enable_pacct() {
+  cat 0<<-EOF
+	
+	enabling process accounting
+	---------------------------
+EOF
+  if ! hash accton 2>/dev/null
+  then
+    echo "[-] process accounting not found!" 1>&2
+    return 1
+  fi
+  # Account processing is turned on by /etc/rc.d/rc.M.  However, the log file
+  # doesn't exist.
+  if [ "${DISTRO}" = "slackware" -a ! -f /var/log/pacct ]
+  then
+    echo '[+] creating /var/log/pacct'
+    make -f ${CWD}/Makefile /var/log/pacct
+  elif [ -x /bin/systemctl ]
+  then
+    # TODO: CentOS / RH
+    systemctl is-enabled acct && echo '[+] process accounting already enabled' || systemctl enable acct
+  fi
+} # enable_pacct()
+################################################################################
 function usage() {
   cat 0<<-EOF
 	harden.sh -- system hardening script for slackware linux
@@ -2230,6 +2243,7 @@ function usage() {
 	  		user_accounts
 	  		configure_basic_auditing
 	  		disable_unnecessary_services
+	  		enable_pacct
 	  -g		import Slackware, SBo & other PGP keys to trustedkeys.gpg keyring
 	        	(you might also want to run this as a regular user)
 	  -h		this help
@@ -2517,6 +2531,7 @@ do
       remove_packages
       remove_shells
       create_limited_ca_list
+      enable_pacct
       import_pgp_keys
       check_and_patch /etc	"${ETC_PATCH_FILE}"	1 && ETC_CHANGED=1
       apply_newconfs . cron.d logrotate.d rc.d modprobe.d
@@ -2578,6 +2593,7 @@ do
 	"user_accounts")        user_accounts                   ;;
 	"configure_basic_auditing") configure_basic_auditing    ;;
 	"disable_unnecessary_services") disable_unnecessary_services ;;
+	"enable_pacct")         enable_pacct                    ;;
 	*)
 	  echo "[-] unknown function" 1>&2
 	  exit 1
