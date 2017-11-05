@@ -2181,7 +2181,12 @@ EOF
   elif [ -x /bin/systemctl ]
   then
     # TODO: CentOS / RH
-    systemctl is-enabled acct && echo '[+] process accounting already enabled' || systemctl enable acct
+    if systemctl is-enabled acct
+    then
+      echo '[+] process accounting already enabled'
+    else
+      systemctl enable acct && echo '[+] process accounting enabled via systemd' || '[-] failed to enable process accounting'
+    fi
   fi
 } # enable_pacct()
 ################################################################################
