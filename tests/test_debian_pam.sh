@@ -42,6 +42,8 @@ check_patch "${logdir}/common-auth.patch" eb767d2ad9d776cc496a2aa41c1caf8650fd83
 check_patch "${logdir}/common-session.patch" a549e42a96228c4468bae898bf07871ded9af476d7789b809d740f181d44536abbcb6fa52e3ed2fbc17da1c5e4c7891e03a181086f31562b217f7bd3c53f4d88
 check_patch "${logdir}/gdm-password-1.patch" f7d22ae4161458e60e79ce58d0e0456c24cb324d0244bccabf4352858a3a3f75aa007c05ace4787bfacd0b3108f606c35828347406b5845dbc3d44e6774e92f3
 check_patch "${logdir}/gdm-password-2.patch" 8e8058b1faec3999af7b26360ef1b82fa77a33002cc8a27f87b07740035b1ab6751186832ea981e14fb8da2dac9a6da564afc17e223f2026f2976305db7bdd43
+check_patch "${logdir}/access.conf-1.patch" b84c05e5402c9d2851f3cbed21c7326a81e5df05fd377b3465c1bf938b72d253c195e2de6e912bc3c4ece54f31a59fb73d47e512796ad10ec720735dd1b74300
+check_patch "${logdir}/access.conf-2.patch" 5fc92e3fe0ec0050db1122ae799e4d2a03a0710814a38cb9ac0dc71e1412707d373275ce03be6a222b359eb45b9fa304b88a22d91fd2382c81162a4f803fb2e2
 
 rm -rf "${logdir}"
 get_ret
