@@ -82,7 +82,7 @@ EOF
     then
       echo '[+] configuring /etc/security/access.conf'
       for regex in \
-        '/^# All other users should be denied to get access from all sources./i+ : root : LOCAL\n- : ALL : cron crond\n+ : (users) : ALL' \
+        '/^# All other users should be denied to get access from all sources./i+ : root Debian-gdm : LOCAL\n- : ALL : cron crond\n+ : (users) : ALL' \
         '/- : ALL : ALL$/s/^#\s*//'
       do
         sed_with_diff "${regex}" "${ROOTDIR:-/}etc/security/access.conf"
