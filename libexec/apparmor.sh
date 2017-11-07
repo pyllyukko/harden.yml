@@ -1,5 +1,6 @@
 #!/bin/bash
 function enable_apparmor() {
+  local file
   cat 0<<-EOF
 	
 	enabling AppArmor
@@ -23,10 +24,25 @@ EOF
   fi
   if [ -d /usr/share/doc/apparmor-profiles/extras ]
   then
-    echo '[+] copying extra profiles from /usr/share/doc/apparmor-profiles/extras'
-    pushd /usr/share/doc/apparmor-profiles/extras 1>/dev/null
-    cp -v -n *.* /etc/apparmor.d/
-    popd 1>/dev/null
+    if [ -x /usr/sbin/aa-complain ]
+    then
+      echo '[+] copying extra profiles from /usr/share/doc/apparmor-profiles/extras'
+      pushd /usr/share/doc/apparmor-profiles/extras 1>/dev/null
+      shopt -s nullglob
+      for file in *.*
+      do
+	# don't overwrite "stable" profiles
+	if [ ! -f "/etc/apparmor.d/${file}" ]
+	then
+	  cp -v -n "${file}" /etc/apparmor.d/
+	  # put all extra profiles in complain mode, as they have a higher chance of breaking things.
+	  aa-complain "/etc/apparmor.d/${file}"
+	fi
+      done
+      popd 1>/dev/null
+    else
+      echo '[-] /usr/sbin/aa-complain not found. is apparmor-utils package installed? skipping copying of extra profiles.' 1>&2
+    fi
   else
     echo "[-] extra profiles not found. try installing \`apparmor-profiles'."
   fi
@@ -54,6 +70,7 @@ EOF
     done
     # more details at https://github.com/pyllyukko/harden.sh/wiki/apparmor
     echo '[+] setting few troublesome profiles back to complain mode'
+    # TODO: all extra profiles
     for profile in "sbin.dhclient" "usr.sbin.sshd" "usr.bin.man" "etc.cron.daily.logrotate" "usr.bin.wireshark" "usr.bin.passwd" "usr.sbin.userdel"
     do
       /usr/sbin/aa-complain /etc/apparmor.d/${profile}
