@@ -36,7 +36,10 @@ EOF
 	then
 	  cp -v -n "${file}" /etc/apparmor.d/
 	  # put all extra profiles in complain mode, as they have a higher chance of breaking things.
-	  aa-complain "/etc/apparmor.d/${file}"
+	  aa-complain "/etc/apparmor.d/${file}" || {
+	    echo "[-] failed to set ${file} into complain mode. removing it." 1>&2
+	    rm -v "/etc/apparmor.d/${file}"
+	  }
 	fi
       done
       popd 1>/dev/null
