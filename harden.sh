@@ -56,7 +56,7 @@ unset PROGRAM
 #   - rc.modules-2.6.33.4
 #   - rc.modules-2.6.33.4-smp
 CWD=$( realpath $( dirname "${0}" ) )
-for file in sysstat.sh utils.sh pam.sh apparmor.sh gpg.sh banners.sh
+for file in sysstat.sh utils.sh pam.sh apparmor.sh gpg.sh banners.sh ssh.sh
 do
   . ${CWD}/libexec/${file} || {
     echo "[-] couldn't find libexec/${file}" 1>&2
@@ -179,40 +179,6 @@ declare -rA PWQUALITY_SETTINGS=(
   ["ucredit"]="-1"
   ["ocredit"]="-1"
   ["lcredit"]="-1"
-)
-# TODO:
-#   - PubkeyAcceptedKeyTypes
-#   - HostKeyAlgorithms
-#   - Ciphers
-#   - MACs
-#   - KEX
-declare -rA SSHD_CONFIG=(
-  # from hardening guides
-  ["Protocol"]=2
-  ["LogLevel"]="INFO"
-  ["X11Forwarding"]="no"
-  ["MaxAuthTries"]=4
-  ["IgnoreRhosts"]="yes"
-  ["HostbasedAuthentication"]="no"
-  ["PermitRootLogin"]="no"
-  ["PermitEmptyPasswords"]="no"
-  ["PermitUserEnvironment"]="no"
-  # ciphers
-  # mac
-  ["ClientAliveInterval"]=300
-  ["ClientAliveCountMax"]=0
-  ["LoginGraceTime"]=60
-
-  # custom
-  ["PubkeyAuthentication"]="yes"
-  ["UseLogin"]="no"
-  ["StrictModes"]="yes"
-  ["PrintLastLog"]="yes"
-  ["UsePrivilegeSeparation"]="sandbox"
-  # see http://www.openssh.com/txt/draft-miller-secsh-compression-delayed-00.txt
-  ["Compression"]="delayed"
-  ["AllowTcpForwarding"]="no"
-  ["FingerprintHash"]="sha256"
 )
 # TODO: http://wiki.apparmor.net/index.php/Distro_debian#Tuning_logs
 declare -rA AUDITD_CONFIG=(
@@ -2350,30 +2316,6 @@ EOF
 
   read_password_policy
 } # configure_password_policies()
-################################################################################
-function configure_sshd() {
-  local setting
-  cat 0<<-EOF
-	
-	configuring sshd
-	----------------
-EOF
-  if [ ! -f /etc/ssh/sshd_config ]
-  then
-    echo "[-] error: /etc/ssh/sshd_config not found!" 1>&2
-    return 1
-  fi
-  for setting in ${!SSHD_CONFIG[*]}
-  do
-    printf "[+] %-23s -> %s\n" ${setting} ${SSHD_CONFIG[${setting}]}
-    sed_with_diff "s/^\(# \?\)\?\(${setting}\)\(\s\+\)\S\+$/\2\3${SSHD_CONFIG[${setting}]}/" /etc/ssh/sshd_config
-    if ! grep -q "^${setting}\s\+${SSHD_CONFIG[${setting}]}$" /etc/ssh/sshd_config
-    then
-      echo "[-] failed to set ${setting}" 1>&2
-    fi
-  done
-  chmod -c ${FILE_PERMS["/etc/ssh/sshd_config"]} /etc/ssh/sshd_config | tee -a "${logdir}/file_perms.txt"
-} # configure_sshd()
 ################################################################################
 function disable_ipv6() {
   cat 0<<-EOF
