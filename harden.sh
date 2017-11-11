@@ -173,6 +173,7 @@ declare -a apache_disable_modules_list=(
 )
 ################################################################################
 function read_password_policy() {
+  check_for_conf_file "/etc/login.defs" || return 1
   PASS_MIN_DAYS=$( awk '/^PASS_MIN_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
   PASS_MAX_DAYS=$( awk '/^PASS_MAX_DAYS/{print$2}' /etc/login.defs 2>/dev/null )
   PASS_WARN_AGE=$( awk '/^PASS_WARN_AGE/{print$2}' /etc/login.defs 2>/dev/null )
