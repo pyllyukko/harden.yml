@@ -846,11 +846,8 @@ EOF
   then
     echo "[-] ERROR: update-ca-certificates not found!" 1>&2
     return 1
-  elif [ ! -f /etc/ca-certificates.conf ]
-  then
-    echo "[-] ERROR: /etc/ca-certificates.conf not found!" 1>&2
-    return 1
   fi
+  check_for_conf_file "/etc/ca-certificates.conf" || return 1
   if [ ! -f /etc/ca-certificates.conf.original ]
   then
     cp -v /etc/ca-certificates.conf /etc/ca-certificates.conf.original
