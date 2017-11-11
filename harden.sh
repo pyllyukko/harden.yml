@@ -194,6 +194,7 @@ declare -rA LIGHTDM_CONFIG=(
 declare -rA FILE_PERMS=(
   ["/boot/grub/grub.cfg"]="og-rwx"
   ["/etc/ssh/sshd_config"]="600"
+  ["/etc/ssh/ssh_config"]="644"
   ["/etc/lilo.conf"]="600"
 )
 
@@ -2203,6 +2204,7 @@ function usage() {
 	  		password_policies
 	  		restrict_cron
 	  		sshd_config
+	  		ssh_config
 	  		sysctl_harden
 	  		homedir_perms
 	  		disable_gdm3_user_list
@@ -2526,6 +2528,7 @@ do
 	"password_policies")	configure_password_policies	;;
 	"restrict_cron")	restrict_cron			;;
 	"sshd_config")		configure_sshd			;;
+	"ssh_config")		configure_ssh			;;
 	"sysctl_harden")	sysctl_harden			;;
 	"homedir_perms")	user_home_directories_permissions ;;
 	"disable_gdm3_user_list") disable_gdm3_user_list        ;;
