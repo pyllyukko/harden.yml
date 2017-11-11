@@ -811,7 +811,17 @@ EOF
     echo '[-] /bin/systemctl not found!' 1>&2
     return 1
   fi
-  for service in atd avahi-daemon bind9 bluetooth cups exim4 hciuart ifup@wlan0 nfs-common vsftpd
+  for service in \
+    atd          \
+    avahi-daemon \
+    bind9        \
+    bluetooth    \
+    cups         \
+    exim4        \
+    hciuart      \
+    ifup@wlan0   \
+    nfs-common   \
+    vsftpd
   do
     if /bin/systemctl is-enabled "${service}" 1>/dev/null
     then
