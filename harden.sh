@@ -193,11 +193,7 @@ function disable_inetd_services() {
 	------------------------
 EOF
 
-  if [ ! -f "${INETDCONF}" ]
-  then
-    echo "inetd conf file not found!" 1>&2
-    return 0
-  fi
+  check_for_conf_file "${INETDCONF}" || return 1
 
   if [ ! -f "${INETDCONF}.original" ]
   then
@@ -553,11 +549,8 @@ EOF
   then
     echo "[-] error: /etc is not writable. are you sure you are root?" 1>&2
     return 1
-  elif [ ! -f /etc/fstab ]
-  then
-    echo "[-] error: /etc/fstab doesn't exist?!?" 1>&2
-    return 1
   fi
+  check_for_conf_file "/etc/fstab" || return 1
   make -f ${CWD}/Makefile /etc/fstab.new
 
   if [ -f /etc/fstab.new ]
@@ -1327,11 +1320,7 @@ function configure_password_policies() {
 	-----------------------------
 EOF
 
-  if [ ! -f /etc/login.defs ]
-  then
-    echo "[-] error: /etc/login.defs not found!" 1>&2
-    return 1
-  fi
+  check_for_conf_file "/etc/login.defs" || return 1
 
   for policy in ${!PASSWORD_POLICIES[*]}
   do

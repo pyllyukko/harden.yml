@@ -58,11 +58,7 @@ function configure_sshd() {
 	configuring sshd
 	----------------
 EOF
-  if [ ! -f /etc/ssh/sshd_config ]
-  then
-    echo "[-] error: /etc/ssh/sshd_config not found!" 1>&2
-    return 1
-  fi
+  check_for_conf_file "/etc/ssh/sshd_config" || return 1
   for setting in ${!SSHD_CONFIG[*]}
   do
     printf "[+] %-23s -> %s\n" ${setting} ${SSHD_CONFIG[${setting}]}
@@ -82,11 +78,7 @@ function configure_ssh() {
 	configuring ssh
 	---------------
 EOF
-  if [ ! -f /etc/ssh/ssh_config ]
-  then
-    echo "[-] error: /etc/ssh/ssh_config not found!" 1>&2
-    return 1
-  fi
+  check_for_conf_file "/etc/ssh/ssh_config" || return 1
   if ! grep -q '^Host \*$' /etc/ssh/ssh_config
   then
     sed_with_diff 's/^#\s\+\(Host \*\)$/\1/' /etc/ssh/ssh_config || {

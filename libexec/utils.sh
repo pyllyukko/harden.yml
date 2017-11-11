@@ -46,3 +46,16 @@ function sed_with_diff() {
   sed -i "${1}" "${2}"
   return ${?}
 } # sed_with_diff()
+################################################################################
+function check_for_conf_file() {
+  local file
+  for file in "$@"
+  do
+    if [ ! -f "${file}" ]
+    then
+      echo "[-] error: file \`${file}' not found!" 1>&2
+      return 1
+    fi
+  done
+  return 0
+} # check_for_conf_file()

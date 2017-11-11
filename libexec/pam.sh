@@ -7,11 +7,7 @@ function configure_core_dumps() {
 	configuring core dumps
 	----------------------
 EOF
-  if [ ! -f "${file}" ]
-  then
-    echo "[-] ${file} NOT found" 1>&2
-    return 1
-  fi
+  check_for_conf_file "${file}" || return 1
   echo "[+] ${file} found"
   sed_with_diff 's/^#\?\*\( \+\)soft\( \+\)core\( \+\)0$/*\1hard\2core\30/' "${file}"
   return ${?}
