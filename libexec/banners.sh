@@ -4,11 +4,7 @@ function create_banners() {
   local regex
   local file
 
-  cat 0<<-EOF
-	
-	creating banners
-	----------------
-EOF
+  print_topic "creating banners"
 
   for file in /etc/issue /etc/issue.net /etc/motd
   do

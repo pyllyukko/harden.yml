@@ -2,11 +2,7 @@
 function configure_core_dumps() {
   # slackware uses /etc/limits and is configured through limits.new file
   local file="${ROOTDIR:-/}etc/security/limits.conf"
-  cat 0<<-EOF
-	
-	configuring core dumps
-	----------------------
-EOF
+  print_topic "configuring core dumps"
   check_for_conf_file "${file}" || return 1
   echo "[+] ${file} found"
   sed_with_diff 's/^#\?\*\( \+\)soft\( \+\)core\( \+\)0$/*\1hard\2core\30/' "${file}"
@@ -31,11 +27,7 @@ function configure_pam() {
 
   configure_password_policies
 
-  cat 0<<-EOF
-	
-	configuring PAM
-	---------------
-EOF
+  print_topic "configuring PAM"
   if [ ! -d ${ROOTDIR:-/}etc/pam.d ]
   then
     echo '[-] /etc/pam.d does not exist!' 1>&2

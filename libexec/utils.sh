@@ -59,3 +59,7 @@ function check_for_conf_file() {
   done
   return 0
 } # check_for_conf_file()
+################################################################################
+function print_topic() {
+  echo -e "\n${1}\n${1//?/-}"
+} # print_topic()

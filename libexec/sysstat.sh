@@ -2,11 +2,7 @@
 declare -r SA_RC="${ROOTDIR:-/}etc/rc.d/rc.sysstat"
 function enable_sysstat() {
   local -i ret=0
-  cat 0<<-EOF
-	
-	enabling system accounting
-	--------------------------
-EOF
+  print_topic "enabling system accounting"
   if [ -f "${SA_RC}" ]
   then
     echo "[+] enabling sysstat through ${SA_RC}"

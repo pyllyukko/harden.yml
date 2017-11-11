@@ -175,11 +175,7 @@ function import_pgp_keys() {
   local SKS_HASH
   local schema
 
-  cat 0<<-EOF
-	
-	importing PGP keys
-	------------------
-EOF
+  print_topic "importing PGP keys"
   # keys with URL
   echo -n "from URLs (${#PGP_URLS[*]} keys)"
   for URL in ${PGP_URLS[*]}

@@ -1,11 +1,7 @@
 #!/bin/bash
 function enable_apparmor() {
   local file
-  cat 0<<-EOF
-	
-	enabling AppArmor
-	-----------------
-EOF
+  print_topic "enabling AppArmor"
   # TODO: if [ -f /boot/cmdline.txt ]
   if [ ! -f /etc/default/grub ]
   then
@@ -60,11 +56,7 @@ EOF
 ################################################################################
 function aa_enforce() {
   local profile
-  cat 0<<-EOF
-	
-	setting AppArmor profiles to enforce mode
-	-----------------------------------------
-EOF
+  print_topic "setting AppArmor profiles to enforce mode"
   if [ -x /usr/sbin/aa-enforce ]
   then
     for profile in /etc/apparmor.d/*.*

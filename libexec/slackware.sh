@@ -914,11 +914,7 @@ function apply_newconfs() {
   local    subdir
   local -a sha256sums
 
-  cat 0<<-EOF
-	
-	applying .new confs
-	-------------------
-EOF
+  print_topic "applying .new confs"
 
   pushd /etc 1>/dev/null || {
     echo "[-] error!" 1>&2

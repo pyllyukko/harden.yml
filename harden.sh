@@ -188,11 +188,7 @@ function disable_inetd_services() {
   # CIS 2.1 Disable Standard Services
   local SERVICE
 
-  cat 0<<-EOF
-	
-	disabling inetd services
-	------------------------
-EOF
+  print_topic "disabling inetd services"
 
   check_for_conf_file "${INETDCONF}" || return 1
 
@@ -215,11 +211,7 @@ EOF
 function create_environment_for_restricted_shell () {
   local PRG
 
-  cat 0<<-EOF
-	
-	populating ${RBINDIR}
-	-----------${RBINDIR//?/-}
-EOF
+  print_topic "populating ${RBINDIR}"
 
   if [ ! -d "${RBINDIR}" ]
   then
@@ -251,11 +243,7 @@ function lock_system_accounts() {
   local uid
   local password_status
 
-  cat 0<<-EOF
-	
-	locking system accounts
-	-----------------------
-EOF
+  print_topic "locking system accounts"
   # CIS 8.1 Block System Accounts (modified)
   # CIS 3.4 Disable Standard Boot Services (modified) (the user accounts part)
   #
@@ -320,11 +308,7 @@ function user_accounts() {
 
   # CUSTOM
 
-  cat 0<<-EOF
-	
-	miscellaneous
-	-------------
-EOF
+  print_topic "miscellaneous"
 
   # change the defaults. this will update /etc/default/useradd.
   # this makes it so, that when a password of a user expires, the account is
@@ -388,11 +372,7 @@ function configure_password_policy_for_existing_users() {
   local NAME
   local uid
   # CIS 8.3 Set Account Expiration Parameters On Active Accounts
-  cat 0<<-EOF
-	
-	configuring password policies for existing users
-	------------------------------------------------
-EOF
+  print_topic "configuring password policies for existing users"
   read_password_policy
   for NAME in ${NAMES[*]}
   do
@@ -410,11 +390,7 @@ EOF
 } # configure_password_policy_for_existing_users()
 ################################################################################
 function restrict_cron() {
-  cat 0<<-EOF
-	
-	restricting use of cron & at
-	----------------------------
-EOF
+  print_topic "restricting use of cron & at"
   # CIS 7.5 Restrict at/cron To Authorized Users
   #
   # NOTE: Dillon's cron does not support /etc/cron.{allow,deny}
@@ -540,11 +516,7 @@ function harden_fstab() {
   #   Particular file system in the `/etc/fstab' file, as documented in the
   #   Mount man page (man mount).
 
-  cat 0<<-EOF
-	
-	hardening mount options in fstab
-	--------------------------------
-EOF
+  print_topic "hardening mount options in fstab"
 
   if [ ! -w /etc ]
   then
@@ -564,11 +536,7 @@ EOF
 ################################################################################
 function file_permissions2() {
   local FILE
-  cat 0<<-EOF
-	
-	hardening file permissions
-	--------------------------
-EOF
+  print_topic "hardening file permissions"
   # new RH/Debian safe file permissions function
   {
     for FILE in ${!FILE_PERMS[*]}
@@ -585,11 +553,7 @@ function user_home_directories_permissions() {
   # this has been split into it's own function, since it relates to both
   # "hardening categories", user accounts & file permissions.
   local DIR
-  cat 0<<-EOF
-	
-	setting permissions of home directories
-	---------------------------------------
-EOF
+  print_topic "setting permissions of home directories"
   if [ -z "${UID_MIN}" -o -z "${UID_MAX}" ]
   then
     echo '[-] error: UID_MIN or UID_MAX not known' 1>&2
@@ -629,11 +593,7 @@ function create_ftpusers() {
   # NOTE: this should be run periodically, since it's a blacklist and
   #       additional user accounts might be created after this.
 
-  cat 0<<-EOF
-	
-	creating /etc/ftpusers
-	----------------------
-EOF
+  print_topic "creating /etc/ftpusers"
   # get the login names
   for NAME in ${NAMES[*]}
   do
@@ -664,11 +624,7 @@ function set_failure_limits() {
   # the UID_MIN and UID_MAX values are from /etc/login.defs
   # locks user accounts after 5 failed logins
 
-  cat 0<<-EOF
-	
-	setting failure limits
-	----------------------
-EOF
+  print_topic "setting failure limits"
   if ! hash faillog 2>/dev/null
   then
     echo "[-] faillog binary not found" 1>&2
@@ -708,11 +664,7 @@ EOF
 } # set_failure_limits()
 ################################################################################
 function enable_bootlog() {
-  cat 0<<-EOF
-	
-	enabling bootlog
-	----------------
-EOF
+  print_topic "enabling bootlog"
   # https://www.linuxquestions.org/questions/slackware-14/how-to-activate-bootlogd-918962/
   if [ ! -f /var/log/boot ]
   then
@@ -734,11 +686,7 @@ function remove_shells() {
   #     entries are added dynamically from doinst.sh scripts
   local SHELL_TO_REMOVE
 
-  cat 0<<-EOF
-	
-	removing unnecessary shells
-	---------------------------
-EOF
+  print_topic "removing unnecessary shells"
 
   # tcsh csh ash ksh zsh	from Slackware
   # es rc esh dash screen	from Debian
@@ -802,11 +750,7 @@ EOF
 function disable_unnecessary_systemd_services() {
   local service
 
-  cat 0<<-EOF
-	
-	disabling unnecessary systemd services
-	--------------------------------------
-EOF
+  print_topic "disabling unnecessary systemd services"
   if [ ! -x /bin/systemctl ]
   then
     echo '[-] /bin/systemctl not found!' 1>&2
@@ -848,11 +792,7 @@ function gnome_settings() {
 ################################################################################
 function create_limited_ca_list() {
   local -i ret
-  cat 0<<-EOF
-	
-	Hardening trusted CA certificates
-	---------------------------------
-EOF
+  print_topic "Hardening trusted CA certificates"
   if [ ! -x /usr/sbin/update-ca-certificates ]
   then
     echo "[-] ERROR: update-ca-certificates not found!" 1>&2
@@ -875,11 +815,7 @@ EOF
 } # create_limited_ca_list()
 ################################################################################
 function sysctl_harden() {
-  cat 0<<-EOF
-	
-	applying sysctl hardening
-	-------------------------
-EOF
+  print_topic "applying sysctl hardening"
   if [ -f "${CWD}/newconfs/sysctl.d/sysctl.conf.new" ]
   then
     if [ -d /etc/sysctl.d ]
@@ -900,11 +836,7 @@ EOF
 } # sysctl_harden()
 ################################################################################
 function configure_tcp_wrappers() {
-  cat 0<<-EOF
-	
-	configuring TCP wrappers
-	------------------------
-EOF
+  print_topic "configuring TCP wrappers"
   if [ -f /etc/hosts.deny ]
   then
     if ! grep -q "^ALL" /etc/hosts.deny
@@ -958,11 +890,7 @@ function quick_harden() {
 ################################################################################
 function configure_modprobe.d() {
   local file
-  cat 0<<-EOF
-	
-	configuring modprobe
-	--------------------
-EOF
+  print_topic "configuring modprobe"
   for file in "CIS.conf" "firewire.conf"
   do
     echo "[+] ${file}"
@@ -971,11 +899,7 @@ EOF
 } # configure_modprobe.d()
 ################################################################################
 function set_usb_authorized_default() {
-  cat 0<<-EOF
-	
-	setting USB authorized_default -> 0
-	-----------------------------------
-EOF
+  print_topic "setting USB authorized_default -> 0"
   if [ "${DISTRO}" = "debian" -o "${DISTRO}" = "raspbian" ]
   then
     if [ -f /etc/rc.local ]
@@ -996,11 +920,7 @@ function toggle_usb_authorized_default() {
   local host
   local state
 
-  cat 0<<-EOF
-	
-	USB authorized_default
-	----------------------
-EOF
+  print_topic "USB authorized_default"
 
   for host in /sys/bus/usb/devices/usb*
   do
@@ -1023,11 +943,7 @@ function configure_basic_auditing() {
   local    concat="/bin/cat"
   local    rule_file
 
-  cat 0<<-EOF
-	
-	configuring basic auditing
-	--------------------------
-EOF
+  print_topic "configuring basic auditing"
 
   if [ ! -x /sbin/auditctl ]
   then
@@ -1173,11 +1089,7 @@ EOF
 } # configure_basic_auditing()
 ################################################################################
 function enable_pacct() {
-  cat 0<<-EOF
-	
-	enabling process accounting
-	---------------------------
-EOF
+  print_topic "enabling process accounting"
   if ! hash accton 2>/dev/null
   then
     echo "[-] process accounting not found!" 1>&2
@@ -1311,22 +1223,14 @@ EOF
 function configure_securetty() {
   # https://www.debian.org/doc/manuals/securing-debian-howto/ch4.en.html#s-restrict-console-login
   local i
-  cat 0<<-EOF
-	
-	creating /etc/securetty
-	-----------------------
-EOF
+  print_topic "creating /etc/securetty"
   make -f ${CWD}/Makefile /etc/securetty
 } # configure_securetty()
 ################################################################################
 function configure_password_policies() {
   local policy
 
-  cat 0<<-EOF
-	
-	configuring password policies
-	-----------------------------
-EOF
+  print_topic "configuring password policies"
 
   check_for_conf_file "/etc/login.defs" || return 1
 
@@ -1359,11 +1263,7 @@ EOF
 } # configure_password_policies()
 ################################################################################
 function disable_ipv6() {
-  cat 0<<-EOF
-	
-	disabling IPv6
-	--------------
-EOF
+  print_topic "disabling IPv6"
   if [ -f /etc/default/grub ] && ! grep -q '^GRUB_CMDLINE_LINUX=".*ipv6.disable=1' /etc/default/grub
   then
     echo '[+] configuring /etc/default/grub'
@@ -1388,11 +1288,7 @@ function enable_selinux() {
 ################################################################################
 function configure_apt() {
   local suite
-  cat 0<<-EOF
-	
-	disabling suggested packages in APT
-	-----------------------------------
-EOF
+  print_topic "disabling suggested packages in APT"
   if [ -d /etc/apt/apt.conf.d ]
   then
     echo '[+] creating /etc/apt/apt.conf.d/99suggested'
@@ -1416,11 +1312,7 @@ EOF
 function disable_gdm3_user_list() {
   local setting
   local value
-  cat 0<<-EOF
-	
-	configuring display manager(s)
-	------------------------------
-EOF
+  print_topic "configuring display manager(s)"
 
   if [ -f /etc/gdm3/greeter.dconf-defaults ]
   then
@@ -1449,11 +1341,7 @@ EOF
 } # disable_gdm3_user_list()
 ################################################################################
 function configure_shells() {
-  cat 0<<-EOF
-	
-	configuring shells
-	------------------
-EOF
+  print_topic "configuring shells"
   echo '[+] creating /etc/profile.d/tmout.sh'
   make -f ${CWD}/Makefile /etc/profile.d/tmout.sh
   configure_umask
@@ -1461,11 +1349,7 @@ EOF
 } # configure_shells()
 ################################################################################
 function configure_umask() {
-  cat 0<<-EOF
-	
-	configuring umask
-	-----------------
-EOF
+  print_topic "configuring umask"
   # TODO: utilize configure_password_policies()
   if [ -f /etc/login.defs ]
   then

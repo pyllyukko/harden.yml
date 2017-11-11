@@ -53,11 +53,7 @@ declare -rA SSH_CONFIG=(
 ################################################################################
 function configure_sshd() {
   local setting
-  cat 0<<-EOF
-	
-	configuring sshd
-	----------------
-EOF
+  print_topic "configuring sshd"
   check_for_conf_file "/etc/ssh/sshd_config" || return 1
   for setting in ${!SSHD_CONFIG[*]}
   do
@@ -73,11 +69,7 @@ EOF
 ################################################################################
 function configure_ssh() {
   local setting
-  cat 0<<-EOF
-	
-	configuring ssh
-	---------------
-EOF
+  print_topic "configuring ssh"
   check_for_conf_file "/etc/ssh/ssh_config" || return 1
   if ! grep -q '^Host \*$' /etc/ssh/ssh_config
   then
