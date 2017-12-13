@@ -168,6 +168,8 @@ declare -ra PGP_KEYS=(
   "0x0445B7AB9ABBEEC6"
   # Michael Rash (Signing key for cipherdyne.org projects)
   "0x4D6644A9DA036904BDA2CB90E6C9E3350D3E7410"
+  # https://developers.yubico.com/Software_Projects/Software_Signing.html
+  "0x0a3b0262bca1705307d5ff06bca00fd4b2168c0a"
 )
 function import_pgp_keys() {
   local URL
