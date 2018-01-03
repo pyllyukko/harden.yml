@@ -1255,6 +1255,7 @@ function configure_password_policies() {
     /sbin/authconfig --passalgo=sha512 --update
   fi
 
+  echo '[+] setting the default password inactivity period'
   useradd -D -f ${password_inactive}
 
   configure_password_policy_for_existing_users
