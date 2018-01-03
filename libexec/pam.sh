@@ -91,7 +91,7 @@ function configure_pam() {
   if [ -f ${ROOTDIR:-/}etc/pam.d/common-auth ] && ! grep -q "pam_faildelay\.so" ${ROOTDIR:-/}etc/pam.d/common-auth
   then
     echo '[+] enabling pam_faildelay in /etc/pam.d/common-auth'
-    sed_with_diff '/^# here are the per-package modules (the "Primary" block)$/aauth\toptional\t\t\tpam_faildelay.so delay=10000000' "${ROOTDIR:-/}etc/pam.d/common-auth"
+    sed_with_diff '/^# here are the per-package modules (the "Primary" block)$/iauth\toptional\t\t\tpam_faildelay.so delay=10000000' "${ROOTDIR:-/}etc/pam.d/common-auth"
   fi
 
   if [ -f ${ROOTDIR:-/}etc/pam.d/lightdm ] && ! grep -q '^session\s\+optional\s\+pam_lastlog\.so' ${ROOTDIR:-/}etc/pam.d/lightdm
