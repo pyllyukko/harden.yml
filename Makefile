@@ -46,6 +46,9 @@ bash_syntax:
 /usr/share/pam-configs/tally2: $(CWD)/newconfs/pam-configs/tally2.new | /usr/share/pam-configs/
 	/usr/bin/install -m 644 $< $@
 
+/usr/share/pam-configs/access: $(CWD)/newconfs/pam-configs/access.new | /usr/share/pam-configs/
+	/usr/bin/install -m 644 $< $@
+
 .PHONY: FORCE
 FORCE:
 

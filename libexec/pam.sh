@@ -41,38 +41,30 @@ function configure_pam() {
     true
     echo '[+] enabling pam_tally2'
     make -f ${CWD}/Makefile /usr/share/pam-configs/tally2
+    # TODO: pam_access for RH
+    echo '[+] enabling pam_access in /etc/pam.d/common-account'
+    make -f ${CWD}/Makefile /usr/share/pam-configs/access
   fi
 
-  if [ -f ${ROOTDIR:-/}etc/pam.d/login ]
+  # access.conf
+  # the checksum is the same both for Debian & CentOS
+  if sha512sum -c 0<<<"a32865fc0d8700ebb63e01fa998c3c92dca7bda2f6a34c5cca0a8a59a5406eef439167add8a15424b82812674312fc225fd26331579d5625a6d1c4cf833a921f  ${ROOTDIR:-/}etc/security/access.conf" &>/dev/null
   then
-    # pam_access
-    # TODO: CentOS
-    if [ -f ${ROOTDIR:-/}etc/pam.d/common-account ] && ! grep -q "account\s\+required\s\+pam_access\.so" ${ROOTDIR:-/}etc/pam.d/common-account
-    then
-      echo '[+] enabling pam_access in /etc/pam.d/common-account'
-      sed_with_diff '$ a account required pam_access.so nodefgroup' "${ROOTDIR:-/}etc/pam.d/common-account"
-    fi
-
-    # access.conf
-    # the checksum is the same both for Debian & CentOS
-    if sha512sum -c 0<<<"a32865fc0d8700ebb63e01fa998c3c92dca7bda2f6a34c5cca0a8a59a5406eef439167add8a15424b82812674312fc225fd26331579d5625a6d1c4cf833a921f  ${ROOTDIR:-/}etc/security/access.conf" &>/dev/null
-    then
-      echo '[+] configuring /etc/security/access.conf'
-      for regex in \
-        '/^# All other users should be denied to get access from all sources./i+ : root : LOCAL\n- : ALL : cron crond\n+ : Debian-gdm : LOCAL\n+ : (users) : ALL' \
-        '/- : ALL : ALL$/s/^#\s*//'
-      do
-        sed_with_diff "${regex}" "${ROOTDIR:-/}etc/security/access.conf"
-      done
-      echo '[*] NOTE: be sure to add regular users to the "users" group!'
-      for NAME in $( awk -F: -v uid_min=${UID_MIN:-1000} '$3>=uid_min{print$1}' /etc/passwd )
-      do
-	if ! id "${NAME}" | fgrep -q "(users)"
-	then
-	  echo "[-] WARNING: user \`${NAME}' does not belong to group \"users\"!" 1>&2
-	fi
-      done
-    fi
+    echo '[+] configuring /etc/security/access.conf'
+    for regex in \
+      '/^# All other users should be denied to get access from all sources./i+ : root : LOCAL\n- : ALL : cron crond\n+ : Debian-gdm : LOCAL\n+ : (users) : ALL' \
+      '/- : ALL : ALL$/s/^#\s*//'
+    do
+      sed_with_diff "${regex}" "${ROOTDIR:-/}etc/security/access.conf"
+    done
+    echo '[*] NOTE: be sure to add regular users to the "users" group!'
+    for NAME in $( awk -F: -v uid_min=${UID_MIN:-1000} '$3>=uid_min{print$1}' /etc/passwd )
+    do
+      if ! id "${NAME}" | fgrep -q "(users)"
+      then
+	echo "[-] WARNING: user \`${NAME}' does not belong to group \"users\"!" 1>&2
+      fi
+    done
   fi
 
   # add 10 second delay to all failed authentication events
