@@ -1,0 +1,6 @@
+Name: Delay on authentication failure
+Default: yes
+Priority: 257
+Auth-Type: Primary
+Auth:
+	optional pam_faildelay.so delay=10000000

@@ -44,6 +44,9 @@ function configure_pam() {
     # TODO: pam_access for RH
     echo '[+] enabling pam_access in /etc/pam.d/common-account'
     make -f ${CWD}/Makefile /usr/share/pam-configs/access
+    # http://www.linux-pam.org/Linux-PAM-html/sag-pam_faildelay.html
+    echo '[+] enabling pam_faildelay'
+    make -f ${CWD}/Makefile /usr/share/pam-configs/faildelay
   fi
 
   # access.conf
@@ -65,14 +68,6 @@ function configure_pam() {
 	echo "[-] WARNING: user \`${NAME}' does not belong to group \"users\"!" 1>&2
       fi
     done
-  fi
-
-  # add 10 second delay to all failed authentication events
-  # http://www.linux-pam.org/Linux-PAM-html/sag-pam_faildelay.html
-  if [ -f ${ROOTDIR:-/}etc/pam.d/common-auth ] && ! grep -q "pam_faildelay\.so" ${ROOTDIR:-/}etc/pam.d/common-auth
-  then
-    echo '[+] enabling pam_faildelay in /etc/pam.d/common-auth'
-    sed_with_diff '/^# here are the per-package modules (the "Primary" block)$/iauth\toptional\t\t\tpam_faildelay.so delay=10000000' "${ROOTDIR:-/}etc/pam.d/common-auth"
   fi
 
   if [ -f ${ROOTDIR:-/}etc/pam.d/lightdm ] && ! grep -q '^session\s\+optional\s\+pam_lastlog\.so' ${ROOTDIR:-/}etc/pam.d/lightdm
