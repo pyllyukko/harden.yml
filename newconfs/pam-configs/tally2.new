@@ -4,6 +4,6 @@ Priority: 257
 Auth-Type: Primary
 Auth:
 	required   pam_tally2.so     onerr=fail audit silent deny=5 unlock_time=900
-Account-Type: Primary
+Account-Type: Additional
 Account:
 	required pam_tally2.so
