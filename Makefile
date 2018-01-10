@@ -52,6 +52,9 @@ bash_syntax:
 /usr/share/pam-configs/polyinstation: $(CWD)/newconfs/pam-configs/polyinstation.new | /usr/share/pam-configs/
 	/usr/bin/install -m 644 $< $@
 
+/usr/share/pam-configs/lastlog: $(CWD)/newconfs/pam-configs/lastlog.new | /usr/share/pam-configs/
+	/usr/bin/install -m 644 $< $@
+
 .PHONY: FORCE
 FORCE:
 

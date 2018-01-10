@@ -38,7 +38,7 @@ function configure_pam() {
   # Debian based
   if [ -d /usr/share/pam-configs ]
   then
-    true
+    # TODO: rewrite the messages
     echo '[+] enabling pam_tally2'
     make -f ${CWD}/Makefile /usr/share/pam-configs/tally2
     # TODO: pam_access for RH
@@ -49,6 +49,9 @@ function configure_pam() {
     make -f ${CWD}/Makefile /usr/share/pam-configs/faildelay
     echo '[+] enabling polyinstation (pam_namespace)'
     make -f ${CWD}/Makefile /usr/share/pam-configs/polyinstation
+    echo '[+] enabling pam_lastlog'
+    make -f ${CWD}/Makefile /usr/share/pam-configs/lastlog
+
     echo '[+] updating /etc/pam.d/common-*'
     pam-auth-update --package
   fi
@@ -85,17 +88,6 @@ function configure_pam() {
 	echo "[-] WARNING: user \`${NAME}' does not belong to group \"users\"!" 1>&2
       fi
     done
-  fi
-
-  if [ -f ${ROOTDIR:-/}etc/pam.d/lightdm ] && ! grep -q '^session\s\+optional\s\+pam_lastlog\.so' ${ROOTDIR:-/}etc/pam.d/lightdm
-  then
-    echo '[+] enabling pam_lastlog in /etc/pam.d/lightdm'
-    sed_with_diff '$ a session    optional   pam_lastlog.so' ${ROOTDIR:-/}etc/pam.d/lightdm
-  fi
-  if [ -f ${ROOTDIR:-/}etc/pam.d/gdm-password ] && ! grep -q '^session\s\+optional\s\+pam_lastlog\.so' ${ROOTDIR:-/}etc/pam.d/gdm-password
-  then
-    echo '[+] enabling pam_lastlog in /etc/pam.d/gdm-password'
-    sed_with_diff '$ a session optional        pam_lastlog.so' ${ROOTDIR:-/}etc/pam.d/gdm-password
   fi
 
   # limit password reuse
