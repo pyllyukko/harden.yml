@@ -49,6 +49,9 @@ bash_syntax:
 /usr/share/pam-configs/access: $(CWD)/newconfs/pam-configs/access.new | /usr/share/pam-configs/
 	/usr/bin/install -m 644 $< $@
 
+/usr/share/pam-configs/polyinstation: $(CWD)/newconfs/pam-configs/polyinstation.new | /usr/share/pam-configs/
+	/usr/bin/install -m 644 $< $@
+
 .PHONY: FORCE
 FORCE:
 

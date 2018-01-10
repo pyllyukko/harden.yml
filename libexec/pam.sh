@@ -47,6 +47,23 @@ function configure_pam() {
     # http://www.linux-pam.org/Linux-PAM-html/sag-pam_faildelay.html
     echo '[+] enabling pam_faildelay'
     make -f ${CWD}/Makefile /usr/share/pam-configs/faildelay
+    echo '[+] enabling polyinstation (pam_namespace)'
+    make -f ${CWD}/Makefile /usr/share/pam-configs/polyinstation
+    echo '[+] updating /etc/pam.d/common-*'
+    pam-auth-update --package
+  fi
+
+  # pam_namespace
+  if [ -f ${ROOTDIR:-/}etc/security/namespace.conf ] && [ "${DISTRO}" = "debian" -o "${DISTRO}" = "raspbian" ]
+  then
+    # WARNING: this is not completely tested with CentOS!
+    echo '[+] configuring polyinstation (pam_namespace)'
+    for regex in \
+      's/^#\/tmp.*$/\/tmp     \/tmp\/tmp-inst\/         level      root/' \
+      '/^#\/var\/tmp/s/^#\(.*\),adm$/\1/'
+    do
+      sed_with_diff "${regex}" "${ROOTDIR:-/}etc/security/namespace.conf"
+    done
   fi
 
   # access.conf
@@ -112,30 +129,6 @@ function configure_pam() {
   then
     echo '[+] configuring pam_wheel.so'
     sed_with_diff '/auth\s\+required\s\+pam_wheel\.so\(\s\+use_uid\)\?$/s/^#\s*//' "${ROOTDIR:-/}etc/pam.d/su"
-  fi
-
-  # pam_namespace
-  if [ -f ${ROOTDIR:-/}etc/security/namespace.conf ] && [ "${DISTRO}" = "debian" -o "${DISTRO}" = "raspbian" ]
-  then
-    # WARNING: this is not completely tested with CentOS!
-    echo '[+] configuring polyinstation (pam_namespace)'
-    for regex in \
-      's/^#\/tmp.*$/\/tmp     \/tmp\/tmp-inst\/         level      root/' \
-      '/^#\/var\/tmp/s/^#\(.*\),adm$/\1/'
-    do
-      sed_with_diff "${regex}" "${ROOTDIR:-/}etc/security/namespace.conf"
-    done
-    for file in \
-      ${ROOTDIR:-/}etc/pam.d/login        \
-      ${ROOTDIR:-/}etc/pam.d/gdm-password \
-      ${ROOTDIR:-/}etc/pam.d/sshd         \
-      ${ROOTDIR:-/}etc/pam.d/lightdm
-    do
-      if [ -f ${file} ] && ! grep -q '^session\s\+required\s\+pam_namespace\.so' ${file}
-      then
-	sed_with_diff '$ a session    required   pam_namespace.so' "${file}"
-      fi
-    done
   fi
 
   # pam_umask
