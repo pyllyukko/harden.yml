@@ -35,27 +35,16 @@ function configure_pam() {
   fi
   # NOTE: if libpam-passwdqc is installed, it is already configured by pam-auth-update
 
-  # enable faillog (pam_tally2)
+  # Debian based
+  if [ -d /usr/share/pam-configs ]
+  then
+    true
+    echo '[+] enabling pam_tally2'
+    make -f ${CWD}/Makefile /usr/share/pam-configs/tally2
+  fi
+
   if [ -f ${ROOTDIR:-/}etc/pam.d/login ]
   then
-    if ! grep -q "pam_tally2" ${ROOTDIR:-/}etc/pam.d/login
-    then
-      echo '[+] enabling pam_tally2'
-      # insert above first occurance of ^auth
-      regex="/^auth/{
-        iauth       required   pam_tally2.so     onerr=fail audit silent deny=${FAILURE_LIMIT} unlock_time=900
-        # loop through the rest of the file
-        :a
-        \$!{
-          # Read the next line of input into the pattern space
-          n
-          # Branch to label a
-          ba
-        }
-      }"
-      sed_with_diff "${regex}" "${ROOTDIR:-/}etc/pam.d/login"
-    fi
-
     # pam_access
     # TODO: CentOS
     if [ -f ${ROOTDIR:-/}etc/pam.d/common-account ] && ! grep -q "account\s\+required\s\+pam_access\.so" ${ROOTDIR:-/}etc/pam.d/common-account
