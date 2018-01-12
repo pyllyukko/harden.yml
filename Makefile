@@ -46,19 +46,7 @@ bash_syntax:
 .PHONY: pam-configs
 pam-configs: /usr/share/pam-configs/tally2 /usr/share/pam-configs/access /usr/share/pam-configs/polyinstation /usr/share/pam-configs/lastlog /usr/share/pam-configs/umask
 
-/usr/share/pam-configs/tally2: $(CWD)/newconfs/pam-configs/tally2.new | /usr/share/pam-configs/
-	/usr/bin/install -m 644 $< $@
-
-/usr/share/pam-configs/access: $(CWD)/newconfs/pam-configs/access.new | /usr/share/pam-configs/
-	/usr/bin/install -m 644 $< $@
-
-/usr/share/pam-configs/polyinstation: $(CWD)/newconfs/pam-configs/polyinstation.new | /usr/share/pam-configs/
-	/usr/bin/install -m 644 $< $@
-
-/usr/share/pam-configs/lastlog: $(CWD)/newconfs/pam-configs/lastlog.new | /usr/share/pam-configs/
-	/usr/bin/install -m 644 $< $@
-
-/usr/share/pam-configs/umask: $(CWD)/newconfs/pam-configs/umask.new | /usr/share/pam-configs/
+/usr/share/pam-configs/%: $(CWD)/newconfs/pam-configs/%.new | /usr/share/pam-configs/
 	/usr/bin/install -m 644 $< $@
 
 .PHONY: FORCE
