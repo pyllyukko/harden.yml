@@ -11,10 +11,12 @@ function configure_core_dumps() {
 } # configure_core_dumps()
 ################################################################################
 function configure_pam_umask() {
-  if [ -f ${ROOTDIR:-/}etc/pam.d/common-session ] && ! grep -q 'pam_umask\.so' ${ROOTDIR:-/}etc/pam.d/common-session
+  if [ -d /usr/share/pam-configs ]
   then
-    echo '[+] enabling pam_umask in /etc/pam.d/common-session'
-    sed_with_diff '$ a session optional pam_umask.so' "${ROOTDIR:-/}etc/pam.d/common-session"
+    echo '[+] creating umask pam-config'
+    make -f "${CWD}/Makefile" /usr/share/pam-configs/umask
+    echo '[+] updating /etc/pam.d/common-*'
+    pam-auth-update --package
   fi
 } # configure_pam_umask()
 ################################################################################
@@ -38,19 +40,11 @@ function configure_pam() {
   # Debian based
   if [ -d /usr/share/pam-configs ]
   then
-    # TODO: rewrite the messages
-    echo '[+] enabling pam_tally2'
-    make -f ${CWD}/Makefile /usr/share/pam-configs/tally2
-    # TODO: pam_access for RH
-    echo '[+] enabling pam_access in /etc/pam.d/common-account'
-    make -f ${CWD}/Makefile /usr/share/pam-configs/access
-    # http://www.linux-pam.org/Linux-PAM-html/sag-pam_faildelay.html
-    echo '[+] enabling pam_faildelay'
-    make -f ${CWD}/Makefile /usr/share/pam-configs/faildelay
-    echo '[+] enabling polyinstation (pam_namespace)'
-    make -f ${CWD}/Makefile /usr/share/pam-configs/polyinstation
-    echo '[+] enabling pam_lastlog'
-    make -f ${CWD}/Makefile /usr/share/pam-configs/lastlog
+    for file in "tally2" "access" "faildelay" "polyinstation" "lastlog" "umask"
+    do
+      echo "[+] creating ${file} pam-config"
+      make -f "${CWD}/Makefile" "/usr/share/pam-configs/${file}"
+    done
 
     echo '[+] updating /etc/pam.d/common-*'
     pam-auth-update --package
@@ -122,9 +116,6 @@ function configure_pam() {
     echo '[+] configuring pam_wheel.so'
     sed_with_diff '/auth\s\+required\s\+pam_wheel\.so\(\s\+use_uid\)\?$/s/^#\s*//' "${ROOTDIR:-/}etc/pam.d/su"
   fi
-
-  # pam_umask
-  configure_pam_umask
 
   # /etc/pam.d/other
   echo '[+] configuring default behaviour via /etc/pam.d/other'
