@@ -43,6 +43,9 @@ bash_syntax:
 /etc/profile.d/umask.sh: $(CWD)/newconfs/profile.d/umask.sh.new FORCE
 	/usr/bin/install -m 755 $< $@
 
+.PHONY: pam-configs
+pam-configs: /usr/share/pam-configs/tally2 /usr/share/pam-configs/access /usr/share/pam-configs/polyinstation /usr/share/pam-configs/lastlog /usr/share/pam-configs/umask
+
 /usr/share/pam-configs/tally2: $(CWD)/newconfs/pam-configs/tally2.new | /usr/share/pam-configs/
 	/usr/bin/install -m 644 $< $@
 
