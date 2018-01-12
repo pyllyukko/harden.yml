@@ -25,13 +25,6 @@ configure_core_dumps
 test_results+=(${?})
 check_patch "${logdir}/limits.conf.patch" d32faaa96ee8d0a34b92ef746d230afe054cb9a1856b180e5896e85dba28e5c9f40a93ebcddd16ebae369428ae1c6ee581131b3a2f3686bce6911c28f5ea50de
 
-configure_pam
-check_patch "${logdir}/su.patch"          2205c05499695d3bf434f5080a078f57d3ba1bed8aa4bbfda9c57fb3b045aee5c907df98760e91dfba7bfd54750f7c75e2958da9d01bda2004697d72b2dd0742
-sha512sum -c 0<<<"c15fa34ee8bcea3c49fb1ffe0be01d4fe645aed9c498f65a6bc815a6b0ea911ed4d15727e34f93323b113905365565e304e2e608dd9a52663a90443598fb8a0c  etc/pam.d/other"
-test_results+=(${?})
-check_patch "${logdir}/access.conf-1.patch" 63cb3cbd3a887cd0a84cec81a9e18866d4993675ca7d8e8382603b72b561240d228929b6ec718aedbc873295664e6e5f7f8e4e75c6788909f99ef24ec91a2940
-check_patch "${logdir}/access.conf-2.patch" 5811af47363a0ab7eb2b2dcccea5420abfa15463736cd1b459779b46daeb9cbfa8983bfe8554ef43b3db8b0139ad7545b8fa87d365ace870014983516b611c4e
-
 rm -rf "${logdir}"
 get_ret
 exit ${ret}
