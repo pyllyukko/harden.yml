@@ -54,7 +54,7 @@ function configure_pam() {
   if [ -f ${ROOTDIR:-/}etc/security/namespace.conf ] && [ "${DISTRO}" = "debian" -o "${DISTRO}" = "raspbian" ]
   then
     # WARNING: this is not completely tested with CentOS!
-    echo '[+] configuring polyinstation (pam_namespace)'
+    echo '[+] configuring /etc/security/namespace.conf'
     for regex in \
       's/^#\/tmp.*$/\/tmp     \/tmp\/tmp-inst\/         level      root/' \
       '/^#\/var\/tmp/s/^#\(.*\),adm$/\1/'
