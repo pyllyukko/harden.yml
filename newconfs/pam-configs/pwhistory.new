@@ -1,0 +1,6 @@
+Name: Limit password reuse
+Default: yes
+Priority: 257
+Password-Type: Primary
+Password:
+	required			pam_pwhistory.so use_authtok

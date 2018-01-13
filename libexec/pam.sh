@@ -40,7 +40,7 @@ function configure_pam() {
   # Debian based
   if [ -d /usr/share/pam-configs ]
   then
-    for file in "tally2" "access" "faildelay" "polyinstation" "lastlog" "umask"
+    for file in "tally2" "access" "faildelay" "polyinstation" "lastlog" "umask" "pwhistory"
     do
       echo "[+] creating ${file} pam-config"
       make -f "${CWD}/Makefile" "/usr/share/pam-configs/${file}"
@@ -89,14 +89,9 @@ function configure_pam() {
   fi
 
   # limit password reuse
-  # debian
-  if [ -f ${ROOTDIR:-/}etc/pam.d/common-password ] && ! grep -q "^password.*pam_unix\.so.*remember" ${ROOTDIR:-/}etc/pam.d/common-password
-  then
-    echo '[+] limiting password reuse in /etc/pam.d/common-password'
-    sed_with_diff 's/^\(password.*pam_unix\.so.*\)$/\1 remember=5/' "${ROOTDIR:-/}etc/pam.d/common-password"
   # red hat
   # NOTE: this should be done in different way, as these configs are wiped by authconfig
-  elif [ -f ${ROOTDIR:-/}etc/pam.d/password-auth -a -f ${ROOTDIR:-/}etc/pam.d/system-auth ] && \
+  if [ -f ${ROOTDIR:-/}etc/pam.d/password-auth -a -f ${ROOTDIR:-/}etc/pam.d/system-auth ] && \
     ! grep -q "^password.*pam_unix\.so.*remember" ${ROOTDIR:-/}etc/pam.d/password-auth && ! grep -q "^password.*pam_unix\.so.*remember" ${ROOTDIR:-/}etc/pam.d/system-auth
   then
     for file in "${ROOTDIR:-/}etc/pam.d/password-auth" "${ROOTDIR:-/}etc/pam.d/system-auth"
