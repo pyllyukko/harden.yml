@@ -1252,7 +1252,27 @@ function configure_password_policies() {
   if [ -x /sbin/authconfig ]
   then
     # TODO: other settings
-    /sbin/authconfig --passalgo=sha512 --update
+    echo '[+] configuring password policy via authconfig'
+    authconfig          \
+      --passalgo=sha512 \
+      --passminlen=14   \
+      --enablereqlower  \
+      --enablerequpper  \
+      --enablereqdigit  \
+      --enablereqother  \
+      --update
+  # pwquality && !rh
+  elif [ -f ${ROOTDIR:-/}etc/security/pwquality.conf ]
+  then
+    echo '[+] configuring pwquality'
+    for setting in ${!PWQUALITY_SETTINGS[*]}
+    do
+      sed_with_diff "s/^\(# \?\)\?\(${setting}\)\(\s*=\s*\)\S\+$/\2\3${PWQUALITY_SETTINGS[${setting}]}/" "${ROOTDIR:-/}etc/security/pwquality.conf"
+      if ! grep -q "^${setting}\s*=\s*${PWQUALITY_SETTINGS[${setting}]}$" ${ROOTDIR:-/}etc/security/pwquality.conf
+      then
+	echo "[-] failed to set ${setting}"
+      fi
+    done
   fi
 
   echo '[+] setting the default password inactivity period'
