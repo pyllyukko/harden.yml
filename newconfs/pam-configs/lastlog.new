@@ -2,5 +2,6 @@ Name: Update lastlog and notify the user about failed logins
 Default: yes
 Priority: 0
 Session-Type: Additional
+Session-Interactive-Only: yes
 Session:
 	optional	pam_lastlog.so showfailed
