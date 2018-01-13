@@ -48,6 +48,15 @@ function configure_pam() {
 
     echo '[+] updating /etc/pam.d/common-*'
     pam-auth-update --package
+  # Red Hat / CentOS
+  elif [ -x /sbin/authconfig ]
+  then
+    # faillock instead of tally2
+    # defaults: deny=4 unlock_time=1200
+    echo '[+] enabling faillock via authconfig'
+    authconfig --enablefaillock --update
+    # access.conf
+    # authconfig --enablepamaccess --update
   fi
 
   # pam_namespace
