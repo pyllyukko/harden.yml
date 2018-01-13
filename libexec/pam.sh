@@ -51,7 +51,7 @@ function configure_pam() {
   fi
 
   # pam_namespace
-  if [ -f ${ROOTDIR:-/}etc/security/namespace.conf ] && [ "${DISTRO}" = "debian" -o "${DISTRO}" = "raspbian" ]
+  if [ -f ${ROOTDIR:-/}etc/security/namespace.conf ] && [ "${DISTRO}" = "debian" -o "${DISTRO}" = "raspbian" -o "${DISTRO}" = "kali" ]
   then
     # WARNING: this is not completely tested with CentOS!
     echo '[+] configuring /etc/security/namespace.conf'
