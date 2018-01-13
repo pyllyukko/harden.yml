@@ -60,16 +60,11 @@ function configure_pam() {
   fi
 
   # pam_namespace
-  if [ -f ${ROOTDIR:-/}etc/security/namespace.conf ] && [ "${DISTRO}" = "debian" -o "${DISTRO}" = "raspbian" -o "${DISTRO}" = "kali" ]
+  if sha512sum -c 0<<<"b782eec0d414dc460b85ffe86601d84d86f9439c4ac95bc965f6e7a245c01dc40ed648c15cfdaccd0402452b2b6397ffdf0e1524d5e431d9a0b6861f832b0c31  ${ROOTDIR:-/}etc/security/namespace.conf" &>/dev/null
   then
     # WARNING: this is not completely tested with CentOS!
     echo '[+] configuring /etc/security/namespace.conf'
-    for regex in \
-      's/^#\/tmp.*$/\/tmp     \/tmp\/tmp-inst\/         level      root/' \
-      '/^#\/var\/tmp/s/^#\(.*\),adm$/\1/'
-    do
-      sed_with_diff "${regex}" "${ROOTDIR:-/}etc/security/namespace.conf"
-    done
+    sed_with_diff '26,27s/^#//' "${ROOTDIR:-/}etc/security/namespace.conf"
   fi
 
   # access.conf
