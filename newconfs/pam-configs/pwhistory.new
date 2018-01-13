@@ -1,5 +1,5 @@
 Name: Limit password reuse
-Default: yes
+Default: no
 Priority: 257
 Conflicts: krb5
 Password-Type: Primary
