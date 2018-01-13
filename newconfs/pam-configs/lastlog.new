@@ -3,4 +3,4 @@ Default: yes
 Priority: 256
 Session-Type: Additional
 Session:
-	optional pam_lastlog.so showfailed
+	optional	pam_lastlog.so showfailed

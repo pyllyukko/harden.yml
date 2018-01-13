@@ -3,4 +3,4 @@ Default: yes
 Priority: 256
 Session-Type: Additional
 Session:
-	required pam_namespace.so
+	required	pam_namespace.so
