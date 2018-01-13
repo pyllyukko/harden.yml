@@ -1,6 +1,6 @@
 Name: /etc/security/access.conf access control
 Default: no
-Priority: 256
+Priority: 0
 Account-Type: Additional
 Account:
 	required			pam_access.so nodefgroup

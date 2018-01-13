@@ -1,6 +1,6 @@
 Name: Polyinstantiated directories
 Default: yes
-Priority: 256
+Priority: 0
 Session-Type: Additional
 Session:
 	required	pam_namespace.so
