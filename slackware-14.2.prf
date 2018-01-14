@@ -140,7 +140,6 @@ plugin=kernel
 plugin=malware
 plugin=memory
 plugin=nginx
-plugin=pam
 plugin=processes
 plugin=security-modules
 plugin=software
