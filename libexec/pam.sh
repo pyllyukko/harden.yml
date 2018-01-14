@@ -6,6 +6,10 @@ function configure_core_dumps() {
   check_for_conf_file "${file}" || return 1
   echo "[+] ${file} found"
   sed_with_diff 's/^#\?\*\( \+\)soft\( \+\)core\( \+\)0$/*\1hard\2core\30/' "${file}"
+  (( ${LYNIS_TESTS} )) && {
+    local LYNIS_SCORE_AFTER=$( get_lynis_hardening_index kernel )
+    check_lynis_tests KRNL-5820
+  }
   return ${?}
   # TODO: nproc - max number of processes
 } # configure_core_dumps()
