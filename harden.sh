@@ -553,6 +553,7 @@ function harden_fstab() {
 function file_permissions2() {
   local FILE
   print_topic "hardening file permissions"
+  (( ${LYNIS_TESTS} )) && local LYNIS_SCORE_BEFORE=$( get_lynis_hardening_index file_permissions )
   # new RH/Debian safe file permissions function
   {
     for FILE in ${!FILE_PERMS[*]}
@@ -563,6 +564,11 @@ function file_permissions2() {
       fi
     done
   } | tee -a "${logdir}/file_perms.txt"
+  (( ${LYNIS_TESTS} )) && {
+    local LYNIS_SCORE_AFTER=$( get_lynis_hardening_index file_permissions )
+    compare_lynis_scores "${LYNIS_SCORE_BEFORE}" "${LYNIS_SCORE_AFTER}"
+    check_lynis_tests FILE-7524
+  }
 } # file_permissions2()
 ################################################################################
 function user_home_directories_permissions() {
