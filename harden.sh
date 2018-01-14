@@ -567,6 +567,7 @@ function file_permissions2() {
   (( ${LYNIS_TESTS} )) && {
     local LYNIS_SCORE_AFTER=$( get_lynis_hardening_index file_permissions )
     compare_lynis_scores "${LYNIS_SCORE_BEFORE}" "${LYNIS_SCORE_AFTER}"
+    # TODO: authentication & boot_services is not run in the above invocation
     check_lynis_tests FILE-7524 AUTH-9252 BOOT-5184
   }
 } # file_permissions2()
@@ -1116,6 +1117,7 @@ function configure_basic_auditing() {
   fi
   # TODO: start auditd?
   (( ${LYNIS_TESTS} )) && {
+    LYNIS_SCORE_AFTER=$( get_lynis_hardening_index accounting )
     check_lynis_tests ACCT-9628 ACCT-9630 ACCT-9632 ACCT-9634
   }
 } # configure_basic_auditing()
@@ -1315,6 +1317,7 @@ function configure_password_policies() {
   read_password_policy
 
   (( ${LYNIS_TESTS} )) && {
+    LYNIS_SCORE_AFTER=$( get_lynis_hardening_index authentication )
     check_lynis_tests AUTH-9286
   }
 } # configure_password_policies()
@@ -1438,6 +1441,7 @@ function configure_umask() {
   make -f ${CWD}/Makefile /etc/profile.d/umask.sh
   configure_pam_umask
   (( ${LYNIS_TESTS} )) && {
+    LYNIS_SCORE_AFTER=$( get_lynis_hardening_index authentication )
     check_lynis_tests AUTH-9328
   }
 } # configure_umask()

@@ -32,6 +32,7 @@ function enable_sysstat() {
     ret=1
   fi
   (( ${LYNIS_TESTS} )) && {
+    LYNIS_SCORE_AFTER=$( get_lynis_hardening_index accounting )
     check_lynis_tests ACCT-9626
   }
   return ${ret}
