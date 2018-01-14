@@ -63,6 +63,7 @@ function check_for_conf_file() {
 function print_topic() {
   echo -e "\n${1}\n${1//?/-}"
 } # print_topic()
+################################################################################
 function get_lynis_hardening_index() {
   # TODO:
   #   * "[ Press ENTER to continue, or CTRL+C to cancel ]"
@@ -75,6 +76,7 @@ function get_lynis_hardening_index() {
   fi
   grep -o 'Hardening index.*' /var/log/lynis.log
 } # get_lynis_hardening_index()
+################################################################################
 function compare_lynis_scores() {
   if [ "${1}" = "${2}" ]
   then
@@ -100,5 +102,7 @@ function check_lynis_tests() {
   if [ ${max} -eq ${#} ]
   then
     echo "[+] max score for all ${#} tests"
+    return 0
   fi
+  return 1
 } # check_lynis_tests()
