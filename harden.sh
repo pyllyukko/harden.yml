@@ -1310,6 +1310,10 @@ function configure_password_policies() {
   configure_password_policy_for_existing_users
 
   read_password_policy
+
+  (( ${LYNIS_TESTS} )) && {
+    check_lynis_tests AUTH-9286
+  }
 } # configure_password_policies()
 ################################################################################
 function disable_ipv6() {
