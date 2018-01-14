@@ -136,6 +136,7 @@ declare -rA FILE_PERMS=(
   ["/etc/ssh/sshd_config"]="600"
   ["/etc/ssh/ssh_config"]="644"
   ["/etc/lilo.conf"]="600"
+  ["/root/.ssh"]="700"
 )
 
 # NOLOGIN(8): "It is intended as a replacement shell field for accounts that have been disabled."
