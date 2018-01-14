@@ -80,19 +80,7 @@ What does it do?
 
  * Makes default log files group ```adm``` readable ([as in Debian](http://www.debian.org/doc/manuals/debian-reference/ch01.en.html#listofnotablesysupsforfileaccess))
  * Users in the [wheel][12] group are able to create cronjobs (as described in [/usr/doc/dcron-4.5/README][8])
- * [grsecurity related](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#Default_Special_Groups)
-   * GID 1001 for [CONFIG\_GRKERNSEC\_PROC\_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_exempted_from_.2Fproc_restrictions)
-   * GID 1002 for [GRKERNSEC\_SOCKET\_SERVER\_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_to_deny_server_sockets_for)
-   * GID 1003 for [GRKERNSEC\_SOCKET\_CLIENT\_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_to_deny_client_sockets_for)
-   * GID 1004 for [GRKERNSEC\_SOCKET\_ALL\_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_to_deny_all_sockets_for)
-   * GID 1005 for [CONFIG\_GRKERNSEC\_TPE\_TRUSTED\_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_TPE-trusted_users)
-   * GID 1006 for [CONFIG\_GRKERNSEC\_SYMLINKOWN\_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_users_with_kernel-enforced_SymlinksIfOwnerMatch)
-   * GID 1007 for [GRKERNSEC\_AUDIT\_GID](https://en.wikibooks.org/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#GID_for_auditing) (not in use)
  * Even though we use [user private groups](https://en.wikipedia.org/wiki/File_system_permissions#User_private_group), the ```users``` group is used to define which users are allowed to login interactively
-
-You can also utilize the above grsec groups with [sudo][11], so the allowed users don't have the permissions by default:
-
-	ADMINS ALL=(:grsec_tpe) NOPASSWD: /usr/bin/newgrp
 
 ### Configures services
 
@@ -329,13 +317,6 @@ And from other sources than SBo:
 I think it's justified and recommended to run an antivirus software on all of your Linux servers. This is because, even though the server's role would not be something like a file sharing server or a mail server, a proper antivirus is able to detect much more than these "traditional" malwares. I'm talking about rootkits, exploits, [PHP shells](https://en.wikipedia.org/wiki/Backdoor_Shell) and the like. Something that a malicious user might be holding at their home dirs or maybe some PHP shell was dropped through a vulnerable web application. If you would get an early warning from an antivirus software, it just might save you on that one occasion :)
 
 So consider getting [ClamAV][4] from SBo.
-
-#### grsecurity
-
-~~You should also consider running [grsecurity](https://grsecurity.net/).~~ Here's few links to get you started:
-* [My packaging scripts](https://github.com/pyllyukko/grsec_confnbuild)
-* [gradm SlackBuild](http://slackbuilds.org/repository/14.1/system/gradm/)
-* [paxctl SlackBuild](http://slackbuilds.org/repository/14.1/system/paxctl/)
 
 ### Bugs discovered during the making :)
 
