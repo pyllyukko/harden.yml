@@ -93,15 +93,10 @@ declare -r CADIR="/usr/share/ca-certificates/local"
 declare -r SKS_CA="sks-keyservers.netCA.pem"
 declare -a NAMES=( $( cut -d: -f1 /etc/passwd ) )
 declare    LYNIS_TESTS=1
-declare    LYNIS_DIR=~/lynis-2.5.9
-if [ ! -d "${LYNIS_DIR}" ]
+if ! hash lynis
 then
   LYNIS_TESTS=0
 fi
-#if ! hash lynis
-#then
-#  LYNIS_TESTS=0
-#fi
 auditPATH='/etc/audit'
 logdir=$( mktemp -p /tmp -d harden.sh.XXXXXX )
 #declare -rA grsec_groups=(

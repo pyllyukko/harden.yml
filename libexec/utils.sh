@@ -64,17 +64,10 @@ function print_topic() {
   echo -e "\n${1}\n${1//?/-}"
 } # print_topic()
 function get_lynis_hardening_index() {
-  if [ ! -d ${LYNIS_DIR} ]
-  then
-    echo "[-] couldn't find Lynis" 1>&2
-    return 1
-  fi
-  pushd ${LYNIS_DIR} 1>/dev/null || return 1
   # TODO:
   #   * "[ Press ENTER to continue, or CTRL+C to cancel ]"
   #   * skip_upgrade_test
-  ./lynis -q --skip-plugins --tests-from-group ${1} 1>/dev/null
-  popd 1>/dev/null
+  lynis -q --skip-plugins --tests-from-group ${1} 1>/dev/null
   if [ ! -r /var/log/lynis.log ]
   then
     echo "[-] /var/log/lynis.log not readable" 1>&2
@@ -94,10 +87,9 @@ function compare_lynis_scores() {
 function check_lynis_tests() {
   local    i
   local -i max=0
-  pushd ${LYNIS_DIR} 1>/dev/null || return 1
   for i in ${*}
   do
-    ./lynis show details "${i}" | grep 'Hardening:' | grep -q -v 'assigned maximum number of hardening points for this item'
+    lynis show details "${i}" | grep 'Hardening:' | grep -q -v 'assigned maximum number of hardening points for this item'
     if [ ${PIPESTATUS[2]} -ne 1 ]
     then
       echo "[-] partial score for test ${i}"
@@ -105,7 +97,6 @@ function check_lynis_tests() {
       ((max++))
     fi
   done
-  popd 1>/dev/null
   if [ ${max} -eq ${#} ]
   then
     echo "[+] max score for all ${#} tests"
