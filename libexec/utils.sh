@@ -70,7 +70,9 @@ function get_lynis_hardening_index() {
     return 1
   fi
   pushd ${LYNIS_DIR} 1>/dev/null || return 1
-  # TODO: "[ Press ENTER to continue, or CTRL+C to cancel ]"
+  # TODO:
+  #   * "[ Press ENTER to continue, or CTRL+C to cancel ]"
+  #   * skip_upgrade_test
   ./lynis -q --skip-plugins --tests-from-group ${1} 1>/dev/null
   popd 1>/dev/null
   if [ ! -r /var/log/lynis.log ]
