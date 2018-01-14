@@ -31,5 +31,8 @@ function enable_sysstat() {
     echo '[-] sysstat config not found' 1>&2
     ret=1
   fi
+  (( ${LYNIS_TESTS} )) && {
+    check_lynis_tests ACCT-9626
+  }
   return ${ret}
 } # enable_sysstat()

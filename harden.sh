@@ -1114,7 +1114,10 @@ function configure_basic_auditing() {
   then
     sed_with_diff 's/$/ audit=1/' /boot/cmdline.txt
   fi
-  # TODO: Lynis ACCT-9628
+  # TODO: start auditd?
+  (( ${LYNIS_TESTS} )) && {
+    check_lynis_tests ACCT-9628 ACCT-9630 ACCT-9632 ACCT-9634
+  }
 } # configure_basic_auditing()
 ################################################################################
 function enable_pacct() {
