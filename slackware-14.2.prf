@@ -152,7 +152,6 @@ plugin=processes
 plugin=security-modules
 plugin=software
 plugin=system-integrity
-plugin=systemd
 plugin=users
 
 
