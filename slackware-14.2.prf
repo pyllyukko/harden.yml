@@ -70,6 +70,14 @@ skip-plugins=no
 #skip-test=SSH-7408
 # "Install a PAM module for password strength testing" - Slackware doesn't use PAM
 skip-test=AUTH-9262
+# "Scan /etc/pam.conf file"
+skip-test=AUTH-9264
+# "Searching available PAM configurations (/etc/pam.d)"
+skip-test=AUTH-9266
+# "Searching available PAM files"
+skip-test=AUTH-9268
+# "Search LDAP support in PAM files"
+skip-test=AUTH-9278
 # "Install a package audit tool" - no such tool available
 skip-test=PKGS-7398
 # "Check RPM database" - Slackware has RPM binary, but it's not used
