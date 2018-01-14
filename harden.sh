@@ -542,7 +542,7 @@ function file_permissions2() {
   {
     for FILE in ${!FILE_PERMS[*]}
     do
-      if [ -f "${FILE}" ]
+      if [ -f "${FILE}" -o -d "${FILE}" ]
       then
 	chmod -c ${FILE_PERMS[${FILE}]} ${FILE}
       fi
