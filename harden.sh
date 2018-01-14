@@ -567,7 +567,7 @@ function file_permissions2() {
   (( ${LYNIS_TESTS} )) && {
     local LYNIS_SCORE_AFTER=$( get_lynis_hardening_index file_permissions )
     compare_lynis_scores "${LYNIS_SCORE_BEFORE}" "${LYNIS_SCORE_AFTER}"
-    check_lynis_tests FILE-7524
+    check_lynis_tests FILE-7524 AUTH-9252
   }
 } # file_permissions2()
 ################################################################################
