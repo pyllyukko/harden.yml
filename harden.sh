@@ -1430,6 +1430,9 @@ function configure_umask() {
   fi
   make -f ${CWD}/Makefile /etc/profile.d/umask.sh
   configure_pam_umask
+  (( ${LYNIS_TESTS} )) && {
+    check_lynis_tests AUTH-9328
+  }
 } # configure_umask()
 ################################################################################
 
