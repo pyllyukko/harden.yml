@@ -98,8 +98,13 @@ kernel.perf_event_paranoid = 2
 # Turn off kexec, even if it's built in.
 kernel.kexec_load_disabled = 1
 
+# https://www.kernel.org/doc/Documentation/security/Yama.txt
+# 0 - classic ptrace permissions
+# 1 - restricted ptrace
+# 2 - admin-only attach
+# 3 - no attach
 # Avoid non-ancestor ptrace access to running processes and their credentials.
-kernel.yama.ptrace_scope = 1
+kernel.yama.ptrace_scope = 3
 
 # Disable User Namespaces, as it opens up a large attack surface to unprivileged users.
 user.max_user_namespaces = 0
