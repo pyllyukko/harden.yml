@@ -94,4 +94,14 @@ kernel.ctrl-alt-del = 0
 # https://www.cert.fi/haavoittuvuudet/2013/haavoittuvuus-2013-071.html
 kernel.perf_event_paranoid = 2
 
+# https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings#sysctls
+# Turn off kexec, even if it's built in.
+kernel.kexec_load_disabled = 1
+
+# Avoid non-ancestor ptrace access to running processes and their credentials.
+kernel.yama.ptrace_scope = 1
+
+# Disable User Namespaces, as it opens up a large attack surface to unprivileged users.
+user.max_user_namespaces = 0
+
 net.ipv4.tcp_timestamps = 0
