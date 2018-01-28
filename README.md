@@ -8,7 +8,7 @@ This is a script to harden your Linux installation.
 Why I made this
 ---------------
 
-* [Bastille](http://bastille-linux.org/) is obsolete
+* [Bastille](http://bastille-linux.sourceforge.net/) is obsolete
 * Not a member of [CIS](http://www.cisecurity.org/), so no downloading of the ready made scripts
 * For learning
 * For minimizing the effort needed to tweak fresh installations
