@@ -88,7 +88,7 @@ What does it do?
 
 ### Slackware specific
 
-See [SLACKWARE.md](SLACKWARE.md].
+See [SLACKWARE.md](SLACKWARE.md).
 
 ### Additional features
 
