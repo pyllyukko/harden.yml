@@ -203,6 +203,11 @@ As a workaround, there is also a new runlevel **2** that can be used to safely r
 * Remove ```floppy``` and ```scanner``` from ```CONSOLE_GROUPS```
 * Restrict the use of ```at``` and ```cron``` from regular users
 
+### Additional features
+
+* Download & verify Slackware ```MANIFEST``` by running ```make manifest```
+* Check Slackware installation's integrity from ```MANIFEST``` (owner & permission) (```-I``` switch)
+
 Other security software
 -----------------------
 
