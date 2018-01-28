@@ -60,8 +60,8 @@ What does it do?
   * Configures ```/etc/security/namespace.conf```
   * Configures ```/etc/security/access.conf```
   * Configures ```/etc/security/pwquality.conf``` if available
-  * Require ```pam_wheel``` in ```/etc/pam.d/su```
-  * Creates a secure ```/etc/pam.d/other```
+  * Require [pam_wheel](http://linux-pam.org/Linux-PAM-html/sag-pam_wheel.html) in ```/etc/pam.d/su```
+  * Creates a secure [/etc/pam.d/other](http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html)
 
 ### Debian specific
 
@@ -71,13 +71,13 @@ What does it do?
 #### PAM
 
 * Creates bunch of ```pam-config```s that are toggleable with ```pam-auth-update```:
-  * Deter brute-force attacks with ```pam_tally2```
-  * Polyinstantiated temp directories with ```pam_namespace```
-  * ```/etc/security/access.conf``` access control with ```pam_access```
-  * Delay on authentication failure with ```pam_faildelay.so```
-  * Set file mode creation mask with ```pam_umask```
+  * Deter brute-force attacks with [pam_tally2](http://linux-pam.org/Linux-PAM-html/sag-pam_tally2.html)
+  * Polyinstantiated temp directories with [pam_namespace](http://linux-pam.org/Linux-PAM-html/sag-pam_namespace.html)
+  * ```/etc/security/access.conf``` access control with [pam_access](http://linux-pam.org/Linux-PAM-html/sag-pam_access.html)
+  * Delay on authentication failure with [pam_faildelay](http://linux-pam.org/Linux-PAM-html/sag-pam_faildelay.html)
+  * Set file mode creation mask with [pam_umask](http://linux-pam.org/Linux-PAM-html/sag-pam_umask.html)
   * Enable ```lastlog```ging from all login methods (not just the console ```login```)
-  * Limit password reuse with ```pam_pwhistory```
+  * Limit password reuse with [pam_pwhistory](http://linux-pam.org/Linux-PAM-html/sag-pam_pwhistory.html)
 * Disallow empty passwords by removing ```nullok```
 
 ### CentOS/RHEL specific
