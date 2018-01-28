@@ -27,12 +27,6 @@ What does it do?
   * Enables [SAK](https://en.wikipedia.org/wiki/Secure_attention_key) and disables the other [magic SysRq stuff](https://www.kernel.org/doc/Documentation/sysrq.txt)
   * Restricts the use of ```dmesg``` by regular users
   * For the complete list, see [sysctl.conf.new](https://github.com/pyllyukko/harden.sh/blob/master/newconfs/sysctl.d/sysctl.conf.new)
-* Properly locks down system accounts (0 - ```SYS_UID_MAX``` && !```root```)
-  * Lock the user's password
-  * Sets shell to ```nologin```
-  * Expire the account
-  * Adds the accounts to [/etc/ftpusers](http://linux.die.net/man/5/ftpusers)
-* Creates ```/etc/ftpusers```
 * Hardens mount options (creates ```/etc/fstab.new```)
   * Also, mount [/proc](https://www.kernel.org/doc/Documentation/filesystems/proc.txt) with ```hidepid=2```
 * Disables the use of certain kernel modules via ```modprobe```
@@ -40,7 +34,7 @@ What does it do?
 * Configures shells
   * Creates an option to use [restricted shell](https://en.wikipedia.org/wiki/Restricted_shell) ([rbash](https://www.gnu.org/software/bash/manual/html_node/The-Restricted-Shell.html))
     * Also sets it as default for new users
-  * Restricts the number of available shells
+  * Restricts the number of available shells (```/etc/shells```)
 * Configures basic auditing based on [stig.rules](https://fedorahosted.org/audit/browser/trunk/contrib/stig.rules) if audit is installed
   * NOTE: non-PAM systems (namely Slackware) don't set the ```loginuid``` properly, so some of the rules don't work when they have ```-F auid!=4294967295```
 * Enables system accounting ([sysstat][10])
@@ -52,7 +46,6 @@ What does it do?
   * Note: password strength should be enforced with applicable PAM module (such as [pam_passwdqc](http://www.openwall.com/passwdqc/) or ```pam_pwquality```)
 * Reduce the amount of trusted [CAs](https://en.wikipedia.org/wiki/Certificate_authority)
   * Doesn't work in CentOS/RHEL
-* Restricts the use of ```cron``` and ```at```
 * Create a strict ```securetty```
 * Sets default [umask](https://en.wikipedia.org/wiki/Umask) to a more stricter ```077```
 * Sets console session timeout via ```$TMOUT``` (Bash)
@@ -62,6 +55,22 @@ What does it do?
   * Configures ```/etc/security/pwquality.conf``` if available
   * Require [pam_wheel](http://linux-pam.org/Linux-PAM-html/sag-pam_wheel.html) in ```/etc/pam.d/su```
   * Creates a secure [/etc/pam.d/other](http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html)
+* Disables unnecessary systemd services
+* Configures ```sshd_config```
+* Configures display manager(s) not to print list of existing users
+
+#### User accounts
+
+* Configures failure limits (```faillog```)
+* Creates ```/etc/ftpusers```
+* Restricts the use of ```cron``` and ```at```
+* Properly locks down system accounts (0 - ```SYS_UID_MAX``` && !```root```)
+  * Lock the user's password
+  * Sets shell to ```nologin```
+  * Expire the account
+  * Adds the accounts to [/etc/ftpusers](http://linux.die.net/man/5/ftpusers)
+* Sets strict permissions to users home directories
+* Configures the default password inactivity period
 
 ### Debian specific
 
