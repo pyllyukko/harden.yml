@@ -6,6 +6,7 @@ function create_banners() {
 
   print_topic "creating banners"
 
+  (( ${LYNIS_TESTS} )) && local LYNIS_SCORE_BEFORE=$( get_lynis_hardening_index banners )
   for file in /etc/issue /etc/issue.net /etc/motd
   do
     echo "[+] creating ${file}"
@@ -29,6 +30,10 @@ function create_banners() {
     echo "[+] configuring banner to sshd"
     sed_with_diff "s/^\(# \?\)\?\(Banner\)\(\s\+\)\S\+$/\2\3\/etc\/issue.net/" /etc/ssh/sshd_config
   fi
+  (( ${LYNIS_TESTS} )) && {
+    local LYNIS_SCORE_AFTER=$( get_lynis_hardening_index banners )
+    compare_lynis_scores "${LYNIS_SCORE_BEFORE}" "${LYNIS_SCORE_AFTER}"
+  }
 
   return 0
 } # create_banners()

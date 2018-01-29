@@ -92,6 +92,11 @@ declare -r INETDCONF="/etc/inetd.conf"
 declare -r CADIR="/usr/share/ca-certificates/local"
 declare -r SKS_CA="sks-keyservers.netCA.pem"
 declare -a NAMES=( $( cut -d: -f1 /etc/passwd ) )
+declare    LYNIS_TESTS=1
+if ! hash lynis
+then
+  LYNIS_TESTS=0
+fi
 auditPATH='/etc/audit'
 logdir=$( mktemp -p /tmp -d harden.sh.XXXXXX )
 #declare -rA grsec_groups=(
@@ -532,12 +537,19 @@ function harden_fstab() {
     echo "[+] /etc/fstab.new created"
   fi
 
+  # there's no point in doing the comparison, but we'll print the score anyway
+  (( ${LYNIS_TESTS} )) && {
+    local LYNIS_SCORE=$( get_lynis_hardening_index filesystems )
+    echo "[*] Lynis score: ${LYNIS_SCORE}"
+  }
+
   return ${?}
 } # harden_fstab()
 ################################################################################
 function file_permissions2() {
   local FILE
   print_topic "hardening file permissions"
+  (( ${LYNIS_TESTS} )) && local LYNIS_SCORE_BEFORE=$( get_lynis_hardening_index file_permissions )
   # new RH/Debian safe file permissions function
   {
     for FILE in ${!FILE_PERMS[*]}
@@ -548,6 +560,12 @@ function file_permissions2() {
       fi
     done
   } | tee -a "${logdir}/file_perms.txt"
+  (( ${LYNIS_TESTS} )) && {
+    local LYNIS_SCORE_AFTER=$( get_lynis_hardening_index file_permissions )
+    compare_lynis_scores "${LYNIS_SCORE_BEFORE}" "${LYNIS_SCORE_AFTER}"
+    # TODO: authentication & boot_services is not run in the above invocation
+    check_lynis_tests FILE-7524 AUTH-9252 BOOT-5184
+  }
 } # file_permissions2()
 ################################################################################
 function user_home_directories_permissions() {
@@ -817,6 +835,7 @@ function create_limited_ca_list() {
 ################################################################################
 function sysctl_harden() {
   print_topic "applying sysctl hardening"
+  (( ${LYNIS_TESTS} )) && local LYNIS_SCORE_BEFORE=$( get_lynis_hardening_index kernel_hardening )
   if [ -f "${CWD}/newconfs/sysctl.d/sysctl.conf.new" ]
   then
     if [ -d /etc/sysctl.d ]
@@ -834,6 +853,11 @@ function sysctl_harden() {
     echo "[-] WARNING: sysctl.conf.new not found!" 1>&2
   fi
   /sbin/sysctl --system
+  (( ${LYNIS_TESTS} )) && {
+    local LYNIS_SCORE_AFTER=$( get_lynis_hardening_index kernel_hardening )
+    compare_lynis_scores "${LYNIS_SCORE_BEFORE}" "${LYNIS_SCORE_AFTER}"
+    check_lynis_tests KRNL-6000
+  }
 } # sysctl_harden()
 ################################################################################
 function configure_tcp_wrappers() {
@@ -1087,6 +1111,11 @@ function configure_basic_auditing() {
   then
     sed_with_diff 's/$/ audit=1/' /boot/cmdline.txt
   fi
+  # TODO: start auditd?
+  (( ${LYNIS_TESTS} )) && {
+    LYNIS_SCORE_AFTER=$( get_lynis_hardening_index accounting )
+    check_lynis_tests ACCT-9628 ACCT-9630 ACCT-9632 ACCT-9634
+  }
 } # configure_basic_auditing()
 ################################################################################
 function enable_pacct() {
@@ -1282,6 +1311,11 @@ function configure_password_policies() {
   configure_password_policy_for_existing_users
 
   read_password_policy
+
+  (( ${LYNIS_TESTS} )) && {
+    LYNIS_SCORE_AFTER=$( get_lynis_hardening_index authentication )
+    check_lynis_tests AUTH-9286
+  }
 } # configure_password_policies()
 ################################################################################
 function disable_ipv6() {
@@ -1364,10 +1398,16 @@ function disable_gdm3_user_list() {
 ################################################################################
 function configure_shells() {
   print_topic "configuring shells"
+  (( ${LYNIS_TESTS} )) && local LYNIS_SCORE_BEFORE=$( get_lynis_hardening_index shells )
   echo '[+] creating /etc/profile.d/tmout.sh'
   make -f ${CWD}/Makefile /etc/profile.d/tmout.sh
   configure_umask
   remove_shells
+  (( ${LYNIS_TESTS} )) && {
+    local LYNIS_SCORE_AFTER=$( get_lynis_hardening_index shells )
+    compare_lynis_scores "${LYNIS_SCORE_BEFORE}" "${LYNIS_SCORE_AFTER}"
+    check_lynis_tests SHLL-6220 SHLL-6230
+  }
 } # configure_shells()
 ################################################################################
 function configure_umask() {
@@ -1396,6 +1436,10 @@ function configure_umask() {
   fi
   make -f ${CWD}/Makefile /etc/profile.d/umask.sh
   configure_pam_umask
+  (( ${LYNIS_TESTS} )) && {
+    LYNIS_SCORE_AFTER=$( get_lynis_hardening_index authentication )
+    check_lynis_tests AUTH-9328
+  }
 } # configure_umask()
 ################################################################################
 

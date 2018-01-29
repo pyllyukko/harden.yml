@@ -63,3 +63,46 @@ function check_for_conf_file() {
 function print_topic() {
   echo -e "\n${1}\n${1//?/-}"
 } # print_topic()
+################################################################################
+function get_lynis_hardening_index() {
+  # TODO:
+  #   * "[ Press ENTER to continue, or CTRL+C to cancel ]"
+  #   * skip_upgrade_test
+  lynis -q --skip-plugins --tests-from-group ${1} 1>/dev/null
+  if [ ! -r /var/log/lynis.log ]
+  then
+    echo "[-] /var/log/lynis.log not readable" 1>&2
+    return 1
+  fi
+  grep -o 'Hardening index.*' /var/log/lynis.log
+} # get_lynis_hardening_index()
+################################################################################
+function compare_lynis_scores() {
+  if [ "${1}" = "${2}" ]
+  then
+    echo "[-] Lynis score did not change: ${2}" 1>&2
+  else
+    echo "[+] Lynis score: ${2}"
+  fi
+} # compare_lynis_scores()
+################################################################################
+function check_lynis_tests() {
+  local    i
+  local -i max=0
+  for i in ${*}
+  do
+    lynis show details "${i}" | grep 'Hardening:' | grep -q -v 'assigned maximum number of hardening points for this item'
+    if [ ${PIPESTATUS[2]} -ne 1 ]
+    then
+      echo "[-] partial score for test ${i}"
+    else
+      ((max++))
+    fi
+  done
+  if [ ${max} -eq ${#} ]
+  then
+    echo "[+] max score for all ${#} tests"
+    return 0
+  fi
+  return 1
+} # check_lynis_tests()

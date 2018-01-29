@@ -6,6 +6,10 @@ function configure_core_dumps() {
   check_for_conf_file "${file}" || return 1
   echo "[+] ${file} found"
   sed_with_diff 's/^#\?\*\( \+\)soft\( \+\)core\( \+\)0$/*\1hard\2core\30/' "${file}"
+  (( ${LYNIS_TESTS} )) && {
+    local LYNIS_SCORE_AFTER=$( get_lynis_hardening_index kernel )
+    check_lynis_tests KRNL-5820
+  }
   return ${?}
   # TODO: nproc - max number of processes
 } # configure_core_dumps()
@@ -26,6 +30,8 @@ function configure_pam() {
   local file
   local regex
   local NAME
+
+  (( ${LYNIS_TESTS} )) && local LYNIS_SCORE_BEFORE=$( get_lynis_hardening_index authentication )
 
   configure_password_policies
 
@@ -135,4 +141,10 @@ EOF
   #  # TODO
   #  true
   #fi
+
+  (( ${LYNIS_TESTS} )) && {
+    local LYNIS_SCORE_AFTER=$( get_lynis_hardening_index authentication )
+    compare_lynis_scores "${LYNIS_SCORE_BEFORE}" "${LYNIS_SCORE_AFTER}"
+    check_lynis_tests AUTH-9262 AUTH-9286 AUTH-9328 AUTH-9408
+  }
 } # configure_pam()
