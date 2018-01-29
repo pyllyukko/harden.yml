@@ -33,6 +33,8 @@ function create_banners() {
   (( ${LYNIS_TESTS} )) && {
     local LYNIS_SCORE_AFTER=$( get_lynis_hardening_index banners )
     compare_lynis_scores "${LYNIS_SCORE_BEFORE}" "${LYNIS_SCORE_AFTER}"
+    # BANN-7126 & BANN-7130 will give only partial score because of "Found only 2 key words (5 or more suggested)"
+    check_lynis_tests BANN-7124 BANN-7126 BANN-7128 BANN-7130
   }
 
   return 0
