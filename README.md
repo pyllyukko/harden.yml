@@ -130,8 +130,8 @@ After running the hardening script, the following actions still need to be perfo
 - [ ] Set LILO/GRUB password
   - [ ] Update LILO/GRUB with ```lilo``` || ```update-grub```
 - Install at least the following additional software:
-  - [ ] [audit](https://slackbuilds.org/repository/14.2/system/audit/) (and run ```harden.sh -S``` afterwards)
-  - [ ] [Aide](https://slackbuilds.org/repository/14.2/system/aide/)
+  - [ ] [audit](https://people.redhat.com/sgrubb/audit/) (and run ```harden.sh -S``` afterwards)
+  - [ ] [Aide](http://aide.sourceforge.net/)
   - [ ] ClamAV
   - [ ] arpwatch
 - [ ] Make sure NTP is running
