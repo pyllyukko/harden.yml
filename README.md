@@ -58,7 +58,9 @@ What does it do?
   * Creates a secure [/etc/pam.d/other](http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html)
 * Disables unnecessary systemd services
 * Configures ```sshd_config```
-* Configures display manager(s) not to print list of existing users
+* Display managers:
+  * Disables user lists in GDM3 & LightDM
+  * Disables guest sessions in LightDM
 
 #### User accounts
 
