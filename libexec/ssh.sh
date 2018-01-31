@@ -69,6 +69,7 @@ function configure_sshd() {
   (( ${LYNIS_TESTS} )) && {
     local LYNIS_SCORE_AFTER=$( get_lynis_hardening_index ssh )
     compare_lynis_scores "${LYNIS_SCORE_BEFORE}" "${LYNIS_SCORE_AFTER}"
+    check_lynis_tests SSH-7408
   }
 } # configure_sshd()
 ################################################################################
