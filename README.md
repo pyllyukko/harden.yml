@@ -79,6 +79,9 @@ What does it do?
 
 * Enables AppArmor
 * Sets the [authorized\_default](https://www.kernel.org/doc/Documentation/usb/authorization.txt) to USB devices via ```rc.local```
+* APT:
+  * Configures APT not to install suggested packages
+  * Configure ```SUITE``` in ```debsecan``` (if installed)
 
 #### PAM
 
