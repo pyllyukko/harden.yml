@@ -174,6 +174,8 @@ declare -ra PGP_KEYS=(
   "0x63CE676698B26D3A36D77527223BD93328686142"
   # Openwall offline signing key
   "0x05C027FD4BDC136E"
+  # LEDE Release Builder (17.01 "Reboot" Signing Key)
+  "0x833C6010D52BBB6B"
 )
 function import_pgp_keys() {
   local URL
