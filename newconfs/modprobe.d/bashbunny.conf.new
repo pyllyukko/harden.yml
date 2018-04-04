@@ -1,0 +1,4 @@
+# BashBunny ECM_ETHERNET
+# https://wiki.bashbunny.com/?_escaped_fragment_=downloads.md#!payload_development.md
+
+blacklist cdc_ether
