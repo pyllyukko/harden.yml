@@ -176,6 +176,8 @@ declare -ra PGP_KEYS=(
   "0x05C027FD4BDC136E"
   # LEDE Release Builder (17.01 "Reboot" Signing Key)
   "0x833C6010D52BBB6B"
+  # GNU IceCat releases <gnuzilla-dev@gnu.org>
+  "0x3C76EED7D7E04784"
 )
 function import_pgp_keys() {
   local URL
