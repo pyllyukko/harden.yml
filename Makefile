@@ -77,6 +77,10 @@ $(foreach l,$(bits),$(eval $(call make-moduli-candidates-target,$l)))
 /etc/ssh/ssh_host_ed25519_key:
 	/usr/bin/ssh-keygen -t ed25519 -f $@ -N ''
 
+numbits = 4096
+dh-$(numbits).pem:
+	openssl dhparam -out $@ $(numbits)
+
 /etc/audit/audit.rules: FORCE
 	/sbin/augenrules
 
