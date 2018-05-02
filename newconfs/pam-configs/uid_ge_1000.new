@@ -1,0 +1,6 @@
+Name: Disallow logins from UIDs less than 1000
+Default: yes
+Priority: 257
+Auth-Type: Primary
+Auth:
+	requisite			pam_succeed_if.so uid >= 1000 quiet_success
