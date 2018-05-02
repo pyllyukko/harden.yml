@@ -3,4 +3,5 @@ Default: yes
 Priority: 257
 Auth-Type: Primary
 Auth:
+	[success=1 default=ignore]	pam_succeed_if.so uid eq 0 service = login quiet
 	requisite			pam_succeed_if.so uid >= 1000 quiet_success
