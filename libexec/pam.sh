@@ -46,11 +46,8 @@ function configure_pam() {
   # Debian based
   if [ -d /usr/share/pam-configs ]
   then
-    for file in "tally2" "access" "faildelay" "polyinstation" "lastlog" "umask" "pwhistory"
-    do
-      echo "[+] creating ${file} pam-config"
-      make -f "${CWD}/Makefile" "/usr/share/pam-configs/${file}"
-    done
+    echo "[+] creating pam-configs"
+    make -f "${CWD}/Makefile" pam-configs
 
     echo '[+] updating /etc/pam.d/common-*'
     pam-auth-update --package
