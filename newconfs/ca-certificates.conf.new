@@ -5,6 +5,7 @@ mozilla/COMODO_RSA_Certification_Authority.crt
 mozilla/Deutsche_Telekom_Root_CA_2.crt
 mozilla/DigiCert_High_Assurance_EV_Root_CA.crt
 mozilla/DigiCert_Global_Root_CA.crt
+mozilla/DigiCert_Global_Root_G2.crt
 mozilla/Entrust.net_Premium_2048_Secure_Server_CA.crt
 mozilla/Equifax_Secure_CA.crt
 mozilla/GeoTrust_Global_CA.crt
