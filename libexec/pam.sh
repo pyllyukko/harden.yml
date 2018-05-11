@@ -2,15 +2,17 @@
 function configure_core_dumps() {
   # slackware uses /etc/limits and is configured through limits.new file
   local file="${ROOTDIR:-/}etc/security/limits.conf"
+  local ret
   print_topic "configuring core dumps"
   check_for_conf_file "${file}" || return 1
   echo "[+] ${file} found"
   sed_with_diff 's/^#\?\*\( \+\)soft\( \+\)core\( \+\)0$/*\1hard\2core\30/' "${file}"
+  ret=${?}
   (( ${LYNIS_TESTS} )) && {
     local LYNIS_SCORE_AFTER=$( get_lynis_hardening_index kernel )
     check_lynis_tests KRNL-5820
   }
-  return ${?}
+  return ${ret}
   # TODO: nproc - max number of processes
 } # configure_core_dumps()
 ################################################################################

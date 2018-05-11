@@ -19,6 +19,7 @@ logdir=$( mktemp -p /tmp -d harden.sh.XXXXXX ) || exit 1
 . ${CWD}/../libexec/utils.sh || exit 1
 ROOTDIR="./"
 DISTRO="debian"
+LYNIS_TESTS=0
 
 . ${CWD}/../libexec/pam.sh || exit 1
 configure_core_dumps
