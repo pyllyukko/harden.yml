@@ -1,6 +1,7 @@
 Name: Polyinstantiated directories
 Default: yes
 Priority: 0
+Conflicts: tmpdir
 Session-Type: Additional
 Session:
 	required	pam_namespace.so
