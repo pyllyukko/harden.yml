@@ -80,6 +80,17 @@ numbits = 4096
 dh-$(numbits).pem:
 	openssl dhparam -out $@ $(numbits)
 
+aircrack-profiles := usr.bin.aircrack-ng usr.bin.airgraph-ng usr.bin.ivstools usr.sbin.airbase-ng usr.sbin.airodump-ng usr.sbin.easside-ng usr.bin.airdecap-ng usr.bin.airolib-ng usr.bin.kstats usr.sbin.aireplay-ng usr.sbin.airserv-ng usr.sbin.tkiptun-ng usr.bin.airdecloak-ng usr.bin.buddy-ng usr.bin.packetforge-ng usr.sbin.airmon-ng usr.sbin.airtun-ng usr.sbin.wesside-ng
+define make-aircrack-apparmor-target
+aircrack-apparmor-profiles += /etc/apparmor.d/$1
+/etc/apparmor.d/$1: | /etc/apparmor.d/
+	wget -nv -O $$@ https://raw.githubusercontent.com/aircrack-ng/aircrack-ng/master/apparmor/$1
+endef
+$(foreach l,$(aircrack-profiles),$(eval $(call make-aircrack-apparmor-target,$l)))
+
+.PHONY: aircrack-apparmor-profiles
+aircrack-apparmor-profiles: $(aircrack-apparmor-profiles)
+
 /etc/audit/audit.rules: FORCE
 	/sbin/augenrules
 
