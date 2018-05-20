@@ -53,7 +53,6 @@ pam-configs: /usr/share/pam-configs/tally2 /usr/share/pam-configs/access /usr/sh
 FORCE:
 
 define make-moduli-candidates-target
-$1: /etc/ssh/moduli-$1.candidates
 /etc/ssh/moduli-$1.candidates:
 	ssh-keygen -G $$@ -b $1
 endef
