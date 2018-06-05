@@ -178,6 +178,8 @@ declare -ra PGP_KEYS=(
   "0x833C6010D52BBB6B"
   # GNU IceCat releases <gnuzilla-dev@gnu.org>
   "0x3C76EED7D7E04784"
+  # Nick Clifton (Chief Binutils Maintainer)
+  "0x13FCEF89DD9E3C4F"
 )
 function import_pgp_keys() {
   local URL
