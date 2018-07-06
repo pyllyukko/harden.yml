@@ -94,6 +94,9 @@ aircrack-apparmor-profiles: $(aircrack-apparmor-profiles)
 /etc/audit/audit.rules: FORCE
 	/sbin/augenrules
 
+/etc/apparmor.d/usr.bin.irssi: | /etc/apparmor.d/
+	wget -nv -O $@ https://gitlab.com/apparmor/apparmor-profiles/raw/master/ubuntu/18.10/usr.bin.irssi
+
 #/etc/%: $(CWD)/newconfs/% FORCE
 #	/usr/bin/install -m 600 $< $@
 
