@@ -180,6 +180,8 @@ declare -ra PGP_KEYS=(
   "0x3C76EED7D7E04784"
   # Nick Clifton (Chief Binutils Maintainer)
   "0x13FCEF89DD9E3C4F"
+  # apparmor@lists.ubuntu.com
+  "0x6689E64E3D3664BB"
 )
 function import_pgp_keys() {
   local URL
