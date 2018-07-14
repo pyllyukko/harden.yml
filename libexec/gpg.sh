@@ -222,7 +222,12 @@ function import_pgp_keys() {
         --logger-fd 1 \
         --keyring "${GPG_KEYRING}" --no-default-keyring \
         --recv-keys "${PGP_KEY}" &>>"${logdir}/pgp_keys.txt"
-      echo -n '.'
+      if [ ${?} -eq 0 ]
+      then
+	echo -n '.'
+      else
+	echo -n '!'
+      fi
     done
     echo -n $'\n'
   else
@@ -278,7 +283,12 @@ function import_pgp_keys() {
         --keyserver-options ca-cert-file=${CADIR}/${SKS_CA} \
         --keyring "${GPG_KEYRING}" --no-default-keyring \
         --recv-keys "${PGP_KEY}" &>>"${logdir}/pgp_keys.txt"
-      echo -n '.'
+      if [ ${?} -eq 0 ]
+      then
+	echo -n '.'
+      else
+	echo -n '!'
+      fi
     done
     echo -n $'\n'
   fi
