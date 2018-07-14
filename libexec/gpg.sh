@@ -182,6 +182,8 @@ declare -ra PGP_KEYS=(
   "0x13FCEF89DD9E3C4F"
   # apparmor@lists.ubuntu.com
   "0x6689E64E3D3664BB"
+  # research@sourcefire.com (ClamAV)
+  "0xF13F9E16BCA5BFAD"
 )
 function import_pgp_keys() {
   local URL
