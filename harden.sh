@@ -273,6 +273,7 @@ function lock_system_accounts() {
     if [ ${uid} -le ${SYS_UID_MAX:-999} ] && \
       [ ${NAME} != 'root' ] && \
       [ ${NAME} != 'Debian-gdm' ] && \
+      [ ${NAME} != 'lightdm' ] && \
       [ ${NAME} != 'daemon' ]
     then
       printf "%-17s (UID=%s)\n" "${NAME}" "${uid}"
