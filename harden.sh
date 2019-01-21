@@ -808,6 +808,25 @@ function gnome_settings() {
   gsettings set org.gnome.desktop.privacy recent-files-max-age  1
   # TODO: Clear Recent History
   gsettings set org.gnome.system.location enabled false
+
+  # https://wiki.gnome.org/Projects/Tracker/
+  # in addition to this, you might want to run "tracker reset --hard"
+  # "Monitor file and directory changes"
+  gsettings set org.freedesktop.Tracker.Miner.Files enable-monitors false
+  # "Index content of files found"
+  gsettings set org.freedesktop.Tracker.FTS max-words-to-index 0
+  # "Enable when running on battery"
+  gsettings set org.freedesktop.Tracker.Miner.Files index-on-battery false
+
+  shopt -s nullglob
+  # this still leaves tracker-store, which is started from D-Bus.
+  for file in /etc/xdg/autostart/tracker-*.desktop
+  do
+    if ! grep '^Hidden=true$' "${file}"
+    then
+      sed_with_diff '$a Hidden=true' "${file}"
+    fi
+  done
 } # gnome_settings()
 ################################################################################
 function create_limited_ca_list() {
@@ -1186,6 +1205,7 @@ function usage() {
 	  		enable_sysstat
 	  		file_permissions
 	  		file_permissions2
+	  		gnome_settings
 	  		lock_system_accounts
 	  		password_policies
 	  		restrict_cron
@@ -1514,6 +1534,7 @@ do
 	"enable_sysstat")	enable_sysstat			;;
 	"file_permissions")	file_permissions		;;
 	"file_permissions2")	file_permissions2		;;
+	"gnome_settings")	gnome_settings			;;
 	"lock_system_accounts")	lock_system_accounts		;;
 	"password_policies")	configure_password_policies	;;
 	"restrict_cron")	restrict_cron			;;
