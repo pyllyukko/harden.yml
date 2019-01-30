@@ -184,6 +184,8 @@ declare -ra PGP_KEYS=(
   "0x6689E64E3D3664BB"
   # research@sourcefire.com (ClamAV)
   "0xF13F9E16BCA5BFAD"
+  # OpenWrt Release Builder (18.06 Signing Key)
+  "0x0F20257417E1CE16"
 )
 function import_pgp_keys() {
   local URL
