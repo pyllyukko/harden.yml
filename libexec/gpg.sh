@@ -32,6 +32,8 @@ declare -ra PGP_KEYS=(
   "0x8050C35A6980F8B0"
   # Felipe "Zimmerle" Costa (ModSecurity)
   "0xE6DFB08CE8B11277"
+  # Victor Ribeiro Hora (ModSecurity)
+  "0x10D549BE676FDF165CC0A017E4BCD2EA82E67A45"
   # Karl Berry <karl@freefriends.org> (gawk)
   "0x9DEB46C0D679F6CF"
   # Fabian Keil, lead developer of privoxy
