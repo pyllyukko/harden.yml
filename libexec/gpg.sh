@@ -142,6 +142,7 @@ declare -ra PGP_KEYS=(
   "0xF6947DAB68E7B931"
   # PuTTY Releases
   "0x9DFE2648B43434E4"
+  "0xE27394ACA3F9D9049522E0546289A25F4AE8DA82"
   # Hashcat signing key
   "0x3C17DA8B8A16544F"
   # Milan Broz <gmazyland@gmail.com> (cryptsetup)
