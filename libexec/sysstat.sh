@@ -14,6 +14,9 @@ function enable_sysstat() {
     echo "[+] enabling sysstat through /etc/default/sysstat"
     sed_with_diff 's/^ENABLED="false"$/ENABLED="true"/' ${ROOTDIR:-/}etc/default/sysstat
     ((ret|=${?}))
+  else
+    echo "[-] couldn't find ${SA_RC} or /etc/default/sysstat" 1>&2
+    ret=1
   fi
   if [ -f ${ROOTDIR:-/}etc/sysstat/sysstat ]
   then
