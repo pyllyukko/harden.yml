@@ -1381,7 +1381,7 @@ function configure_apt() {
     if [ -n "${suite}" ]
     then
       echo '[+] configuring suite to /etc/default/debsecan'
-      sed -i "s/^SUITE=.*\$/SUITE=${suite}/" /etc/default/debsecan
+      sed_with_diff "s/^SUITE=.*\$/SUITE=${suite}/" /etc/default/debsecan
     fi
   fi
 } # configure_apt()
