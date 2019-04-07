@@ -1,4 +1,16 @@
 #!/bin/bash
+declare -r INETDCONF="/etc/inetd.conf"
+# from CIS 2.1 Disable Standard Services
+declare -a INETD_SERVICES=(echo discard daytime chargen time ftp telnet comsat shell login exec talk ntalk klogin eklogin kshell krbupdate kpasswd pop imap uucp tftp bootps finger systat netstat auth netbios swat rstatd rusersd walld)
+# ...plus some extras
+INETD_SERVICES+=(pop3 imap2 netbios-ssn netbios-ns)
+# TODO: http://wiki.apparmor.net/index.php/Distro_debian#Tuning_logs
+declare -rA AUDITD_CONFIG=(
+  ["space_left_action"]="email"
+  ["action_mail_acct"]="root"
+  ["max_log_file_action"]="keep_logs"
+)
+
 function disable_inetd_services() {
   # CIS 2.1 Disable Standard Services
   local SERVICE

@@ -81,23 +81,16 @@ if [ -f /etc/os-release ]
 then
   DISTRO=$( sed -n '/^ID=/s/^ID="\?\([^"]*\)"\?$/\1/p' /etc/os-release )
 fi
-# these are not declared as integers cause then the ${ ... :-DEFAULT } syntax won't work(?!)
-declare -r UID_MIN=$(		awk '/^UID_MIN/{print$2}'	/etc/login.defs 2>/dev/null )
-declare -r UID_MAX=$(		awk '/^UID_MAX/{print$2}'	/etc/login.defs 2>/dev/null )
-declare -r SYS_UID_MAX=$(	awk '/^SYS_UID_MAX/{print$2}'	/etc/login.defs 2>/dev/null )
 declare -r WWWROOT="/var/www"
 declare -i ETC_CHANGED=0
 declare -r RBINDIR="/usr/local/rbin"
-declare -r INETDCONF="/etc/inetd.conf"
 declare -r CADIR="/usr/share/ca-certificates/local"
 declare -r SKS_CA="sks-keyservers.netCA.pem"
-declare -a NAMES=( $( cut -d: -f1 /etc/passwd ) )
 declare    LYNIS_TESTS=1
 if ! hash lynis
 then
   LYNIS_TESTS=0
 fi
-auditPATH='/etc/audit'
 logdir=$( mktemp -p /tmp -d harden.sh.XXXXXX )
 #declare -rA grsec_groups=(
 #  ["grsec_proc"]=1001
@@ -125,17 +118,6 @@ declare -rA PWQUALITY_SETTINGS=(
   ["ocredit"]="-1"
   ["lcredit"]="-1"
 )
-# TODO: http://wiki.apparmor.net/index.php/Distro_debian#Tuning_logs
-declare -rA AUDITD_CONFIG=(
-  ["space_left_action"]="email"
-  ["action_mail_acct"]="root"
-  ["max_log_file_action"]="keep_logs"
-)
-declare -rA LIGHTDM_CONFIG=(
-  ["greeter-hide-users"]="true"
-  # https://freedesktop.org/wiki/Software/LightDM/CommonConfiguration/#disablingguestlogin
-  ["allow-guest"]="false"
-)
 declare -rA FILE_PERMS=(
   ["/boot/grub/grub.cfg"]="og-rwx"
   ["/etc/ssh/sshd_config"]="600"
@@ -144,29 +126,7 @@ declare -rA FILE_PERMS=(
   ["/root/.ssh"]="700"
   ["/etc/krb5.keytab"]="600"
 )
-
-# NOLOGIN(8): "It is intended as a replacement shell field for accounts that have been disabled."
-# Slackware default location:
-if [ -x /sbin/nologin ]
-then
-  DENY_SHELL="/sbin/nologin"
-# Debian default location:
-elif [ -x /usr/sbin/nologin ]
-then
-  DENY_SHELL="/usr/sbin/nologin"
-else
-  echo "[-] warning: can't find nologin!" 1>&2
-  DENY_SHELL=
-fi
-# man FAILLOG(8)
-declare -i FAILURE_LIMIT=5
 declare -r CERTS_DIR="/etc/ssl/certs"
-
-# from CIS 2.1 Disable Standard Services
-declare -a INETD_SERVICES=(echo discard daytime chargen time ftp telnet comsat shell login exec talk ntalk klogin eklogin kshell krbupdate kpasswd pop imap uucp tftp bootps finger systat netstat auth netbios swat rstatd rusersd walld)
-
-# ...plus some extras
-INETD_SERVICES+=(pop3 imap2 netbios-ssn netbios-ns)
 
 # from CIS Apache HTTP Server 2.4 Benchmark v1.1.0 - 12-03-2013
 # 1.2.3-8

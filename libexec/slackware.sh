@@ -39,6 +39,7 @@ SERVICES_WHITELIST=(
   /etc/rc.d/rc.snort
   /etc/rc.d/rc.auditd
 )
+auditPATH='/etc/audit'
 declare -r ARCH=$( /bin/uname -m )
 case "${MACHTYPE%%-*}" in
   "x86_64")	SLACKWARE="slackware64"	;;

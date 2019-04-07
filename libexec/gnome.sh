@@ -1,4 +1,9 @@
 #!/bin/bash
+declare -rA LIGHTDM_CONFIG=(
+  ["greeter-hide-users"]="true"
+  # https://freedesktop.org/wiki/Software/LightDM/CommonConfiguration/#disablingguestlogin
+  ["allow-guest"]="false"
+)
 function gnome_settings() {
   local file
   # Settings -> Privacy -> Usage & History -> Recently Used

@@ -1,4 +1,25 @@
 #!/bin/bash
+# NOLOGIN(8): "It is intended as a replacement shell field for accounts that have been disabled."
+# Slackware default location:
+if [ -x /sbin/nologin ]
+then
+  DENY_SHELL="/sbin/nologin"
+# Debian default location:
+elif [ -x /usr/sbin/nologin ]
+then
+  DENY_SHELL="/usr/sbin/nologin"
+else
+  echo "[-] warning: can't find nologin!" 1>&2
+  DENY_SHELL=
+fi
+# man FAILLOG(8)
+declare -i FAILURE_LIMIT=5
+declare -a NAMES=( $( cut -d: -f1 /etc/passwd ) )
+# these are not declared as integers cause then the ${ ... :-DEFAULT } syntax won't work(?!)
+declare -r UID_MIN=$(		awk '/^UID_MIN/{print$2}'	/etc/login.defs 2>/dev/null )
+declare -r UID_MAX=$(		awk '/^UID_MAX/{print$2}'	/etc/login.defs 2>/dev/null )
+declare -r SYS_UID_MAX=$(	awk '/^SYS_UID_MAX/{print$2}'	/etc/login.defs 2>/dev/null )
+################################################################################
 function user_accounts() {
   # NOTE: http://refspecs.freestandards.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/usernames.html
   #
@@ -313,4 +334,3 @@ function set_failure_limits() {
   done
   return ${?}
 } # set_failure_limits()
-################################################################################
