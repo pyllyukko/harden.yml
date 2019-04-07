@@ -486,42 +486,58 @@ function usage() {
 	  -c		create limited CA conf
 
 	  -f function	run a function. available functions:
-	  		aa_enforce
-	  		configure_apt
-	  		configure_modprobe.d
+
+	  		authentication & authorization:
+
+	  		user_accounts
+	  		lock_system_accounts
+	  		create_ftpusers
+	  		set_failure_limits
+	  		password_policies
+	  		homedir_perms
 	  		configure_pam
 	  		configure_securetty
-	  		configure_umask
-	  		configure_shells
-	  		configure_tcp_wrappers
-	  		core_dumps
-	  		create_banners
-	  		disable_ipv6
+
+	  		services:
+
 	  		disable_unnecessary_systemd_services
-	  		enable_apparmor
-	  		enable_bootlog
-	  		enable_sysstat
-	  		file_permissions
-	  		file_permissions2
-	  		gnome_settings
-	  		lock_system_accounts
-	  		password_policies
+	  		disable_unnecessary_services
 	  		restrict_cron
 	  		sshd_config
 	  		ssh_config
-	  		sysctl_harden
-	  		homedir_perms
-	  		disable_gdm3_user_list
-	  		set_usb_authorized_default
-	  		remove_shells
-	  		create_ftpusers
 	  		disable_inetd_services
-	  		set_failure_limits
-	  		harden_fstab (you can also run "make /etc/fstab.new")
-	  		user_accounts
 	  		configure_basic_auditing
-	  		disable_unnecessary_services
 	  		enable_pacct
+	  		enable_sysstat
+
+	  		GUI:
+
+	  		gnome_settings
+	  		disable_gdm3_user_list
+
+	  		network:
+
+	  		configure_tcp_wrappers
+	  		disable_ipv6
+
+	  		others:
+
+	  		aa_enforce
+	  		configure_apt
+	  		configure_modprobe.d
+	  		configure_umask
+	  		configure_shells
+	  		remove_shells
+	  		core_dumps
+	  		create_banners
+	  		enable_apparmor
+	  		enable_bootlog
+	  		file_permissions
+	  		file_permissions2
+	  		sysctl_harden
+	  		set_usb_authorized_default
+	  		harden_fstab (you can also run "make /etc/fstab.new")
+
 	  -g		import Slackware, SBo & other PGP keys to trustedkeys.gpg keyring
 	        	(you might also want to run this as a regular user)
 	  -h		this help
