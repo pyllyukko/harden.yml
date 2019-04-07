@@ -297,6 +297,7 @@ function configure_basic_auditing() {
 } # configure_basic_auditing()
 ################################################################################
 function enable_pacct() {
+  local svc_name
   print_topic "enabling process accounting"
   if ! hash accton 2>/dev/null
   then
@@ -311,12 +312,27 @@ function enable_pacct() {
     make -f ${CWD}/Makefile /var/log/pacct
   elif [ -x /bin/systemctl ]
   then
-    # TODO: CentOS / RH
-    if systemctl is-enabled acct
+    if [ "${DISTRO}" = "debian" ]
+    then
+      svc_name="acct"
+    elif [ "${DISTRO}" = "centos" ]
+    then
+      svc_name="psacct"
+    else
+      echo "[-] couldn't determine process accounting service name" 1>&2
+      return 1
+    fi
+    if systemctl is-enabled "${svc_name}"
     then
       echo '[+] process accounting already enabled'
     else
-      systemctl enable acct && echo '[+] process accounting enabled via systemd' || '[-] failed to enable process accounting'
+      if systemctl enable "${svc_name}"
+      then
+        echo '[+] process accounting enabled via systemd'
+      else
+        echo '[-] failed to enable process accounting' 1>&2
+        return 1
+      fi
     fi
   fi
 } # enable_pacct()
