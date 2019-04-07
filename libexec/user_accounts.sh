@@ -193,34 +193,6 @@ function lock_account() {
   return 0
 } # lock_account()
 ################################################################################
-function create_additional_user_accounts() {
-  # see http://slackbuilds.org/uid_gid.txt
-
-  groupadd -g 206 -r privoxy
-  useradd  -u 206 -g privoxy -e 1970-01-02 -M -d /dev/null -s ${DENY_SHELL} -r privoxy
-
-  # this is also used by metasploit
-  groupadd -g 209 -r postgres
-  useradd  -u 209 -e 1970-01-02 -g 209 -s ${DENY_SHELL} -M -d /var/lib/pgsql -r postgres
-
-  # http://slackbuilds.org/repository/14.0/system/clamav/
-  groupadd -g 210 -r clamav
-  useradd  -u 210 -e 1970-01-02 -M -d /var/lib/clamav -s ${DENY_SHELL} -g clamav -r clamav
-
-  # ntop 212
-
-  #groupadd -g 213 -r nagios
-  #useradd -u 213 -d /dev/null -s /sbin/nologin -g nagios -r nagios
-  #usermod -G nagios -a apache
-
-  groupadd -g 220 -r tor
-  useradd  -u 220 -g 220 -e 1970-01-02 -c "The Onion Router" -M -d /var/lib/tor -s ${DENY_SHELL} tor
-
-  groupadd -g 234 -r kismet
-
-  return
-} # create_additional_user_accounts()
-################################################################################
 function user_home_directories_permissions() {
   # this has been split into it's own function, since it relates to both
   # "hardening categories", user accounts & file permissions.

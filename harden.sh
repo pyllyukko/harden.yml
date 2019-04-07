@@ -553,7 +553,6 @@ function usage() {
 	          - creates hardened fstab.new
 	          - creates limited CA list
 	          - lock system accounts
-	  -U	create additional user accounts (SBo related)
 
 	Make targets:
 
@@ -742,7 +741,7 @@ fi
 
 read_password_policy
 
-while getopts "aAbcf:ghIL:mp:P:qU" OPTION
+while getopts "aAbcf:ghIL:mp:P:q" OPTION
 do
   case "${OPTION}" in
     "a") configure_apache		;;
@@ -886,7 +885,6 @@ do
       esac
     ;;
     "q") quick_harden			;;
-    "U") create_additional_user_accounts ;;
   esac
 done
 
