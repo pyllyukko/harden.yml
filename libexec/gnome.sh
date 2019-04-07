@@ -1,5 +1,6 @@
 #!/bin/bash
 function gnome_settings() {
+  local file
   # Settings -> Privacy -> Usage & History -> Recently Used
   gsettings set org.gnome.desktop.privacy remember-recent-files false
   gsettings set org.gnome.desktop.privacy recent-files-max-age  1
