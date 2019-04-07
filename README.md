@@ -38,7 +38,7 @@ What does it do?
 * Configures basic auditing based on [stig.rules](https://fedorahosted.org/audit/browser/trunk/contrib/stig.rules) if audit is installed
   * NOTE: non-PAM systems (namely Slackware) don't set the ```loginuid``` properly, so some of the rules don't work when they have ```-F auid!=4294967295```
 * Enables system accounting ([sysstat][10])
- * Sets it's log retention to 99999 days (the logs are really small, so it doesn't eat up disk space)
+  * Sets it's log retention to 99999 days (the logs are really small, so it doesn't eat up disk space)
 * Configures password policies
   * Maximum age for password
   * Minimum age for password
