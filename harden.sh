@@ -79,7 +79,7 @@ unset file
 # determine distro
 if [ -f /etc/os-release ]
 then
-  DISTRO=$( sed -n '/^ID=/s/^ID=//p' /etc/os-release )
+  DISTRO=$( sed -n '/^ID=/s/^ID="\?\([^"]*\)"\?$/\1/p' /etc/os-release )
 fi
 # these are not declared as integers cause then the ${ ... :-DEFAULT } syntax won't work(?!)
 declare -r UID_MIN=$(		awk '/^UID_MIN/{print$2}'	/etc/login.defs 2>/dev/null )
