@@ -67,8 +67,8 @@
     - name: Configure SHA crypt rounds
       replace:
         path: /etc/login.defs
-        regexp: '^#?(SHA_CRYPT_MIN_ROUNDS)\s+[0-9]+$'
-        replace: '\1 500000'
+        regexp: '^(# ?)?(SHA_CRYPT_MIN_ROUNDS)\s+[0-9]+$'
+        replace: '\2 500000'
     - name: Configure faillog
       replace:
         path: /etc/login.defs
