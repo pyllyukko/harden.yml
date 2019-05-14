@@ -1,0 +1,82 @@
+---
+
+- hosts: localhost
+  tasks:
+    - name: Configuring fail delay
+      when: ansible_distribution == "Slackware"
+      replace:
+        path: /etc/login.defs
+        regexp: '^#?(FAIL_DELAY)\t+[0-9]+$'
+        replace: '\1\t\t20'
+    - name: Enable logging of successful logins
+      replace:
+        path: /etc/login.defs
+        regexp: '^#?(LOG_OK_LOGINS)\t+[0-9]+$'
+        replace: '\1\t\tyes'
+    - name: Enable sulog
+      replace:
+        path: /etc/login.defs
+        regexp: '^#?(SULOG_FILE)\t+.*$'
+        replace: '\1\t/var/log/sulog'
+    - name: Configure umask
+      replace:
+        path: /etc/login.defs
+        regexp: '^#?(UMASK)\t+[0-9]+$'
+        replace: '\1\t\t077'
+    - name: Configure maximum password age
+      replace:
+        path: /etc/login.defs
+        regexp: '^#?(PASS_MAX_DAYS)\t+[0-9]+$'
+        replace: '\1\t365'
+    - name: Configure minimum password age
+      replace:
+        path: /etc/login.defs
+        regexp: '^#?(PASS_MIN_DAYS)\t+[0-9]+$'
+        replace: '\1\t1'
+    - name: Configure minimum password length
+      when: ansible_distribution == "Slackware"
+      replace:
+        path: /etc/login.defs
+        regexp: '^#?(PASS_MIN_LEN)\t+[0-9]+$'
+        replace: '\1\t8'
+    - name: Configure password warn age
+      replace:
+        path: /etc/login.defs
+        regexp: '^#?(PASS_WARN_AGE)\t+[0-9]+$'
+        replace: '\1\t30'
+    - name: Configure su wheel only
+      replace:
+        path: /etc/login.defs
+        regexp: '^#?(SU_WHEEL_ONLY)\t+[0-9]+$'
+        replace: '\1\tyes'
+    - name: Configure chfn
+      replace:
+        path: /etc/login.defs
+        regexp: '^#?(CHFN_RESTRICT)\t+.*$'
+        replace: '\1\t\trwh'
+    - name: Configure encrypt method
+      replace:
+        path: /etc/login.defs
+        regexp: '^#?(ENCRYPT_METHOD)\s+.*$'
+        replace: '\1 SHA512'
+    - name: Configure default home
+      replace:
+        path: /etc/login.defs
+        regexp: '^#?(DEFAULT_HOME)\s+.*$'
+        replace: '\1\tno'
+    - name: Configure SHA crypt rounds
+      replace:
+        path: /etc/login.defs
+        regexp: '^#?(SHA_CRYPT_MIN_ROUNDS)\s+[0-9]+$'
+        replace: '\1 500000'
+    - name: Configure faillog
+      replace:
+        path: /etc/login.defs
+        regexp: '^#?(FAILLOG_ENAB)\s+.*$'
+        replace: '\1\t\tyes'
+    - name: Configure create home
+      when: ansible_distribution == "Slackware"
+      replace:
+        path: /etc/login.defs
+        regexp: '^#?(CREATE_HOME\s+).*$'
+        replace: '\1yes'
