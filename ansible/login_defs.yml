@@ -6,53 +6,53 @@
       when: ansible_distribution == "Slackware"
       replace:
         path: /etc/login.defs
-        regexp: '^#?(FAIL_DELAY)\t+[0-9]+$'
+        regexp: '^#?(FAIL_DELAY)\s+[0-9]+$'
         replace: '\1\t\t20'
     - name: Enable logging of successful logins
       replace:
         path: /etc/login.defs
-        regexp: '^#?(LOG_OK_LOGINS)\t+[0-9]+$'
+        regexp: '^#?(LOG_OK_LOGINS)\s+.*$'
         replace: '\1\t\tyes'
     - name: Enable sulog
       replace:
         path: /etc/login.defs
-        regexp: '^#?(SULOG_FILE)\t+.*$'
+        regexp: '^#?(SULOG_FILE)\s+.*$'
         replace: '\1\t/var/log/sulog'
     - name: Configure umask
       replace:
         path: /etc/login.defs
-        regexp: '^#?(UMASK)\t+[0-9]+$'
+        regexp: '^#?(UMASK)\s+[0-9]+$'
         replace: '\1\t\t077'
     - name: Configure maximum password age
       replace:
         path: /etc/login.defs
-        regexp: '^#?(PASS_MAX_DAYS)\t+[0-9]+$'
+        regexp: '^#?(PASS_MAX_DAYS)\s+[0-9]+$'
         replace: '\1\t365'
     - name: Configure minimum password age
       replace:
         path: /etc/login.defs
-        regexp: '^#?(PASS_MIN_DAYS)\t+[0-9]+$'
+        regexp: '^#?(PASS_MIN_DAYS)\s+[0-9]+$'
         replace: '\1\t1'
     - name: Configure minimum password length
       when: ansible_distribution == "Slackware"
       replace:
         path: /etc/login.defs
-        regexp: '^#?(PASS_MIN_LEN)\t+[0-9]+$'
+        regexp: '^#?(PASS_MIN_LEN)\s+[0-9]+$'
         replace: '\1\t8'
     - name: Configure password warn age
       replace:
         path: /etc/login.defs
-        regexp: '^#?(PASS_WARN_AGE)\t+[0-9]+$'
+        regexp: '^#?(PASS_WARN_AGE)\s+[0-9]+$'
         replace: '\1\t30'
     - name: Configure su wheel only
       replace:
         path: /etc/login.defs
-        regexp: '^#?(SU_WHEEL_ONLY)\t+[0-9]+$'
+        regexp: '^#?(SU_WHEEL_ONLY)\s+[0-9]+$'
         replace: '\1\tyes'
     - name: Configure chfn
       replace:
         path: /etc/login.defs
-        regexp: '^#?(CHFN_RESTRICT)\t+.*$'
+        regexp: '^#?(CHFN_RESTRICT)\s+.*$'
         replace: '\1\t\trwh'
     - name: Configure encrypt method
       replace:
