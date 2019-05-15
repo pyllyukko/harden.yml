@@ -1,97 +1,43 @@
 ---
 
 - hosts: localhost
+  vars:
+    defs_common:
+      LOG_OK_LOGINS: "yes"
+      UMASK: "077"
+      SULOG_FILE: "/var/log/sulog"
+      PASS_MAX_DAYS: "365"
+      PASS_MIN_DAYS: "7"
+      PASS_WARN_AGE: "30"
+      FAILLOG_ENAB: "yes"
+      SHA_CRYPT_MIN_ROUNDS: 500000
+      ENCRYPT_METHOD: "SHA512"
+      CHFN_RESTRICT: "rwh"
+      DEFAULT_HOME: "no"
+    defs_slackware:
+      LASTLOG_ENAB: "yes"
+      PASS_MIN_LEN: "8"
+      FAIL_DELAY: "20"
+      CREATE_HOME: "yes"
+      SU_WHEEL_ONLY: "yes"
+      PORTTIME_CHECKS_ENAB: "yes"
+      NOLOGINS_FILE: "/etc/nologin"
+      CHFN_AUTH: "yes"
   tasks:
-    - name: Configuring fail delay
+    - name: Configure shadow password suite (common)
+      become: yes
+      replace:
+        path: /etc/login.defs
+        regexp: '^(# ?)?({{ item.key }}\s+)[^\s]+$'
+        replace: '\g<2>{{ item.value }}'
+        validate: '/bin/grep "^{{ item.key }}\s\+{{ item.value }}$" %s'
+      with_dict: "{{ defs_common }}"
+    - name: Configure shadow password suite (Slackware specific)
+      become: yes
       when: ansible_distribution == "Slackware"
       replace:
         path: /etc/login.defs
-        regexp: '^#?(FAIL_DELAY)\s+[0-9]+$'
-        replace: '\1\t\t20'
-        validate: '/bin/grep -P "^FAIL_DELAY\t20$" %s'
-    - name: Enable logging of successful logins
-      replace:
-        path: /etc/login.defs
-        regexp: '^#?(LOG_OK_LOGINS)\s+.*$'
-        replace: '\1\t\tyes'
-        validate: '/bin/grep -P "^LOG_OK_LOGINS\t\tyes$" %s'
-    - name: Enable sulog
-      replace:
-        path: /etc/login.defs
-        regexp: '^#?(SULOG_FILE)\s+.*$'
-        replace: '\1\t/var/log/sulog'
-        validate: '/bin/grep -P "^SULOG_FILE\t/var/log/sulog$" %s'
-    - name: Configure umask
-      replace:
-        path: /etc/login.defs
-        regexp: '^#?(UMASK)\s+[0-9]+$'
-        replace: '\1\t\t077'
-        validate: '/bin/grep -P "^UMASK\t\t077$" %s'
-    - name: Configure maximum password age
-      replace:
-        path: /etc/login.defs
-        regexp: '^#?(PASS_MAX_DAYS)\s+[0-9]+$'
-        replace: '\1\t365'
-        validate: '/bin/grep -P "^PASS_MAX_DAYS\t365$" %s'
-    - name: Configure minimum password age
-      replace:
-        path: /etc/login.defs
-        regexp: '^#?(PASS_MIN_DAYS)\s+[0-9]+$'
-        replace: '\1\t1'
-        validate: '/bin/grep -P "^PASS_MIN_DAYS\t1$" %s'
-    - name: Configure minimum password length
-      when: ansible_distribution == "Slackware"
-      replace:
-        path: /etc/login.defs
-        regexp: '^#?(PASS_MIN_LEN)\s+[0-9]+$'
-        replace: '\1\t8'
-        validate: '/bin/grep -P "^PASS_MIN_LEN\t8$" %s'
-    - name: Configure password warn age
-      replace:
-        path: /etc/login.defs
-        regexp: '^#?(PASS_WARN_AGE)\s+[0-9]+$'
-        replace: '\1\t30'
-        validate: '/bin/grep -P "^PASS_WARN_AGE\t30$" %s'
-    - name: Configure su wheel only
-      replace:
-        path: /etc/login.defs
-        regexp: '^#?(SU_WHEEL_ONLY)\s+[0-9]+$'
-        replace: '\1\tyes'
-        validate: '/bin/grep -P "^SU_WHELL_ONLY\tyes$" %s'
-    - name: Configure chfn
-      replace:
-        path: /etc/login.defs
-        regexp: '^#?(CHFN_RESTRICT)\s+.*$'
-        replace: '\1\t\trwh'
-        validate: '/bin/grep -P "^CHFN_RESTRICT\t\trwh$" %s'
-    - name: Configure encrypt method
-      replace:
-        path: /etc/login.defs
-        regexp: '^#?(ENCRYPT_METHOD)\s+.*$'
-        replace: '\1 SHA512'
-        validate: '/bin/grep "^ENCRYPT_METHOD SHA512$" %s'
-    - name: Configure default home
-      replace:
-        path: /etc/login.defs
-        regexp: '^#?(DEFAULT_HOME)\s+.*$'
-        replace: '\1\tno'
-        validate: '/bin/grep -P "^DEFAULT_HOME\tno$" %s'
-    - name: Configure SHA crypt rounds
-      replace:
-        path: /etc/login.defs
-        regexp: '^(# ?)?(SHA_CRYPT_MIN_ROUNDS)\s+[0-9]+$'
-        replace: '\2 500000'
-        validate: '/bin/grep "^SHA_CRYPT_MIN_ROUNDS 500000$" %s'
-    - name: Configure faillog
-      replace:
-        path: /etc/login.defs
-        regexp: '^#?(FAILLOG_ENAB)\s+.*$'
-        replace: '\1\t\tyes'
-        validate: '/bin/grep -P "^FAILLOG_ENAB\t\tyes$" %s'
-    - name: Configure create home
-      when: ansible_distribution == "Slackware"
-      replace:
-        path: /etc/login.defs
-        regexp: '^#?(CREATE_HOME\s+).*$'
-        replace: '\1yes'
-        validate: '/bin/grep "^CREATE_HOME\s\+yes$" %s'
+        regexp: '^(# ?)?({{ item.key }}\s+)[^\s]+$'
+        replace: '\g<2>{{ item.value }}'
+        validate: '/bin/grep "^{{ item.key }}\s\+{{ item.value }}$" %s'
+      with_dict: "{{ defs_slackware }}"
