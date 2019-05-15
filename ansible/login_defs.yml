@@ -2,6 +2,7 @@
 
 - hosts: localhost
   vars:
+    allowed_group: users
     defs_common:
       LOG_OK_LOGINS: "yes"
       UMASK: "077"
@@ -41,3 +42,13 @@
         replace: '\g<2>{{ item.value }}'
         validate: '/bin/grep "^{{ item.key }}\s\+{{ item.value }}$" %s'
       with_dict: "{{ defs_slackware }}"
+    - name: Configure login access control table (Slackware)
+      when: ansible_distribution == "Slackware"
+      become: yes
+      blockinfile:
+        path: /etc/login.access
+        block: |
+          # Allow local login for root and specific group
+          +:root {{ allowed_group }}:LOCAL
+          # Disallow all others
+          -:ALL:ALL
