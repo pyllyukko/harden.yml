@@ -1,76 +1,39 @@
 ---
 
 - hosts: localhost
+  vars:
+    slackware_services:
+      - /etc/rc.d/rc.inetd
+      - /etc/rc.d/rc.yp
+      - /etc/rc.d/rc.cups
+      - /etc/rc.d/rc.cups-browsed
+    debian_services:
+      - avahi-daemon
+      - bluetooth
+      - cups
+      - cups-browsed
+      - atd
   tasks:
-    - name: Stop & disable avahi-daemon (Debian)
+    - name: Stop & disable unwanted services (Debian)
+      become: yes
       when: ansible_distribution == "Debian"
       service:
         name: avahi-daemon
         state: stopped
         enabled: no
-    - name: Stop & disable Bluetooth (Debian)
-      when: ansible_distribution == "Debian"
-      service:
-        name: bluetooth
-        state: stopped
-        enabled: no
-    - name: Stop & disable atd (Debian)
-      when: ansible_distribution == "Debian"
-      service:
-        name: atd
-        state: stopped
-        enabled: no
-    - name: Stop & disable CUPS (Debian)
-      when: ansible_distribution == "Debian"
-      service:
-        name: cups
-        state: stopped
-        enabled: no
-    - name: Stop & disable CUPS browsed (Debian)
-      when: ansible_distribution == "Debian"
-      service:
-        name: cups-browsed
-        enabled: no
-        state: stopped
-    - name: Stop inetd (Slackware)
+      with_items: "{{ debian_services }}"
+    - name: Stop unwanted services (Slackware)
+      become: yes
       when: ansible_distribution == "Slackware"
-      # rc.inetd returns 1 if it doesn't find processes
       ignore_errors: yes
-      command: /bin/sh /etc/rc.d/rc.inetd stop
-    - name: Disable inetd (Slackware)
+      command: /bin/sh "{{item}}" stop
+      with_items: "{{ slackware_services }}"
+    - name: Disable unwanted services (Slackware)
+      become: yes
       when: ansible_distribution == "Slackware"
       file:
-        path: /etc/rc.d/rc.inetd
+        path: "{{item}}"
         owner: root
         group: root
         mode: ugo-x
-    - name: Stop NIS (Slackware)
-      when: ansible_distribution == "Slackware"
-      command: /bin/sh /etc/rc.d/rc.yp stop
-    - name: Disable NIS (Slackware)
-      when: ansible_distribution == "Slackware"
-      file:
-        path: /etc/rc.d/rc.yp
-        owner: root
-        group: root
-        mode: ugo-x
-    - name: Stop CUPS (Slackware)
-      when: ansible_distribution == "Slackware"
-      command: /bin/sh /etc/rc.d/rc.cups stop
-    - name: Disable CUPS (Slackware)
-      when: ansible_distribution == "Slackware"
-      file:
-        path: /etc/rc.d/rc.cups
-        owner: root
-        group: root
-        mode: ugo-x
-    - name: Stop CUPS browsed (Slackware)
-      when: ansible_distribution == "Slackware"
-      command: /bin/sh /etc/rc.d/rc.cups-browsed stop
-    - name: Disable CUPS browsed (Slackware)
-      when: ansible_distribution == "Slackware"
-      file:
-        path: /etc/rc.d/rc.cups-browsed
-        owner: root
-        group: root
-        mode: ugo-x
+      with_items: "{{ slackware_services }}"
