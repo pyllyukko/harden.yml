@@ -61,6 +61,6 @@
           + : root : LOCAL
           + : daemon : cron
           - : ALL : cron
-          + : ({{ allowed_group }} : ALL
+          + : ({{ allowed_group }}) : ALL
           + : Debian-gdm lightdm : LOCAL
           - : ALL : ALL
