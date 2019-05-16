@@ -7,9 +7,9 @@
       LOG_OK_LOGINS: "yes"
       UMASK: "077"
       SULOG_FILE: "/var/log/sulog"
-      PASS_MAX_DAYS: "365"
-      PASS_MIN_DAYS: "7"
-      PASS_WARN_AGE: "30"
+      PASS_MAX_DAYS: 365
+      PASS_MIN_DAYS: 7
+      PASS_WARN_AGE: 30
       FAILLOG_ENAB: "yes"
       SHA_CRYPT_MIN_ROUNDS: 500000
       ENCRYPT_METHOD: "SHA512"
@@ -17,8 +17,8 @@
       DEFAULT_HOME: "no"
     defs_slackware:
       LASTLOG_ENAB: "yes"
-      PASS_MIN_LEN: "8"
-      FAIL_DELAY: "20"
+      PASS_MIN_LEN: 8
+      FAIL_DELAY: 20
       CREATE_HOME: "yes"
       SU_WHEEL_ONLY: "yes"
       PORTTIME_CHECKS_ENAB: "yes"
