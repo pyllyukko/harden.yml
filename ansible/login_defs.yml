@@ -52,3 +52,15 @@
           +:root {{ allowed_group }}:LOCAL
           # Disallow all others
           -:ALL:ALL
+    - name: Configure login access control table (Debian)
+      when: ansible_distribution == "Debian"
+      become: yes
+      blockinfile:
+        path: /etc/security/access.conf
+        block: |
+          + : root : LOCAL
+          + : daemon : cron
+          - : ALL : cron
+          + : ({{ allowed_group }} : ALL
+          + : Debian-gdm lightdm : LOCAL
+          - : ALL : ALL
