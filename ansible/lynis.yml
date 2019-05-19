@@ -1,24 +1,25 @@
 ---
 
-- hosts: localhost
+#- hosts: localhost
+- hosts: raspberrypi.rootforge.net
   tasks:
     # https://packages.cisofy.com/community/#debian-ubuntu
     - name: Add Lynis repository
       become: yes
-      when: ansible_distribution == "Debian"
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
       apt_repository:
         repo: deb https://packages.cisofy.com/community/lynis/deb/ stable main
         state: present
     - name: Add Lynis signing key
       become: yes
-      when: ansible_distribution == "Debian"
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
       apt_key:
         id: C80E383C3DE9F082E01391A0366C67DE91CA5D5F
         url: https://packages.cisofy.com/keys/cisofy-software-public.key
         state: present
     - name: Install Lynis
       become: yes
-      when: ansible_distribution == "Debian"
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
       apt:
         name: "{{ packages }}"
       vars:
