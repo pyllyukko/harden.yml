@@ -16,3 +16,12 @@
         id: C80E383C3DE9F082E01391A0366C67DE91CA5D5F
         url: https://packages.cisofy.com/keys/cisofy-software-public.key
         state: present
+    - name: Install Lynis
+      become: yes
+      when: ansible_distribution == "Debian"
+      apt:
+        name: "{{ packages }}"
+      vars:
+        packages:
+          - apt-transport-https
+          - lynis
