@@ -80,6 +80,10 @@
         owner: root
         group: root
         mode: 0600
+    - name: Load sysctl settings
+      ignore_errors: yes
+      become: yes
+      command: /sbin/sysctl -p /etc/sysctl.d/harden.conf
     - name: modprobe.d
       become: yes
       copy:
@@ -93,10 +97,6 @@
         - bashbunny
         - firewire
         - usb-storage
-    - name: Load sysctl settings
-      ignore_errors: yes
-      become: yes
-      command: /sbin/sysctl -p /etc/sysctl.d/harden.conf
     - name: Enable system accounting (sysstat)
       become: yes
       replace:
