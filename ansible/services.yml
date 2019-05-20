@@ -3,10 +3,10 @@
 - hosts: localhost
   vars:
     slackware_services:
-      - /etc/rc.d/rc.inetd
-      - /etc/rc.d/rc.yp
-      - /etc/rc.d/rc.cups
-      - /etc/rc.d/rc.cups-browsed
+      - inetd
+      - yp
+      - cups
+      - cups-browsed
     debian_services:
       - avahi-daemon
       - bluetooth
@@ -26,13 +26,13 @@
       become: yes
       when: ansible_distribution == "Slackware"
       ignore_errors: yes
-      command: /bin/sh "{{item}}" stop
+      command: /bin/sh /etc/rc.d/rc.{{ item }} stop
       with_items: "{{ slackware_services }}"
     - name: Disable unwanted services (Slackware)
       become: yes
       when: ansible_distribution == "Slackware"
       file:
-        path: "{{item}}"
+        path: "/etc/rc.d/rc.{{ item }}"
         owner: root
         group: root
         mode: ugo-x
