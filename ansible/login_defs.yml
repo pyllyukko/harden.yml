@@ -53,7 +53,7 @@
           # Disallow all others
           -:ALL:ALL
     - name: Configure login access control table (Debian)
-      when: ansible_distribution == "Debian"
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
       become: yes
       blockinfile:
         path: /etc/security/access.conf
