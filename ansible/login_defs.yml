@@ -80,6 +80,19 @@
         owner: root
         group: root
         mode: 0600
+    - name: modprobe.d
+      become: yes
+      copy:
+        src: "{{ playbook_dir }}/../newconfs/modprobe.d/{{ item }}.conf.new"
+        dest: /etc/modprobe.d/{{ item }}.conf
+        owner: root
+        group: root
+        mode: 0600
+      with_items:
+        - CIS
+        - bashbunny
+        - firewire
+        - usb-storage
     - name: Load sysctl settings
       ignore_errors: yes
       become: yes
