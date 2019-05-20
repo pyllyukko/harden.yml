@@ -64,6 +64,14 @@
           + : ({{ allowed_group }}) : ALL
           + : Debian-gdm lightdm : LOCAL
           - : ALL : ALL
+    - name: Disable core dumps
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+      become: yes
+      replace:
+        path: /etc/security/limits.conf
+        regexp: '^#?\*\s+soft\s+core\s+0$'
+        replace: '*               hard    core            0'
+        validate: '/bin/grep "^\* \{15\}hard \{4\}core \{12\}0$" %s'
     - name: Create harden.conf sysctl settings file
       become: yes
       copy:
