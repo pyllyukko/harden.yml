@@ -97,3 +97,10 @@
       ignore_errors: yes
       become: yes
       command: /sbin/sysctl -p /etc/sysctl.d/harden.conf
+    - name: Enable system accounting (sysstat)
+      become: yes
+      replace:
+        path: /etc/default/sysstat
+        regexp: '^ENABLED=.*$'
+        replace: 'ENABLED="true"'
+        validate: '/bin/grep "^ENABLED=\"true\"$" %s'
