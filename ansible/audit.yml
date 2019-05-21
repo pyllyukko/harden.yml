@@ -26,6 +26,15 @@
     - name: Unzip stig.rules
       become: yes
       command: /bin/gunzip -f /etc/audit/rules.d/30-stig.rules.gz
+    - name: Disable noisy STIG rules
+      become: yes
+      replace:
+        path: /etc/audit/rules.d/30-stig.rules
+        regexp: "^(-.+-F key={{ item }})$"
+        replace: '#\1'
+      with_items:
+        - perm_mod
+        - delete
     - name: Create temp dir
       tempfile:
         state: directory
