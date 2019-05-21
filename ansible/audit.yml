@@ -66,4 +66,4 @@
         dest: /etc/audit/rules.d/40-local.rules
     - name: Load the rules
       become: yes
-      command: /usr/sbin/augenrules --load
+      command: augenrules --load
