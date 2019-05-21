@@ -1,0 +1,48 @@
+---
+
+- hosts: localhost
+  vars:
+    container_name: test-container
+  tasks:
+    - name: Create a stopped container
+      lxc_container:
+        name: "{{ container_name }}"
+        container_log: true
+        template: debian
+        state: stopped
+        template_options: --release stretch
+    - name: Start a container
+      lxc_container:
+        name: "{{ container_name }}"
+        state: started
+      register: containers_info
+    - name: Wait for the network to be setup in the containers
+      when: containers_info|changed
+      pause: seconds=10
+    - name: Get containers info now that IPs are available
+      lxc_container:
+        name: "{{ container_name }}"
+      register: containers_info
+    - name: Enable password auth for SSH
+      lxc_container:
+        name: "{{ container_name }}"
+        container_command: "{{ item }}"
+      with_items:
+        - echo "root:debian" | chpasswd
+        - sed -i 's/^#\?\(PermitRootLogin\) .*$/\1 yes/' /etc/ssh/sshd_config
+        - systemctl restart ssh
+        - apt-get -y install python
+    - name: Debug
+      debug:
+        msg: "{{ containers_info }}"
+    - name: Register the hosts in the inventory
+      add_host:
+        name: "{{ containers_info.lxc_container.ips.0 }}"
+        group: "{{ container_name }}"
+
+- hosts: test-container
+  vars:
+    ansible_ssh_pass: debian
+  tasks:
+    - name: Run command in container
+      command: cat /etc/os-release
