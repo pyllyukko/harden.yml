@@ -55,6 +55,15 @@
         path: "{{ tempdir_1.path }}"
         state: absent
       when: tempdir_1.path is defined
+    - name: Remove unnecessary file
+      file:
+        state: absent
+        path: /etc/audit/rules.d/audit.rules
+    - name: Create few custom rules
+      become: yes
+      assemble:
+        src: "{{ playbook_dir }}/../newconfs/rules.d"
+        dest: /etc/audit/rules.d/40-local.rules
     - name: Load the rules
       become: yes
       command: /usr/sbin/augenrules --load
