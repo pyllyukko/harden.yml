@@ -20,6 +20,8 @@
       with_items:
         - 10-base-config.rules
         - 30-stig.rules.gz
+        - 42-injection.rules
+        - 43-module-load.rules
         - 99-finalize.rules
     - name: Unzip stig.rules
       become: yes
