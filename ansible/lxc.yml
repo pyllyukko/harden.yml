@@ -43,6 +43,11 @@
 - hosts: test-container
   vars:
     ansible_ssh_pass: debian
+    ansible_become_method: su
   tasks:
-    - name: Run command in container
-      command: cat /etc/os-release
+    - include: lynis.yml
+    - name: Run Lynis
+      command: /usr/sbin/lynis -Q
+    - name: Get Lynis score
+      command: grep 'Hardening index' /var/log/lynis.log
+      register: lynis_score_before
