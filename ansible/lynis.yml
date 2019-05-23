@@ -5,6 +5,12 @@
   apt_repository:
     repo: deb https://packages.cisofy.com/community/lynis/deb/ stable main
     state: present
+- name: Install apt-transport-https
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  apt:
+    name: apt-transport-https
+    update_cache: yes
 - name: Add Lynis signing key
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
@@ -16,8 +22,4 @@
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   apt:
-    name: "{{ packages }}"
-  vars:
-    packages:
-      - apt-transport-https
-      - lynis
+    name: lynis
