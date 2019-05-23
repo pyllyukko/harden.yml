@@ -23,3 +23,4 @@
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   apt:
     name: lynis
+    update_cache: yes
