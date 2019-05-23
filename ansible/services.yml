@@ -1,39 +1,39 @@
 ---
-
-- hosts: localhost
-  vars:
-    slackware_services:
-      - inetd
-      - yp
-      - cups
-      - cups-browsed
-    debian_services:
-      - avahi-daemon
-      - bluetooth
-      - cups
-      - cups-browsed
-      - atd
-  tasks:
-    - name: Stop & disable unwanted services (Debian)
-      become: yes
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-      service:
-        name: avahi-daemon
-        state: stopped
-        enabled: no
-      with_items: "{{ debian_services }}"
-    - name: Stop unwanted services (Slackware)
-      become: yes
-      when: ansible_distribution == "Slackware"
-      ignore_errors: yes
-      command: /bin/sh /etc/rc.d/rc.{{ item }} stop
-      with_items: "{{ slackware_services }}"
-    - name: Disable unwanted services (Slackware)
-      become: yes
-      when: ansible_distribution == "Slackware"
-      file:
-        path: "/etc/rc.d/rc.{{ item }}"
-        owner: root
-        group: root
-        mode: ugo-x
-      with_items: "{{ slackware_services }}"
+- name: Stop & disable unwanted services (Debian)
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  service:
+    name: avahi-daemon
+    state: stopped
+    enabled: no
+  with_items: "{{ debian_services }}"
+- name: Stop unwanted services (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  ignore_errors: yes
+  command: /bin/sh /etc/rc.d/rc.{{ item }} stop
+  with_items: "{{ slackware_services }}"
+- name: Disable unwanted services (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  file:
+    path: "/etc/rc.d/rc.{{ item }}"
+    owner: root
+    group: root
+    mode: ugo-x
+  with_items: "{{ slackware_services }}"
+- name: Restrict cron (cron.allow)
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  become: yes
+  file:
+    path: /etc/cron.allow
+    state: touch
+    owner: root
+    group: crontab
+    mode: '0640'
+- name: Restrict cron (cron.deny)
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  become: yes
+  file:
+    path: /etc/cron.deny
+    state: absent

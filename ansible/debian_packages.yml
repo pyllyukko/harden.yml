@@ -1,21 +1,17 @@
 ---
-
-- hosts: localhost
-  tasks:
-    - name: Install security software
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-      become: yes
-      apt:
-        name: "{{ packages }}"
-        update_cache: yes
-      vars:
-        packages:
-        - sysstat
-        - debsums
-        - bootlogd
-        - tiger
-        - iptables-persistent
-        - libpam-passwdqc
-        - libpam-tmpdir
-        - debsecan
-        - aide
+- name: Install security software
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  become: yes
+  apt:
+    name: "{{ packages }}"
+    update_cache: yes
+  vars:
+    packages:
+    - debsums
+    - bootlogd
+    - tiger
+    - iptables-persistent
+    - libpam-passwdqc
+    - libpam-tmpdir
+    - debsecan
+    - aide

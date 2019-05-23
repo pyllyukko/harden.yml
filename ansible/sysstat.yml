@@ -1,0 +1,21 @@
+---
+- name: Install sysstat
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  apt:
+    name: sysstat
+    update_cache: yes
+- name: Enable system accounting (sysstat)
+  become: yes
+  replace:
+    path: /etc/default/sysstat
+    regexp: '^ENABLED=.*$'
+    replace: 'ENABLED="true"'
+    validate: '/bin/grep "^ENABLED=\"true\"$" %s'
+- name: Configure sysstat
+  become: yes
+  replace:
+    path: /etc/sysstat/sysstat
+    regexp: '^HISTORY=[0-9]+$'
+    replace: 'HISTORY=99999'
+    validate: '/bin/grep "^HISTORY=99999$" %s'
