@@ -60,6 +60,7 @@
 - name: Create few custom rules
   become: yes
   assemble:
+    remote_src: no
     src: "{{ playbook_dir }}/../newconfs/rules.d"
     dest: /etc/audit/rules.d/40-local.rules
 - name: Load the rules
