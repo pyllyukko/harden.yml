@@ -97,6 +97,11 @@
         - bashbunny
         - firewire
         - usb-storage
+    - name: Limit the list of terminals from which root can log in (securetty)
+      become: yes
+      copy:
+        src: "{{ playbook_dir }}/../newconfs/securetty.new"
+        dest: /etc/securetty
     - name: Enable system accounting (sysstat)
       become: yes
       replace:
