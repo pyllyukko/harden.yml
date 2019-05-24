@@ -61,6 +61,7 @@
     - name: Lynis score before hardening
       debug:
         msg: "{{ lynis_score_before.stdout }}"
+    - include: ca-certs.yml
     - include: debian_packages.yml
     - include: login_defs.yml
     - include: services.yml

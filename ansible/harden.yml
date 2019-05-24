@@ -4,6 +4,7 @@
     - vars.yml
   tasks:
     - include: lynis.yml
+    - include: ca-certs.yml
     - include: debian_packages.yml
     - include: audit.yml
     - include: login_defs.yml
