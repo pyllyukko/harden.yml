@@ -45,6 +45,12 @@
     - vars.yml
   tasks:
     - include: lynis.yml
+    - name: Disable non-applicable tests in Lynis
+      blockinfile:
+        path: /etc/lynis/default.prf
+        insertafter: "^# Skip a test"
+        block: |
+          skip-test=FILE-6310
     - name: Run Lynis
       command: /usr/sbin/lynis -Q
     - name: Get Lynis score
