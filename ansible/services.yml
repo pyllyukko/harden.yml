@@ -2,6 +2,7 @@
 - name: Stop & disable unwanted services (Debian)
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  ignore_errors: yes
   service:
     name: avahi-daemon
     state: stopped
