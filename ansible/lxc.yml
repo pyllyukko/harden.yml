@@ -76,3 +76,9 @@
     - name: Lynis score
       debug:
         msg: "before={{ lynis_score_before.stdout }} after={{ lynis_score_after.stdout }}"
+    - name: Check that the file modifications worked
+      shell: 'echo "{{ item.value }}  {{ item.key }}" | sha512sum -c'
+      with_dict:
+        /etc/login.defs: 457d44d224f3435851b92af6ebb9b191dbe8157691f36dba7145443b3b5f455158831fedb89c09fdcad41ff380394bb778f0d07c665d712354aa3f5e6690e9c6
+        /etc/security/access.conf: fd2af9ee053665e242ca93f98d18923e0ec501d4f7d8bf35a808722c65d2af2d8220c0335f011b2aeccd323ea1278ec134e7a3ab2dc099a616c38dc063419008
+        /etc/security/limits.conf: a5e2ab24296cff523f269f64ea73360f9135ed9dac6dd712b40138b754be37ca6c99a89b02cfff25ef5938c0adc6725039b5e62abbe350be20eb13249dfab76e
