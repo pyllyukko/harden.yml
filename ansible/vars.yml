@@ -1,0 +1,13 @@
+---
+allowed_group: users
+slackware_services:
+  - inetd
+  - yp
+  - cups
+  - cups-browsed
+debian_services:
+  - avahi-daemon
+  - bluetooth
+  - cups
+  - cups-browsed
+  - atd

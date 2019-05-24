@@ -1,18 +1,7 @@
 ---
 - hosts: localhost
-  vars:
-    allowed_group: users
-    slackware_services:
-      - inetd
-      - yp
-      - cups
-      - cups-browsed
-    debian_services:
-      - avahi-daemon
-      - bluetooth
-      - cups
-      - cups-browsed
-      - atd
+  vars_files:
+    - vars.yml
   tasks:
     - include: lynis.yml
     - include: debian_packages.yml

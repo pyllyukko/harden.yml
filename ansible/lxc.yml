@@ -44,6 +44,8 @@
   vars:
     ansible_ssh_pass: debian
     ansible_become_method: su
+  vars_files:
+    - vars.yml
   tasks:
     - include: lynis.yml
     - name: Run Lynis
