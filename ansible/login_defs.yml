@@ -69,6 +69,10 @@
     regexp: '^#?\*\s+soft\s+core\s+0$'
     replace: '*               hard    core            0'
     validate: '/bin/grep "^\* \{15\}hard \{4\}core \{12\}0$" %s'
+- name: Create /etc/modprobe.d/
+  file:
+    path: /etc/modprobe.d
+    state: directory
 - name: modprobe.d
   become: yes
   copy:
