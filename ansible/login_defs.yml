@@ -91,3 +91,11 @@
   copy:
     src: "{{ playbook_dir }}/../newconfs/securetty.new"
     dest: /etc/securetty
+- name: Create /etc/profile.d/tmout.sh
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/../newconfs/profile.d/tmout.sh.new"
+    dest: /etc/profile.d/tmout.sh
+    owner: root
+    group: root
+    mode: '0755'
