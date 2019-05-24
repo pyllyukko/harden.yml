@@ -16,3 +16,9 @@
     - debsecan
     - aide
     - autolog
+    - rkhunter
+    - tiger
+    - chkrootkit
+    - needrestart
+    - arpwatch
+    - clamav
