@@ -99,3 +99,12 @@
     owner: root
     group: root
     mode: '0755'
+- name: Create secure default /etc/pam.d/other
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/../newconfs/pam.d/other.new"
+    dest: /etc/pam.d/other
+    owner: root
+    group: root
+    mode: '0644'
