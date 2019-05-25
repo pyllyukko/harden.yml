@@ -39,6 +39,12 @@
       PORTTIME_CHECKS_ENAB: "yes"
       NOLOGINS_FILE: "/etc/nologin"
       CHFN_AUTH: "yes"
+# The login ACL following this task will actually start blocking access, so
+# check that we are not locking ourselves out of the system being hardened.
+- name: 'Check that some user(s) exist in "{{ allowed_group }}" group'
+  command: getent group {{ allowed_group }}
+  register: members_of_group
+  failed_when: members_of_group.stdout == "users:x:100:"
 - name: Configure login access control table (Slackware)
   when: ansible_distribution == "Slackware"
   become: yes
