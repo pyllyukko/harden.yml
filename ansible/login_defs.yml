@@ -76,6 +76,7 @@
     replace: '*               hard    core            0'
     validate: '/bin/grep "^\* \{15\}hard \{4\}core \{12\}0$" %s'
 - name: Create /etc/modprobe.d/
+  become: yes
   file:
     path: /etc/modprobe.d
     state: directory

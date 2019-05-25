@@ -47,14 +47,17 @@
   tasks:
     - include: lynis.yml
     - name: Disable non-applicable tests in Lynis
+      become: yes
       blockinfile:
         path: /etc/lynis/default.prf
         insertafter: "^# Skip a test"
         block: |
           skip-test=FILE-6310
     - name: Run Lynis
+      become: yes
       command: /usr/sbin/lynis -Q
     - name: Get Lynis score
+      become: yes
       command: 'sed -n "s/^.*Hardening index : \[\([0-9]\+\)\].*$/\1/p" /var/log/lynis.log'
       args:
         warn: false
@@ -69,8 +72,10 @@
     - include: sysctl.yml
     - include: sysstat.yml
     - name: Run Lynis (again)
+      become: yes
       command: /usr/sbin/lynis -Q
     - name: Get Lynis score
+      become: yes
       command: 'sed -n "s/^.*Hardening index : \[\([0-9]\+\)\].*$/\1/p" /var/log/lynis.log'
       args:
         warn: false
@@ -79,6 +84,7 @@
       debug:
         msg: "before={{ lynis_score_before.stdout }} after={{ lynis_score_after.stdout }}"
     - name: Check that the file modifications worked
+      become: yes
       shell: 'echo "{{ item.value }}  {{ item.key }}" | sha512sum -c'
       with_dict:
         /etc/login.defs: 457d44d224f3435851b92af6ebb9b191dbe8157691f36dba7145443b3b5f455158831fedb89c09fdcad41ff380394bb778f0d07c665d712354aa3f5e6690e9c6
