@@ -23,15 +23,14 @@
       lxc_container:
         name: "{{ container_name }}"
       register: containers_info
-    - name: Enable password auth for SSH
+    - name: Create regular user and install Python & sudo
       lxc_container:
         name: "{{ container_name }}"
         container_command: "{{ item }}"
       with_items:
-        - echo "root:debian" | chpasswd
-        - sed -i 's/^#\?\(PermitRootLogin\) .*$/\1 yes/' /etc/ssh/sshd_config
-        - systemctl restart ssh
-        - apt-get -y install python
+        - useradd -m -G users,sudo debian
+        - echo "debian:debian" | chpasswd
+        - apt-get -y install python sudo
     - name: Register the hosts in the inventory
       add_host:
         name: "{{ containers_info.lxc_container.ips.0 }}"
@@ -39,8 +38,10 @@
 
 - hosts: test-container
   vars:
+    ansible_ssh_user: debian
     ansible_ssh_pass: debian
-    ansible_become_method: su
+    ansible_sudo_pass: debian
+    ansible_become_method: sudo
   vars_files:
     - vars.yml
   tasks:
