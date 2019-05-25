@@ -3,6 +3,8 @@
 - hosts: localhost
   vars:
     container_name: test-container
+  vars_files:
+    - vars.yml
   tasks:
     - name: Create a stopped container
       lxc_container:
@@ -28,7 +30,7 @@
         name: "{{ container_name }}"
         container_command: "{{ item }}"
       with_items:
-        - useradd -m -G users,sudo debian
+        - useradd -m -G {{ allowed_group }},sudo debian
         - echo "debian:debian" | chpasswd
         - apt-get -y install python sudo
     - name: Register the hosts in the inventory
