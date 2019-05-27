@@ -38,12 +38,12 @@
   file:
     path: /etc/cron.deny
     state: absent
-- name: Harden SSH daemon configuration (Debian)
-  when: ansible_distribution == "Debian"
+- name: Harden SSH daemon configuration
   become: yes
-  copy:
-    src: "{{ playbook_dir }}/templates/sshd_config-1.100"
+  template:
+    src: "{{ playbook_dir }}/templates/sshd_config-{{ ansible_distribution }}.j2"
     dest: /etc/ssh/sshd_config
+    validate: /usr/sbin/sshd -t -f %s
 - name: Restart sshd
   become: yes
   service:
