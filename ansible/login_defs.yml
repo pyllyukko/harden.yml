@@ -115,3 +115,9 @@
     owner: root
     group: root
     mode: '0644'
+- name: Disallow blank passwords
+  become: yes
+  replace:
+    path: /etc/pam.d/common-auth
+    regexp: '\s+nullok(_secure)?'
+    replace: ''
