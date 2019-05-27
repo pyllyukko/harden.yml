@@ -38,3 +38,14 @@
   file:
     path: /etc/cron.deny
     state: absent
+- name: Harden SSH daemon configuration (Debian)
+  when: ansible_distribution == "Debian"
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/templates/sshd_config-1.100"
+    dest: /etc/ssh/sshd_config
+- name: Restart sshd
+  become: yes
+  service:
+    name: ssh
+    state: restarted
