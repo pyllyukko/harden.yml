@@ -84,7 +84,7 @@
       register: lynis_score_after
     - name: Lynis score
       debug:
-        msg: "before={{ lynis_score_before.stdout }} after={{ lynis_score_after.stdout }}"
+        msg: "before={{ lynis_score_before.stdout }} after={{ lynis_score_after.stdout }} change={{ lynis_score_after.stdout|int - lynis_score_before.stdout|int }}"
     - name: Check that the file modifications worked
       become: yes
       shell: 'echo "{{ item.value }}  {{ item.key }}" | sha512sum -c'
