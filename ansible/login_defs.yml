@@ -138,3 +138,20 @@
   with_items:
     - '/tmp'
     - '/var/tmp'
+- name: Copying new pam-configs
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/../newconfs/pam-configs/{{ item }}.new"
+    dest: /usr/share/pam-configs/{{ item }}
+  with_items:
+    - access
+    - faildelay
+    - lastlog
+    - polyinstation
+    - pwhistory
+    - tally2
+    - uid_ge_1000
+    - umask
+- name: Update PAM
+  become: yes
+  command: /usr/sbin/pam-auth-update --package

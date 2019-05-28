@@ -12,7 +12,7 @@
     - tiger
     - iptables-persistent
     - libpam-passwdqc
-    - libpam-tmpdir
+    #- libpam-tmpdir
     - debsecan
     - aide
     - autolog
