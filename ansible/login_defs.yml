@@ -128,3 +128,13 @@
     regexp: '^#\s*(auth\s+required\s+pam_wheel\.so(\s+use_uid)?)$'
     replace: '\1'
     validate: '/bin/grep "^auth\s\+required\s\+pam_wheel\.so.*$" %s'
+- name: Enable polyinstantiated temp directories
+  become: yes
+  replace:
+    path: /etc/security/namespace.conf
+    regexp: '^#({{ item }}\s+({{ item }})?/tmp-inst/\s+level\s+root,adm)$'
+    replace: '\1'
+    validate: '/bin/grep "^{{ item }}\s\+\({{ item }}\)\?/tmp-inst/\s\+level\s\+root,adm$" %s'
+  with_items:
+    - '/tmp'
+    - '/var/tmp'
