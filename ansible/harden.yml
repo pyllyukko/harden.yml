@@ -11,3 +11,4 @@
     - include: services.yml
     - include: sysctl.yml
     - include: sysstat.yml
+    - include: apparmor.yml

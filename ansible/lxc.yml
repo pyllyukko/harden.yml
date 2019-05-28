@@ -73,6 +73,7 @@
     - include: services.yml
     - include: sysctl.yml
     - include: sysstat.yml
+    - include: apparmor.yml
     - name: Run Lynis (again)
       become: yes
       command: /usr/sbin/lynis -Q
