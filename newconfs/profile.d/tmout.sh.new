@@ -1,6 +1,6 @@
 #!/bin/bash
 # if UID = 0 or local terminal, set the session expiration.
-if [ "`id -u`" = "0" ] || [[ "`/bin/tty`" =~ ^/dev/tty[0-9]+$ ]]
+if [ "`id -u`" = "0" ] || [[ "`tty`" =~ ^/dev/tty[0-9]+$ ]]
 then
   # Logout if a root terminal is not being used (system-hardening-10.2.txt)
   # see more details from http://www.gnu.org/software/bash/manual/bashref.html#Bash-Variables or man 1 bash
