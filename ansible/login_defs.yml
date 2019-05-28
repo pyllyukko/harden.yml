@@ -155,3 +155,17 @@
 - name: Update PAM
   become: yes
   command: /usr/sbin/pam-auth-update --package
+- name: Configure generic log retention period to {{ log_retention_time_in_months }} months
+  become: yes
+  replace:
+    path: /etc/logrotate.conf
+    regexp: '^(rotate\s+)[0-9]+$'
+    replace: '\g<1>{{ log_retention_time_in_months * 4 }}'
+    validate: '/bin/grep "^rotate\s\+{{ log_retention_time_in_months * 4 }}$" %s'
+- name: Configure [bw]tmp retention period to {{ log_retention_time_in_months }} months
+  become: yes
+  replace:
+    path: /etc/logrotate.conf
+    regexp: '^(\s+rotate\s+)1$'
+    replace: '\g<1>{{ log_retention_time_in_months }}'
+    validate: '/bin/grep "^\s\+rotate\s\+{{ log_retention_time_in_months }}$" %s'

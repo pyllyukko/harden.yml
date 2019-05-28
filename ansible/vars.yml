@@ -1,5 +1,6 @@
 ---
 allowed_group: users
+log_retention_time_in_months: 6
 slackware_services:
   - inetd
   - yp
