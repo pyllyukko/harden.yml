@@ -12,3 +12,5 @@
     - include: sysctl.yml
     - include: sysstat.yml
     - include: apparmor.yml
+    - include: logging.yml
+    - include: misc.yml

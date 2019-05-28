@@ -67,32 +67,6 @@
       + : ({{ allowed_group }}) : ALL
       + : Debian-gdm lightdm : LOCAL
       - : ALL : ALL
-- name: Disable core dumps
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-  become: yes
-  replace:
-    path: /etc/security/limits.conf
-    regexp: '^#?\*\s+soft\s+core\s+0$'
-    replace: '*               hard    core            0'
-    validate: '/bin/grep "^\* \{15\}hard \{4\}core \{12\}0$" %s'
-- name: Create /etc/modprobe.d/
-  become: yes
-  file:
-    path: /etc/modprobe.d
-    state: directory
-- name: modprobe.d
-  become: yes
-  copy:
-    src: "{{ playbook_dir }}/../newconfs/modprobe.d/{{ item }}.conf.new"
-    dest: /etc/modprobe.d/{{ item }}.conf
-    owner: root
-    group: root
-    mode: 0600
-  with_items:
-    - CIS
-    - bashbunny
-    - firewire
-    - usb-storage
 - name: Limit the list of terminals from which root can log in (securetty)
   become: yes
   copy:
@@ -157,17 +131,3 @@
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
   command: /usr/sbin/pam-auth-update --package
-- name: Configure generic log retention period to {{ log_retention_time_in_months }} months
-  become: yes
-  replace:
-    path: /etc/logrotate.conf
-    regexp: '^(rotate\s+)[0-9]+$'
-    replace: '\g<1>{{ log_retention_time_in_months * 4 }}'
-    validate: '/bin/grep "^rotate\s\+{{ log_retention_time_in_months * 4 }}$" %s'
-- name: Configure [bw]tmp retention period to {{ log_retention_time_in_months }} months
-  become: yes
-  replace:
-    path: /etc/logrotate.conf
-    regexp: '^(\s+rotate\s+)1$'
-    replace: '\g<1>{{ log_retention_time_in_months }}'
-    validate: '/bin/grep "^\s\+rotate\s\+{{ log_retention_time_in_months }}$" %s'
