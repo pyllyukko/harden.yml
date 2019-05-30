@@ -14,3 +14,4 @@
     - include: apparmor.yml
     - include: logging.yml
     - include: misc.yml
+    - include: banners.yml
