@@ -45,7 +45,7 @@
   shell: getent group {{ allowed_group }} | cut -d':' -f4
   register: members_of_group
   failed_when: members_of_group.stdout == ""
-- name: Configure login access control table (Slackware)
+- name: Configure login access control table (shadow suite)
   when: ansible_distribution == "Slackware"
   become: yes
   blockinfile:
@@ -55,7 +55,7 @@
       +:root {{ allowed_group }}:LOCAL
       # Disallow all others
       -:ALL:ALL
-- name: Configure login access control table (Debian)
+- name: Configure login access control table (PAM)
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
   blockinfile:
