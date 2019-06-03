@@ -1,0 +1,11 @@
+---
+- name: 'TCP wrappers: create /etc/hosts.allow'
+  become: yes
+  template:
+    src: "{{ playbook_dir }}/templates/hosts.allow.j2"
+    dest: /etc/hosts.allow
+- name: 'TCP wrappers: create /etc/hosts.deny'
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/../newconfs/hosts.deny.new"
+    dest: /etc/hosts.deny

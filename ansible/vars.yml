@@ -12,3 +12,5 @@ debian_services:
   - cups
   - cups-browsed
   - atd
+allowed_services:
+  - sshd

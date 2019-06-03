@@ -77,6 +77,7 @@
     - include: logging.yml
     - include: misc.yml
     - include: banners.yml
+    - include: network.yml
     - name: Run Lynis (again)
       become: yes
       command: /usr/sbin/lynis -Q
