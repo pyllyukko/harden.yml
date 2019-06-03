@@ -141,6 +141,9 @@ aircrack-apparmor-profiles: $(aircrack-apparmor-profiles)
 /etc/sysctl.d/harden.conf: $(CWD)/newconfs/sysctl.d/sysctl.conf.new FORCE | /etc/sysctl.d
 	/usr/bin/install -m 600 $< $@
 
+/etc/sysctl.d/%.conf: $(CWD)/newconfs/sysctl.d/%.conf.new FORCE | /etc/sysctl.d
+	/usr/bin/install -m 600 $< $@
+
 $(CWD)/manifests/$(slackware)-$(slackware_version)/:
 	mkdir -pv $@
 
