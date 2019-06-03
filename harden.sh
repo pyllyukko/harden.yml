@@ -349,6 +349,7 @@ function create_limited_ca_list() {
 } # create_limited_ca_list()
 ################################################################################
 function sysctl_harden() {
+  local conf
   print_topic "applying sysctl hardening"
   (( ${LYNIS_TESTS} )) && local LYNIS_SCORE_BEFORE=$( get_lynis_hardening_index kernel_hardening )
   if [ -f "${CWD}/newconfs/sysctl.d/sysctl.conf.new" ]
@@ -356,12 +357,15 @@ function sysctl_harden() {
     if [ -d /etc/sysctl.d ]
     then
       # for debian
-      echo "[+] writing to /etc/sysctl.d/harden.conf"
-      make -f ${CWD}/Makefile /etc/sysctl.d/harden.conf
+      for conf in "harden" "network"
+      do
+	echo "[+] writing to /etc/sysctl.d/${conf}.conf"
+	make -f "${CWD}/Makefile" "/etc/sysctl.d/${conf}.conf"
+      done
     else
       # slackware
       # TODO: add some check if it's already there.
-      cat "${CWD}/newconfs/sysctl.conf.new" 1>>/etc/sysctl.conf
+      cat "${CWD}/newconfs/sysctl.conf.new" "${CWD}/newconfs/network.conf.new" 1>>/etc/sysctl.conf
       echo "[+] written to /etc/sysctl.conf"
     fi
   else
