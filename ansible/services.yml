@@ -4,7 +4,7 @@
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   ignore_errors: yes
   service:
-    name: avahi-daemon
+    name: "{{ item }}"
     state: stopped
     enabled: no
   with_items: "{{ debian_services }}"
