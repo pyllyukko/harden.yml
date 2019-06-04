@@ -76,12 +76,14 @@
     src: "{{ playbook_dir }}/../newconfs/securetty.new"
     dest: /etc/securetty
 - name: Create /etc/shutdown.allow
+  become: yes
   when: ansible_distribution == "Slackware"
   copy:
     content: ""
     dest: /etc/shutdown.allow
     force: no
 - name: Use shutdown -a in /etc/inittab
+  become: yes
   when: ansible_distribution == "Slackware"
   replace:
     path: /etc/inittab
