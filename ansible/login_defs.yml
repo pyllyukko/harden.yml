@@ -109,12 +109,14 @@
     group: root
     mode: '0644'
 - name: Disallow blank passwords
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
   replace:
     path: /etc/pam.d/common-auth
     regexp: '\s+nullok(_secure)?'
     replace: ''
 - name: Enable pam_wheel.so in /etc/pam.d/su
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
   become: yes
   replace:
     path: /etc/pam.d/su
@@ -122,6 +124,7 @@
     replace: '\1'
     validate: '/bin/grep "^auth\s\+required\s\+pam_wheel\.so.*$" %s'
 - name: Enable polyinstantiated temp directories
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
   become: yes
   replace:
     path: /etc/security/namespace.conf
