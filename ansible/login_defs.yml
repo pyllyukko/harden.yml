@@ -72,6 +72,19 @@
   copy:
     src: "{{ playbook_dir }}/../newconfs/securetty.new"
     dest: /etc/securetty
+- name: Create /etc/shutdown.allow
+  when: ansible_distribution == "Slackware"
+  copy:
+    content: ""
+    dest: /etc/shutdown.allow
+    force: no
+- name: Use shutdown -a in /etc/inittab
+  when: ansible_distribution == "Slackware"
+  replace:
+    path: /etc/inittab
+    regexp: '^(ca::ctrlaltdel:/sbin/shutdown -t5 -r now)$'
+    replace: '\g<1> -a'
+    validate: '/bin/grep "^ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a$" %s'
 - name: Create /etc/profile.d/tmout.sh
   become: yes
   copy:
