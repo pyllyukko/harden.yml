@@ -13,6 +13,7 @@
     dest: /etc/ca-certificates.conf
 - name: Install OpenSSL
   when: ansible_distribution == "Slackware"
+  become: yes
   command: slackpkg -batch=on -default_answer=y install openssl
 - name: Run update-ca-certificates
   when: ansible_os_family != "RedHat"

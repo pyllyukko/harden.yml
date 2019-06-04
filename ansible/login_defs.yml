@@ -41,6 +41,7 @@
       CHFN_AUTH: "yes"
 - name: Install glibc package
   when: ansible_distribution == "Slackware"
+  become: yes
   command: slackpkg -batch=on -default_answer=y install glibc
 # The login ACL following this task will actually start blocking access, so
 # check that we are not locking ourselves out of the system being hardened.
