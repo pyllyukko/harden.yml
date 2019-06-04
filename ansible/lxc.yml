@@ -13,9 +13,22 @@
         template: "{{ item.key }}"
         name: "harden.sh-test-{{ item.key }}"
         state: started
+        container_config:
+          - lxc.network.type=veth
+          - lxc.network.link=lxcbr0
+          - lxc.network.flags=up
         template_options: --release {{ item.value }}
       with_dict: "{{ containers }}"
       register: containers_info
+    - name: Prepare the Slackware container
+      lxc_container:
+        name: harden.sh-test-slackware
+        container_command: "{{ item }}"
+      with_items:
+        - /bin/sed -i 's/^\(USE_DHCP\[0\]=\).*$/\1"yes"/' /etc/rc.d/rc.inet1.conf
+        - /bin/sh /etc/rc.d/rc.inet1 start
+        - useradd -m -G {{ allowed_group }} slackware
+        - echo "slackware:slackware" | chpasswd
     - name: Wait for the network to be setup in the containers
       when: containers_info|changed
       pause: seconds=10
@@ -34,8 +47,9 @@
         - apt-get -y install python sudo
     - name: Register the hosts in the inventory
       add_host:
-        name: "{{ containers_info.results.0.lxc_container.ips.0 }}"
-        group: harden.sh-test-debian
+        name: "{{ item.lxc_container.ips.0 }}"
+        group: "{{ item.lxc_container.name }}"
+      with_items: "{{ containers_info.results }}"
 
 - hosts: harden.sh-test-debian
   vars:
