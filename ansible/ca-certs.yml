@@ -11,6 +11,11 @@
   copy:
     src: "{{ playbook_dir }}/../newconfs/ca-certificates.conf.new"
     dest: /etc/ca-certificates.conf
+- name: Install OpenSSL
+  when: ansible_distribution == "Slackware"
+  slackpkg:
+    name: openssl
+    state: present
 - name: Run update-ca-certificates
   when: ansible_os_family != "RedHat"
   become: yes
