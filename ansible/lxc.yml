@@ -20,6 +20,7 @@
         template_options: --release {{ item.value }}
       with_dict: "{{ containers }}"
       register: containers_info
+    # Slackware
     - name: Prepare the Slackware container
       lxc_container:
         name: harden.sh-test-slackware
@@ -41,6 +42,7 @@
         name: "harden.sh-test-{{ item.key }}"
       with_dict: "{{ containers }}"
       register: containers_info
+    # Debian
     - name: Prepare the Debian container
       lxc_container:
         name: harden.sh-test-debian
