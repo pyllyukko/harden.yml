@@ -17,6 +17,7 @@
 - name: Disable unwanted services (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
+  ignore_errors: yes
   file:
     path: "/etc/rc.d/rc.{{ item }}"
     owner: root
