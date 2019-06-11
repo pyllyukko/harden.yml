@@ -128,9 +128,36 @@
     ansible_ssh_pass: slackware
     ansible_sudo_pass: slackware
     ansible_become_method: sudo
+    lynis_version: "2.7.4"
   vars_files:
     - vars.yml
   tasks:
+    - name: Download Lynis
+      become: yes
+      get_url:
+        url: https://downloads.cisofy.com/lynis/lynis-{{ lynis_version }}.tar.gz
+        dest: /root/lynis-{{ lynis_version }}.tar.gz
+        checksum: sha256:a3f615793ff80733bae15584893a4086101d891c61c3a52d280dfb658cb98fbd
+    - name: Extract Lynis
+      become: yes
+      unarchive:
+        remote_src: yes
+        src: /root/lynis-{{ lynis_version }}.tar.gz
+        dest: /root
+    - name: Run Lynis
+      become: yes
+      command: ./lynis -Q
+      args:
+        chdir: /root/lynis
+    - name: Get Lynis score
+      become: yes
+      command: 'sed -n "s/^.*Hardening index : \[\([0-9]\+\)\].*$/\1/p" /var/log/lynis.log'
+      args:
+        warn: false
+      register: lynis_score_before
+    - name: Lynis score before hardening
+      debug:
+        msg: "{{ lynis_score_before.stdout }}"
     - include: ca-certs.yml
     - include: login_defs.yml
     - include: services.yml
@@ -141,3 +168,17 @@
     - include: misc.yml
     - include: banners.yml
     - include: network.yml
+    - name: Run Lynis (again)
+      become: yes
+      command: ./lynis -Q
+      args:
+        chdir: /root/lynis
+    - name: Get Lynis score
+      become: yes
+      command: 'sed -n "s/^.*Hardening index : \[\([0-9]\+\)\].*$/\1/p" /var/log/lynis.log'
+      args:
+        warn: false
+      register: lynis_score_after
+    - name: Lynis score
+      debug:
+        msg: "before={{ lynis_score_before.stdout }} after={{ lynis_score_after.stdout }} change={{ lynis_score_after.stdout|int - lynis_score_before.stdout|int }}"
