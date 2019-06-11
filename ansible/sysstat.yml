@@ -7,11 +7,27 @@
     update_cache: yes
 - name: Enable system accounting (sysstat)
   become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   replace:
     path: /etc/default/sysstat
     regexp: '^ENABLED=.*$'
     replace: 'ENABLED="true"'
     validate: '/bin/grep "^ENABLED=\"true\"$" %s'
+- name: Install sysstat (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  slackpkg:
+    name: sysstat
+    state: present
+- name: Enable sysstat (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  file:
+    path: /etc/rc.d/rc.sysstat
+    owner: root
+    group: root
+    mode: 0700
+# TODO: Start sysstat (Slackware)
 - name: Configure sysstat
   become: yes
   replace:
