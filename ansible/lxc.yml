@@ -146,6 +146,19 @@
         remote_src: yes
         src: /root/lynis-{{ lynis_version }}.tar.gz
         dest: /root
+    - name: Disable non-applicable tests in Lynis
+      become: yes
+      blockinfile:
+        path: /root/lynis/default.prf
+        insertafter: "^# Skip a test"
+        block: |
+          skip-test=AUTH-9262
+          skip-test=AUTH-9264
+          skip-test=AUTH-9266
+          skip-test=AUTH-9268
+          skip-test=AUTH-9278
+          skip-test=PKGS-7398
+          skip-test=PKGS-7308
     - name: Run Lynis
       become: yes
       command: ./lynis -Q
