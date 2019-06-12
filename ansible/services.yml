@@ -46,7 +46,12 @@
     dest: /etc/ssh/sshd_config
     validate: /usr/sbin/sshd -t -f %s
 - name: Restart sshd
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
   service:
     name: ssh
     state: restarted
+- name: Restart sshd (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: yes
+  command: /bin/sh /etc/rc.d/rc.sshd restart
