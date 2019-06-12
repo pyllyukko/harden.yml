@@ -134,6 +134,7 @@
   vars_files:
     - vars.yml
   tasks:
+    - include: ca-certs.yml
     - name: Download Lynis
       become: yes
       get_url:
@@ -173,7 +174,6 @@
     - name: Lynis score before hardening
       debug:
         msg: "{{ lynis_score_before.stdout }}"
-    - include: ca-certs.yml
     - include: login_defs.yml
     - include: services.yml
     - include: sysctl.yml
