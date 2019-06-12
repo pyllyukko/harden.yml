@@ -153,3 +153,11 @@
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
   command: /usr/sbin/pam-auth-update --package
+- name: getent passwd
+  getent:
+    database: passwd
+- name: Create /etc/ftpusers
+  become: yes
+  template:
+    src: "{{ playbook_dir }}/templates/ftpusers.j2"
+    dest: /etc/ftpusers
