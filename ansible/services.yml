@@ -46,6 +46,12 @@
     path: /usr/bin/crontab
     group: wheel
     mode: '4710'
+- name: chmod crond (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: yes
+  file:
+    path: /usr/sbin/crond
+    mode: '0700'
 - name: Harden SSH daemon configuration
   become: yes
   template:
