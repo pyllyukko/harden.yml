@@ -19,7 +19,7 @@
   slackpkg:
     name: sysstat
     state: present
-- name: Enable sysstat (Slackware)
+- name: Enable rc.sysstat (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
   file:
@@ -27,7 +27,12 @@
     owner: root
     group: root
     mode: 0700
-# TODO: Start sysstat (Slackware)
+- name: Create sysstat cron jobs
+  when: ansible_distribution == "Slackware"
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/../newconfs/cron.d/sysstat.new"
+    dest: /etc/cron.d/sysstat
 - name: Configure sysstat
   become: yes
   replace:
