@@ -30,7 +30,7 @@
         - /bin/sh /etc/rc.d/rc.inet1 start
         - useradd -m -G {{ allowed_group }} slackware
         - echo "slackware:slackware" | chpasswd
-        - slackpkg -batch=on -default_answer=y update
+        - yes | slackpkg -batch=on -default_answer=y update
         - slackpkg -batch=on -default_answer=y install python
         - slackpkg -batch=on -default_answer=y install sudo
         - 'echo "slackware ALL=(root) EXEC: ALL" 1>/etc/sudoers.d/letmein'
