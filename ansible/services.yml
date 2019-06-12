@@ -39,6 +39,13 @@
   file:
     path: /etc/cron.deny
     state: absent
+- name: Restrict cron (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: yes
+  file:
+    path: /usr/bin/crontab
+    group: wheel
+    mode: '4710'
 - name: Harden SSH daemon configuration
   become: yes
   template:
