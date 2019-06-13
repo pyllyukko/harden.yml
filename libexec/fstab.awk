@@ -1,13 +1,15 @@
 #!/usr/bin/gawk -f
 # TODO: /tmp and maybe the /var/tmp binding from NSA 2.2.1.4
+@load "filefuncs"
 BEGIN{
-  if(system("grep -q raspbian /etc/os-release")==0)
+  getline < "/etc/os-release"
+  if($0 ~ /Raspbian GNU\/Linux/)
     os="raspbian"
-  else if(system("test -f /etc/slackware-version")==0)
+  else if(stat("/etc/slackware-version", stbuf)==0)
     os="slackware"
-  else if(system("test -f /etc/debian_version")==0)
+  else if(stat("/etc/debian_version", stbuf)==0)
     os="debian"
-  else if(system("test -f /etc/centos-release")==0)
+  else if(stat("/etc/centos-release", stbuf)==0)
     os="centos"
   else
     os="unknown"
