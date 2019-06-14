@@ -161,6 +161,7 @@
           skip-test=AUTH-9278
           skip-test=PKGS-7398
           skip-test=PKGS-7308
+          skip-test=FILE-6310
     - name: Run Lynis
       become: yes
       command: ./lynis -Q
