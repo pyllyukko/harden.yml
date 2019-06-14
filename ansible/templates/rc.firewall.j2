@@ -1,0 +1,39 @@
+#!/bin/bash
+# minimal firewall script
+allowed_tcp_ports=(
+{% for port in allowed_tcp_ports %}
+{{ port }}
+{% endfor %}
+)
+function start_firewall() {
+  local chain
+  local port
+  # flush existing rules
+  echo '[+] Flushing existing iptables rules...'
+  iptables  -F
+  ip6tables -F
+  iptables -X
+  ip6tables -X
+  # create default policy
+  for chain in INPUT FORWARD
+  do
+    iptables  -P "${chain}" DROP
+    ip6tables -P "${chain}" DROP
+  done
+  # block IPv6
+  ip6tables -P OUTPUT DROP
+  echo '[+] Setting up INPUT chain...'
+  # drop invalid packets
+  iptables -t filter -A INPUT -m state --state INVALID -j DROP
+  # allow loopback traffic
+  iptables -t filter -A INPUT -i lo -s 127.0.0.1 -d 127.0.0.1 -j ACCEPT
+  # allow established,related packets
+  iptables -t filter -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+  for port in ${allowed_tcp_ports[*]}
+  do
+    iptables -t filter -A INPUT -p tcp -m tcp --dport "${port}" --syn -m state --state NEW -j ACCEPT
+  done
+}
+case "${1}" in
+  "start") start_firewall ;;
+esac

@@ -15,3 +15,67 @@
   copy:
     src: "{{ playbook_dir }}/../newconfs/hosts.deny.new"
     dest: /etc/hosts.deny
+# Firewall for Slackware
+- name: Install iptables (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: yes
+  command: slackpkg -batch=on -default_answer=y install {{ item }}
+  with_items:
+    - iptables
+    - libpcap
+    - libnl3
+    - dbus
+- name: Create /etc/rc.d/rc.firewall (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  template:
+    src: "{{ playbook_dir }}/templates/rc.firewall.j2"
+    dest: /etc/rc.d/rc.firewall
+    mode: '0700'
+- name: Start firewall (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  command: /etc/rc.d/rc.firewall start
+# Firewall for Debian
+- name: Install iptables-persistent
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  apt:
+    name: iptables-persistent
+    update_cache: yes
+- name: Create temp file
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  tempfile:
+    state: file
+    suffix: temp
+  register: tempfile_1
+- name: Copy firewall script
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  template:
+    src: "{{ playbook_dir }}/templates/rc.firewall.j2"
+    dest: "{{ tempfile_1.path }}"
+    mode: '0700'
+- name: Run firewall script
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  command: /bin/bash {{ tempfile_1.path }} start
+- name: Remove temp file
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  file:
+    path: "{{ tempfile_1.path }}"
+    state: absent
+- name: Create /etc/iptables/rules.v4
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  shell: /sbin/iptables-save 1>/etc/iptables/rules.v4
+- name: Create /etc/iptables/rules.v6
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  shell: /sbin/ip6tables-save 1>/etc/iptables/rules.v6
+- name: Enable netfilter-persistent
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  systemd:
+    name: netfilter-persistent
+    state: started
+    enabled: yes
