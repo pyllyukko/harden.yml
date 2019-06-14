@@ -7,6 +7,14 @@
     regexp: '^(/sbin/mount -v proc /proc -n -t proc).*$'
     replace: '\g<1> -o hidepid=2 2> /dev/null'
     validate: '/bin/grep "^/sbin/mount -v proc /proc -n -t proc -o hidepid=2 2> /dev/null$" %s'
+- name: Remount /proc with hidepid=2
+  become: yes
+  mount:
+    path: /proc
+    opts: hidepid=2
+    state: mounted
+    src: proc
+    fstype: proc
 - name: Create temp file
   tempfile:
     state: file
