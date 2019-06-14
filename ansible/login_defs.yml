@@ -99,7 +99,7 @@
     owner: root
     group: root
     mode: '0755'
-- name: Tweak umask in /etc/profile (Slackware)
+- name: Set umask to 077 in /etc/profile (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
   replace:
