@@ -107,6 +107,23 @@
     regexp: '^(umask) [0-9]+$'
     replace: '\g<1> 077'
     validate: '/bin/grep "^umask 077$" %s'
+- name: Remove S from System initialization (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  replace:
+    path: /etc/inittab
+    regexp: '^si:S:sysinit:/etc/rc.d/rc.S$'
+    replace: 'si::sysinit:/etc/rc.d/rc.S'
+    validate: '/bin/grep "^si::sysinit:/etc/rc.d/rc.S$" %s'
+- name: Create separate entry for single user mode which requires authentication (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  blockinfile:
+    path: /etc/inittab
+    insertafter: "^x1:4:respawn:/etc/rc.d/rc.4$"
+    block: |
+      # single user mode
+      ~~:S:wait:/sbin/sulogin
 - name: Create secure default /etc/pam.d/other
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
   become: yes
