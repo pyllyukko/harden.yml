@@ -200,3 +200,18 @@
     - name: Lynis score
       debug:
         msg: "before={{ lynis_score_before.stdout }} after={{ lynis_score_after.stdout }} change={{ lynis_score_after.stdout|int - lynis_score_before.stdout|int }}"
+    - name: Check that the file modifications worked
+      become: yes
+      shell: 'echo "{{ item.value }}  {{ item.key }}" | sha512sum -c'
+      with_dict:
+        /usr/sbin/adduser: 9dbe4b4c329139bdad8907964dd7d2632dce3fa809b5a0e96539b85c633d4f09fddbd75f2072943e58e9ca9c7de6da44d0456b036ddfc0b983ae822a0d8c42bb
+        /etc/inittab: 28afc334dcaf4f6c5210568a2ccb2f5809a94bf16b2feba6763ea054827f383f23d5b76420e901376e29eb37e1b6af6b5ffaea0001effd1df4afeff34c9564d7
+        /etc/login.defs: e9921e7506e3af10ff2c93fc548f8a4879ed05e8df6377a0af08cc7835d594cb9cd32c6937dc4d6940bb2de3f743255c9617e83f8120373fcd7e6569315564c2
+        /etc/shutdown.allow: cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e
+        /etc/logrotate.conf: deac1364c31d16dab1576566384e9b8bf9b0c0b5b733189562c489767387567086b1dcc6c1f4911bb74e58f5ecfb07d67e657d91c00c3c61ab65d0bac59daa8f
+        /etc/cron.d/sysstat: 2a963c51e42d738ff87ae4f62d10f199db6774b6ebeecf21e2fa2955804678245092bc64e2bfb0738f9ac488c64dcd93a0a62ead3119a367f666a6713ece0565
+        /etc/profile: 6cd4d0549d7b5cb6fb3673370b13d5362c13ce4fd7c59190811533d50d7c34e746837385c373a8108b97dc63931484f0ecb02c2592c581e7fd054717780bb925
+        /etc/login.access: faa10889bdf4fa4633bf8ad96b515fcee393bc4518fad53a8678574c66dc39041ab4ee69cd4286060916778db8904c8ff46a14780777835444e537ffb347c7f3
+        /etc/securetty: 59c89246507c3c6f61ed61ddb2558bb020ce23e5f4b8083b28c2bba487bd3c79382634fa5d936c08808a6558ac03e59fa09e29b578e7f8b5f1c0c1fef5564bdc
+        /etc/hosts.allow: 65c9832595051d0b96b3c7282ae2a2e08a593f7be34fa02c34fa7cf850ca15a3b9313f88fe6b34b746dc7d41974e638790f98db300920ff80aaba0809e6a65bc
+        /etc/hosts.deny: 5a2aba03254a150de369afbbbb477af808c49bc7f15ad6a30f4f49c1dd4394a30f10c31f19ea108af8e1bf2f21862ea4ec95a439f4cd4a4af2edf24702b65b3e
