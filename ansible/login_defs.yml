@@ -192,6 +192,14 @@
   become: yes
   command: gpasswd -d daemon adm
   ignore_errors: yes
+- name: Set defchmod to 700 in /usr/sbin/adduser (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  replace:
+    path: /usr/sbin/adduser
+    regexp: '^(defchmod)=[0-9]+.*'
+    replace: '\g<1>=700 # home dir permissions'
+    validate: '/bin/grep "^defchmod=700 # home dir permissions$" %s'
 - name: Fix gshadow (Slackware)
   when: ansible_distribution == "Slackware"
   ignore_errors: yes
