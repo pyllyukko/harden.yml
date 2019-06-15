@@ -1,0 +1,16 @@
+#
+# hosts.allow	This file describes the names of the hosts which are
+#		allowed to use the local INET services, as decided by
+#		the '/usr/sbin/tcpd' server.
+#
+# Version:	@(#)/etc/hosts.allow	1.00	05/28/93
+#
+# Author:	Fred N. van Kempen, <waltje@uwalt.nl.mugnet.org
+#
+#
+
+{% for service in allowed_services %}
+{{ service }}: ALL
+{% endfor %}
+
+# End of hosts.allow.

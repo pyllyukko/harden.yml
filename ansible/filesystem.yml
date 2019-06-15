@@ -1,0 +1,40 @@
+---
+- name: Mount /proc with hidepid=2 (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  replace:
+    path: /etc/rc.d/rc.S
+    regexp: '^(/sbin/mount -v proc /proc -n -t proc).*$'
+    replace: '\g<1> -o hidepid=2 2> /dev/null'
+    validate: '/bin/grep "^/sbin/mount -v proc /proc -n -t proc -o hidepid=2 2> /dev/null$" %s'
+- name: Remount /proc with hidepid=2
+  become: yes
+  mount:
+    path: /proc
+    opts: hidepid=2
+    state: mounted
+    src: proc
+    fstype: proc
+- name: Create temp file
+  tempfile:
+    state: file
+    suffix: temp
+  register: tempfile_1
+- name: Copy fstab.awk
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/../libexec/fstab.awk"
+    dest: "{{ tempfile_1.path }}"
+- name: Install Gawk
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  apt:
+    name: gawk
+    update_cache: yes
+- name: Create /etc/fstab.new
+  become: yes
+  shell: gawk -f {{ tempfile_1.path }} /etc/fstab 1>/etc/fstab.new
+- name: Remove temp file
+  file:
+    path: "{{ tempfile_1.path }}"
+    state: absent

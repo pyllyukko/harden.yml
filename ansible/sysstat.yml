@@ -1,0 +1,42 @@
+---
+- name: Install sysstat
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  apt:
+    name: sysstat
+    update_cache: yes
+- name: Enable system accounting (sysstat)
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  replace:
+    path: /etc/default/sysstat
+    regexp: '^ENABLED=.*$'
+    replace: 'ENABLED="true"'
+    validate: '/bin/grep "^ENABLED=\"true\"$" %s'
+- name: Install sysstat (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  slackpkg:
+    name: sysstat
+    state: present
+- name: Enable rc.sysstat (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  file:
+    path: /etc/rc.d/rc.sysstat
+    owner: root
+    group: root
+    mode: 0700
+- name: Create sysstat cron jobs
+  when: ansible_distribution == "Slackware"
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/../newconfs/cron.d/sysstat.new"
+    dest: /etc/cron.d/sysstat
+- name: Configure sysstat
+  become: yes
+  replace:
+    path: /etc/sysstat/sysstat
+    regexp: '^HISTORY=[0-9]+$'
+    replace: 'HISTORY=99999'
+    validate: '/bin/grep "^HISTORY=99999$" %s'

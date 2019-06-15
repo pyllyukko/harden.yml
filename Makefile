@@ -49,6 +49,9 @@ pam-configs: /usr/share/pam-configs/tally2 /usr/share/pam-configs/access /usr/sh
 /usr/share/pam-configs/%: $(CWD)/newconfs/pam-configs/%.new | /usr/share/pam-configs/
 	/usr/bin/install -m 644 $< $@
 
+/etc/pam.d/other: $(CWD)/newconfs/pam.d/other.new FORCE | /etc/pam.d/
+	/usr/bin/install -m 644 $< $@
+
 .PHONY: FORCE
 FORCE:
 

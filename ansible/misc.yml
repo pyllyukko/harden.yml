@@ -1,0 +1,27 @@
+---
+- name: Disable core dumps
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  become: yes
+  replace:
+    path: /etc/security/limits.conf
+    regexp: '^#?\*\s+soft\s+core\s+0$'
+    replace: '*               hard    core            0'
+    validate: '/bin/grep "^\* \{15\}hard \{4\}core \{12\}0$" %s'
+- name: Create /etc/modprobe.d/
+  become: yes
+  file:
+    path: /etc/modprobe.d
+    state: directory
+- name: modprobe.d
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/../newconfs/modprobe.d/{{ item }}.conf.new"
+    dest: /etc/modprobe.d/{{ item }}.conf
+    owner: root
+    group: root
+    mode: 0600
+  with_items:
+    - CIS
+    - bashbunny
+    - firewire
+    - usb-storage

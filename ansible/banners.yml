@@ -1,0 +1,14 @@
+---
+- name: Create /etc/issue{,.net}
+  become: yes
+  copy:
+    content: 'Authorized uses only. All activity may be monitored and reported.'
+    dest: "{{ item }}"
+  with_items:
+    - /etc/issue
+    - /etc/issue.net
+- name: Create /etc/motd
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/../newconfs/motd.new"
+    dest: /etc/motd

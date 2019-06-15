@@ -1,0 +1,14 @@
+#
+# hosts.deny	This file describes the names of the hosts which are
+#		*not* allowed to use the local INET services, as decided
+#		by the '/usr/sbin/tcpd' server.
+#
+# Version:	@(#)/etc/hosts.deny	1.00	05/28/93
+#
+# Author:	Fred N. van Kempen, <waltje@uwalt.nl.mugnet.org
+#
+#
+
+ALL: ALL EXCEPT localhost
+
+# End of hosts.deny.

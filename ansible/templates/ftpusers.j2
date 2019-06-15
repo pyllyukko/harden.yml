@@ -1,0 +1,21 @@
+#
+# ftpusers	This file describes the names of the users that may
+#		_*NOT*_ log into the system via the FTP server.
+#		This usually includes "root", "uucp", "news" and the
+#		like, because those users have too much power to be
+#		allowed to do "just" FTP...
+#
+#
+# Version:	@(#)/etc/ftpusers	3.00	02/25/2001 volkerdi
+#
+# Original Author:  Fred N. van Kempen, <waltje@uwalt.nl.mugnet.org>
+#
+# The entire line gets matched, so no comments or extra characters on
+# lines containing a username.
+#
+# To enable anonymous FTP, remove the "ftp" user:
+{% for user in getent_passwd %}
+{{ user }}
+{% endfor %}
+
+# End of ftpusers.

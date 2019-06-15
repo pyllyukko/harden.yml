@@ -1,0 +1,16 @@
+---
+- name: Create harden.conf sysctl settings file
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/../newconfs/sysctl.d/{{ item }}.conf.new"
+    dest: /etc/sysctl.d/{{ item }}.conf
+    owner: root
+    group: root
+    mode: 0600
+  with_items:
+    - sysctl
+    - network
+- name: Load sysctl settings
+  ignore_errors: yes
+  become: yes
+  command: /sbin/sysctl -p /etc/sysctl.d/sysctl.conf /etc/sysctl.d/network.conf

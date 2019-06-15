@@ -1,0 +1,19 @@
+---
+- hosts: localhost
+  vars_files:
+    - vars.yml
+  tasks:
+    - include: lynis.yml
+    - include: filesystem.yml
+    - include: ca-certs.yml
+    - include: debian_packages.yml
+    - include: audit.yml
+    - include: login_defs.yml
+    - include: services.yml
+    - include: sysctl.yml
+    - include: sysstat.yml
+    - include: apparmor.yml
+    - include: logging.yml
+    - include: misc.yml
+    - include: banners.yml
+    - include: network.yml

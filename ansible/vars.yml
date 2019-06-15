@@ -1,0 +1,23 @@
+---
+allowed_group: users
+log_retention_time_in_months: 6
+slackware_services:
+  - inetd
+  - yp
+  - cups
+  - cups-browsed
+debian_services:
+  - avahi-daemon
+  - bluetooth
+  - cups
+  - cups-browsed
+  - atd
+allowed_services:
+  - sshd
+allowed_tcp_ports:
+  - 22
+sshd_config:
+  Ciphers: aes256-ctr,aes256-gcm@openssh.com,chacha20-poly1305@openssh.com
+  MACs: hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com
+  KexAlgorithms: curve25519-sha256@libssh.org,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256
+  MaxAuthTries: 3

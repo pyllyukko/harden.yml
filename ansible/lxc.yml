@@ -1,0 +1,202 @@
+---
+
+- hosts: localhost
+  vars:
+    containers:
+      debian: stretch
+      slackware: current
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Create the containers
+      lxc_container:
+        template: "{{ item.key }}"
+        name: "harden.sh-test-{{ item.key }}"
+        state: started
+        container_config:
+          - lxc.network.type=veth
+          - lxc.network.link=lxcbr0
+          - lxc.network.flags=up
+        template_options: --release {{ item.value }}
+      with_dict: "{{ containers }}"
+      register: containers_info
+    # Slackware
+    - name: Prepare the Slackware container
+      lxc_container:
+        name: harden.sh-test-slackware
+        container_command: "{{ item }}"
+      with_items:
+        - /bin/sed -i 's/^\(USE_DHCP\[0\]=\).*$/\1"yes"/' /etc/rc.d/rc.inet1.conf
+        - /bin/sh /etc/rc.d/rc.inet1 start
+        - useradd -m -G {{ allowed_group }} slackware
+        - echo "slackware:slackware" | chpasswd
+        - yes | slackpkg -batch=on -default_answer=y update
+        - slackpkg -batch=on -default_answer=y install python
+        - slackpkg -batch=on -default_answer=y install sudo
+        - 'echo "slackware ALL=(root) EXEC: ALL" 1>/etc/sudoers.d/letmein'
+    - name: Wait for the network to be setup in the containers
+      when: containers_info|changed
+      pause: seconds=10
+    - name: Get containers info now that IPs are available
+      lxc_container:
+        name: "harden.sh-test-{{ item.key }}"
+      with_dict: "{{ containers }}"
+      register: containers_info
+    # Debian
+    - name: Prepare the Debian container
+      lxc_container:
+        name: harden.sh-test-debian
+        container_command: "{{ item }}"
+      with_items:
+        - useradd -m -G {{ allowed_group }},sudo debian
+        - echo "debian:debian" | chpasswd
+        - apt-get -y install python sudo
+    - name: Register the hosts in the inventory
+      add_host:
+        name: "{{ item.lxc_container.ips.0 }}"
+        group: "{{ item.lxc_container.name }}"
+      with_items: "{{ containers_info.results }}"
+
+- hosts: harden.sh-test-debian
+  vars:
+    ansible_ssh_user: debian
+    ansible_ssh_pass: debian
+    ansible_sudo_pass: debian
+    ansible_become_method: sudo
+  vars_files:
+    - vars.yml
+  tasks:
+    - include: lynis.yml
+    - name: Disable non-applicable tests in Lynis
+      become: yes
+      blockinfile:
+        path: /etc/lynis/default.prf
+        insertafter: "^# Skip a test"
+        block: |
+          skip-test=FILE-6310
+    - name: Run Lynis
+      become: yes
+      command: /usr/sbin/lynis -Q
+    - name: Get Lynis score
+      become: yes
+      command: 'sed -n "s/^.*Hardening index : \[\([0-9]\+\)\].*$/\1/p" /var/log/lynis.log'
+      args:
+        warn: false
+      register: lynis_score_before
+    - name: Lynis score before hardening
+      debug:
+        msg: "{{ lynis_score_before.stdout }}"
+    - include: filesystem.yml
+    - include: ca-certs.yml
+    - include: debian_packages.yml
+    - include: login_defs.yml
+    - include: services.yml
+    - include: sysctl.yml
+    - include: sysstat.yml
+    - include: apparmor.yml
+    - include: logging.yml
+    - include: misc.yml
+    - include: banners.yml
+    - include: network.yml
+    - name: Run Lynis (again)
+      become: yes
+      command: /usr/sbin/lynis -Q
+    - name: Get Lynis score
+      become: yes
+      command: 'sed -n "s/^.*Hardening index : \[\([0-9]\+\)\].*$/\1/p" /var/log/lynis.log'
+      args:
+        warn: false
+      register: lynis_score_after
+    - name: Lynis score
+      debug:
+        msg: "before={{ lynis_score_before.stdout }} after={{ lynis_score_after.stdout }} change={{ lynis_score_after.stdout|int - lynis_score_before.stdout|int }}"
+    - name: Check that the file modifications worked
+      become: yes
+      shell: 'echo "{{ item.value }}  {{ item.key }}" | sha512sum -c'
+      with_dict:
+        /etc/login.defs: 457d44d224f3435851b92af6ebb9b191dbe8157691f36dba7145443b3b5f455158831fedb89c09fdcad41ff380394bb778f0d07c665d712354aa3f5e6690e9c6
+        /etc/security/access.conf: fd2af9ee053665e242ca93f98d18923e0ec501d4f7d8bf35a808722c65d2af2d8220c0335f011b2aeccd323ea1278ec134e7a3ab2dc099a616c38dc063419008
+        /etc/security/limits.conf: a5e2ab24296cff523f269f64ea73360f9135ed9dac6dd712b40138b754be37ca6c99a89b02cfff25ef5938c0adc6725039b5e62abbe350be20eb13249dfab76e
+        /etc/cron.allow: cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e
+        /etc/pam.d/other: c15fa34ee8bcea3c49fb1ffe0be01d4fe645aed9c498f65a6bc815a6b0ea911ed4d15727e34f93323b113905365565e304e2e608dd9a52663a90443598fb8a0c
+        /etc/pam.d/common-auth: 914617e8986ab3c2ee33c6b8e71e4194fdaf225f8b2e3daf31c91c36639e34d60de5cf3057280054d92e256a29a658c1bd62e0bc32f70870b048cd528845dd5a
+        /etc/pam.d/su: e597844534e3e5979e2b3b97f1f3cf04386390946b49ce3d7daf00273a03d9a708e07c96c78c8d0e5c2df58cd11681fd3a9ada7e2d029e621d8d1ec1490aabbd
+        /etc/security/namespace.conf: 0a141ce7e6f601b485771bf76c0da677440a783b1beef180b5fa318f0b7dd6062d533c8e79b92ea8da4d0e303aa7d31c9d3359552b60c00da52a178377ed7dd8
+        /etc/hosts.allow: 65c9832595051d0b96b3c7282ae2a2e08a593f7be34fa02c34fa7cf850ca15a3b9313f88fe6b34b746dc7d41974e638790f98db300920ff80aaba0809e6a65bc
+        /etc/hosts.deny: 5a2aba03254a150de369afbbbb477af808c49bc7f15ad6a30f4f49c1dd4394a30f10c31f19ea108af8e1bf2f21862ea4ec95a439f4cd4a4af2edf24702b65b3e
+
+- hosts: harden.sh-test-slackware
+  vars:
+    ansible_ssh_user: slackware
+    ansible_ssh_pass: slackware
+    ansible_sudo_pass: slackware
+    ansible_become_method: sudo
+    lynis_version: "2.7.4"
+  vars_files:
+    - vars.yml
+  tasks:
+    - include: ca-certs.yml
+    - name: Download Lynis
+      become: yes
+      get_url:
+        url: https://downloads.cisofy.com/lynis/lynis-{{ lynis_version }}.tar.gz
+        dest: /root/lynis-{{ lynis_version }}.tar.gz
+        checksum: sha256:a3f615793ff80733bae15584893a4086101d891c61c3a52d280dfb658cb98fbd
+    - name: Extract Lynis
+      become: yes
+      unarchive:
+        remote_src: yes
+        src: /root/lynis-{{ lynis_version }}.tar.gz
+        dest: /root
+    - name: Disable non-applicable tests in Lynis
+      become: yes
+      blockinfile:
+        path: /root/lynis/default.prf
+        insertafter: "^# Skip a test"
+        block: |
+          skip-test=AUTH-9262
+          skip-test=AUTH-9264
+          skip-test=AUTH-9266
+          skip-test=AUTH-9268
+          skip-test=AUTH-9278
+          skip-test=PKGS-7398
+          skip-test=PKGS-7308
+          skip-test=FILE-6310
+    - name: Run Lynis
+      become: yes
+      command: ./lynis -Q
+      args:
+        chdir: /root/lynis
+    - name: Get Lynis score
+      become: yes
+      command: 'sed -n "s/^.*Hardening index : \[\([0-9]\+\)\].*$/\1/p" /var/log/lynis.log'
+      args:
+        warn: false
+      register: lynis_score_before
+    - name: Lynis score before hardening
+      debug:
+        msg: "{{ lynis_score_before.stdout }}"
+    - include: filesystem.yml
+    - include: login_defs.yml
+    - include: services.yml
+    - include: sysctl.yml
+    - include: sysstat.yml
+    - include: apparmor.yml
+    - include: logging.yml
+    - include: misc.yml
+    - include: banners.yml
+    - include: network.yml
+    - name: Run Lynis (again)
+      become: yes
+      command: ./lynis -Q
+      args:
+        chdir: /root/lynis
+    - name: Get Lynis score
+      become: yes
+      command: 'sed -n "s/^.*Hardening index : \[\([0-9]\+\)\].*$/\1/p" /var/log/lynis.log'
+      args:
+        warn: false
+      register: lynis_score_after
+    - name: Lynis score
+      debug:
+        msg: "before={{ lynis_score_before.stdout }} after={{ lynis_score_after.stdout }} change={{ lynis_score_after.stdout|int - lynis_score_before.stdout|int }}"
