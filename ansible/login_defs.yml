@@ -186,6 +186,12 @@
   template:
     src: "{{ playbook_dir }}/templates/ftpusers.j2"
     dest: /etc/ftpusers
+# https://github.com/ansible/ansible/issues/11024
+- name: Remove daemon from adm group (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: yes
+  command: gpasswd -d daemon adm
+  ignore_errors: yes
 - name: Fix gshadow (Slackware)
   when: ansible_distribution == "Slackware"
   ignore_errors: yes
