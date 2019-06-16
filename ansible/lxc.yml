@@ -90,6 +90,7 @@
     - include: ca-certs.yml
     - include: debian_packages.yml
     - include: login_defs.yml
+    - include: pam.yml
     - include: services.yml
     - include: sysctl.yml
     - include: sysstat.yml
@@ -178,7 +179,6 @@
         msg: "{{ lynis_score_before.stdout }}"
     - include: filesystem.yml
     - include: login_defs.yml
-    - include: pam.yml
     - include: services.yml
     - include: sysctl.yml
     - include: sysstat.yml
