@@ -1,0 +1,67 @@
+---
+- name: Configure login access control table (PAM)
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  become: yes
+  blockinfile:
+    path: /etc/security/access.conf
+    block: |
+      + : root : LOCAL
+      + : daemon : cron
+      - : ALL : cron
+      + : ({{ allowed_group }}) : ALL
+      + : Debian-gdm lightdm : LOCAL
+      - : ALL : ALL
+- name: Create secure default /etc/pam.d/other
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/../newconfs/pam.d/other.new"
+    dest: /etc/pam.d/other
+    owner: root
+    group: root
+    mode: '0644'
+- name: Disallow blank passwords
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  become: yes
+  replace:
+    path: /etc/pam.d/common-auth
+    regexp: '\s+nullok(_secure)?'
+    replace: ''
+- name: Enable pam_wheel.so in /etc/pam.d/su
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
+  become: yes
+  replace:
+    path: /etc/pam.d/su
+    regexp: '^#\s*(auth\s+required\s+pam_wheel\.so(\s+use_uid)?)$'
+    replace: '\1'
+    validate: '/bin/grep "^auth\s\+required\s\+pam_wheel\.so.*$" %s'
+- name: Enable polyinstantiated temp directories
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
+  become: yes
+  replace:
+    path: /etc/security/namespace.conf
+    regexp: '^#({{ item }}\s+({{ item }})?/tmp-inst/\s+level\s+root,adm)$'
+    replace: '\1'
+    validate: '/bin/grep "^{{ item }}\s\+\({{ item }}\)\?/tmp-inst/\s\+level\s\+root,adm$" %s'
+  with_items:
+    - '/tmp'
+    - '/var/tmp'
+- name: Copying new pam-configs
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/../newconfs/pam-configs/{{ item }}.new"
+    dest: /usr/share/pam-configs/{{ item }}
+  with_items:
+    - access
+    - faildelay
+    - lastlog
+    - polyinstation
+    - pwhistory
+    - tally2
+    - uid_ge_1000
+    - umask
+- name: Update PAM
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  become: yes
+  command: /usr/sbin/pam-auth-update --package

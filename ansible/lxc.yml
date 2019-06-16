@@ -178,6 +178,7 @@
         msg: "{{ lynis_score_before.stdout }}"
     - include: filesystem.yml
     - include: login_defs.yml
+    - include: pam.yml
     - include: services.yml
     - include: sysctl.yml
     - include: sysstat.yml
