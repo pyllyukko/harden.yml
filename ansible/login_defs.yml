@@ -200,10 +200,22 @@
     regexp: '^(defchmod)=[0-9]+.*'
     replace: '\g<1>=700 # home dir permissions'
     validate: '/bin/grep "^defchmod=700 # home dir permissions$" %s'
+- name: Initialize /var/log/faillog (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  command: dd if=/dev/zero of=/var/log/faillog bs=32 count=60001
 - name: Set login failure limits (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
   command: faillog -a -l 900 -m 5 -u 1000-60000
+- name: Change perms of /var/log/faillog
+  when: ansible_distribution == "Slackware"
+  become: yes
+  file:
+    path: /var/log/faillog
+    owner: root
+    group: adm
+    mode: '0640'
 - name: Fix gshadow (Slackware)
   when: ansible_distribution == "Slackware"
   ignore_errors: yes
