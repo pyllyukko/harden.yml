@@ -5,7 +5,7 @@
   size 1G
   shred
   notifempty
-  nocompress
+  compress
   create 0640 root adm
   nomail
 

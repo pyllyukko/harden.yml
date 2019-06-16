@@ -1,4 +1,5 @@
 ---
+# System accounting
 - name: Install sysstat
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
@@ -40,3 +41,43 @@
     regexp: '^HISTORY=[0-9]+$'
     replace: 'HISTORY=99999'
     validate: '/bin/grep "^HISTORY=99999$" %s'
+# Process accounting
+- name: Install acct
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  apt:
+    name: acct
+    update_cache: yes
+- name: Enable acct
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  systemd:
+    name: acct
+    state: started
+    enabled: yes
+- name: Install acct (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  slackpkg:
+    name: acct
+    state: present
+- name: Create /var/log/pacct (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  copy:
+    content: ""
+    dest: /var/log/pacct
+    force: no
+    owner: root
+    group: adm
+    mode: '0640'
+- name: Create /etc/logrotate.d/pacct (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  copy:
+    src: "{{ playbook_dir }}/../newconfs/logrotate.d/pacct.new"
+    dest: /etc/logrotate.d/pacct
+- name: Start process accounting (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  command: /sbin/accton /var/log/pacct
