@@ -118,7 +118,7 @@ Notes
 -----
 
 * Rebooting the system after running this is highly recommended, since many startup scripts are modified
-* The script is quite verbose, so you might want to record it with *script*
+* The script is quite verbose, so you might want to record it with `script`
 * It is best to run this script on a fresh installation for best results
 
 ### Other security software
