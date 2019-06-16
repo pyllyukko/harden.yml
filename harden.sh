@@ -582,6 +582,7 @@ function usage() {
 	  /etc/securetty
 	  /etc/fstab.new
 	  manifest
+	  pam-configs
 EOF
   # print functions
   #declare -f 2>/dev/null | sed -n '/^.* () $/s/^/  /p'
