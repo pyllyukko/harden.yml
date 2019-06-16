@@ -1,0 +1,4 @@
+#!/bin/bash
+echo -en "\033[1;31m"
+/usr/bin/expiry -c
+echo -en "\033[0m"

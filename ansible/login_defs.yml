@@ -95,6 +95,14 @@
     regexp: '^(umask) [0-9]+$'
     replace: '\g<1> 077'
     validate: '/bin/grep "^umask 077$" %s'
+- name: Warn users about expiring password
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/../newconfs/expiry.sh.new"
+    dest: /etc/profile.d/expiry.sh
+    owner: root
+    group: root
+    mode: '0755'
 - name: Remove S from System initialization (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
