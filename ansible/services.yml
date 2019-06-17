@@ -39,6 +39,14 @@
   file:
     path: /etc/cron.deny
     state: absent
+- name: Increase crond's log level (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: yes
+  replace:
+    path: /etc/default/crond
+    regexp: '^(CROND_OPTS=".*)-l [a-z]+(.*")$'
+    replace: '\g<1>-l info\g<2>'
+    validate: '/bin/grep "^CROND_OPTS=\".*-l info.*\"$" %s'
 - name: Restrict cron (Slackware)
   when: ansible_distribution == "Slackware"
   become: yes
