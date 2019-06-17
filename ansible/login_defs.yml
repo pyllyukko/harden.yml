@@ -142,6 +142,13 @@
     regexp: '^(defchmod)=[0-9]+.*'
     replace: '\g<1>=700 # home dir permissions'
     validate: '/bin/grep "^defchmod=700 # home dir permissions$" %s'
+- name: Create /etc/porttime (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  copy:
+    dest: /etc/porttime
+    content: "SU:*:\n"
+    force: no
 - name: Initialize /var/log/faillog (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
