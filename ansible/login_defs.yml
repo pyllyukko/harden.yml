@@ -149,6 +149,14 @@
     dest: /etc/porttime
     content: "SU:*:\n"
     force: no
+- name: Create /etc/suauth (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  copy:
+    dest: /etc/suauth
+    content: "ALL:ALL:DENY\n"
+    force: no
+    mode: '0400'
 - name: Initialize /var/log/faillog (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
