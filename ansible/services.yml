@@ -1,4 +1,5 @@
 ---
+# Unwanted services
 - name: Stop & disable unwanted services (Debian)
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
@@ -24,6 +25,7 @@
     group: root
     mode: ugo-x
   with_items: "{{ slackware_services }}"
+# Cron
 - name: Restrict cron (cron.allow)
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
@@ -60,6 +62,7 @@
   file:
     path: /usr/sbin/crond
     mode: '0700'
+# SSH
 - name: Harden SSH daemon configuration
   become: yes
   template:
@@ -76,6 +79,7 @@
   when: ansible_distribution == "Slackware"
   become: yes
   command: /bin/sh /etc/rc.d/rc.sshd restart
+# Misc
 #- name: Install icmpinfo
 #  become: yes
 #  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
