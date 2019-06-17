@@ -68,3 +68,55 @@
   when: ansible_distribution == "Slackware"
   become: yes
   command: /bin/sh /etc/rc.d/rc.sshd restart
+#- name: Install icmpinfo
+#  become: yes
+#  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+#  apt:
+#    name: icmpinfo
+#    update_cache: yes
+- name: Install icmpinfo (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  slackpkg:
+    name: icmpinfo
+    state: present
+- name: Start icmpinfo & logoutd from /etc/rc.d/rc.local (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: yes
+  blockinfile:
+    path: /etc/rc.d/rc.local
+    block: |
+      # Log icmp packets to syslog
+      if [ -x /usr/sbin/icmpinfo ]
+      then
+        echo "Starting ICMP logging:  icmpinfo -v -s -n -p -l"
+        /usr/sbin/icmpinfo -v -s -n -p -l
+      fi
+
+      # Enforce login time restrictions set in /etc/porttime
+      if [ -x /usr/sbin/logoutd -a -f /etc/porttime ]
+      then
+        echo "Starting logoutd:  /usr/sbin/logoutd"
+        /usr/sbin/logoutd
+      fi
+- name: Create /etc/rc.d/rc.local_shutdown (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  copy:
+    content: "#!/bin/bash\n"
+    dest: /etc/rc.d/rc.local_shutdown
+    force: no
+    owner: root
+    group: root
+    mode: '0700'
+- name: Stop icmpinfo from /etc/rc.d/rc.local_shutdown (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: yes
+  blockinfile:
+    path: /etc/rc.d/rc.local_shutdown
+    block: |
+      # stop icmpinfo
+      if [ -x /usr/sbin/icmpinfo -a -f /var/run/icmpinfo.pid ]
+      then
+        /usr/sbin/icmpinfo -k
+      fi
