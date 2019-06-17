@@ -25,3 +25,11 @@
     - bashbunny
     - firewire
     - usb-storage
+- name: Make installpkg store md5sums (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  replace:
+    path: /sbin/installpkg
+    regexp: '^(MD5SUM)=[0-9]+$'
+    replace: '\g<1>=1'
+    validate: '/bin/grep "^MD5SUM=1$" %s'
