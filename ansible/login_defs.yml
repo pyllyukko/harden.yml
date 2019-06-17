@@ -157,22 +157,20 @@
     content: "ALL:ALL:DENY\n"
     force: no
     mode: '0400'
-- name: Initialize /var/log/faillog (Slackware)
+- name: Setup faillog (Slackware)
+  block:
+  - name: Initialize /var/log/faillog (Slackware)
+    command: dd if=/dev/zero of=/var/log/faillog bs=32 count=60001
+  - name: Set login failure limits (Slackware)
+    command: faillog -a -l 900 -m 5 -u 1000-60000
+  - name: Change perms of /var/log/faillog
+    file:
+      path: /var/log/faillog
+      owner: root
+      group: adm
+      mode: '0640'
   become: yes
   when: ansible_distribution == "Slackware"
-  command: dd if=/dev/zero of=/var/log/faillog bs=32 count=60001
-- name: Set login failure limits (Slackware)
-  become: yes
-  when: ansible_distribution == "Slackware"
-  command: faillog -a -l 900 -m 5 -u 1000-60000
-- name: Change perms of /var/log/faillog
-  when: ansible_distribution == "Slackware"
-  become: yes
-  file:
-    path: /var/log/faillog
-    owner: root
-    group: adm
-    mode: '0640'
 - name: Fix gshadow (Slackware)
   when: ansible_distribution == "Slackware"
   ignore_errors: yes
