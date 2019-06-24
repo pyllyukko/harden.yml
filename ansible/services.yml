@@ -132,3 +132,21 @@
       then
         /usr/sbin/icmpinfo -k
       fi
+- name: Enable smartd (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  replace:
+    path: /etc/rc.d/rc.M
+    after: '# by default.'
+    before: '# Monitor the UPS with genpowerd.'
+    regexp: '^#(.+)$'
+    replace: '\1'
+- name: Disable atd (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  replace:
+    path: /etc/rc.d/rc.M
+    after: '# Start atd \(manages jobs scheduled with ''at''\):'
+    before: '# Slackware-Mini-Quota-HOWTO:'
+    regexp: '^(.+)$'
+    replace: '#\g<1>'
