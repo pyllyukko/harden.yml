@@ -1,0 +1,95 @@
+---
+# Minor FreeBSD hardening
+- hosts: freebsd
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Harden sysctl settings
+      become: yes
+      when: ansible_distribution == "FreeBSD"
+      sysctl:
+        name: "{{ item.key }}"
+        value: "{{ item.value }}"
+        state: present
+      with_dict:
+        kern.coredump: 0
+        kern.securelevel: 1
+        security.bsd.see_other_uids: 0
+        security.bsd.see_other_gids: 0
+    - name: Enable firewall & auditing
+      become: yes
+      when: ansible_distribution == "FreeBSD"
+      blockinfile:
+        path: /etc/rc.conf
+        block: |
+          firewall_enable="YES"
+          firewall_type="open"
+          auditd_enable="YES"
+    # https://www.freebsd.org/doc/handbook/audit-config.html
+    - name: Start auditd
+      become: yes
+      when: ansible_distribution == "FreeBSD"
+      service:
+        name: auditd
+        state: started
+    - name: Create audit log rotation
+      become: yes
+      when: ansible_distribution == "FreeBSD"
+      cron:
+        name: "audit log rotation"
+        hour: "*/12"
+        job: /usr/sbin/audit -n
+    # https://www.freebsd.org/doc/handbook/consoles.html#consoles-singleuser
+    - name: Ask for password in single User Mode
+      become: yes
+      when: ansible_distribution == "FreeBSD"
+      replace:
+        path: /etc/ttys
+        regexp: '^(console\s+.+\s+)secure$'
+        replace: '\g<1>insecure'
+        validate: '/usr/bin/grep "^console.\+insecure$" %s'
+    - name: Set uucp user's shell to nologin
+      become: yes
+      when: ansible_distribution == "FreeBSD"
+      user:
+        name: uucp
+        shell: /sbin/nologin
+    - name: Remove the user 'toor'
+      become: yes
+      when: ansible_distribution == "FreeBSD"
+      user:
+        name: toor
+        state: absent
+        remove: yes
+    # https://www.freebsd.org/doc/handbook/security-pkg.html
+    - name: Run pkg audit daily
+      become: yes
+      when: ansible_distribution == "FreeBSD"
+      replace:
+        path: /etc/periodic.conf
+        regexp: '^(daily_status_security_pkgaudit_enable)="[A-Z]+"$'
+        replace: '\g<1>="YES"'
+        validate: '/usr/bin/grep "^daily_status_security_pkgaudit_enable=\"YES\"$" %s'
+    # https://www.freebsd.org/doc/handbook/security-accounting.html#idp56794616
+    - name: Enable process accounting
+      block:
+      - name: Create process accounting file
+        copy:
+          content: ""
+          dest: /var/account/acct
+          force: no
+          group: wheel
+          owner: root
+          mode: 0600
+      - name: Enable process accounting
+        command: "{{ item }}"
+        with_items:
+          - accton /var/account/acct
+          - sysrc accounting_enable=yes
+      become: yes
+      when: ansible_distribution == "FreeBSD"
+    - name: 'TCP wrappers: create /etc/hosts.allow'
+      become: yes
+      template:
+        src: "{{ playbook_dir }}/templates/hosts.allow-{{ ansible_system }}.j2"
+        dest: /etc/hosts.allow
