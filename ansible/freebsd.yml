@@ -62,9 +62,13 @@
         state: absent
         remove: yes
     # https://www.freebsd.org/doc/handbook/security-pkg.html
+    - name: Stat /etc/periodic.conf
+      stat:
+        path: /etc/periodic.conf
+      register: stat_result
     - name: Run pkg audit daily
       become: yes
-      when: ansible_distribution == "FreeBSD"
+      when: ansible_distribution == "FreeBSD" and stat_result.stat.exists == True
       replace:
         path: /etc/periodic.conf
         regexp: '^(daily_status_security_pkgaudit_enable)="[A-Z]+"$'
