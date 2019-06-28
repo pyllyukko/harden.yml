@@ -38,6 +38,7 @@
       cron:
         name: "audit log rotation"
         hour: "*/12"
+        minute: "0"
         job: /usr/sbin/audit -n 1>/dev/null
     # https://www.freebsd.org/doc/handbook/consoles.html#consoles-singleuser
     - name: Ask for password in single User Mode
