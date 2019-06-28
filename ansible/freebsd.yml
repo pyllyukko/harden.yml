@@ -24,18 +24,13 @@
         block: |
           firewall_enable="YES"
           firewall_type="open"
-    - name: Enable auditing
+    # https://www.freebsd.org/doc/handbook/audit-config.html
+    - name: Enable & start auditing
       become: yes
       when: ansible_distribution == "FreeBSD"
       service:
         name: auditd
         enabled: yes
-    # https://www.freebsd.org/doc/handbook/audit-config.html
-    - name: Start auditd
-      become: yes
-      when: ansible_distribution == "FreeBSD"
-      service:
-        name: auditd
         state: started
     - name: Create audit log rotation
       become: yes
