@@ -100,12 +100,12 @@
       become: yes
     - name: Get kern.ident
       become: yes
-      command: sysctl -e kern.ident
+      command: sysctl -n kern.ident
       register: kern_ident
     - name: Add rrdcached to allowed_services
       set_fact:
         allowed_services: "{{ allowed_services + [ \"rrdcached\" ] }}"
-      when: kern_ident.stdout == "kern.ident=FREENAS64"
+      when: kern_ident.stdout == "FREENAS64"
     - name: 'TCP wrappers: create /etc/hosts.allow'
       become: yes
       when: ansible_distribution == "FreeBSD"
