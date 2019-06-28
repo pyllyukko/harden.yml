@@ -96,8 +96,11 @@
         service:
           name: accounting
           enabled: yes
+      when: ansible_distribution == "FreeBSD"
+      become: yes
     - name: 'TCP wrappers: create /etc/hosts.allow'
       become: yes
+      when: ansible_distribution == "FreeBSD"
       template:
         src: "{{ playbook_dir }}/templates/hosts.allow-{{ ansible_system }}.j2"
         dest: /etc/hosts.allow
