@@ -16,7 +16,7 @@
         kern.securelevel: 1
         security.bsd.see_other_uids: 0
         security.bsd.see_other_gids: 0
-    - name: Enable firewall & auditing
+    - name: Enable firewall
       become: yes
       when: ansible_distribution == "FreeBSD"
       blockinfile:
@@ -24,7 +24,12 @@
         block: |
           firewall_enable="YES"
           firewall_type="open"
-          auditd_enable="YES"
+    - name: Enable auditing
+      become: yes
+      when: ansible_distribution == "FreeBSD"
+      service:
+        name: auditd
+        enabled: yes
     # https://www.freebsd.org/doc/handbook/audit-config.html
     - name: Start auditd
       become: yes
@@ -85,13 +90,12 @@
           group: wheel
           owner: root
           mode: 0600
-      - name: Enable process accounting
-        command: "{{ item }}"
-        with_items:
-          - accton /var/account/acct
-          - sysrc accounting_enable=yes
-      become: yes
-      when: ansible_distribution == "FreeBSD"
+      - name: Start process accounting
+        command: accton /var/account/acct
+      - name: Enable accounting
+        service:
+          name: accounting
+          enabled: yes
     - name: 'TCP wrappers: create /etc/hosts.allow'
       become: yes
       template:
