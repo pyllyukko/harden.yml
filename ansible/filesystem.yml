@@ -38,3 +38,14 @@
   file:
     path: "{{ tempfile_1.path }}"
     state: absent
+- name: Restrict visibility to /etc/cron.{d,hourly,daily,monthly}/
+  become: yes
+  ignore_errors: yes
+  file:
+    path: /etc/{{ item }}
+    mode: '0700'
+  with_items:
+    - cron.d
+    - cron.hourly
+    - cron.daily
+    - cron.monthly
