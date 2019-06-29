@@ -97,6 +97,11 @@
       block: |
         # single user mode
         ~~:S:wait:/sbin/sulogin
+  - name: Fix rc.K
+    lineinfile:
+      path: /etc/rc.d/rc.K
+      regexp: '^/sbin/telinit'
+      line: /sbin/telinit -t 1 S
   become: yes
   when: ansible_distribution == "Slackware"
 - name: Add LESS variables and disable core dumps
