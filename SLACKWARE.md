@@ -24,29 +24,45 @@ What does it do?
 
 **DISCLAIMER**: This is not a complete list.
 
+### Authentication
+
+* "Fix" the single-user mode to use `su-login` instead of `agetty`
+* Configures a bit better password policy to `login.defs`
+
+### Authorization
+
+* Sets a maximum number of failed login attempts (`faillog`)
+* Create login access control table (`/etc/login.access`)
+* Create access time file (`/etc/porttime`)
+* ~~/etc/limits~~
+* `/etc/login.defs`:
+  * Disallow logins if home dir does not exist
+* SSH `AllowGroups users`
+* Restrict the use of `su` (prefer [sudo][11] instead)
+  * `/etc/suauth`
+  * `/etc/porttime`
+  * `/etc/login.defs`: `SU_WHEEL_ONLY`
+* Restrict use of cron
+
+### Accounting
+
+* Enable [process accounting][9] (acct)
+  * Log rotation for process accounting (pacct), since these files **will** grow huge
+
 ### Harden user accounts
 
 * Sets restrictions for normal users
   * Sets the [maximum number of processes available to a single user](https://en.wikipedia.org/wiki/Fork_bomb#Prevention) (```ulimit -u```)
   * Sets the maximum size of core files created (```ulimit -c```)
   * Sets a session timeout (```TMOUT```) in certain conditions
-  * Sets a maximum number of failed login attempts (```faillog```)
   * Sets stricter umask in all the following locations:
     * /etc/login.defs
     * ~~/etc/limits~~
     * /etc/profile
 * Removes "unnecessary" shells
-* Restricts logins
-  * /etc/login.access
-  * /etc/porttime
-  * ~~/etc/limits~~
-  * /etc/login.defs
-    * Disallow logins if home dir does not exist
-  * SSH ```AllowGroups users```
 * Sets ```useradd``` defaults
   * ```INACTIVE``` days to lock accounts after the password expires
   * ```rbash``` as default shell
-* Configures a bit better password policy to ```login.defs```
 * Changes the hashing mechanism to [SHA512](https://en.wikipedia.org/wiki/SHA-2) and more crypt rounds
 * Removes user daemon from group ```adm``` (as we will take use of the ```adm``` group)
 * Fix ```gshadow``` with ```grpck```
@@ -125,10 +141,6 @@ What does it do?
 
 ### Other controls
 
-* Restrict the use of ```su``` (prefer [sudo][11] instead)
-  * /etc/suauth
-  * /etc/porttime
-  * ```/etc/login.defs```:```SU_WHEEL_ONLY```
 * Modifies crontab behaviour a bit
   * Users in the [wheel][12] group are able to create cronjobs (as described in [/usr/doc/dcron-4.5/README][8])
   * Increase cron's logging from ```notice``` to ```info```
@@ -140,7 +152,6 @@ What does it do?
   * uucp
   * [floppy][7]
 * Make ```installpkg``` store the MD5 checksums
-* "Fix" the single-user mode to use ```su-login``` instead of ```agetty```
 
 #### Periodic checks
 
@@ -186,8 +197,6 @@ As a workaround, there is also a new runlevel **2** that can be used to safely r
 * Makes default log files group ```adm``` readable ([as in Debian](http://www.debian.org/doc/manuals/debian-reference/ch01.en.html#listofnotablesysupsforfileaccess))
   * Notice that this takes place only after logrotate. The ownerships/permissions of the existing logs are not modified.
 * Use ```shred``` to remove rotated log files
-* Enable [process accounting][9] (acct)
-  * Log rotation for process accounting (pacct), since these files **will** grow huge
 * Enables the use of ```xconsole``` (or makes it possible). You can use it with [sudo][11] as follows: ```ADMINS ALL=(:adm) NOPASSWD: /usr/bin/xconsole```
 * Enables ```bootlogd```
 * Makes certain log files [append only](http://www.seifried.org/lasg/logging/)
