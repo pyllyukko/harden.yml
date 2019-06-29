@@ -18,29 +18,52 @@
       PORTTIME_CHECKS_ENAB: "yes"
       NOLOGINS_FILE: "/etc/nologin"
       CHFN_AUTH: "yes"
-- name: Configure login access control table (shadow suite)
-  when: ansible_distribution == "Slackware"
-  become: yes
-  blockinfile:
-    path: /etc/login.access
-    block: |
-      # Allow local login for root and specific group
-      +:root {{ allowed_group }}:LOCAL
-      # Disallow all others
-      -:ALL:ALL
-- name: /etc/shutdown.allow
+- name: Slackware authorization
   block:
-  - name: Create /etc/shutdown.allow
+  - name: Configure login access control table (shadow suite)
+    blockinfile:
+      path: /etc/login.access
+      block: |
+        # Allow local login for root and specific group
+        +:root {{ allowed_group }}:LOCAL
+        # Disallow all others
+        -:ALL:ALL
+  - name: /etc/shutdown.allow
+    block:
+    - name: Create /etc/shutdown.allow
+      copy:
+        content: ""
+        dest: /etc/shutdown.allow
+        force: no
+    - name: Use shutdown -a in /etc/inittab
+      replace:
+        path: /etc/inittab
+        regexp: '^(ca::ctrlaltdel:/sbin/shutdown -t5 -r now)$'
+        replace: '\g<1> -a'
+        validate: '/bin/grep "^ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a$" %s'
+  - name: Create /etc/porttime (Slackware)
     copy:
-      content: ""
-      dest: /etc/shutdown.allow
+      dest: /etc/porttime
+      content: "SU:*:\n"
       force: no
-  - name: Use shutdown -a in /etc/inittab
-    replace:
-      path: /etc/inittab
-      regexp: '^(ca::ctrlaltdel:/sbin/shutdown -t5 -r now)$'
-      replace: '\g<1> -a'
-      validate: '/bin/grep "^ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a$" %s'
+  - name: Create /etc/suauth (Slackware)
+    copy:
+      dest: /etc/suauth
+      content: "ALL:ALL:DENY\n"
+      force: no
+      mode: '0400'
+  - name: Setup faillog (Slackware)
+    block:
+    - name: Initialize /var/log/faillog (Slackware)
+      command: dd if=/dev/zero of=/var/log/faillog bs=32 count=60001
+    - name: Set login failure limits (Slackware)
+      command: faillog -a -l 900 -m 5 -u 1000-60000
+    - name: Change perms of /var/log/faillog
+      file:
+        path: /var/log/faillog
+        owner: root
+        group: adm
+        mode: '0640'
   become: yes
   when: ansible_distribution == "Slackware"
 - name: Set umask to 077 in /etc/profile (Slackware)
@@ -82,35 +105,6 @@
   become: yes
   command: gpasswd -d daemon adm
   ignore_errors: yes
-- name: Create /etc/porttime (Slackware)
-  become: yes
-  when: ansible_distribution == "Slackware"
-  copy:
-    dest: /etc/porttime
-    content: "SU:*:\n"
-    force: no
-- name: Create /etc/suauth (Slackware)
-  become: yes
-  when: ansible_distribution == "Slackware"
-  copy:
-    dest: /etc/suauth
-    content: "ALL:ALL:DENY\n"
-    force: no
-    mode: '0400'
-- name: Setup faillog (Slackware)
-  block:
-  - name: Initialize /var/log/faillog (Slackware)
-    command: dd if=/dev/zero of=/var/log/faillog bs=32 count=60001
-  - name: Set login failure limits (Slackware)
-    command: faillog -a -l 900 -m 5 -u 1000-60000
-  - name: Change perms of /var/log/faillog
-    file:
-      path: /var/log/faillog
-      owner: root
-      group: adm
-      mode: '0640'
-  become: yes
-  when: ansible_distribution == "Slackware"
 - name: Fix gshadow (Slackware)
   when: ansible_distribution == "Slackware"
   ignore_errors: yes
