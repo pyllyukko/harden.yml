@@ -99,13 +99,13 @@
         ~~:S:wait:/sbin/sulogin
   become: yes
   when: ansible_distribution == "Slackware"
-- name: Add LESSSECURE and redirect LESSHISTFILE to /dev/null
+- name: Add LESS variables and disable core dumps
   blockinfile:
     path: /etc/profile
-    insertafter: "^export LESS=\"-M\"$"
     block: |
       export LESSSECURE=1
       export LESSHISTFILE="/dev/null"
+      ulimit -Hc 0
   become: yes
   when: ansible_distribution == "Slackware"
 # https://github.com/ansible/ansible/issues/11024
