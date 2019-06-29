@@ -28,6 +28,7 @@ What does it do?
 
 * "Fix" the single-user mode to use `su-login` instead of `agetty`
 * Configures a bit better password policy to `login.defs`
+* Changes the hashing mechanism to [SHA512](https://en.wikipedia.org/wiki/SHA-2) and more crypt rounds
 
 ### Authorization
 
@@ -63,7 +64,6 @@ What does it do?
 * Sets ```useradd``` defaults
   * ```INACTIVE``` days to lock accounts after the password expires
   * ```rbash``` as default shell
-* Changes the hashing mechanism to [SHA512](https://en.wikipedia.org/wiki/SHA-2) and more crypt rounds
 * Removes user daemon from group ```adm``` (as we will take use of the ```adm``` group)
 * Fix ```gshadow``` with ```grpck```
 
