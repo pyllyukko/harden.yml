@@ -148,5 +148,5 @@
     path: /etc/rc.d/rc.M
     after: '# Start atd \(manages jobs scheduled with ''at''\):'
     before: '# Slackware-Mini-Quota-HOWTO:'
-    regexp: '^(.+)$'
+    regexp: '^#?(.+)$'
     replace: '#\g<1>'
