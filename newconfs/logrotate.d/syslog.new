@@ -1,0 +1,12 @@
+/var/log/cron /var/log/debug /var/log/maillog /var/log/messages /var/log/secure /var/log/spooler /var/log/syslog {
+    sharedscripts
+    prerotate
+	# remove the append only flag, so logrotate can do it's job
+	/usr/bin/chattr -a /var/log/{cron,debug,maillog,messages,secure,spooler,syslog}
+    endscript
+    postrotate
+	# make logs append only
+	/usr/bin/chattr +a /var/log/{cron,debug,maillog,messages,secure,spooler,syslog}
+	/bin/kill -HUP `cat /var/run/syslogd.pid 2>/dev/null` 2>/dev/null || true
+    endscript
+}

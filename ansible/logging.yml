@@ -13,3 +13,9 @@
     regexp: '^(\s+rotate\s+)1$'
     replace: '\g<1>{{ log_retention_time_in_months }}'
     validate: '/bin/grep "^\s\+rotate\s\+{{ log_retention_time_in_months }}$" %s'
+- name: Make some log files append only (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  copy:
+    src: "{{ playbook_dir }}/../newconfs/logrotate.d/syslog.new"
+    dest: /etc/logrotate.d/syslog
