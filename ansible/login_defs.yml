@@ -20,26 +20,7 @@
       ENCRYPT_METHOD: "SHA512"
       CHFN_RESTRICT: "rwh"
       DEFAULT_HOME: "no"
-- name: Configure shadow password suite (Slackware specific)
-  become: yes
-  when: ansible_distribution == "Slackware"
-  replace:
-    path: /etc/login.defs
-    regexp: '^(# ?)?({{ item.key }}\s+)[^\s]+$'
-    replace: '\g<2>{{ item.value }}'
-    validate: '/bin/grep "^{{ item.key }}\s\+{{ item.value }}$" %s'
-  with_dict: "{{ defs_slackware }}"
-  vars:
-    defs_slackware:
-      LASTLOG_ENAB: "yes"
-      PASS_MIN_LEN: 8
-      FAIL_DELAY: 20
-      CREATE_HOME: "yes"
-      SU_WHEEL_ONLY: "yes"
-      PORTTIME_CHECKS_ENAB: "yes"
-      NOLOGINS_FILE: "/etc/nologin"
-      CHFN_AUTH: "yes"
-- name: Install glibc package
+- name: Install glibc package (Slackware)
   when: ansible_distribution == "Slackware"
   become: yes
   command: slackpkg -batch=on -default_answer=y install glibc
@@ -49,36 +30,11 @@
   shell: getent group {{ allowed_group }} | cut -d':' -f4
   register: members_of_group
   failed_when: members_of_group.stdout == ""
-- name: Configure login access control table (shadow suite)
-  when: ansible_distribution == "Slackware"
-  become: yes
-  blockinfile:
-    path: /etc/login.access
-    block: |
-      # Allow local login for root and specific group
-      +:root {{ allowed_group }}:LOCAL
-      # Disallow all others
-      -:ALL:ALL
 - name: Limit the list of terminals from which root can log in (securetty)
   become: yes
   copy:
     src: "{{ playbook_dir }}/../newconfs/securetty.new"
     dest: /etc/securetty
-- name: Create /etc/shutdown.allow
-  become: yes
-  when: ansible_distribution == "Slackware"
-  copy:
-    content: ""
-    dest: /etc/shutdown.allow
-    force: no
-- name: Use shutdown -a in /etc/inittab
-  become: yes
-  when: ansible_distribution == "Slackware"
-  replace:
-    path: /etc/inittab
-    regexp: '^(ca::ctrlaltdel:/sbin/shutdown -t5 -r now)$'
-    replace: '\g<1> -a'
-    validate: '/bin/grep "^ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a$" %s'
 - name: Create /etc/profile.d/tmout.sh
   become: yes
   copy:
@@ -87,14 +43,6 @@
     owner: root
     group: root
     mode: '0755'
-- name: Set umask to 077 in /etc/profile (Slackware)
-  become: yes
-  when: ansible_distribution == "Slackware"
-  replace:
-    path: /etc/profile
-    regexp: '^(umask) [0-9]+$'
-    replace: '\g<1> 077'
-    validate: '/bin/grep "^umask 077$" %s'
 - name: Warn users about expiring password
   become: yes
   copy:
@@ -103,23 +51,6 @@
     owner: root
     group: root
     mode: '0755'
-- name: Remove S from System initialization (Slackware)
-  become: yes
-  when: ansible_distribution == "Slackware"
-  replace:
-    path: /etc/inittab
-    regexp: '^si:S:sysinit:/etc/rc.d/rc.S$'
-    replace: 'si::sysinit:/etc/rc.d/rc.S'
-    validate: '/bin/grep "^si::sysinit:/etc/rc.d/rc.S$" %s'
-- name: Create separate entry for single user mode which requires authentication (Slackware)
-  become: yes
-  when: ansible_distribution == "Slackware"
-  blockinfile:
-    path: /etc/inittab
-    insertafter: "^x1:4:respawn:/etc/rc.d/rc.4$"
-    block: |
-      # single user mode
-      ~~:S:wait:/sbin/sulogin
 - name: getent passwd
   getent:
     database: passwd
@@ -128,54 +59,8 @@
   template:
     src: "{{ playbook_dir }}/templates/ftpusers.j2"
     dest: /etc/ftpusers
-# https://github.com/ansible/ansible/issues/11024
-- name: Remove daemon from adm group (Slackware)
+- include: login_defs-slackware.yml
   when: ansible_distribution == "Slackware"
-  become: yes
-  command: gpasswd -d daemon adm
-  ignore_errors: yes
-- name: Set defchmod to 700 in /usr/sbin/adduser (Slackware)
-  become: yes
-  when: ansible_distribution == "Slackware"
-  replace:
-    path: /usr/sbin/adduser
-    regexp: '^(defchmod)=[0-9]+.*'
-    replace: '\g<1>=700 # home dir permissions'
-    validate: '/bin/grep "^defchmod=700 # home dir permissions$" %s'
-- name: Create /etc/porttime (Slackware)
-  become: yes
-  when: ansible_distribution == "Slackware"
-  copy:
-    dest: /etc/porttime
-    content: "SU:*:\n"
-    force: no
-- name: Create /etc/suauth (Slackware)
-  become: yes
-  when: ansible_distribution == "Slackware"
-  copy:
-    dest: /etc/suauth
-    content: "ALL:ALL:DENY\n"
-    force: no
-    mode: '0400'
-- name: Setup faillog (Slackware)
-  block:
-  - name: Initialize /var/log/faillog (Slackware)
-    command: dd if=/dev/zero of=/var/log/faillog bs=32 count=60001
-  - name: Set login failure limits (Slackware)
-    command: faillog -a -l 900 -m 5 -u 1000-60000
-  - name: Change perms of /var/log/faillog
-    file:
-      path: /var/log/faillog
-      owner: root
-      group: adm
-      mode: '0640'
-  become: yes
-  when: ansible_distribution == "Slackware"
-- name: Fix gshadow (Slackware)
-  when: ansible_distribution == "Slackware"
-  ignore_errors: yes
-  become: yes
-  shell: yes | grpck
 - name: Verify integrity of group files
   become: yes
   command: grpck -r
