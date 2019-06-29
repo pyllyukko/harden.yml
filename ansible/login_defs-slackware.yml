@@ -28,21 +28,21 @@
       +:root {{ allowed_group }}:LOCAL
       # Disallow all others
       -:ALL:ALL
-- name: Create /etc/shutdown.allow
+- name: /etc/shutdown.allow
+  block:
+  - name: Create /etc/shutdown.allow
+    copy:
+      content: ""
+      dest: /etc/shutdown.allow
+      force: no
+  - name: Use shutdown -a in /etc/inittab
+    replace:
+      path: /etc/inittab
+      regexp: '^(ca::ctrlaltdel:/sbin/shutdown -t5 -r now)$'
+      replace: '\g<1> -a'
+      validate: '/bin/grep "^ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a$" %s'
   become: yes
   when: ansible_distribution == "Slackware"
-  copy:
-    content: ""
-    dest: /etc/shutdown.allow
-    force: no
-- name: Use shutdown -a in /etc/inittab
-  become: yes
-  when: ansible_distribution == "Slackware"
-  replace:
-    path: /etc/inittab
-    regexp: '^(ca::ctrlaltdel:/sbin/shutdown -t5 -r now)$'
-    replace: '\g<1> -a'
-    validate: '/bin/grep "^ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a$" %s'
 - name: Set umask to 077 in /etc/profile (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
@@ -59,23 +59,23 @@
     regexp: '^(defchmod)=[0-9]+.*'
     replace: '\g<1>=700 # home dir permissions'
     validate: '/bin/grep "^defchmod=700 # home dir permissions$" %s'
-- name: Remove S from System initialization (Slackware)
+- name: Single user mode authentication
+  block:
+  - name: Remove S from System initialization (Slackware)
+    replace:
+      path: /etc/inittab
+      regexp: '^si:S:sysinit:/etc/rc.d/rc.S$'
+      replace: 'si::sysinit:/etc/rc.d/rc.S'
+      validate: '/bin/grep "^si::sysinit:/etc/rc.d/rc.S$" %s'
+  - name: Create separate entry for single user mode which requires authentication (Slackware)
+    blockinfile:
+      path: /etc/inittab
+      insertafter: "^x1:4:respawn:/etc/rc.d/rc.4$"
+      block: |
+        # single user mode
+        ~~:S:wait:/sbin/sulogin
   become: yes
   when: ansible_distribution == "Slackware"
-  replace:
-    path: /etc/inittab
-    regexp: '^si:S:sysinit:/etc/rc.d/rc.S$'
-    replace: 'si::sysinit:/etc/rc.d/rc.S'
-    validate: '/bin/grep "^si::sysinit:/etc/rc.d/rc.S$" %s'
-- name: Create separate entry for single user mode which requires authentication (Slackware)
-  become: yes
-  when: ansible_distribution == "Slackware"
-  blockinfile:
-    path: /etc/inittab
-    insertafter: "^x1:4:respawn:/etc/rc.d/rc.4$"
-    block: |
-      # single user mode
-      ~~:S:wait:/sbin/sulogin
 # https://github.com/ansible/ansible/issues/11024
 - name: Remove daemon from adm group (Slackware)
   when: ansible_distribution == "Slackware"
