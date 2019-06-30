@@ -179,6 +179,8 @@ declare -ra PGP_KEYS=(
   "0x05C027FD4BDC136E"
   # LEDE Release Builder (17.01 "Reboot" Signing Key)
   "0x833C6010D52BBB6B"
+  # LEDE Build System (LEDE GnuPG key for unattended build jobs)
+  "0xCD84BCED626471F1"
   # GNU IceCat releases <gnuzilla-dev@gnu.org>
   "0x3C76EED7D7E04784"
   # Nick Clifton (Chief Binutils Maintainer)
