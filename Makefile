@@ -135,6 +135,9 @@ aircrack-apparmor-profiles: $(aircrack-apparmor-profiles)
 /etc/%: /etc/%.new
 	if [ -f $@ ]; then cmp $@ $< && rm -v $< || true; else mv -v $< $@; fi
 
+/etc/lynis/custom.prf: | /etc/lynis/
+	grep '^skip-test=' $(CWD)/slackware-14.2.prf 1>$@
+
 # TODO: chmod in debian is in /bin
 /var/log/pacct:
 	/usr/bin/touch $@
