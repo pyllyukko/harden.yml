@@ -217,6 +217,22 @@ As a workaround, there is also a new runlevel **2** that can be used to safely r
 * Download & verify Slackware ```MANIFEST``` by running ```make manifest```
 * Check Slackware installation's integrity from ```MANIFEST``` (owner & permission) (```-I``` switch)
 
+Slackware audit profile
+-----------------------
+
+There's a Slackware audit profile for Lynis in this repo. The main differences to `default.prf` are:
+
+* Disable [PAM plugin](https://github.com/CISOfy/lynis/blob/master/plugins/plugin_pam_phase1)
+* Disable [systemd plugin](https://github.com/CISOfy/lynis/blob/master/plugins/plugin_systemd_phase1)
+* Disable [PAM](http://www.linux-pam.org/) checks:
+  * [AUTH-9262](https://cisofy.com/lynis/controls/AUTH-9262/)
+  * AUTH-9264 (`pam.conf`)
+  * AUTH-9266 (`pam.d` files)
+  * AUTH-9268 (PAM modules)
+  * AUTH-9278 (PAM LDAP)
+* [PKGS-7398](https://cisofy.com/lynis/controls/PKGS-7398/) (package audit tool)
+* [PKGS-7308](https://cisofy.com/lynis/controls/PKGS-7308/) (RPM)
+
 Other security software
 -----------------------
 
