@@ -191,6 +191,8 @@ declare -ra PGP_KEYS=(
   "0xF13F9E16BCA5BFAD"
   # OpenWrt Release Builder (18.06 Signing Key)
   "0x0F20257417E1CE16"
+  # https://www.php.net/downloads.php#gpg-7.2
+  "0xDC9FF8D3EE5AF27F"
 )
 function import_pgp_keys() {
   local URL
