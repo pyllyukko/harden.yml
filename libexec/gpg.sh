@@ -195,6 +195,8 @@ declare -ra PGP_KEYS=(
   "0xDC9FF8D3EE5AF27F"
   # Bintray (by JFrog) <bintray@bintray.com> (boost library)
   "0x379CE192D401AB61"
+  # Marcus Müller (GNU Radio)
+  "0xD34D1A1F4A44088DEB70085EA06C6D95DFC71475"
 )
 function import_pgp_keys() {
   local URL
