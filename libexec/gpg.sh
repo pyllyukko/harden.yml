@@ -193,6 +193,8 @@ declare -ra PGP_KEYS=(
   "0x0F20257417E1CE16"
   # https://www.php.net/downloads.php#gpg-7.2
   "0xDC9FF8D3EE5AF27F"
+  # Bintray (by JFrog) <bintray@bintray.com> (boost library)
+  "0x379CE192D401AB61"
 )
 function import_pgp_keys() {
   local URL
