@@ -8,17 +8,14 @@ mozilla/DigiCert_Global_Root_CA.crt
 mozilla/DigiCert_Global_Root_G2.crt
 mozilla/Entrust.net_Premium_2048_Secure_Server_CA.crt
 mozilla/Entrust_Root_Certification_Authority_-_G2.crt
-mozilla/Equifax_Secure_CA.crt
 mozilla/GeoTrust_Global_CA.crt
 mozilla/GeoTrust_Primary_Certification_Authority.crt
 mozilla/GlobalSign_Root_CA.crt
 mozilla/Go_Daddy_Class_2_CA.crt
 mozilla/Go_Daddy_Root_Certificate_Authority_-_G2.crt
 mozilla/Starfield_Class_2_CA.crt
-mozilla/UTN_USERFirst_Hardware_Root_CA.crt
 mozilla/Verisign_Class_3_Public_Primary_Certification_Authority_-_G3.crt
 mozilla/VeriSign_Class_3_Public_Primary_Certification_Authority_-_G5.crt
-mozilla/Verisign_Class_3_Public_Primary_Certification_Authority.crt
 mozilla/thawte_Primary_Root_CA.crt
 mozilla/thawte_Primary_Root_CA_-_G3.crt
 mozilla/SecureTrust_CA.crt
