@@ -12,6 +12,11 @@ debian_services:
   - cups
   - cups-browsed
   - atd
+  # for servers
+  #- triggerhappy
+  #- wpa_supplicant
+  #- alsa-restore
+  #- alsa-state
 allowed_services:
   - sshd
 allowed_tcp_ports:
