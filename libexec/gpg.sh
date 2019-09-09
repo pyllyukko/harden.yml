@@ -173,6 +173,7 @@ declare -ra PGP_KEYS=(
   "0x4D6644A9DA036904BDA2CB90E6C9E3350D3E7410"
   # https://developers.yubico.com/Software_Projects/Software_Signing.html
   "0x0a3b0262bca1705307d5ff06bca00fd4b2168c0a"
+  "0x59944611C823D88CEB7245B906FC004369E7D338"
   # Stefan Seelmann (CODE SIGNING KEY) <seelmann@apache.org> (for Apache Directory Studio)
   "0x63CE676698B26D3A36D77527223BD93328686142"
   # Openwall offline signing key
