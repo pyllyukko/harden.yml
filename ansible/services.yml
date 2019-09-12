@@ -142,5 +142,24 @@
       before: '# Slackware-Mini-Quota-HOWTO:'
       regexp: '^#?(.+)$'
       replace: '#\g<1>'
+  - name: NFSv4 support in rc.inet2
+    blockinfile:
+      path: /etc/rc.d/rc.inet2
+      insertbefore: "^# If /etc/rc.d/rc.rpc is executable, run it to load rpc.portmap, rpc.lockd,$"
+      block: |
+        # Mount remote (NFSv4) filesystems:
+        if cat /etc/fstab | grep -v '^#' | grep -w nfs4 1> /dev/null 2> /dev/null ; then
+          # Check if we have Kerberos keytab
+          if [ -f /etc/krb5.keytab -a -x /usr/sbin/rpc.gssd ]
+          then
+            if ! ps axc | grep -q rpc.gssd ; then
+              echo "Starting RPCSEC_GSS daemon:  /usr/sbin/rpc.gssd"
+              /usr/sbin/rpc.gssd
+            fi
+          fi
+          echo "Mounting remote (NFSv4) file systems:  /sbin/mount -a -t nfs4"
+          /sbin/mount -a -t nfs4
+          /sbin/mount -v -t nfs4
+        fi
   when: ansible_distribution == "Slackware"
   become: yes
