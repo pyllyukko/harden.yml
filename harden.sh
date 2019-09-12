@@ -583,6 +583,7 @@ function usage() {
 	  /etc/fstab.new
 	  manifest
 	  pam-configs
+	  dh-[numbits].pem
 EOF
   # print functions
   #declare -f 2>/dev/null | sed -n '/^.* () $/s/^/  /p'
