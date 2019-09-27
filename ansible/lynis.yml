@@ -1,26 +1,39 @@
 # https://packages.cisofy.com/community/#debian-ubuntu
-- name: Install apt-transport-https
-  become: yes
+- name: Install Lynis into Debian
+  block:
+  - name: Install apt-transport-https
+    apt:
+      name: apt-transport-https
+      update_cache: yes
+  - name: Add Lynis signing key
+    apt_key:
+      id: C80E383C3DE9F082E01391A0366C67DE91CA5D5F
+      url: https://packages.cisofy.com/keys/cisofy-software-public.key
+      state: present
+  - name: Add Lynis repository
+    apt_repository:
+      repo: deb https://packages.cisofy.com/community/lynis/deb/ stable main
+      state: present
+  - name: Install Lynis
+    apt:
+      name: lynis
+      update_cache: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-  apt:
-    name: apt-transport-https
-    update_cache: yes
-- name: Add Lynis signing key
   become: yes
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-  apt_key:
-    id: C80E383C3DE9F082E01391A0366C67DE91CA5D5F
-    url: https://packages.cisofy.com/keys/cisofy-software-public.key
-    state: present
-- name: Add Lynis repository
+- name: Install Lynis into CentOS
+  block:
+  - name: Add Lynis repository
+    yum_repository:
+      name: lynis
+      description: CISOfy Software - Lynis package
+      baseurl: https://packages.cisofy.com/community/lynis/rpm/
+      gpgkey: https://packages.cisofy.com/keys/cisofy-software-rpms-public.key
+      gpgcheck: yes
+      priority: 2
+      enabled: yes
+  - name: Install Lynis
+    yum:
+      name: lynis
+      update_cache: yes
+  when: ansible_distribution == "CentOS"
   become: yes
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-  apt_repository:
-    repo: deb https://packages.cisofy.com/community/lynis/deb/ stable main
-    state: present
-- name: Install Lynis
-  become: yes
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-  apt:
-    name: lynis
-    update_cache: yes
