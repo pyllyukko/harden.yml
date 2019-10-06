@@ -41,6 +41,14 @@
   file:
     path: /etc/cron.deny
     state: absent
+- name: Create a job that checks systemd's state
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
+  cron:
+    name: "Check SystemState"
+    job: "/bin/systemctl show --property=SystemState | /bin/grep -v '^SystemState=running$'"
+    minute: "*/5"
+    state: present
 - name: Increase crond's log level (Slackware)
   when: ansible_distribution == "Slackware"
   become: yes
