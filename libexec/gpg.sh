@@ -198,6 +198,8 @@ declare -ra PGP_KEYS=(
   "0x379CE192D401AB61"
   # Marcus Müller (GNU Radio)
   "0xD34D1A1F4A44088DEB70085EA06C6D95DFC71475"
+  # Steve Dickson <steved@redhat.com> (nfs-utils)
+  "0xFEFAD1BB14447F4968C1971095D24347967C393E"
 )
 function import_pgp_keys() {
   local URL
