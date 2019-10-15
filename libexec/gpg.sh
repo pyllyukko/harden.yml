@@ -1,5 +1,5 @@
 #!/bin/bash
-declare GPG_KEYRING="trustedkeys.gpg"
+declare GPG_KEYRING="trustedkeys.kbx"
 # more info about these PGP keys:
 #   - https://tails.boum.org/download/index.en.html#verify
 #   - TODO: http://www.snort.org/snort-downloads#pgp
