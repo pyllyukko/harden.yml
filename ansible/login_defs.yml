@@ -24,12 +24,6 @@
   when: ansible_distribution == "Slackware"
   become: yes
   command: slackpkg -batch=on -default_answer=y install glibc
-# The login ACL following this task will actually start blocking access, so
-# check that we are not locking ourselves out of the system being hardened.
-- name: 'Check that some user(s) exist in "{{ allowed_group }}" group'
-  shell: getent group {{ allowed_group }} | cut -d':' -f4
-  register: members_of_group
-  failed_when: members_of_group.stdout == ""
 - name: Limit the list of terminals from which root can log in (securetty)
   become: yes
   copy:
