@@ -118,6 +118,7 @@ declare -ra PGP_KEYS=(
   "0x24C6A8A7F4A80EB5"
   # RVM https://rvm.io/rvm/security
   "0x409B6B1796C275462A1703113804BB82D39DC0E3"
+  "0x7D2BAF1CF37B13E2069D6956105BD0E739499BDB"
   # The Irssi project <staff@irssi.org>
   "0x00CCB587DDBEF0E1"
   # LEAP (https://bitmask.net/en/install/signature-verification)
