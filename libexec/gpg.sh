@@ -208,6 +208,13 @@ function import_pgp_keys() {
   local schema
 
   print_topic "importing PGP keys"
+
+  if grep -q '^keyring' ~/.gnupg/gpg.conf
+  then
+    echo "[-] WARNING: you have keyring definitions in your gpg.conf. refusing to run." 1>&2
+    return 1
+  fi
+
   # keys with URL
   echo -n "from URLs (${#PGP_URLS[*]} keys)"
   for URL in ${PGP_URLS[*]}
