@@ -4,12 +4,6 @@
 # harden.sh -- https://github.com/pyllyukko/harden.sh
 #
 ################################################################################
-if [ ${BASH_VERSINFO[0]} -ne 4 ]
-then
-  echo -e "error: bash version != 4, this script might not work properly!" 1>&2
-  echo    "       you can bypass this check by commenting out lines $[${LINENO}-2]-$[${LINENO}+2]." 1>&2
-  exit 1
-fi
 shopt -s extglob
 set -u
 export PATH="/usr/sbin:/sbin:/usr/bin:/bin"
