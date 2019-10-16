@@ -18,3 +18,4 @@
     - include: misc.yml
     - include: banners.yml
     - include: network.yml
+    - include: entropy.yml

@@ -187,6 +187,7 @@
     - include: misc.yml
     - include: banners.yml
     - include: network.yml
+    - include: entropy.yml
     - name: Run Lynis (again)
       become: yes
       command: ./lynis -Q
