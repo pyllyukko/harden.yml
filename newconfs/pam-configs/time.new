@@ -1,0 +1,6 @@
+Name: /etc/security/time.conf access control
+Default: no
+Priority: 0
+Account-Type: Additional
+Account:
+	required			pam_time.so

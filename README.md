@@ -89,6 +89,7 @@ What does it do?
   * Deter brute-force attacks with [pam_tally2](http://linux-pam.org/Linux-PAM-html/sag-pam_tally2.html)
   * Polyinstantiated temp directories with [pam_namespace](http://linux-pam.org/Linux-PAM-html/sag-pam_namespace.html)
   * ```/etc/security/access.conf``` access control with [pam_access](http://linux-pam.org/Linux-PAM-html/sag-pam_access.html)
+  * `/etc/security/time.conf` access control with [pam_time](http://linux-pam.org/Linux-PAM-html/sag-pam_time.html)
   * Delay on authentication failure with [pam_faildelay](http://linux-pam.org/Linux-PAM-html/sag-pam_faildelay.html)
   * Set file mode creation mask with [pam_umask](http://linux-pam.org/Linux-PAM-html/sag-pam_umask.html)
   * Enable ```lastlog```ging from all login methods (not just the console ```login```)
