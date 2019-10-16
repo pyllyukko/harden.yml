@@ -141,6 +141,7 @@ After running the hardening script, the following actions still need to be perfo
   - [ ] [Aide](http://aide.sourceforge.net/)
   - [ ] ClamAV
   - [ ] arpwatch
+  - [ ] rngd (if you have [HRNG](https://en.wikipedia.org/wiki/Hardware_random_number_generator))
 - [ ] Make sure NTP is running
 - [ ] Configure remote log host
 - [ ] Add legit users to:
