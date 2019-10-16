@@ -58,5 +58,11 @@
     with_items:
       - sudoers.d
       - sudoers
+  - name: Kerberos keytab
+    file:
+      path: /etc/krb5.keytab
+      mode: '0600'
+      owner: root
+      group: root
   become: yes
   ignore_errors: yes
