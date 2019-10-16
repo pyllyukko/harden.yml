@@ -1,6 +1,6 @@
 ---
 - name: Disable core dumps
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
   become: yes
   pam_limits:
     domain: '*'
