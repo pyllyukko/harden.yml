@@ -1,0 +1,51 @@
+---
+- name: Configure ClamAV
+  become: yes
+  replace:
+    path: /etc/clamd.conf
+    regexp: '^#?({{ item.key }} ).*$'
+    replace: '\g<1>{{ item.value }}'
+    validate: '/bin/grep "^{{ item.key }} {{ item.value }}$" %s'
+  with_dict: "{{ clamav_settings }}"
+  vars:
+    clamav_settings:
+      LogTime: yes
+      LogSyslog: yes
+      LogFacility: LOG_LOCAL6
+      ExtendedDetectionInfo: yes
+      CrossFilesystems: yes
+      DetectPUA: yes
+      HeuristicAlerts: yes
+      HeuristicScanPrecedence: no
+      AlertBrokenExecutables: yes
+      ScanPE: yes
+      ScanELF: yes
+      ScanOLE2: yes
+      ScanPDF: yes
+      ScanSWF: yes
+      ScanXMLDOCS: yes
+      ScanHWP3: yes
+      ScanMail: yes
+      PhishingSignatures: yes
+      PhishingScanURLs: yes
+      ScanHTML: yes
+      ScanArchive: yes
+      Bytecode: yes
+      BytecodeSecurity: Paranoid
+- name: Configure freshclam
+  become: yes
+  replace:
+    path: /etc/freshclam.conf
+    regexp: '^#?({{ item.key }} ).*$'
+    replace: '\g<1>{{ item.value }}'
+    validate: '/bin/grep "^{{ item.key }} {{ item.value }}$" %s'
+  with_dict: "{{ freshclam_settings }}"
+  vars:
+    freshclam_settings:
+      LogTime: yes
+      LogFacility: LOG_LOCAL6
+      ScriptedUpdates: yes
+      CompressLocalDatabase: no
+      ReceiveTimeout: 300
+      TestDatabases: yes
+      Bytecode: yes
