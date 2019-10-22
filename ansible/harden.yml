@@ -3,6 +3,7 @@
   vars_files:
     - vars.yml
   tasks:
+    #- include: sudoers.yml
     - include: lynis.yml
     - include: filesystem.yml
     - include: ca-certs.yml

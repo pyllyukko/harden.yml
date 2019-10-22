@@ -1,0 +1,11 @@
+---
+- name: Set file permissions/ownership for sudoers
+  file:
+    path: /etc/{{ item }}
+    mode: g-w,o-rwx
+    owner: root
+    group: root
+  become: yes
+  with_items:
+    - sudoers.d
+    - sudoers

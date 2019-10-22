@@ -474,7 +474,6 @@ function usage() {
 	  		  - removes unnecessary shells
 	  		  - imports PGP keys
 	  		  - applies the etc hardening patch
-	  		  - applies the sudoers hardening patch
 	  		  - applies the SSH hardening patch
 	  		  - disables unnecessary services
 	  		  - miscellaneous_settings()
@@ -554,7 +553,6 @@ function usage() {
 	      apache
 	      sendmail
 	      php
-	      sudoers
 	      wipe **HIGHLY EXPERIMENTAL AND DANGEROUS**
 
 	  -q	"quick harden" - just some generic stuff that should work on any system
@@ -777,7 +775,6 @@ do
       import_pgp_keys
       check_and_patch /etc	"${ETC_PATCH_FILE}"	1 && ETC_CHANGED=1
       apply_newconfs . cron.d logrotate.d rc.d modprobe.d
-      check_and_patch /etc	"${SUDOERS_PATCH_FILE}"	1
       check_and_patch /etc	"${SSH_PATCH_FILE}"	1
 
       # this should be run after patching etc,
@@ -867,7 +864,6 @@ do
         "apache")	check_and_patch /etc/httpd "${APACHE_PATCH_FILE}" 3		;;
 	"sendmail")	patch_sendmail							;;
 	"php")		check_and_patch /etc/httpd php_harden.patch 1			;;
-        "sudoers")	check_and_patch /etc "${SUDOERS_PATCH_FILE}" 1			;;
 	"wipe")
 	  check_and_patch /etc wipe.patch 1
 	  {
@@ -892,7 +888,6 @@ do
         "apache")	check_and_patch /etc/httpd "${APACHE_PATCH_FILE}" 3 reverse		;;
         "sendmail")	patch_sendmail reverse							;;
 	"php")		check_and_patch /etc/httpd php_harden.patch 1 reverse			;;
-        "sudoers")	check_and_patch /etc	"${SUDOERS_PATCH_FILE}"	1 reverse		;;
 	"wipe")
 	  check_and_patch /etc wipe.patch 1 reverse
           /sbin/init q

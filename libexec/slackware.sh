@@ -55,8 +55,6 @@ fi
 #declare -r APACHE_PATCH_VERSION="2.4.3-20120929-1"
 declare -r APACHE_PATCH_FILE="apache_harden.patch"
 declare -r SENDMAIL_PATCH_FILE="sendmail_harden.patch"
-declare -r SUDOERS_PATCH_VERSION="1.8.12"
-declare -r SUDOERS_PATCH_FILE="sudoers-${SUDOERS_PATCH_VERSION}.patch"
 # OpenSSH configs differ between versions, so we need to have quite version
 # specific patches, it also isn't Slackware version dependent, so we need to
 # try to detect it.

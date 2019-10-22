@@ -49,15 +49,7 @@
       - cron.hourly
       - cron.daily
       - cron.monthly
-  - name: sudoers
-    file:
-      path: /etc/{{ item }}
-      mode: g-w,o-rwx
-      owner: root
-      group: root
-    with_items:
-      - sudoers.d
-      - sudoers
+  - include: filesystem-sudoers.yml
   - name: Kerberos keytab
     file:
       path: /etc/krb5.keytab

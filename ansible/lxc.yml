@@ -99,6 +99,7 @@
     - include: misc.yml
     - include: banners.yml
     - include: network.yml
+    - include: sudoers.yml
     - name: Run Lynis (again)
       become: yes
       command: /usr/sbin/lynis -Q
@@ -126,6 +127,7 @@
         /etc/security/namespace.conf: 0a141ce7e6f601b485771bf76c0da677440a783b1beef180b5fa318f0b7dd6062d533c8e79b92ea8da4d0e303aa7d31c9d3359552b60c00da52a178377ed7dd8
         /etc/hosts.allow: 65c9832595051d0b96b3c7282ae2a2e08a593f7be34fa02c34fa7cf850ca15a3b9313f88fe6b34b746dc7d41974e638790f98db300920ff80aaba0809e6a65bc
         /etc/hosts.deny: 5a2aba03254a150de369afbbbb477af808c49bc7f15ad6a30f4f49c1dd4394a30f10c31f19ea108af8e1bf2f21862ea4ec95a439f4cd4a4af2edf24702b65b3e
+        /etc/sudoers: ca4bf83aca2647cc3331bdaef655cf0fb6d6ce93bdc8aade92d6645fc7a6f54f4884afd4f9ee8b8a5ac4cc01aec544228584d5c98360fb0530f782b396325c9e
 
 - hosts: harden.sh-test-slackware
   vars:
@@ -189,6 +191,7 @@
     - include: banners.yml
     - include: network.yml
     - include: entropy.yml
+    - include: sudoers.yml
     - name: Run Lynis (again)
       become: yes
       command: ./lynis -Q
@@ -224,3 +227,4 @@
         /etc/rc.d/rc.K: 937b12d9bf2036cfcf3c998d12ba9b64bfa1044c404a1ecfff8dc346f154eb7f411c009806e325527a6f849fb1ad6cdda5a23e443b64a04042b515cdb12ec49d
         /etc/rc.d/rc.inet2: 50016486e2f9fc7b62425be3411d6018ccdf4217202bfe0f259012d521b4e683a6195cccf91924c659209fb92f47f5341d8091a12024238cddcc21276b0dfeca
         /etc/logrotate.d/syslog: a3d706dd7a94b1f58d362d9222b0d473c6c6d6d1d166813bc57a0f523cfe67792ee75dfd09e6e07a28794fcecf76dcdfeb5a96992c4ae324f118a21630de1126
+        /etc/sudoers: 000f40e3b4eb49a9e901f60b5bf810febb1fd0e6b0424fa5b93cb6f900c5c027faa5020d6f4729e48c925eb9a1982f3b49875725be2d7ad3d23c44f16d1febbf
