@@ -4,6 +4,11 @@
   register: members_of_group
   failed_when: members_of_group.stdout == ""
   when: ansible_distribution == "Debian"
+- name: 'Check that some user(s) exist in "wheel" group'
+  shell: getent group wheel | cut -d':' -f4
+  register: members_of_group
+  failed_when: members_of_group.stdout == "" or members_of_group.stdout == "root"
+  when: ansible_distribution == "Slackware"
 - name: 'Configure /etc/sudoers'
   become: yes
   template:

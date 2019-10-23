@@ -90,7 +90,11 @@ Defaults	passwd_tries=2, passwd_timeout=1
 root ALL=(ALL) ALL
 
 ## Uncomment to allow members of group wheel to execute any command
+{% if ansible_distribution == "Slackware" %}
+%wheel ALL=(ALL) ALL
+{% else %}
 # %wheel ALL=(ALL) ALL
+{% endif %}
 
 ## Same thing without a password
 # %wheel ALL=(ALL) NOPASSWD: ALL

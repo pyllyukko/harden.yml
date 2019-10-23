@@ -28,7 +28,7 @@
       with_items:
         - /bin/sed -i 's/^\(USE_DHCP\[0\]=\).*$/\1"yes"/' /etc/rc.d/rc.inet1.conf
         - /bin/sh /etc/rc.d/rc.inet1 start
-        - useradd -m -G {{ allowed_group }} slackware
+        - useradd -m -G {{ allowed_group }},wheel slackware
         - echo "slackware:slackware" | chpasswd
         - yes | slackpkg -batch=on -default_answer=y update
         - slackpkg -batch=on -default_answer=y install python
@@ -227,4 +227,4 @@
         /etc/rc.d/rc.K: 937b12d9bf2036cfcf3c998d12ba9b64bfa1044c404a1ecfff8dc346f154eb7f411c009806e325527a6f849fb1ad6cdda5a23e443b64a04042b515cdb12ec49d
         /etc/rc.d/rc.inet2: 50016486e2f9fc7b62425be3411d6018ccdf4217202bfe0f259012d521b4e683a6195cccf91924c659209fb92f47f5341d8091a12024238cddcc21276b0dfeca
         /etc/logrotate.d/syslog: a3d706dd7a94b1f58d362d9222b0d473c6c6d6d1d166813bc57a0f523cfe67792ee75dfd09e6e07a28794fcecf76dcdfeb5a96992c4ae324f118a21630de1126
-        /etc/sudoers: 000f40e3b4eb49a9e901f60b5bf810febb1fd0e6b0424fa5b93cb6f900c5c027faa5020d6f4729e48c925eb9a1982f3b49875725be2d7ad3d23c44f16d1febbf
+        /etc/sudoers: 59e384b62140a34b136d8d14e3db822dbc46a42d27ad5ee37c319002f6d96921ccd337e1ee101134f963872e715d586e5220c7ca6cd788ab0b2a38a15c42e082
