@@ -76,7 +76,7 @@
           skip-test=FILE-6310
     - name: Run Lynis
       become: yes
-      command: /usr/sbin/lynis -Q
+      command: /usr/sbin/lynis -Q -q
     - name: Get Lynis score
       become: yes
       command: 'sed -n "s/^.*Hardening index : \[\([0-9]\+\)\].*$/\1/p" /var/log/lynis.log'
@@ -102,7 +102,7 @@
     - include: sudoers.yml
     - name: Run Lynis (again)
       become: yes
-      command: /usr/sbin/lynis -Q
+      command: /usr/sbin/lynis -Q -q
     - name: Get Lynis score
       become: yes
       command: 'sed -n "s/^.*Hardening index : \[\([0-9]\+\)\].*$/\1/p" /var/log/lynis.log'
@@ -168,7 +168,7 @@
           skip-test=FILE-6310
     - name: Run Lynis
       become: yes
-      command: ./lynis -Q
+      command: ./lynis -Q -q
       args:
         chdir: /root/lynis
     - name: Get Lynis score
@@ -194,7 +194,7 @@
     - include: sudoers.yml
     - name: Run Lynis (again)
       become: yes
-      command: ./lynis -Q
+      command: ./lynis -Q -q
       args:
         chdir: /root/lynis
     - name: Get Lynis score
