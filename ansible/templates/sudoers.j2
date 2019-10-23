@@ -70,7 +70,11 @@ Defaults mail_badpass, mail_no_host, mail_no_perms, mail_no_user
 # Defaults!/usr/local/bin/sudoreplay !log_output
 # Defaults!REBOOT !log_output
 Defaults	env_reset
+{% if ansible_distribution == "Slackware" %}
 Defaults	syslog=auth, syslog_pid
+{% else %}
+Defaults	syslog=auth
+{% endif %}
 Defaults	log_year, log_host, logfile=/var/log/sudo.log
 Defaults!PAGERS	noexec
 Defaults	listpw=always
