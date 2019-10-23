@@ -10,11 +10,27 @@
   failed_when: members_of_group.stdout == "" or members_of_group.stdout == "root"
   when: ansible_distribution == "Slackware"
 - name: 'Configure /etc/sudoers'
-  become: yes
-  template:
-    src: "{{ playbook_dir }}/templates/sudoers.j2"
-    dest: /etc/sudoers
+  block:
+  - name: 'Create /etc/sudoers.new'
+    template:
+      src: "{{ playbook_dir }}/templates/sudoers.j2"
+      dest: /etc/sudoers.new
+      mode: '0440'
+      owner: root
+      group: root
+  - name: 'Validate /etc/sudoers.new'
+    command: visudo -cs -f /etc/sudoers.new
+  - name: 'Copy /etc/sudoers.new to /etc/sudoers'
+    copy:
+      remote_src: yes
+      src: /etc/sudoers.new
+      dest: /etc/sudoers
+  - name: 'Remove /etc/sudoers.new'
+    file:
+      path: /etc/sudoers.new
+      state: absent
   when: ansible_distribution == "Slackware" or ansible_distribution == "Debian"
+  become: yes
 # https://www.raspberrypi.org/documentation/configuration/security.md
 - name: 'Remove /etc/sudoers.d/010_pi-nopasswd'
   become: yes
