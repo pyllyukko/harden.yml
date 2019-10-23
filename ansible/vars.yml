@@ -13,6 +13,7 @@ debian_services:
   - cups-browsed
   - atd
   - ModemManager
+  - triggerhappy
   # for servers
   #- triggerhappy
   #- wpa_supplicant
