@@ -96,7 +96,7 @@ root ALL=(ALL) ALL
 
 ## Uncomment to allow members of group wheel to execute any command
 {% if ansible_distribution == "Slackware" %}
-%wheel ALL=(ALL) ALL
+%wheel {{ ansible_hostname }}=(root) PASSWD: ALL
 {% else %}
 # %wheel ALL=(ALL) ALL
 {% endif %}
@@ -106,7 +106,7 @@ root ALL=(ALL) ALL
 
 ## Uncomment to allow members of group sudo to execute any command
 {% if ansible_distribution == "Debian" %}
-%sudo	ALL=(ALL) ALL
+%sudo	{{ ansible_hostname }}=(root) PASSWD: ALL
 {% else %}
 # %sudo	ALL=(ALL) ALL
 {% endif %}
