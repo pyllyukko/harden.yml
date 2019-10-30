@@ -30,3 +30,11 @@
         state: link
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
+- name: Configure debsecan
+  when: ansible_distribution == "Debian"
+  become: yes
+  debconf:
+    name: debsecan
+    question: debsecan/suite
+    vtype: select
+    value: "{{ ansible_distribution_release }}"
