@@ -56,5 +56,15 @@
       mode: '0600'
       owner: root
       group: root
+  - name: /var/log/wtmp
+    file:
+      path: /var/log/wtmp
+      mode: '0660'
+      owner: root
+      group: utmp
+  - name: /var/log/lastlog
+    file:
+      path: /var/log/lastlog
+      mode: o-rwx
   become: yes
   ignore_errors: yes
