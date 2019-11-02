@@ -33,3 +33,11 @@
     regexp: '^(MD5SUM)=[0-9]+$'
     replace: '\g<1>=1'
     validate: '/bin/grep "^MD5SUM=1$" %s'
+# https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/sect-security-enhanced_linux-working_with_selinux-disable_ptrace
+- name: Disable ptrace() with SELinux
+  become: yes
+  when: ansible_os_family == "RedHat"
+  seboolean:
+    name: deny_ptrace
+    state: yes
+    persistent: yes
