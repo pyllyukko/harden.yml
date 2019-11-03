@@ -50,7 +50,7 @@
       with_items:
         - useradd -m -G {{ allowed_group }},sudo debian
         - echo "debian:debian" | chpasswd
-        - apt-get -y install python sudo
+        - apt-get -y install python sudo lsb-release
     - name: Register the hosts in the inventory
       add_host:
         name: "{{ item.lxc_container.ips.0 }}"
