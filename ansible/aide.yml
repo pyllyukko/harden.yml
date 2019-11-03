@@ -1,0 +1,16 @@
+---
+- name: Setup AIDE
+  block:
+    - name: Install AIDE package
+      apt:
+        name: aide
+        update_cache: yes
+    - name: Check for /var/lib/aide/aide.db
+      stat:
+        path: /var/lib/aide/aide.db
+      register: stat_result
+    - name: Create aide.db
+      command: /usr/sbin/aideinit
+      when: stat_result.stat.exists == False
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  become: yes
