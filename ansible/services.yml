@@ -49,27 +49,46 @@
     job: "/bin/systemctl show --property=SystemState | /bin/grep -v '^SystemState=running$'"
     minute: "*/5"
     state: present
-- name: Increase crond's log level (Slackware)
+- name: Slackware's cron
+  block:
+  - name: Increase crond's log level (Slackware)
+    replace:
+      path: /etc/default/crond
+      regexp: '^(CROND_OPTS=".*)-l [a-z]+(.*")$'
+      replace: '\g<1>-l info\g<2>'
+      validate: '/bin/grep "^CROND_OPTS=\".*-l info.*\"$" %s'
+  - name: Restrict cron (Slackware)
+    file:
+      path: /usr/bin/crontab
+      group: wheel
+      mode: '4710'
+  - name: Set permissions for /var/spool/cron
+    file:
+      path: /var/spool/cron
+      owner: root
+      group: root
+      mode: '0700'
+  - name: Set permissions for /var/spool/cron/crontabs
+    file:
+      path: /var/spool/cron/crontabs
+      owner: root
+      group: root
+      mode: '0700'
+  # user needs to have x perms into the directory where the temp file is created
+  # Slackware 14.2 has /var/spool/cron as TMPDIR and 14.2+ has /run/cron
+  - name: Fix /etc/rc.d/rc.crond
+    blockinfile:
+      path: /etc/rc.d/rc.crond
+      insertafter: "^ {4}mkdir -p /run/cron$"
+      block: |
+        /bin/chgrp wheel /run/cron
+        /bin/chmod 0710 /run/cron
+  - name: chmod crond (Slackware)
+    file:
+      path: /usr/sbin/crond
+      mode: '0700'
   when: ansible_distribution == "Slackware"
   become: yes
-  replace:
-    path: /etc/default/crond
-    regexp: '^(CROND_OPTS=".*)-l [a-z]+(.*")$'
-    replace: '\g<1>-l info\g<2>'
-    validate: '/bin/grep "^CROND_OPTS=\".*-l info.*\"$" %s'
-- name: Restrict cron (Slackware)
-  when: ansible_distribution == "Slackware"
-  become: yes
-  file:
-    path: /usr/bin/crontab
-    group: wheel
-    mode: '4710'
-- name: chmod crond (Slackware)
-  when: ansible_distribution == "Slackware"
-  become: yes
-  file:
-    path: /usr/sbin/crond
-    mode: '0700'
 # SSH
 - name: Harden SSH daemon configuration
   become: yes
