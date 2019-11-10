@@ -41,3 +41,19 @@
     name: deny_ptrace
     state: yes
     persistent: yes
+- name: Configure certbot to use 4096 bit keys
+  block:
+    - name: Check for /etc/letsencrypt
+      stat:
+        path: /etc/letsencrypt
+      register: stat_result
+    # https://certbot.eff.org/docs/using.html
+    - name: Configure /etc/letsencrypt/cli.ini
+      ini_file:
+        path: /etc/letsencrypt/cli.ini
+        section: null
+        option: rsa-key-size
+        value: 4096
+        mode: '0600'
+      when: stat_result.stat.exists == True
+  become: yes
