@@ -58,3 +58,8 @@
 - name: Verify integrity of group files
   become: yes
   command: grpck -r
+- name: Remove pi from adm group (Debian)
+  when: ansible_distribution == "Debian"
+  become: yes
+  command: gpasswd -d pi adm
+  ignore_errors: yes
