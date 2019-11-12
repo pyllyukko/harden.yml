@@ -66,5 +66,12 @@
     file:
       path: /var/log/lastlog
       mode: o-rwx
+  - name: /var/log
+    file:
+      path: /var/log
+      # apps that have own accounts & directories under /var/log need the x-bit (like freerad in Debian)
+      mode: '0751'
+      owner: root
+      group: adm
   become: yes
   ignore_errors: yes
