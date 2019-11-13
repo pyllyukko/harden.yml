@@ -34,6 +34,9 @@ bash_syntax:
 	@echo "Authorized uses only. All activity may be monitored and reported." 1>$@
 	@chmod -c 644 $@
 
+/var/lib/rkhunter/db/rkhunter.dat:
+	/usr/bin/rkhunter --propupd
+
 /etc/issue.net: /etc/issue
 	@cp -vf $< $@
 
