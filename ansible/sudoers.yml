@@ -18,6 +18,15 @@
       mode: '0440'
       owner: root
       group: root
+  - name: Create /etc/sudo_env
+    copy:
+      content: "LESSSECURE=1\nPAGER=/bin/less\nMANPAGER=/bin/less\nSYSTEMD_PAGER=/bin/less\n"
+      dest: /etc/sudo_env
+      owner: root
+      group: root
+      mode: '0400'
+      force: no
+  # https://jpmens.net/2013/02/06/don-t-try-this-at-the-office-etc-sudoers/
   - name: 'Validate /etc/sudoers.new'
     command: visudo -cs -f /etc/sudoers.new
   - name: 'Copy /etc/sudoers.new to /etc/sudoers'
