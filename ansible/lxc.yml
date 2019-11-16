@@ -181,6 +181,13 @@
     - name: Lynis score before hardening
       debug:
         msg: "{{ lynis_score_before.stdout }}"
+    - include: sudoers.yml
+    # Remove the sudoers entry made during preparation so we'll see whether our stricter sudoers works
+    - name: Remove /etc/sudoers.d/letmein
+      file:
+        path: /etc/sudoers.d/letmein
+        state: absent
+      become: yes
     - include: filesystem.yml
     - include: login_defs.yml
     - include: services.yml
@@ -192,7 +199,6 @@
     - include: banners.yml
     - include: network.yml
     - include: entropy.yml
-    - include: sudoers.yml
     - name: Run Lynis (again)
       become: yes
       command: ./lynis -Q -q
