@@ -1,4 +1,8 @@
 ---
+- name: Install glibc package (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: yes
+  command: slackpkg -batch=on -default_answer=y install glibc
 - name: 'Check that some user(s) exist in "sudo" group'
   shell: getent group sudo | cut -d':' -f4
   register: members_of_group
