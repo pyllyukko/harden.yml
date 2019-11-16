@@ -100,7 +100,7 @@ Defaults	env_file=/etc/sudo_env
 ##
 ## User privilege specification
 ##
-root ALL=(ALL) ALL
+root {{ ansible_hostname }}=(ALL) ALL
 {{ ansible_user_id }}	{{ ansible_hostname }}=(root) PASSWD:EXEC: ANSIBLE
 
 ## Uncomment to allow members of group wheel to execute any command
