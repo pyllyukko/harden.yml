@@ -104,30 +104,26 @@ root {{ ansible_hostname }}=(ALL) ALL
 {{ ansible_user_id }}	{{ ansible_hostname }}=(root) PASSWD:EXEC: ANSIBLE
 
 ## Uncomment to allow members of group wheel to execute any command
+# %wheel ALL=(ALL) ALL
 {% if ansible_distribution == "Slackware" or ansible_os_family == "RedHat" %}
-#%wheel {{ ansible_hostname }}=(root) PASSWD: ALL
 %wheel {{ ansible_hostname }}=(root) PASSWD:EXEC: SHELLS
 %wheel {{ ansible_hostname }}=(root) PASSWD:NOEXEC: sudoedit
 %wheel {{ ansible_hostname }}=(:adm) PASSWD:NOEXEC: READ_FILES
 {% if ansible_os_family == "RedHat" %}
 %wheel {{ ansible_hostname }}=(root) PASSWD:EXEC: /bin/yum update
 {% endif %}
-{% else %}
-# %wheel ALL=(ALL) ALL
 {% endif %}
 
 ## Same thing without a password
 # %wheel ALL=(ALL) NOPASSWD: ALL
 
 ## Uncomment to allow members of group sudo to execute any command
+# %sudo	ALL=(ALL) ALL
 {% if ansible_distribution == "Debian" %}
-#%sudo	{{ ansible_hostname }}=(root) PASSWD: ALL
 %sudo	{{ ansible_hostname }}=(root) PASSWD:EXEC: SHELLS
 %sudo	{{ ansible_hostname }}=(:systemd-journal) PASSWD:EXEC: /bin/journalctl
 %sudo	{{ ansible_hostname }}=(root) PASSWD:EXEC: APT_GET
 %sudo	{{ ansible_hostname }}=(root) PASSWD:NOEXEC: sudoedit
-{% else %}
-# %sudo	ALL=(ALL) ALL
 {% endif %}
 
 ## Uncomment to allow any user to run sudo if they know the password
