@@ -30,7 +30,7 @@
 # Cmnd_Alias	REBOOT = /sbin/halt, /sbin/reboot, /sbin/poweroff
 Cmnd_Alias	PAGERS = /usr/bin/more, /usr/bin/pg, /usr/bin/less, /usr/bin/pager
 Cmnd_Alias	SHELLS = /bin/sh "", /bin/bash "", /bin/dash "", /bin/zsh "", /bin/csh "", /bin/tcsh ""
-Cmnd_Alias	APT_GET = /usr/bin/apt-get update, /usr/bin/apt-get upgrade, /usr/bin/apt-get dist-upgrade, /usr/bin/apt-get autoremove, /usr/bin/apt-get clean
+Cmnd_Alias	APT_GET = /usr/bin/apt-get update, /usr/bin/apt-get upgrade, /usr/bin/apt-get dist-upgrade, /usr/bin/apt-get autoremove, /usr/bin/apt-get clean, /usr/bin/apt-get autoclean, /usr/bin/apt-file update
 # these should be enough. you can do "sudo cat | grep" etc. tail is for following.
 Cmnd_Alias	READ_FILES = /bin/ls, /bin/tail, /bin/cat
 Cmnd_Alias	ANSIBLE = /bin/sh -c echo BECOME-SUCCESS-????????????????????????????????; /usr/bin/python /home/{{ ansible_user_id }}/.ansible/tmp/ansible-tmp-??????????.*-*/AnsiballZ_*.py, /bin/sh -c echo BECOME-SUCCESS-????????????????????????????????;\ \ /home/pi/.ansible/tmp/ansible-tmp-??????????.*-*/*
@@ -122,6 +122,7 @@ root {{ ansible_hostname }}=(ALL) ALL
 {% if ansible_distribution == "Debian" %}
 %sudo	{{ ansible_hostname }}=(root) PASSWD:EXEC: SHELLS
 %sudo	{{ ansible_hostname }}=(:systemd-journal) PASSWD:EXEC: /bin/journalctl
+%sudo	{{ ansible_hostname }}=(:adm) PASSWD:NOEXEC: READ_FILES
 %sudo	{{ ansible_hostname }}=(root) PASSWD:EXEC: APT_GET
 %sudo	{{ ansible_hostname }}=(root) PASSWD:NOEXEC: sudoedit
 {% endif %}
