@@ -1,13 +1,19 @@
 ---
+- name: Install glibc package (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: yes
+  command: slackpkg -batch=on -default_answer=y install glibc
 - name: 'Check that some user(s) exist in "sudo" group'
-  shell: getent group sudo | cut -d':' -f4
-  register: members_of_group
-  failed_when: members_of_group.stdout == ""
+  getent:
+    database: group
+    key: sudo
+  failed_when: getent_group.sudo[2] == ""
   when: ansible_distribution == "Debian"
 - name: 'Check that some user(s) exist in "wheel" group'
-  shell: getent group wheel | cut -d':' -f4
-  register: members_of_group
-  failed_when: members_of_group.stdout == "" or members_of_group.stdout == "root"
+  getent:
+    database: group
+    key: wheel
+  failed_when: getent_group.wheel[2] == "" or getent_group.wheel[2] == "root"
   when: ansible_distribution == "Slackware"
 - name: 'Configure /etc/sudoers'
   block:
@@ -18,6 +24,15 @@
       mode: '0440'
       owner: root
       group: root
+  - name: Create /etc/sudo_env
+    copy:
+      content: "LESSSECURE=1\nPAGER=/bin/less\nMANPAGER=/bin/less\nSYSTEMD_PAGER=/bin/less\n"
+      dest: /etc/sudo_env
+      owner: root
+      group: root
+      mode: '0400'
+      force: no
+  # https://jpmens.net/2013/02/06/don-t-try-this-at-the-office-etc-sudoers/
   - name: 'Validate /etc/sudoers.new'
     command: visudo -cs -f /etc/sudoers.new
   - name: 'Copy /etc/sudoers.new to /etc/sudoers'
