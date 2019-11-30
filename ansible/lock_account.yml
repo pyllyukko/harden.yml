@@ -25,28 +25,26 @@
         path: "{{ getent_passwd[user][4] }}"
         state: absent
       become: yes
-    - name: Terminate all sessions of the user
-      command: loginctl terminate-user {{ user }}
-      become: yes
-      ignore_errors: yes
-    - name: killall processes
-      command: killall -s SIGKILL -u {{ user }} -v
+    - name: Kill processes
+      block:
+      - name: Terminate all sessions of the user
+        command: loginctl terminate-user {{ user }}
+      - name: killall processes
+        command: killall -s SIGKILL -u {{ user }} -v
       become: yes
       ignore_errors: yes
     - name: Crontab/at
       block:
       - name: Remove user's crontab (Slackware)
         command: crontab -d -u {{ user }}
-        become: yes
         when: ansible_distribution == "Slackware"
       - name: Remove user's crontab (Debian)
         command: crontab -r -u {{ user }}
-        become: yes
         when: ansible_distribution == "Debian"
         ignore_errors: yes
       - name: Remove at jobs
         shell: for job in $(atq|awk '$NF=="{{ user }}"{print$1}'); do atrm $job; done
-        become: yes
+      become: yes
     - name: Login ACLs
       block:
       - name: Stat /etc/security/access.conf
@@ -60,7 +58,6 @@
           insertbefore: '^[^#]'
           firstmatch: yes
           line: "- : {{ user }} : ALL"
-        become: yes
         when: stat_result.stat.exists == True
       - name: Stat /etc/login.access
         stat:
@@ -73,13 +70,12 @@
           insertbefore: '^[^#]'
           firstmatch: yes
           line: "-:{{ user }}:ALL"
-        become: yes
         when: stat_result.stat.exists == True
       - name: Add user to /etc/ftpusers
         lineinfile:
           path: /etc/ftpusers
           line: "{{ user }}"
-        become: yes
+      become: yes
     - name: Lock account
       user:
         name: "{{ user }}"
