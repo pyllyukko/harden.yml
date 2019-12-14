@@ -15,27 +15,37 @@
   copy:
     src: "{{ playbook_dir }}/../newconfs/hosts.deny.new"
     dest: /etc/hosts.deny
-# Firewall for Slackware
-- name: Install iptables (Slackware)
-  when: ansible_distribution == "Slackware"
-  become: yes
-  command: slackpkg -batch=on -default_answer=y install {{ item }}
-  with_items:
-    - iptables
-    - libpcap
-    - libnl3
-    - dbus
-- name: Create /etc/rc.d/rc.firewall (Slackware)
+- name: Stat /etc/rc.d/rc.firewall
+  stat:
+    path: /etc/rc.d/rc.firewall
+  register: stat_result
   become: yes
   when: ansible_distribution == "Slackware"
-  template:
-    src: "{{ playbook_dir }}/templates/rc.firewall.j2"
-    dest: /etc/rc.d/rc.firewall
+- name: Firewall for Slackware
+  block:
+  - name: Install iptables (Slackware)
+    command: slackpkg -batch=on -default_answer=y install {{ item }}
+    with_items:
+      - iptables
+      - libpcap
+      - libnl3
+      - dbus
+  - name: Create /etc/rc.d/rc.firewall (Slackware)
+    template:
+      src: "{{ playbook_dir }}/templates/rc.firewall.j2"
+      dest: /etc/rc.d/rc.firewall
+      mode: '0700'
+  - name: Start firewall (Slackware)
+    command: /etc/rc.d/rc.firewall start
+  become: yes
+  when: ansible_distribution == "Slackware" and stat_result.stat.exists == False
+- name: Enable Slackware firewall
+  when: ansible_distribution == "Slackware" and stat_result.stat.exists == True and stat_result.stat.xusr == False
+  file:
+    path: /etc/rc.d/rc.firewall
     mode: '0700'
-- name: Start firewall (Slackware)
-  become: yes
-  when: ansible_distribution == "Slackware"
-  command: /etc/rc.d/rc.firewall start
+    owner: root
+    group: root
 - name: Stat /etc/iptables/rules.v4
   stat:
     path: /etc/iptables/rules.v4
