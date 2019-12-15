@@ -1,0 +1,72 @@
+---
+- hosts: 10.0.3.175
+  tasks:
+    # TODO: install packages (build-essential libcmocka-dev libpam-wrapper libpam0g-dev)
+    - name: Backup PAM configurations
+      copy:
+        src: /etc/pam.d/{{ item }}
+        dest: /etc/pam.d/{{ item }}.bak
+        remote_src: yes
+        force: no
+      become: yes
+      with_items:
+        - login
+        - common-auth
+    - name: Create /tmp/passdb
+      blockinfile:
+        dest: /tmp/passdb
+        create: yes
+        block: |
+          root:rootsecret:login
+      become: yes
+    - name: Create temp dir
+      tempfile:
+        state: directory
+        suffix: temp
+      register: tempdir_1
+    - name: Copy Makefile & source
+      copy:
+        src: "{{ playbook_dir }}/../{{ item }}"
+        dest: "{{ tempdir_1.path }}/"
+        mode: 0600
+      with_items:
+        - Makefile
+        - tests/test.c
+    - name: Build PAM test
+      make:
+        chdir: "{{ tempdir_1.path }}"
+        target: test
+    - name: Make sure pam_securetty is enabled for login
+      replace:
+        path: /etc/pam.d/login
+        regexp: '^#?\s*(auth\s+\[success=ok new_authtok_reqd=ok ignore=ignore user_unknown=bad default=die\]\s+pam_securetty\.so)$'
+        replace: '\1'
+        validate: '/bin/grep "^auth\s\+\[success=ok new_authtok_reqd=ok ignore=ignore user_unknown=bad default=die\]\s\+pam_securetty\.so$" %s'
+      become: yes
+    # authentication should fail as pam_matrix is not yet in use
+    - name: Run first test
+      command: "{{ tempdir_1.path }}/test"
+    #- name: Switch pam_auth to pam_matrix in /etc/pam.d/common-auth
+    #  replace:
+    #    path: /etc/pam.d/common-auth
+    #    regexp: '^(auth\s+\[success=1 default=ignore\]\s+)pam_unix\.so.*$'
+    #    replace: '\1/usr/lib/x86_64-linux-gnu/pam_wrapper/pam_matrix.so passdb=/tmp/passdb verbose'
+    #    validate: '/bin/grep "^auth\s\+\[success=1 default=ignore\]\s\+.*pam_matrix\.so.*$" %s'
+    #  become: yes
+    # should fail because of pam_securetty
+    - name: Run test #2
+      command: "{{ tempdir_1.path }}/test"
+    # segfaul?!
+    - name: Copy original common-auth back
+      copy:
+        src: /etc/pam.d/common-auth.bak
+        dest: /etc/pam.d/common-auth
+        remote_src: yes
+      become: yes
+    # TODO: disable securetty
+    # TODO: run phase 2
+    #- name: Remove temp dir
+    #  file:
+    #    path: "{{ tempdir_1.path }}"
+    #    state: absent
+    #  when: tempdir_1.path is defined

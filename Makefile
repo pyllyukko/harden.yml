@@ -219,6 +219,10 @@ pamcheck: pam-files
 	-diff --color pam-files/xdm		/etc/pam.d/xdm
 	-diff --color pam-files/dovecot		/etc/pam.d/dovecot
 
+# PAM test
+test: test.c
+	gcc -o $@ $< -lpamtest -lcmocka
+
 .PHONY: manifest
 manifest: $(manifest_files)
 
