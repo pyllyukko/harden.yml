@@ -1,6 +1,0 @@
-Name: pam_matrix authentication for testing
-Default: yes
-Priority: 0
-Auth-Type: Primary
-Auth:
-	[success=end default=ignore]	/usr/lib/x86_64-linux-gnu/pam_wrapper/pam_matrix.so passdb=/tmp/passdb verbose
