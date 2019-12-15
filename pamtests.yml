@@ -46,23 +46,17 @@
     # authentication should fail as pam_matrix is not yet in use
     - name: Run first test
       command: "{{ tempdir_1.path }}/test"
-    #- name: Switch pam_auth to pam_matrix in /etc/pam.d/common-auth
-    #  replace:
-    #    path: /etc/pam.d/common-auth
-    #    regexp: '^(auth\s+\[success=1 default=ignore\]\s+)pam_unix\.so.*$'
-    #    replace: '\1/usr/lib/x86_64-linux-gnu/pam_wrapper/pam_matrix.so passdb=/tmp/passdb verbose'
-    #    validate: '/bin/grep "^auth\s\+\[success=1 default=ignore\]\s\+.*pam_matrix\.so.*$" %s'
-    #  become: yes
+    - name: Copy pam_matrix pam-config
+      copy:
+        src: "{{ playbook_dir }}/../newconfs/pam-configs/matrix.new"
+        dest: /usr/share/pam-configs/matrix
+      become: yes
+    - name: Update PAM
+      become: yes
+      command: /usr/sbin/pam-auth-update --package
     # should fail because of pam_securetty
     - name: Run test #2
       command: "{{ tempdir_1.path }}/test"
-    # segfaul?!
-    - name: Copy original common-auth back
-      copy:
-        src: /etc/pam.d/common-auth.bak
-        dest: /etc/pam.d/common-auth
-        remote_src: yes
-      become: yes
     # TODO: disable securetty
     # TODO: run phase 2
     #- name: Remove temp dir
