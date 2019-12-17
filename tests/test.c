@@ -67,16 +67,15 @@ static void test_pam_authenticate(void **state)
 			break;
 	}
 }
-int main(void) {
+int main(int argc, char *argv[]) {
     int rc;
     /*
      * phases: 0 with Debian defaults
      *         1 modifications
      */
-    switch(0) {
-	case 0:
-		testcase = SHOULDFAIL;
-		break;
+    testcase = SHOULDFAIL;
+    if(argc==2) {
+        testcase = SHOULDSUCCESS;
     }
     const struct CMUnitTest init_tests[] = {
 		cmocka_unit_test(test_pam_authenticate),

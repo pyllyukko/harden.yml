@@ -12,6 +12,13 @@
       with_items:
         - login
         - common-auth
+    - name: Create /etc/pam.d/common-auth-matrix
+      copy:
+        src: /etc/pam.d/common-auth
+        dest: /etc/pam.d/common-auth-matrix
+        remote_src: yes
+        force: no
+      become: yes
     - name: Create /tmp/passdb
       blockinfile:
         dest: /tmp/passdb
@@ -46,25 +53,33 @@
     # authentication should fail as pam_matrix is not yet in use
     - name: Run first test
       command: "{{ tempdir_1.path }}/test"
-    #- name: Switch pam_auth to pam_matrix in /etc/pam.d/common-auth
-    #  replace:
-    #    path: /etc/pam.d/common-auth
-    #    regexp: '^(auth\s+\[success=1 default=ignore\]\s+)pam_unix\.so.*$'
-    #    replace: '\1/usr/lib/x86_64-linux-gnu/pam_wrapper/pam_matrix.so passdb=/tmp/passdb verbose'
-    #    validate: '/bin/grep "^auth\s\+\[success=1 default=ignore\]\s\+.*pam_matrix\.so.*$" %s'
-    #  become: yes
+    - name: Switch pam_auth to pam_matrix in /etc/pam.d/common-auth-matrix
+      replace:
+        path: /etc/pam.d/common-auth-matrix
+        regexp: '^(auth\s+\[success=1 default=ignore\]\s+)pam_unix\.so.*$'
+        replace: '\1/usr/lib/x86_64-linux-gnu/pam_wrapper/pam_matrix.so passdb=/tmp/passdb verbose'
+        validate: '/bin/grep "^auth\s\+\[success=1 default=ignore\]\s\+.*pam_matrix\.so.*$" %s'
+      become: yes
+    - name: Make login use common-auth-matrix
+      replace:
+        path: /etc/pam.d/login
+        regexp: '^(@include common-auth).*$'
+        replace: '\1-matrix'
+        validate: '/bin/grep "^@include common-auth-matrix$" %s'
+      become: yes
     # should fail because of pam_securetty
     - name: Run test #2
       command: "{{ tempdir_1.path }}/test"
-    # segfaul?!
-    - name: Copy original common-auth back
-      copy:
-        src: /etc/pam.d/common-auth.bak
-        dest: /etc/pam.d/common-auth
-        remote_src: yes
+    - name: Disable pam_securetty in /etc/pam.d/login
+      replace:
+        path: /etc/pam.d/login
+        regexp: '^#?\s*(auth.+pam_securetty\.so)$'
+        replace: '#\1'
+        validate: '/bin/grep "^#auth.\+pam_securetty\.so$" %s'
       become: yes
-    # TODO: disable securetty
-    # TODO: run phase 2
+    # successful authentication against pam_matrix
+    - name: Run test 3
+      command: "{{ tempdir_1.path }}/test 1"
     #- name: Remove temp dir
     #  file:
     #    path: "{{ tempdir_1.path }}"
