@@ -36,9 +36,7 @@
 #define ZERO_STRUCT(x) memset((char *)&(x), 0, sizeof(x))
 #endif
 
-#define SHOULDSUCCESS 0
-#define SHOULDFAIL 1
-uint8_t testcase = SHOULDSUCCESS;
+uint8_t testcase = PAMTEST_ERR_OK;
 
 static void test_pam_authenticate(void **state)
 {
@@ -58,24 +56,40 @@ static void test_pam_authenticate(void **state)
 	conv_data.in_echo_off = trinity_authtoks;
 
 	perr = run_pamtest("login", "root", &conv_data, tests);
-	switch(testcase) {
-		case SHOULDSUCCESS:
-			assert_int_equal(perr, PAMTEST_ERR_OK);
-			break;
-		case SHOULDFAIL:
-			assert_int_equal(perr, PAMTEST_ERR_CASE);
-			break;
-	}
+	assert_int_equal(perr, testcase);
+}
+void usage(void) {
+  printf("\
+options:\n\
+	-h	this help\n\
+	-r int	expected return code\n\
+		return codes:\n\
+		0	PAMTEST_ERR_OK\n\
+		1	PAMTEST_ERR_START\n\
+		2	PAMTEST_ERR_CASE\n\
+		3	PAMTEST_ERR_OP\n\
+		4	PAMTEST_ERR_END\n\
+		5	PAMTEST_ERR_KEEPHANDLE\n\
+		6	PAMTEST_ERR_INTERNAL\n\
+");
 }
 int main(int argc, char *argv[]) {
-    int rc;
-    /*
-     * phases: 0 with Debian defaults
-     *         1 modifications
-     */
-    testcase = SHOULDFAIL;
-    if(argc==2) {
-        testcase = SHOULDSUCCESS;
+    int rc, c;
+
+    while((c = getopt (argc, argv, "hr:")) != -1) {
+      switch(c) {
+	case 'h':
+	  usage();
+	  exit(0);
+	  break;
+	case 'r':
+	  testcase = atoi(optarg);
+	  if(testcase>PAMTEST_ERR_INTERNAL) {
+	    printf("invalid value\n");
+	    exit(0);
+	  }
+	  break;
+      }
     }
     const struct CMUnitTest init_tests[] = {
 		cmocka_unit_test(test_pam_authenticate),
