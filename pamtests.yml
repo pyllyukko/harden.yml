@@ -51,7 +51,7 @@
         validate: '/bin/grep "^auth\s\+\[success=ok new_authtok_reqd=ok ignore=ignore user_unknown=bad default=die\]\s\+pam_securetty\.so$" %s'
       become: yes
     # authentication should fail as pam_matrix is not yet in use
-    - name: Run first test
+    - name: Test login:auth root login against pam_unix
       command: "{{ tempdir_1.path }}/test -r 2"
     - name: Switch pam_auth to pam_matrix in /etc/pam.d/common-auth-matrix
       replace:
@@ -68,7 +68,7 @@
         validate: '/bin/grep "^@include common-auth-matrix$" %s'
       become: yes
     # should fail because of pam_securetty
-    - name: Run test #2
+    - name: Test login:auth root login blocked by pam_securetty
       command: "{{ tempdir_1.path }}/test -r 2"
     - name: Disable pam_securetty in /etc/pam.d/login
       replace:
@@ -78,7 +78,7 @@
         validate: '/bin/grep "^#auth.\+pam_securetty\.so$" %s'
       become: yes
     # successful authentication against pam_matrix
-    - name: Run test 3
+    - name: Test login:auth root login against pam_matrix
       command: "{{ tempdir_1.path }}/test"
     #- name: Remove temp dir
     #  file:
