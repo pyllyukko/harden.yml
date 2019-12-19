@@ -83,7 +83,7 @@
       block:
       - name: Test login:auth root login against pam_matrix
         command: "{{ tempdir_1.path }}/test -t 1"
-      - name: Test login:acct invalid user
+      - name: Test login:acct invalid user blocked by pam_unix
         command: "{{ tempdir_1.path }}/test -t 2 -r 2"
       - name: Test login:acct root user
         command: "{{ tempdir_1.path }}/test -t 3 -r 0"
