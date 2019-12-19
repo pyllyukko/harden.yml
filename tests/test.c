@@ -58,6 +58,26 @@ static void test_pam_authenticate(void **state)
 	perr = run_pamtest("login", "root", &conv_data, tests);
 	assert_int_equal(perr, testcase);
 }
+static void test_pam_authenticate_nobody(void **state)
+{
+	enum pamtest_err perr;
+	struct pamtest_conv_data conv_data;
+	const char *trinity_authtoks[] = {
+		"nobodysecret",
+		NULL,
+	};
+	struct pam_testcase tests[] = {
+		pam_test(PAMTEST_AUTHENTICATE, PAM_SUCCESS),
+	};
+
+	(void) state;	/* unused */
+
+	ZERO_STRUCT(conv_data);
+	conv_data.in_echo_off = trinity_authtoks;
+
+	perr = run_pamtest("login", "nobody", &conv_data, tests);
+	assert_int_equal(perr, testcase);
+}
 static void test_pam_acct_invalid_user(void **state)
 {
 	enum pamtest_err perr;
@@ -125,6 +145,7 @@ options:\n\
 		3	login:acct root user\n\
 		4	cron:acct root user\n\
 		5	cron:acct nobody user\n\
+		6	login:auth nobody user\n\
 ");
 }
 int main(int argc, char *argv[]) {
@@ -160,6 +181,9 @@ int main(int argc, char *argv[]) {
 	      break;
 	    case 5:
 	      ptr = test_pam_acct_cron_nobody;
+	      break;
+	    case 6:
+	      ptr = test_pam_authenticate_nobody;
 	      break;
 	    default:
 	      printf("invalid test case\n");

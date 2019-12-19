@@ -25,6 +25,7 @@
         create: yes
         block: |
           root:rootsecret:login
+          nobody:nobodysecret:login
       become: yes
     - name: Create temp dir
       tempfile:
@@ -90,6 +91,8 @@
         command: "{{ tempdir_1.path }}/test -t 4 -r 0"
       - name: Test cron:acct nobody user blocked by pam_access
         command: "{{ tempdir_1.path }}/test -t 5 -r 2"
+      - name: Test login:auth nobody user (valid pass) blocked by pam_succeed_if
+        command: "{{ tempdir_1.path }}/test -t 6 -r 2"
       become: yes
     #- name: Remove temp dir
     #  file:
