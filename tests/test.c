@@ -82,6 +82,30 @@ static void test_pam_acct_root(void **state)
 	perr = run_pamtest("login", "root", NULL, tests);
 	assert_int_equal(perr, testcase);
 }
+static void test_pam_acct_cron_root(void **state)
+{
+	enum pamtest_err perr;
+	struct pam_testcase tests[] = {
+		pam_test(PAMTEST_ACCOUNT, PAM_SUCCESS),
+	};
+
+	(void) state;	/* unused */
+
+	perr = run_pamtest("cron", "root", NULL, tests);
+	assert_int_equal(perr, testcase);
+}
+static void test_pam_acct_cron_nobody(void **state)
+{
+	enum pamtest_err perr;
+	struct pam_testcase tests[] = {
+		pam_test(PAMTEST_ACCOUNT, PAM_SUCCESS),
+	};
+
+	(void) state;	/* unused */
+
+	perr = run_pamtest("cron", "nobody", NULL, tests);
+	assert_int_equal(perr, testcase);
+}
 void usage(void) {
   printf("\
 options:\n\
@@ -97,8 +121,10 @@ options:\n\
 		6	PAMTEST_ERR_INTERNAL\n\
 	-t int	test #\n\
 		1	authenticate\n\
-		2	acct invalid user\n\
-		3	acct root user\n\
+		2	login:acct invalid user\n\
+		3	login:acct root user\n\
+		4	cron:acct root user\n\
+		5	cron:acct nobody user\n\
 ");
 }
 int main(int argc, char *argv[]) {
@@ -128,6 +154,12 @@ int main(int argc, char *argv[]) {
 	      break;
 	    case 3:
 	      ptr = test_pam_acct_root;
+	      break;
+	    case 4:
+	      ptr = test_pam_acct_cron_root;
+	      break;
+	    case 5:
+	      ptr = test_pam_acct_cron_nobody;
 	      break;
 	    default:
 	      printf("invalid test case\n");
