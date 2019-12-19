@@ -52,7 +52,7 @@
       become: yes
     # authentication should fail as pam_matrix is not yet in use
     - name: Test login:auth root login against pam_unix
-      command: "{{ tempdir_1.path }}/test -r 2"
+      command: "{{ tempdir_1.path }}/test -t 1 -r 2"
     - name: Switch pam_auth to pam_matrix in /etc/pam.d/common-auth-matrix
       replace:
         path: /etc/pam.d/common-auth-matrix
@@ -69,7 +69,7 @@
       become: yes
     # should fail because of pam_securetty
     - name: Test login:auth root login blocked by pam_securetty
-      command: "{{ tempdir_1.path }}/test -r 2"
+      command: "{{ tempdir_1.path }}/test -t 1 -r 2"
     - name: Disable pam_securetty in /etc/pam.d/login
       replace:
         path: /etc/pam.d/login
@@ -79,7 +79,7 @@
       become: yes
     # successful authentication against pam_matrix
     - name: Test login:auth root login against pam_matrix
-      command: "{{ tempdir_1.path }}/test"
+      command: "{{ tempdir_1.path }}/test -t 1"
     #- name: Remove temp dir
     #  file:
     #    path: "{{ tempdir_1.path }}"

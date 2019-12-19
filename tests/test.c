@@ -71,12 +71,15 @@ options:\n\
 		4	PAMTEST_ERR_END\n\
 		5	PAMTEST_ERR_KEEPHANDLE\n\
 		6	PAMTEST_ERR_INTERNAL\n\
+	-t int	test #\n\
+		1	authenticate\n\
 ");
 }
 int main(int argc, char *argv[]) {
     int rc, c;
+    void *ptr = NULL;
 
-    while((c = getopt (argc, argv, "hr:")) != -1) {
+    while((c = getopt (argc, argv, "hr:t:")) != -1) {
       switch(c) {
 	case 'h':
 	  usage();
@@ -89,10 +92,25 @@ int main(int argc, char *argv[]) {
 	    exit(0);
 	  }
 	  break;
+	case 't':
+	  switch(atoi(optarg)) {
+	    case 1:
+	      ptr = test_pam_authenticate;
+	      break;
+	    default:
+	      printf("invalid test case\n");
+	      exit (1);
+	      break;
+	  }
+	  break;
       }
     }
+    if(ptr==NULL) {
+      printf("please specify a test case\n");
+      exit(1);
+    }
     const struct CMUnitTest init_tests[] = {
-		cmocka_unit_test(test_pam_authenticate),
+		cmocka_unit_test(ptr),
 	};
 
     rc = cmocka_run_group_tests(init_tests, NULL, NULL);
