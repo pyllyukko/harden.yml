@@ -58,6 +58,30 @@ static void test_pam_authenticate(void **state)
 	perr = run_pamtest("login", "root", &conv_data, tests);
 	assert_int_equal(perr, testcase);
 }
+static void test_pam_acct_invalid_user(void **state)
+{
+	enum pamtest_err perr;
+	struct pam_testcase tests[] = {
+		pam_test(PAMTEST_ACCOUNT, PAM_SUCCESS),
+	};
+
+	(void) state;	/* unused */
+
+	perr = run_pamtest("login", "trinity", NULL, tests);
+	assert_int_equal(perr, testcase);
+}
+static void test_pam_acct_root(void **state)
+{
+	enum pamtest_err perr;
+	struct pam_testcase tests[] = {
+		pam_test(PAMTEST_ACCOUNT, PAM_SUCCESS),
+	};
+
+	(void) state;	/* unused */
+
+	perr = run_pamtest("login", "root", NULL, tests);
+	assert_int_equal(perr, testcase);
+}
 void usage(void) {
   printf("\
 options:\n\
@@ -73,6 +97,8 @@ options:\n\
 		6	PAMTEST_ERR_INTERNAL\n\
 	-t int	test #\n\
 		1	authenticate\n\
+		2	acct invalid user\n\
+		3	acct root user\n\
 ");
 }
 int main(int argc, char *argv[]) {
@@ -96,6 +122,12 @@ int main(int argc, char *argv[]) {
 	  switch(atoi(optarg)) {
 	    case 1:
 	      ptr = test_pam_authenticate;
+	      break;
+	    case 2:
+	      ptr = test_pam_acct_invalid_user;
+	      break;
+	    case 3:
+	      ptr = test_pam_acct_root;
 	      break;
 	    default:
 	      printf("invalid test case\n");
