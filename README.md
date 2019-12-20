@@ -91,7 +91,7 @@ Creates bunch of `pam-config`s that are toggleable with `pam-auth-update`:
 | -------------------------------------------------------------------------------------------- | -------------- | --------------------------------------------------------------------------------------- |
 | [pam\_wheel](http://www.linux-pam.org/Linux-PAM-html/sag-pam_wheel.html)[<sup>1</sup>](#fn1) | auth           | Require `wheel` group membership (`su`)                                                 |
 | [pam\_succeed\_if](http://www.linux-pam.org/Linux-PAM-html/sag-pam_succeed_if.html)          | auth           | Require UID >= 1000 && UID <= 60000 (or 0 & `login`)                                    |
-| [pam\_unix](http://www.linux-pam.org/Linux-PAM-html/sag-pam_unix.html[<sup>1</sup>](#fn1)    | auth           | Remove `nullok`                                                                         |
+| [pam\_unix](http://www.linux-pam.org/Linux-PAM-html/sag-pam_unix.html)[<sup>1</sup>](#fn1)   | auth           | Remove `nullok`                                                                         |
 | [pam\_faildelay](http://www.linux-pam.org/Linux-PAM-html/sag-pam_faildelay.html)             | auth           | Delay on authentication failure                                                         |
 | [pam\_tally2](http://www.linux-pam.org/Linux-PAM-html/sag-pam_tally2.html)                   | auth & account | Deter brute-force attacks                                                               |
 | [pam\_access](http://linux-pam.org/Linux-PAM-html/sag-pam_access.html)                       | account        | Use login ACL (`/etc/security/access.conf`)                                             |
@@ -101,8 +101,8 @@ Creates bunch of `pam-config`s that are toggleable with `pam-auth-update`:
 | [pam\_lastlog](http://www.linux-pam.org/Linux-PAM-html/sag-pam_lastlog.html)                 | session        | Display info about last login and update the lastlog and wtmp files[<sup>2</sup>](#fn2) |
 | [pam\_pwhistory](http://www.linux-pam.org/Linux-PAM-html/sag-pam_pwhistory.html)             | password       | Limit password reuse                                                                    |
 
-<span id="fn1">Not a `pam-config`, but a modification to existing `/etc/pam.d/` files</span>
-<span id="fn2">For all login methods and not just the console login</span>
+1. <span id="fn1"/>Not a `pam-config`, but a modification to existing `/etc/pam.d/` files
+2. <span id="fn2"/>For all login methods and not just the console login
 
 ### CentOS/RHEL specific
 
