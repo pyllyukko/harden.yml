@@ -85,16 +85,24 @@ What does it do?
 
 #### PAM
 
-* Creates bunch of ```pam-config```s that are toggleable with ```pam-auth-update```:
-  * Deter brute-force attacks with [pam_tally2](http://linux-pam.org/Linux-PAM-html/sag-pam_tally2.html)
-  * Polyinstantiated temp directories with [pam_namespace](http://linux-pam.org/Linux-PAM-html/sag-pam_namespace.html)
-  * ```/etc/security/access.conf``` access control with [pam_access](http://linux-pam.org/Linux-PAM-html/sag-pam_access.html)
-  * `/etc/security/time.conf` access control with [pam_time](http://linux-pam.org/Linux-PAM-html/sag-pam_time.html)
-  * Delay on authentication failure with [pam_faildelay](http://linux-pam.org/Linux-PAM-html/sag-pam_faildelay.html)
-  * Set file mode creation mask with [pam_umask](http://linux-pam.org/Linux-PAM-html/sag-pam_umask.html)
-  * Enable ```lastlog```ging from all login methods (not just the console ```login```)
-  * Limit password reuse with [pam_pwhistory](http://linux-pam.org/Linux-PAM-html/sag-pam_pwhistory.html)
-* Disallow empty passwords by removing ```nullok```
+Creates bunch of `pam-config`s that are toggleable with `pam-auth-update`:
+
+| PAM module                                                                                   | Type           | Description                                                                             |
+| -------------------------------------------------------------------------------------------- | -------------- | --------------------------------------------------------------------------------------- |
+| [pam\_wheel](http://www.linux-pam.org/Linux-PAM-html/sag-pam_wheel.html)[<sup>1</sup>](#fn1) | auth           | Require `wheel` group membership (`su`)                                                 |
+| [pam\_succeed\_if](http://www.linux-pam.org/Linux-PAM-html/sag-pam_succeed_if.html)          | auth           | Require UID >= 1000 && UID <= 60000 (or 0 & `login`)                                    |
+| [pam\_unix](http://www.linux-pam.org/Linux-PAM-html/sag-pam_unix.html[<sup>1</sup>](#fn1)    | auth           | Remove `nullok`                                                                         |
+| [pam\_faildelay](http://www.linux-pam.org/Linux-PAM-html/sag-pam_faildelay.html)             | auth           | Delay on authentication failure                                                         |
+| [pam\_tally2](http://www.linux-pam.org/Linux-PAM-html/sag-pam_tally2.html)                   | auth & account | Deter brute-force attacks                                                               |
+| [pam\_access](http://linux-pam.org/Linux-PAM-html/sag-pam_access.html)                       | account        | Use login ACL (`/etc/security/access.conf`)                                             |
+| [pam\_time](http://www.linux-pam.org/Linux-PAM-html/sag-pam_time.html)                       | account        | `/etc/security/time.conf`                                                               |
+| [pam\_namespace](http://www.linux-pam.org/Linux-PAM-html/sag-pam_namespace.html)             | session        | Polyinstantiated temp directories                                                       |
+| [pam\_umask](http://www.linux-pam.org/Linux-PAM-html/sag-pam_umask.html)                     | session        | Set file mode creation mask                                                             |
+| [pam\_lastlog](http://www.linux-pam.org/Linux-PAM-html/sag-pam_lastlog.html)                 | session        | Display info about last login and update the lastlog and wtmp files[<sup>2</sup>](#fn2) |
+| [pam\_pwhistory](http://www.linux-pam.org/Linux-PAM-html/sag-pam_pwhistory.html)             | password       | Limit password reuse                                                                    |
+
+<span id="fn1">Not a `pam-config`, but a modification to existing `/etc/pam.d/` files</span>
+<span id="fn2">For all login methods and not just the console login</span>
 
 ### CentOS/RHEL specific
 
