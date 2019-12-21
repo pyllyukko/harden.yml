@@ -53,6 +53,14 @@
   with_items:
     - '/tmp'
     - '/var/tmp'
+- name: Remove adm user from /etc/security/namespace.conf
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  become: yes
+  replace:
+    path: /etc/security/namespace.conf
+    regexp: '^(.+),adm$'
+    replace: '\1'
+    validate: '/bin/grep "^\(/var\)\?/tmp\s\+\(/var/tmp\)\?/tmp-inst/\s\+level\s\+root$" %s'
 - name: Copying new pam-configs
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
