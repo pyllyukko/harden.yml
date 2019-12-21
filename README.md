@@ -90,7 +90,7 @@ Creates bunch of `pam-config`s that are toggleable with `pam-auth-update`:
 | PAM module                                                                                   | Type           | Description                                                                             |
 | -------------------------------------------------------------------------------------------- | -------------- | --------------------------------------------------------------------------------------- |
 | [pam\_wheel](http://www.linux-pam.org/Linux-PAM-html/sag-pam_wheel.html)[<sup>1</sup>](#fn1) | auth           | Require `wheel` group membership (`su`)                                                 |
-| [pam\_succeed\_if](http://www.linux-pam.org/Linux-PAM-html/sag-pam_succeed_if.html)          | auth           | Require UID >= 1000 && UID <= 60000 (or 0 & `login`)                                    |
+| [pam\_succeed\_if](http://www.linux-pam.org/Linux-PAM-html/sag-pam_succeed_if.html)          | auth & account | Require UID >= 1000 && UID <= 60000 (or 0 & `login`)                                    |
 | [pam\_unix](http://www.linux-pam.org/Linux-PAM-html/sag-pam_unix.html)[<sup>1</sup>](#fn1)   | auth           | Remove `nullok`                                                                         |
 | [pam\_faildelay](http://www.linux-pam.org/Linux-PAM-html/sag-pam_faildelay.html)             | auth           | Delay on authentication failure                                                         |
 | [pam\_tally2](http://www.linux-pam.org/Linux-PAM-html/sag-pam_tally2.html)                   | auth & account | Deter brute-force attacks                                                               |
