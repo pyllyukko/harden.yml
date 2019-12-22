@@ -9,4 +9,4 @@ Account-Type: Additional
 Account:
 	[success=2 default=ignore]	pam_succeed_if.so uid eq 0 service = cron quiet
 	[success=1 default=ignore]	pam_succeed_if.so uid eq 0 service = login quiet
-	requisite			pam_succeed_if.so uid >= 1000 uid <= 60000 quiet_success
+	required			pam_succeed_if.so uid >= 1000 uid <= 60000 quiet_success
