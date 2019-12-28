@@ -77,6 +77,7 @@
     - uid_ge_1000
     - umask
     - time
+    - inactive
 - name: Update PAM
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes

@@ -1,0 +1,6 @@
+Name: Lock out inactive users (no login in 90 days)
+Default: no
+Priority: 0
+Account-Type: Additional
+Account:
+	required			pam_lastlog.so inactive=90
