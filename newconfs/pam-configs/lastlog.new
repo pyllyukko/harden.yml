@@ -4,6 +4,12 @@ Priority: 0
 Session-Type: Additional
 Session-Interactive-Only: yes
 Session:
-	optional	pam_echo.so [1;31m
-	optional	pam_lastlog.so showfailed silent
-	optional	pam_echo.so [0m
+	[success=6 default=ignore]	pam_succeed_if.so service != sshd service !~ gdm-*
+	[success=5 default=ignore]	pam_succeed_if.so service = gdm-launch-environment
+	[success=3 default=ignore]	pam_succeed_if.so service =~ gdm-*
+	# For SSH
+	optional			pam_echo.so [1;31m
+	optional			pam_lastlog.so showfailed silent noupdate
+	[default=1]			pam_echo.so [0m
+	# For GDM
+	optional			pam_lastlog.so showfailed silent nowtmp
