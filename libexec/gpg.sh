@@ -203,6 +203,8 @@ declare -ra PGP_KEYS=(
   "0xFEFAD1BB14447F4968C1971095D24347967C393E"
   # Todd C. Miller (sudo)
   "0xA9F4C021CEA470FB"
+  # IX SecTeam <security-officer@ixsystems.com> (FreeNAS)
+  "0xC8D62DEF767C1DB0DFF4E6EC358EAA9112CF7946"
 )
 function import_pgp_keys() {
   local URL
