@@ -73,5 +73,17 @@
       mode: '0751'
       owner: root
       group: adm
+  - name: LDAP secrets
+    file:
+      path: "{{ item }}"
+      mode: '0600'
+      owner: root
+      group: root
+    with_items:
+      # nss_ldap(5)
+      - /etc/ldap.secret
+      - /etc/libnss-ldap.secret
+      # pam_ldap(5)
+      - /etc/pam_ldap.secret
   become: yes
   ignore_errors: yes
