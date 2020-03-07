@@ -9,6 +9,7 @@ slackware_services:
 debian_services:
   - avahi-daemon
   - bluetooth
+  - hciuart
   - cups
   - cups-browsed
   - atd
