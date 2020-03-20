@@ -205,6 +205,8 @@ declare -ra PGP_KEYS=(
   "0xA9F4C021CEA470FB"
   # IX SecTeam <security-officer@ixsystems.com> (FreeNAS)
   "0xC8D62DEF767C1DB0DFF4E6EC358EAA9112CF7946"
+  # https://www.php.net/downloads.php#gpg-7.4
+  "0x5A52880781F755608BF815FC910DEB46F53EA312"
 )
 function import_pgp_keys() {
   local URL
