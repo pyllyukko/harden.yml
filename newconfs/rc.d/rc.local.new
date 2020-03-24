@@ -1,0 +1,187 @@
+#!/bin/bash
+#
+# /etc/rc.d/rc.local:  Local system initialization script.
+#
+# bzcat MANIFEST.bz2 | awk '$6 ~ /etc\/rc\.d\/rc\./ && $6 !~ /conf(\.new)?$/{sub(/\.new$/, "",$6);printf "/%s\n", $6}'
+# rc.sysstat, rc.lxc & rc.mcelog are not called from anywhere in 14.2
+
+# rc scripts handled by Slackware's init system
+slackware_rc_scripts=(
+  "/etc/rc.d/rc.acpid"
+  "/etc/rc.d/rc.messagebus"
+  "/etc/rc.d/rc.udev"
+  "/etc/rc.d/rc.font"
+  "/etc/rc.d/rc.cgconfig"
+  "/etc/rc.d/rc.cgred"
+  "/etc/rc.d/rc.pcmcia"
+  "/etc/rc.d/rc.syslog"
+  "/etc/rc.d/rc.local"
+  "/etc/rc.d/rc.local_shutdown"
+  "/etc/rc.d/rc.loop"
+  "/etc/rc.d/rc.6"
+  "/etc/rc.d/rc.0"
+  /etc/rc.d/rc.modules*
+  "/etc/rc.d/rc.K"
+  "/etc/rc.d/rc.cpufreq"
+  "/etc/rc.d/rc.sysvinit"
+  "/etc/rc.d/rc.4"
+  "/etc/rc.d/rc.M"
+  "/etc/rc.d/rc.S"
+  "/etc/rc.d/rc.serial"
+  "/etc/rc.d/rc.alsa-oss"
+  "/etc/rc.d/rc.alsa"
+  "/etc/rc.d/rc.cgproxy"
+  "/etc/rc.d/rc.cgmanager"
+  "/etc/rc.d/rc.cups"
+  "/etc/rc.d/rc.cups-browsed"
+  "/etc/rc.d/rc.lxc"
+  "/etc/rc.d/rc.mysqld"
+  "/etc/rc.d/rc.consolekit"
+  "/etc/rc.d/rc.fuse"
+  "/etc/rc.d/rc.pulseaudio"
+  "/etc/rc.d/rc.networkmanager"
+  "/etc/rc.d/rc.autofs"
+  "/etc/rc.d/rc.bind"
+  "/etc/rc.d/rc.bluetooth"
+  "/etc/rc.d/rc.saslauthd"
+  "/etc/rc.d/rc.dnsmasq"
+  "/etc/rc.d/rc.httpd"
+  "/etc/rc.d/rc.inetd"
+  "/etc/rc.d/rc.snmpd"
+  "/etc/rc.d/rc.atalk"
+  "/etc/rc.d/rc.ip_forward"
+  "/etc/rc.d/rc.inet1"
+  "/etc/rc.d/rc.inet2"
+  "/etc/rc.d/rc.firewall"
+  "/etc/rc.d/rc.nfsd"
+  "/etc/rc.d/rc.ntpd"
+  "/etc/rc.d/rc.sshd"
+  "/etc/rc.d/rc.php-fpm"
+  "/etc/rc.d/rc.rpc"
+  "/etc/rc.d/rc.samba"
+  "/etc/rc.d/rc.sendmail"
+  "/etc/rc.d/rc.ulogd"
+  "/etc/rc.d/rc.wireless"
+  "/etc/rc.d/rc.yp"
+  "/etc/rc.d/rc.keymap"
+  "/etc/rc.d/rc.gpm-sample"
+  # Slackware 15.0
+  "/etc/rc.d/rc.crond"
+  "/etc/rc.d/rc.atd"
+  "/etc/rc.d/rc.fuse3"
+  "/etc/rc.d/rc.setterm"
+  "/etc/rc.d/rc.haveged"
+  "/etc/rc.d/rc.icecc-scheduler"
+  "/etc/rc.d/rc.iceccd"
+  "/etc/rc.d/rc.kadmind"
+  "/etc/rc.d/rc.kpropd"
+  "/etc/rc.d/rc.krb5kdc"
+  "/etc/rc.d/rc.openvpn"
+  "/etc/rc.d/rc.postfix"
+  "/etc/rc.d/rc.dovecot"
+)
+
+in_array() {
+  # See: http://fvue.nl/wiki/Bash:_Check_if_array_element_exists
+  local hay needle=$1
+  shift
+  for hay; do
+    [[ $hay == $needle ]] && return 0
+  done
+  return 1
+}
+function handle_local_services() {
+  local rc
+  if [ ${#} -ne 1 ]
+  then
+    return 1
+  fi
+  shopt -s nullglob
+  for rc in /etc/rc.d/rc.*
+  do
+    if [ ! -x "${rc}" ]
+    then
+      continue
+    fi
+    if [[ ${rc} =~ (\.(conf|new|orig)|~)$ ]]
+    then
+      continue
+    fi
+    if in_array "${rc}" "${slackware_rc_scripts[@]}"
+    then
+      continue
+    fi
+    echo "${0}:  ${rc} ${1}"
+    /bin/sh "${rc}" "${1}"
+  done
+}
+function start_extra_services() {
+  # services that do not have rc script
+
+  # Log icmp packets to syslog
+  if [ -x /usr/sbin/icmpinfo ]
+  then
+    echo "Starting ICMP logging:  icmpinfo -v -s -n -p -l"
+    /usr/sbin/icmpinfo -v -s -n -p -l
+  fi
+
+  # Enforce login time restrictions set in /etc/porttime
+  if [ -x /usr/sbin/logoutd -a -f /etc/porttime ]
+  then
+    echo "Starting logoutd:  /usr/sbin/logoutd"
+    /usr/sbin/logoutd
+  fi
+
+  # start snmptrapd
+  if [ -x /usr/sbin/snmptrapd -a -f /etc/snmp/snmptrapd.conf ]
+  then
+    echo "Starting SNMP trap daemon:  /usr/sbin/snmptrapd -c /etc/snmp/snmptrapd.conf -Ls d"
+    /usr/sbin/snmptrapd -c /etc/snmp/snmptrapd.conf -Ls d
+  fi
+
+  # start mdadm if there are RAID devices
+  if /bin/grep -q '^md[0-9]\+\s\+:\s\+active' /proc/mdstat 2>/dev/null
+  then
+    echo "Starting RAID monitoring:  /sbin/mdadm -F -m root -y -f -i /var/run/mdadm.pid -t -s"
+    /sbin/mdadm -F -m root -y -f -i /var/run/mdadm.pid -t -s
+  fi
+
+  # TODO: rngd
+}
+function stop_extra_services() {
+  local service_pid
+  local service
+  # stop icmpinfo
+  echo "Stopping ICMP logging..."
+  if [ -x /usr/sbin/icmpinfo ]
+  then
+    /usr/sbin/icmpinfo -k
+  fi
+  for service in snmptrapd mdadm
+  do
+    if [ -f "/var/run/${service}.pid" ]
+    then
+      read service_pid 0<"/var/run/service.pid"
+      if [ -n "${service_pid}" ]
+      then
+        echo "${0}:  Stopping ${service#/etc/rc.d/rc.} service..."
+        /bin/kill -SIGTERM "${service_pid}"
+        /bin/rm -f "/var/run/${service}.pid"
+      fi
+    fi
+  done
+}
+
+who_called="$( caller | awk '{print$2}' )"
+# TODO: Slackware 15 doesn't source rc.local anymore
+if [ "${who_called}" = "/etc/rc.d/rc.M" -o "${1}" = "start" -o ${#} -eq 0 ]
+then
+  handle_local_services start
+  start_extra_services
+elif [ "${1}" = "stop" -o "${0##*/}" = "rc.local_shutdown" ]
+then
+  handle_local_services stop
+  stop_extra_services
+else
+  echo "[-] rc.local: don't know what to do" 1>&2
+fi
