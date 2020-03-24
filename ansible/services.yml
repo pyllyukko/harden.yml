@@ -136,12 +136,11 @@
       group: root
       state: link
   - name: Enable smartd (Slackware)
-    replace:
-      path: /etc/rc.d/rc.M
-      after: '# by default.'
-      before: '# Monitor the UPS with genpowerd.'
-      regexp: '^#(.+)$'
-      replace: '\1'
+    file:
+      path: /etc/rc.d/rc.smartd
+      owner: root
+      group: root
+      mode: '0700'
   - name: Disable atd (Slackware)
     replace:
       path: /etc/rc.d/rc.M

@@ -79,6 +79,7 @@ slackware_rc_scripts=(
   "/etc/rc.d/rc.openvpn"
   "/etc/rc.d/rc.postfix"
   "/etc/rc.d/rc.dovecot"
+  "/etc/rc.d/rc.smartd"
 )
 
 in_array() {
