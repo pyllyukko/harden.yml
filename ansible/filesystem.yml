@@ -85,5 +85,10 @@
       - /etc/libnss-ldap.secret
       # pam_ldap(5)
       - /etc/pam_ldap.secret
+  - name: /etc/ssl/private
+    file:
+      path: /etc/ssl/private
+      mode: o-rwx
+      owner: root
   become: yes
   ignore_errors: yes
