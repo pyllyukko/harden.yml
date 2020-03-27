@@ -80,6 +80,7 @@ slackware_rc_scripts=(
   "/etc/rc.d/rc.postfix"
   "/etc/rc.d/rc.dovecot"
   "/etc/rc.d/rc.smartd"
+  "/etc/rc.d/rc.4.local"
 )
 
 in_array() {
