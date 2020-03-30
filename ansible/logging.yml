@@ -15,13 +15,13 @@
     validate: '/bin/grep "^\s\+rotate\s\+{{ log_retention_time_in_months }}$" %s'
 - name: Slackware specific logrotate changes
   block:
-  - name: Make log file default permissions group adm readable (Slackware)
+  - name: Make new log file default permissions group adm readable (Slackware)
     replace:
       path: /etc/logrotate.conf
       regexp: '^(create)$'
       replace: '\g<1> 0640 root adm'
       validate: '/bin/grep "^create 0640 root adm$" %s'
-  - name: Make btmp group adm readable (Slackware)
+  - name: Make new btmp group adm readable (Slackware)
     replace:
       after: '/var/log/btmp {'
       path: /etc/logrotate.conf
@@ -32,5 +32,26 @@
     copy:
       src: "{{ playbook_dir }}/../newconfs/logrotate.d/syslog.new"
       dest: /etc/logrotate.d/syslog
+  - name: Make existing log files group adm readable (Slackware)
+    file:
+      path: "{{ item }}"
+      mode: '0640'
+      owner: root
+      group: adm
+    with_items:
+      - /var/log/cron
+      - /var/log/debug
+      - /var/log/maillog
+      - /var/log/messages
+      - /var/log/secure
+      - /var/log/spooler
+      - /var/log/syslog
+  - name: Make /var/log/dmesg group adm readable
+    lineinfile:
+      insertafter: 'chmod 640 /var/log/dmesg$'
+      state: present
+      path: /etc/rc.d/rc.M
+      regexp: '^ {4}chgrp adm /var/log/dmesg$'
+      line: '    chgrp adm /var/log/dmesg'
   become: yes
   when: ansible_distribution == "Slackware"
