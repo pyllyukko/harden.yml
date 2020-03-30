@@ -35,7 +35,7 @@
         - slackpkg -batch=on -default_answer=y install sudo
         - 'echo "slackware ALL=(root) EXEC: ALL" 1>/etc/sudoers.d/letmein'
     - name: Wait for the network to be setup in the containers
-      when: containers_info|changed
+      when: containers_info is changed
       pause: seconds=10
     - name: Get containers info now that IPs are available
       lxc_container:
