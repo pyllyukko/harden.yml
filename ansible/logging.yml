@@ -13,26 +13,24 @@
     regexp: '^(\s+rotate\s+)1$'
     replace: '\g<1>{{ log_retention_time_in_months }}'
     validate: '/bin/grep "^\s\+rotate\s\+{{ log_retention_time_in_months }}$" %s'
-- name: Make log file default permissions group adm readable (Slackware)
+- name: Slackware specific logrotate changes
+  block:
+  - name: Make log file default permissions group adm readable (Slackware)
+    replace:
+      path: /etc/logrotate.conf
+      regexp: '^(create)$'
+      replace: '\g<1> 0640 root adm'
+      validate: '/bin/grep "^create 0640 root adm$" %s'
+  - name: Make btmp group adm readable (Slackware)
+    replace:
+      after: '/var/log/btmp {'
+      path: /etc/logrotate.conf
+      regexp: '^(\s+create\s+)0600 root root$'
+      replace: '\g<1>0640 root adm'
+      validate: '/bin/grep "^\s\+create\s\+0640 root adm$" %s'
+  - name: Make some log files append only (Slackware)
+    copy:
+      src: "{{ playbook_dir }}/../newconfs/logrotate.d/syslog.new"
+      dest: /etc/logrotate.d/syslog
   become: yes
-  replace:
-    path: /etc/logrotate.conf
-    regexp: '^(create)$'
-    replace: '\g<1> 0640 root adm'
-    validate: '/bin/grep "^create 0640 root adm$" %s'
   when: ansible_distribution == "Slackware"
-- name: Make btmp group adm readable (Slackware)
-  become: yes
-  replace:
-    after: '/var/log/btmp {'
-    path: /etc/logrotate.conf
-    regexp: '^(\s+create\s+)0600 root root$'
-    replace: '\g<1>0640 root adm'
-    validate: '/bin/grep "^\s\+create\s\+0640 root adm$" %s'
-  when: ansible_distribution == "Slackware"
-- name: Make some log files append only (Slackware)
-  become: yes
-  when: ansible_distribution == "Slackware"
-  copy:
-    src: "{{ playbook_dir }}/../newconfs/logrotate.d/syslog.new"
-    dest: /etc/logrotate.d/syslog
