@@ -33,6 +33,8 @@
         - yes | slackpkg -batch=on -default_answer=y update
         - slackpkg -batch=on -default_answer=y install python
         - slackpkg -batch=on -default_answer=y install sudo
+        - slackpkg -batch=on -default_answer=y install ca-certificates
+        - slackpkg -batch=on -default_answer=y install perl
         - 'echo "slackware ALL=(root) EXEC: ALL" 1>/etc/sudoers.d/letmein'
     - name: Wait for the network to be setup in the containers
       when: containers_info is changed
