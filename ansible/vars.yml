@@ -20,6 +20,7 @@ debian_services:
   #- wpa_supplicant
   #- alsa-restore
   #- alsa-state
+  #- hciuart
 allowed_services:
   - sshd
 allowed_tcp_ports:
