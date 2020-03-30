@@ -141,6 +141,7 @@
       owner: root
       group: root
       mode: '0700'
+    ignore_errors: yes
   - name: Disable atd (Slackware)
     replace:
       path: /etc/rc.d/rc.M
