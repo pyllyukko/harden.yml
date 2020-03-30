@@ -66,6 +66,23 @@
     file:
       path: /var/log/lastlog
       mode: o-rwx
+  - name: Install acl (Slackware)
+    when: ansible_distribution == "Slackware"
+    slackpkg:
+      name: acl
+      state: present
+  # we don't want to mess with the group ownerships because these might be needed to be writable by utmp group
+  - name: Grant group adm read rights on login records
+    acl:
+      path: "{{ item }}"
+      entity: adm
+      etype: group
+      permissions: r
+      state: present
+    with_items:
+      - /var/log/lastlog
+      - /var/log/btmp
+      - /var/log/wtmp
   - name: /var/log
     file:
       path: /var/log

@@ -33,6 +33,7 @@ Cmnd_Alias	SHELLS = /bin/sh "", /bin/bash "", /bin/dash "", /bin/zsh "", /bin/cs
 Cmnd_Alias	APT_GET = /usr/bin/apt-get update, /usr/bin/apt-get upgrade, /usr/bin/apt-get dist-upgrade, /usr/bin/apt-get autoremove, /usr/bin/apt-get clean, /usr/bin/apt-get autoclean, /usr/bin/apt-file update
 # these should be enough. you can do "sudo cat | grep" etc. tail is for following.
 Cmnd_Alias	READ_FILES = /bin/ls, /bin/tail, /bin/cat
+Cmnd_Alias	LOGIN_RECORD_VIEWERS = /usr/bin/lastlog, /usr/bin/lastb, /usr/bin/last, /usr/bin/who
 Cmnd_Alias	ANSIBLE = /bin/sh -c echo BECOME-SUCCESS-????????????????????????????????; /usr/bin/python /home/{{ ansible_user_id }}/.ansible/tmp/ansible-tmp-??????????.*-*/AnsiballZ_*.py, /bin/sh -c echo BECOME-SUCCESS-???????????????????????????????? ; /usr/bin/python /home/{{ ansible_user_id }}/.ansible/tmp/ansible-tmp-??????????.*-*/AnsiballZ_*.py, /bin/sh -c echo BECOME-SUCCESS-????????????????????????????????;\ \ /home/{{ ansible_user_id }}/.ansible/tmp/ansible-tmp-??????????.*-*/*
 
 ##
@@ -112,6 +113,7 @@ root {{ ansible_hostname }}=(ALL) ALL
 %wheel {{ ansible_hostname }}=(root) PASSWD:EXEC: SHELLS
 %wheel {{ ansible_hostname }}=(root) PASSWD:NOEXEC: sudoedit
 %wheel {{ ansible_hostname }}=(:adm) PASSWD:NOEXEC: READ_FILES
+%wheel {{ ansible_hostname }}=(:adm) PASSWD:NOEXEC: LOGIN_RECORD_VIEWERS
 {% if ansible_os_family == "RedHat" %}
 %wheel {{ ansible_hostname }}=(root) PASSWD:EXEC: /bin/yum update
 {% endif %}
