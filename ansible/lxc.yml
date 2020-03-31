@@ -220,6 +220,7 @@
       shell: 'echo "{{ item.value }}  {{ item.key }}" | sha512sum -c'
       with_dict:
         /usr/sbin/adduser: 9dbe4b4c329139bdad8907964dd7d2632dce3fa809b5a0e96539b85c633d4f09fddbd75f2072943e58e9ca9c7de6da44d0456b036ddfc0b983ae822a0d8c42bb
+        /sbin/installpkg: db2804e1e5d826f914be9b3419b5d0ac7bd4e22b65093b8b2fb138a69d8afa95d274d37f48c9e71df168ce12adc1b217f212ea54fb4127a0a4947208b635d127
         /etc/inittab: 28afc334dcaf4f6c5210568a2ccb2f5809a94bf16b2feba6763ea054827f383f23d5b76420e901376e29eb37e1b6af6b5ffaea0001effd1df4afeff34c9564d7
         /etc/login.defs: 2e64ef9d8576ecb4f09ac10f018ec14c6cf793329ef9fbf3a5b9034b8d62ca300076ae79346d3acb27ec017b5f3ff04d28b4545c163d095a853e556ceb76c40a
         /etc/shutdown.allow: cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e
