@@ -21,6 +21,13 @@
       regexp: '^(create)$'
       replace: '\g<1> 0640 root adm'
       validate: '/bin/grep "^create 0640 root adm$" %s'
+  - name: Make new wtmp file permissions non world-readable (Slackware)
+    replace:
+      after: '/var/log/wtmp {'
+      path: /etc/logrotate.conf
+      regexp: '^(\s+create\s+)0664 root utmp$'
+      replace: '\g<1>0660 root utmp'
+      validate: '/bin/grep "^\s\+create\s\+0660 root utmp$" %s'
   - name: Make new btmp group adm readable (Slackware)
     replace:
       after: '/var/log/btmp {'
