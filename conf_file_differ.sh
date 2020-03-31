@@ -14,6 +14,7 @@ lxc_dir="/var/lib/lxc"
 
 # shadow suite
 /usr/bin/vimdiff <(zcat "${slackware_mirror_dir}/slackware64-current/source/a/shadow/login.defs.shadow.gz")					"${lxc_dir}/harden.sh-test-slackware/rootfs/etc/login.defs"
+/usr/bin/vimdiff <(zcat "${slackware_mirror_dir}/slackware64-current/source/a/shadow/useradd.gz")						"${lxc_dir}/harden.sh-test-slackware/rootfs/etc/default/useradd"
 /usr/bin/vimdiff "${slackware_mirror_dir}/slackware64-current/source/a/shadow/adduser"								"${lxc_dir}/harden.sh-test-slackware/rootfs/usr/sbin/adduser"
 /usr/bin/vimdiff <(tar xf "${slackware_mirror_dir}/slackware64-current/slackware64/a/shadow-4.8.1-x86_64-5.txz" etc/login.access.new -O)	"${lxc_dir}/harden.sh-test-slackware/rootfs/etc/login.access"
 
