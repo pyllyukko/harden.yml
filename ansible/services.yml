@@ -106,6 +106,15 @@
   when: ansible_distribution == "Slackware"
   become: yes
   command: /bin/sh /etc/rc.d/rc.sshd restart
+- name: Harden SSH client configuration
+  become: yes
+  when: ansible_distribution == "Slackware"
+  template:
+    src: "{{ playbook_dir }}/templates/ssh_config-{{ ansible_distribution }}.j2"
+    dest: /etc/ssh/ssh_config
+    owner: root
+    group: root
+    mode: '0644'
 # Misc
 #- name: Install icmpinfo
 #  become: yes
