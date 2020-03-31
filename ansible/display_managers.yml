@@ -1,0 +1,25 @@
+---
+- name: Configure LightDM
+  block:
+  - name: Disable VNC in LightDM
+    ini_file:
+      path: /etc/lightdm/lightdm.conf
+      section: VNCServer
+      option: enabled
+      value: "false"
+  - name: Hide user list in LightDM
+    ini_file:
+      path: /etc/lightdm/lightdm.conf
+      section: "{{ item }}"
+      option: greeter-hide-users
+      value: "True"
+    with_items:
+      - LightDM
+      - [Seat:*]
+  - name: Disallow guest login in LightDM
+    ini_file:
+      path: /etc/lightdm/lightdm.conf
+      section: LightDM
+      option: allow-guest
+      value: "False"
+  become: yes
