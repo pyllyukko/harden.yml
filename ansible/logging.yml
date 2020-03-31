@@ -34,18 +34,18 @@
       dest: /etc/logrotate.d/syslog
   - name: Make existing log files group adm readable (Slackware)
     file:
-      path: "{{ item }}"
+      path: "/var/log/{{ item }}"
       mode: '0640'
       owner: root
       group: adm
     with_items:
-      - /var/log/cron
-      - /var/log/debug
-      - /var/log/maillog
-      - /var/log/messages
-      - /var/log/secure
-      - /var/log/spooler
-      - /var/log/syslog
+      - cron
+      - debug
+      - maillog
+      - messages
+      - secure
+      - spooler
+      - syslog
   - name: Make /var/log/dmesg group adm readable
     lineinfile:
       insertafter: 'chmod 640 /var/log/dmesg$'
