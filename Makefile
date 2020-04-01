@@ -158,7 +158,7 @@ $(CWD)/manifests/$(slackware)-$(slackware_version)/:
 
 $(CWD)/manifests/$(slackware)-$(slackware_version)/CHECKSUMS.md5: $(CWD)/manifests/$(slackware)-$(slackware_version)/CHECKSUMS.md5.asc FORCE | $(CWD)/manifests/$(slackware)-$(slackware_version)/
 	-wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/$(slackware)/$(notdir $@)
-	cd $(CWD)/manifests/$(slackware)-$(slackware_version) && gpgv CHECKSUMS.md5.asc CHECKSUMS.md5
+	cd $(CWD)/manifests/$(slackware)-$(slackware_version) && gpgv2 CHECKSUMS.md5.asc CHECKSUMS.md5
 
 # TODO: list keys used in the .asc
 $(CWD)/manifests/$(slackware)-$(slackware_version)/CHECKSUMS.md5.asc: | $(CWD)/manifests/$(slackware)-$(slackware_version)/
