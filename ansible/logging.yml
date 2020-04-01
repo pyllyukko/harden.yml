@@ -68,6 +68,10 @@
     copy:
       src: "{{ playbook_dir }}/../newconfs/logrotate.d/syslog.new"
       dest: /etc/logrotate.d/syslog
+  become: yes
+  when: ansible_distribution == "Slackware"
+- name: Slackware specific log file changes
+  block:
   - name: Make existing log files group adm readable (Slackware)
     file:
       path: "/var/log/{{ item }}"
