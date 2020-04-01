@@ -28,6 +28,14 @@
       regexp: '^(\s+create\s+)0664 root utmp$'
       replace: '\g<1>0660 root utmp'
       validate: '/bin/grep "^\s\+create\s\+0660 root utmp$" %s'
+  - name: Make new wtmp file permissions group adm readable (Slackware)
+    blockinfile:
+      insertafter: '/var/log/wtmp {'
+      path: /etc/logrotate.conf
+      block: |
+        postrotate
+        /usr/bin/setfacl -m g:adm:r /var/log/wtmp
+        endscript
   - name: Make new btmp group adm readable (Slackware)
     replace:
       after: '/var/log/btmp {'
