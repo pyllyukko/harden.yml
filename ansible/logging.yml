@@ -6,6 +6,7 @@
     regexp: '^(rotate\s+)[0-9]+$'
     replace: '\g<1>{{ log_retention_time_in_months * 4 }}'
     validate: '/bin/grep "^rotate\s\+{{ log_retention_time_in_months * 4 }}$" %s'
+# this applies to Slackware & CentOS. Debian has these in /etc/logrotate.d/[bw]tmp
 - name: Configure [bw]tmp retention period to {{ log_retention_time_in_months }} months
   become: yes
   replace:
@@ -13,6 +14,26 @@
     regexp: '^(\s+rotate\s+)1$'
     replace: '\g<1>{{ log_retention_time_in_months }}'
     validate: '/bin/grep "^\s\+rotate\s\+{{ log_retention_time_in_months }}$" %s'
+- name: Debian specific logrotate changes
+  block:
+  - name: Configure [bw]tmp retention period to {{ log_retention_time_in_months }} months (Debian)
+    replace:
+      path: /etc/logrotate.d/{{ item }}
+      regexp: '^(\s+rotate\s+)1$'
+      replace: '\g<1>{{ log_retention_time_in_months }}'
+      validate: '/bin/grep "^\s\+rotate\s\+{{ log_retention_time_in_months }}$" %s'
+    with_items:
+      - btmp
+      - wtmp
+  - name: Make new wtmp file permissions non world-readable (Debian)
+    replace:
+      after: '/var/log/wtmp {'
+      path: /etc/logrotate.d/wtmp
+      regexp: '^(\s+create\s+)0664 root utmp$'
+      replace: '\g<1>0660 root utmp'
+      validate: '/bin/grep "^\s\+create\s\+0660 root utmp$" %s'
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
 - name: Slackware specific logrotate changes
   block:
   - name: Make new log file default permissions group adm readable (Slackware)
