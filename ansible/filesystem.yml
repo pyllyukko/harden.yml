@@ -107,5 +107,11 @@
       path: /etc/ssl/private
       mode: o-rwx
       owner: root
+  - name: /root
+    file:
+      path: /root
+      mode: '0700'
+      owner: root
+      group: root
   become: yes
   ignore_errors: yes
