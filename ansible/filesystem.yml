@@ -38,6 +38,14 @@
   file:
     path: "{{ tempfile_1.path }}"
     state: absent
+- name: Clean up /tmp during boot (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  replace:
+    path: /etc/rc.d/rc.S
+    regexp: '^(rm -rf) /tmp/\{.*\}$'
+    replace: '\g<1> /tmp/*'
+    validate: '/bin/grep "^rm -rf /tmp/\*$" %s'
 - name: Chmod sensitive files
   block:
   - name: Restrict visibility to /etc/cron.{d,hourly,daily,monthly}/
