@@ -2,11 +2,12 @@
 - name: Mount /proc with hidepid=2 (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
-  replace:
+  lineinfile:
     path: /etc/rc.d/rc.S
-    regexp: '^(/sbin/mount -v proc /proc -n -t proc).*$'
-    replace: '\g<1> -o hidepid=2 2> /dev/null'
-    validate: '/bin/grep "^/sbin/mount -v proc /proc -n -t proc -o hidepid=2 2> /dev/null$" %s'
+    state: present
+    insertafter: '/sbin/mount -v proc /proc -n -t proc 2> /dev/null$'
+    regexp: '^/sbin/mount -o remount,hidepid=2 /proc$'
+    line: '/sbin/mount -o remount,hidepid=2 /proc'
 - name: Remount /proc with hidepid=2
   become: yes
   mount:
