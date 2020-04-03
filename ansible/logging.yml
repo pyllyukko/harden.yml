@@ -93,5 +93,16 @@
       path: /etc/rc.d/rc.M
       regexp: '^ {4}chgrp adm /var/log/dmesg$'
       line: '    chgrp adm /var/log/dmesg'
+  - name: Enable bootlogd
+    blockinfile:
+      insertafter: '^PATH='
+      path: /etc/rc.d/rc.S
+      block: |
+        # https://www.linuxquestions.org/questions/slackware-14/how-to-activate-bootlogd-918962/
+        if [ -x /sbin/bootlogd ]; then
+          echo 'Starting bootlogd'
+          /sbin/bootlogd
+          echo 'Bootlogd started (this is the first boot message that appears in /var/log/boot).'
+        fi
   become: yes
   when: ansible_distribution == "Slackware"

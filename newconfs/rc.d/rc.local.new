@@ -180,10 +180,16 @@ if [ "${who_called}" = "/etc/rc.d/rc.M" -o "${1}" = "start" -o ${#} -eq 0 ]
 then
   handle_local_services start
   start_extra_services
+  # stop bootlogd
+  killall -SIGTERM bootlogd 2>/dev/null
 elif [ "${1}" = "stop" -o "${0##*/}" = "rc.local_shutdown" ]
 then
   handle_local_services stop
   stop_extra_services
+  # create/clear bootlog so it will be ready on the next boot
+  >/var/log/boot
+  chown root:adm /var/log/boot
+  chmod 640 /var/log/boot
 else
   echo "[-] rc.local: don't know what to do" 1>&2
 fi
