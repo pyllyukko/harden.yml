@@ -2,7 +2,7 @@
 - name: Create /etc/issue{,.net}
   become: yes
   copy:
-    content: 'Authorized uses only. All activity may be monitored and reported.'
+    content: "Authorized uses only. All activity may be monitored and reported.\n"
     dest: "{{ item }}"
   with_items:
     - /etc/issue
