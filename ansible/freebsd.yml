@@ -108,3 +108,9 @@
       template:
         src: "{{ playbook_dir }}/templates/hosts.allow-{{ ansible_system }}.j2"
         dest: /etc/hosts.allow
+    - name: chmod /root
+      file:
+        path: /root
+        mode: '0700'
+      become: yes
+      when: ansible_distribution == "FreeBSD"
