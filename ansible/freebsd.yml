@@ -4,113 +4,94 @@
   vars_files:
     - vars.yml
   tasks:
-    - name: Harden sysctl settings
-      become: yes
-      when: ansible_distribution == "FreeBSD"
-      sysctl:
-        name: "{{ item.key }}"
-        value: "{{ item.value }}"
-        state: present
-      with_dict:
-        kern.coredump: 0
-        kern.securelevel: 1
-        security.bsd.see_other_uids: 0
-        security.bsd.see_other_gids: 0
-    - name: Enable firewall
-      become: yes
-      when: ansible_distribution == "FreeBSD"
-      blockinfile:
-        path: /etc/rc.conf
-        block: |
-          firewall_enable="YES"
-          firewall_type="open"
-    # https://www.freebsd.org/doc/handbook/audit-config.html
-    - name: Enable & start auditing
-      become: yes
-      when: ansible_distribution == "FreeBSD"
-      service:
-        name: auditd
-        enabled: yes
-        state: started
-    - name: Create audit log rotation
-      become: yes
-      when: ansible_distribution == "FreeBSD"
-      cron:
-        name: "audit log rotation"
-        hour: "*/12"
-        minute: "0"
-        job: /usr/sbin/audit -n 1>/dev/null
-    # https://www.freebsd.org/doc/handbook/consoles.html#consoles-singleuser
-    - name: Ask for password in single User Mode
-      become: yes
-      when: ansible_distribution == "FreeBSD"
-      replace:
-        path: /etc/ttys
-        regexp: '^(console\s+.+\s+)secure$'
-        replace: '\g<1>insecure'
-        validate: '/usr/bin/grep "^console.\+insecure$" %s'
-    - name: Set uucp user's shell to nologin
-      become: yes
-      when: ansible_distribution == "FreeBSD"
-      user:
-        name: uucp
-        shell: /sbin/nologin
-    - name: Remove the user 'toor'
-      become: yes
-      when: ansible_distribution == "FreeBSD"
-      user:
-        name: toor
-        state: absent
-        remove: yes
-    # https://www.freebsd.org/doc/handbook/security-pkg.html
-    - name: Stat /etc/periodic.conf
-      stat:
-        path: /etc/periodic.conf
-      register: stat_result
-    - name: Run pkg audit daily
-      become: yes
-      when: ansible_distribution == "FreeBSD" and stat_result.stat.exists == True
-      replace:
-        path: /etc/periodic.conf
-        regexp: '^(daily_status_security_pkgaudit_enable)="[A-Z]+"$'
-        replace: '\g<1>="YES"'
-        validate: '/usr/bin/grep "^daily_status_security_pkgaudit_enable=\"YES\"$" %s'
-    # https://www.freebsd.org/doc/handbook/security-accounting.html#idp56794616
-    - name: Enable process accounting
+    - name: Minimal FreeBSD hardening
       block:
-      - name: Create process accounting file
-        copy:
-          content: ""
-          dest: /var/account/acct
-          force: no
-          group: wheel
-          owner: root
-          mode: 0600
-      - name: Start process accounting
-        command: accton /var/account/acct
-      - name: Enable accounting
+      - name: Harden sysctl settings
+        sysctl:
+          name: "{{ item.key }}"
+          value: "{{ item.value }}"
+          state: present
+        with_dict:
+          kern.coredump: 0
+          kern.securelevel: 1
+          security.bsd.see_other_uids: 0
+          security.bsd.see_other_gids: 0
+      - name: Enable firewall
+        blockinfile:
+          path: /etc/rc.conf
+          block: |
+            firewall_enable="YES"
+            firewall_type="open"
+      # https://www.freebsd.org/doc/handbook/audit-config.html
+      - name: Enable & start auditing
         service:
-          name: accounting
+          name: auditd
           enabled: yes
-      when: ansible_distribution == "FreeBSD"
-      become: yes
-    - name: Get kern.ident sysctl value
-      become: yes
-      command: sysctl -n kern.ident
-      register: kern_ident
-    - name: Add rrdcached to allowed_services
-      set_fact:
-        allowed_services: "{{ allowed_services + [ \"rrdcached\" ] }}"
-      when: kern_ident.stdout == "FREENAS64"
-    - name: 'TCP wrappers: create /etc/hosts.allow'
-      become: yes
-      when: ansible_distribution == "FreeBSD"
-      template:
-        src: "{{ playbook_dir }}/templates/hosts.allow-{{ ansible_system }}.j2"
-        dest: /etc/hosts.allow
-    - name: chmod /root
-      file:
-        path: /root
-        mode: '0700'
+          state: started
+      - name: Create audit log rotation
+        cron:
+          name: "audit log rotation"
+          hour: "*/12"
+          minute: "0"
+          job: /usr/sbin/audit -n 1>/dev/null
+      # https://www.freebsd.org/doc/handbook/consoles.html#consoles-singleuser
+      - name: Ask for password in single User Mode
+        replace:
+          path: /etc/ttys
+          regexp: '^(console\s+.+\s+)secure$'
+          replace: '\g<1>insecure'
+          validate: '/usr/bin/grep "^console.\+insecure$" %s'
+      - name: Set uucp user's shell to nologin
+        user:
+          name: uucp
+          shell: /sbin/nologin
+      - name: Remove the user 'toor'
+        user:
+          name: toor
+          state: absent
+          remove: yes
+      # https://www.freebsd.org/doc/handbook/security-pkg.html
+      - name: Stat /etc/periodic.conf
+        stat:
+          path: /etc/periodic.conf
+        register: stat_result
+      - name: Run pkg audit daily
+        replace:
+          path: /etc/periodic.conf
+          regexp: '^(daily_status_security_pkgaudit_enable)="[A-Z]+"$'
+          replace: '\g<1>="YES"'
+          validate: '/usr/bin/grep "^daily_status_security_pkgaudit_enable=\"YES\"$" %s'
+      # https://www.freebsd.org/doc/handbook/security-accounting.html#idp56794616
+      - name: Enable process accounting
+        block:
+        - name: Create process accounting file
+          copy:
+            content: ""
+            dest: /var/account/acct
+            force: no
+            group: wheel
+            owner: root
+            mode: 0600
+        - name: Start process accounting
+          command: accton /var/account/acct
+        - name: Enable accounting
+          service:
+            name: accounting
+            enabled: yes
+      - name: Get kern.ident sysctl value
+        command: sysctl -n kern.ident
+        register: kern_ident
+      - name: Add rrdcached to allowed_services
+        set_fact:
+          allowed_services: "{{ allowed_services + [ \"rrdcached\" ] }}"
+        when: kern_ident.stdout == "FREENAS64"
+      - name: 'TCP wrappers: create /etc/hosts.allow'
+        template:
+          src: "{{ playbook_dir }}/templates/hosts.allow-{{ ansible_system }}.j2"
+          dest: /etc/hosts.allow
+      - name: chmod /root
+        file:
+          path: /root
+          mode: '0700'
       become: yes
       when: ansible_distribution == "FreeBSD"
