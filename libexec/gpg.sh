@@ -139,8 +139,6 @@ declare -ra PGP_KEYS=(
   "0x46181433FBB75451"
   # DNSSEC Manager <dnssec@iana.org>
   "0xD1AFBCE00F6C91D2"
-  # OpenWrt signing key
-  "0xBEA8F6E25378AAF8"
   # Hannes von Haugwitz's key (Aide)
   "0xF6947DAB68E7B931"
   # PuTTY Releases
@@ -191,8 +189,12 @@ declare -ra PGP_KEYS=(
   "0x6689E64E3D3664BB"
   # research@sourcefire.com (ClamAV)
   "0xF13F9E16BCA5BFAD"
+  # OpenWrt signing key
+  "0xBEA8F6E25378AAF8"
   # OpenWrt Release Builder (18.06 Signing Key)
   "0x0F20257417E1CE16"
+  # OpenWrt Build System pgpsign-19.07@openwrt.org
+  "0xD9C6901F45C9B86858687DFF28A39BC32074BE7A"
   # https://www.php.net/downloads.php#gpg-7.2
   "0xDC9FF8D3EE5AF27F"
   # Bintray (by JFrog) <bintray@bintray.com> (boost library)
