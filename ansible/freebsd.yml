@@ -17,6 +17,7 @@
           security.bsd.see_other_uids: 0
           security.bsd.see_other_gids: 0
           security.bsd.unprivileged_read_msgbuf: 0
+          #kern.racct.enable: 1
       - name: Enable firewall
         blockinfile:
           path: /etc/rc.conf
