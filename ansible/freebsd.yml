@@ -94,5 +94,12 @@
         file:
           path: /root
           mode: '0700'
+      - name: Set default umask to 077
+        replace:
+          path: /etc/login.conf
+          regexp: '^(\s+:umask=)022:\\$'
+          replace: '\g<1>077:\\'
+      - name: Update the login.conf database
+        command: cap_mkdb
       become: yes
       when: ansible_distribution == "FreeBSD"
