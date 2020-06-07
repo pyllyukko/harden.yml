@@ -111,6 +111,7 @@
       - /etc/libnss-ldap.secret
       # pam_ldap(5)
       - /etc/pam_ldap.secret
+      - /etc/nslcd.conf
   - name: /etc/ssl/private
     file:
       path: /etc/ssl/private
