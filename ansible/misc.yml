@@ -57,3 +57,10 @@
         mode: '0600'
       when: stat_result.stat.exists == True
   become: yes
+- name: Set verify_ap_req_nofail -> true in krb5.conf
+  ini_file:
+    path: /etc/krb5.conf
+    section: libdefaults
+    option: verify_ap_req_nofail
+    value: "true"
+  become: yes
