@@ -89,3 +89,11 @@
     ucredit: -1
     ocredit: -1
     lcredit: -1
+- name: Configure minlen -> 14 in /etc/pam.d/system-auth
+  replace:
+    path: /etc/pam.d/system-auth
+    regexp: '^(password.+\sminlen=)[0-9]+(.*)$'
+    replace: '\g<1>14\g<2>'
+    validate: '/bin/grep "^password.\+minlen=14.*$" %s'
+  when: ansible_distribution == "Slackware"
+  become: yes
