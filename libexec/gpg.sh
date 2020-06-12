@@ -235,7 +235,7 @@ function import_pgp_keys() {
       continue
     fi
     # after importing these keys, we can verify slackware packages with gpgv
-    /usr/bin/wget --append-output="${logdir}/wget-log.txt" --tries=5 "${URL}" -nv --output-document=- | gpg --logger-fd 1 --keyring "${GPG_KEYRING}" --no-default-keyring --import - &>>"${logdir}/pgp_keys.txt"
+    /usr/bin/wget --append-output="${logdir}/wget-log.txt" --tries=5 "${URL}" -nv --output-document=- | gpg2 --logger-fd 1 --keyring "${GPG_KEYRING}" --no-default-keyring --import - &>>"${logdir}/pgp_keys.txt"
     echo -n '.'
   done
   echo -n $'\n'
@@ -252,7 +252,7 @@ function import_pgp_keys() {
     echo -n "from keyserver (${#PGP_KEYS[*]} keys)"
     for PGP_KEY in ${PGP_KEYS[*]}
     do
-      /usr/bin/gpg \
+      /usr/bin/gpg2 \
         --logger-fd 1 \
         --keyring "${GPG_KEYRING}" --no-default-keyring \
         --recv-keys "${PGP_KEY}" &>>"${logdir}/pgp_keys.txt"
@@ -311,7 +311,7 @@ function import_pgp_keys() {
     echo -n "from keyserver (${#PGP_KEYS[*]} keys)"
     for PGP_KEY in ${PGP_KEYS[*]}
     do
-      /usr/bin/gpg \
+      /usr/bin/gpg2 \
         --logger-fd 1 \
         --keyserver "hkps://hkps.pool.sks-keyservers.net" \
         --keyserver-options ca-cert-file=${CADIR}/${SKS_CA} \
