@@ -9,6 +9,7 @@ lxc_dir="/var/lib/lxc"
 /usr/bin/vimdiff "${slackware_mirror_dir}/slackware64-current/source/a/sysvinit-scripts/scripts/inittab"	"${lxc_dir}/harden.sh-test-slackware/rootfs/etc/inittab"
 /usr/bin/vimdiff "${slackware_mirror_dir}/slackware64-current/source/a/sysvinit-scripts/scripts/rc.M"		"${lxc_dir}/harden.sh-test-slackware/rootfs/etc/rc.d/rc.M"
 /usr/bin/vimdiff "${slackware_mirror_dir}/slackware64-current/source/a/sysvinit-scripts/scripts/rc.K"		"${lxc_dir}/harden.sh-test-slackware/rootfs/etc/rc.d/rc.K"
+/usr/bin/vimdiff "${slackware_mirror_dir}/slackware64-current/source/a/sysvinit-scripts/scripts/rc.S"		"${lxc_dir}/harden.sh-test-slackware/rootfs/etc/rc.d/rc.S"
 /usr/bin/vimdiff "${slackware_mirror_dir}/slackware64-current/source/a/dcron/rc.crond"				"${lxc_dir}/harden.sh-test-slackware/rootfs/etc/rc.d/rc.crond"
 /usr/bin/vimdiff "${slackware_mirror_dir}/slackware64-current/source/n/network-scripts/scripts/rc.inet2"	"${lxc_dir}/harden.sh-test-slackware/rootfs/etc/rc.d/rc.inet2"
 
