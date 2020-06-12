@@ -101,7 +101,7 @@ function handle_local_services() {
   shopt -s nullglob
   for rc in /etc/rc.d/rc.*
   do
-    if [ ! -x "${rc}" ]
+    if [ ! -x "${rc}" -o -h "${rc}" ]
     then
       continue
     fi
