@@ -71,6 +71,7 @@
     command: chage --inactive 30 {{ item.key }}
     when: item.value[1] | int >= 1000
     with_dict: "{{ getent_passwd }}"
+    ignore_errors: yes
   become: yes
 - name: Configure pwquality
   replace:
