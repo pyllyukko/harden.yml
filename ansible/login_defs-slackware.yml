@@ -14,6 +14,7 @@
       PASS_MIN_LEN: 8
       FAIL_DELAY: 20
       CREATE_HOME: "yes"
+      HOME_MODE: "0700"
       SU_WHEEL_ONLY: "yes"
       PORTTIME_CHECKS_ENAB: "yes"
       NOLOGINS_FILE: "/etc/nologin"
@@ -27,14 +28,6 @@
       database: group
       key: "{{ allowed_group }}"
     failed_when: getent_group.{{ allowed_group }}[2] == ""
-  - name: Configure login access control table (shadow suite)
-    blockinfile:
-      path: /etc/login.access
-      block: |
-        # Allow local login for root and specific group
-        +:root {{ allowed_group }}:LOCAL
-        # Disallow all others
-        -:ALL:ALL
   - name: /etc/shutdown.allow
     block:
     - name: Create /etc/shutdown.allow
@@ -48,17 +41,6 @@
         regexp: '^(ca::ctrlaltdel:/sbin/shutdown -t5 -r now)$'
         replace: '\g<1> -a'
         validate: '/bin/grep "^ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a$" %s'
-  - name: Create /etc/porttime (Slackware)
-    copy:
-      dest: /etc/porttime
-      content: "SU:*:\n"
-      force: no
-  - name: Create /etc/suauth (Slackware)
-    copy:
-      dest: /etc/suauth
-      content: "ALL:ALL:DENY\n"
-      force: no
-      mode: '0400'
   - name: Setup faillog (Slackware)
     block:
     - name: Initialize /var/log/faillog (Slackware)
