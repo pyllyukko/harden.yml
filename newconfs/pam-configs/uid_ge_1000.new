@@ -8,6 +8,7 @@ Auth:
 	requisite			pam_succeed_if.so uid >= 1000 uid <= 60000 quiet_success
 Account-Type: Additional
 Account:
+	[success=8 default=ignore]	pam_succeed_if.so uid eq 0 service = chfn quiet
 	[success=7 default=ignore]	pam_succeed_if.so user = lightdm service = systemd-user quiet
 	[success=6 default=ignore]	pam_succeed_if.so user = Debian-gdm service = gdm-launch-environment quiet
 	[success=5 default=ignore]	pam_succeed_if.so user = Debian-gdm service = systemd-user quiet
