@@ -16,7 +16,6 @@
         - debsecan
         - autolog
         - rkhunter
-        - tiger
         - chkrootkit
         - needrestart
         - arpwatch
