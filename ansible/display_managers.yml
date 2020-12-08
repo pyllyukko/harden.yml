@@ -1,4 +1,5 @@
 ---
+# https://github.com/canonical/lightdm#configuration
 - name: Configure LightDM
   block:
   - name: Disable VNC in LightDM
