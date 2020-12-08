@@ -21,3 +21,13 @@
       option: allow-guest
       value: "false"
   become: yes
+- name: Configure GDM3
+  replace:
+    regexp: '^(# ?)?({{ item.key }})=.+$'
+    replace: '\g<2>={{ item.value }}'
+    path: /etc/gdm3/greeter.dconf-defaults
+  with_dict:
+    disable-user-list: "true"
+    banner-message-enable: "true"
+    banner-message-text: "'Authorized uses only'"
+  become: yes
