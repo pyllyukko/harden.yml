@@ -99,6 +99,16 @@
       mode: '0751'
       owner: root
       group: adm
+  - name: Slackware pkgtools
+    when: ansible_distribution == "Slackware"
+    file:
+      path: "{{ item }}"
+      mode: '0750'
+      owner: root
+      group: adm
+    with_items:
+      - /var/log/pkgtools
+      - /var/lib/pkgtools
   - name: LDAP secrets
     file:
       path: "{{ item }}"
