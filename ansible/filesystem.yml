@@ -51,16 +51,6 @@
     validate: '/bin/grep "^rm -rf /tmp/\*$" %s'
 - name: Chmod sensitive files
   block:
-  - name: Restrict visibility to /etc/cron.{d,hourly,daily,weekly,monthly}/
-    file:
-      path: /etc/{{ item }}
-      mode: '0700'
-    with_items:
-      - cron.d
-      - cron.hourly
-      - cron.daily
-      - cron.weekly
-      - cron.monthly
   - include: filesystem-sudoers.yml
   - name: Kerberos keytab
     file:
@@ -68,16 +58,6 @@
       mode: '0600'
       owner: root
       group: root
-  - name: /var/log/wtmp
-    file:
-      path: /var/log/wtmp
-      mode: '0660'
-      owner: root
-      group: utmp
-  - name: /var/log/lastlog
-    file:
-      path: /var/log/lastlog
-      mode: o-rwx
   - name: Install acl (Slackware)
     when: ansible_distribution == "Slackware"
     slackpkg:
@@ -95,23 +75,6 @@
       - /var/log/lastlog
       - /var/log/btmp
       - /var/log/wtmp
-  - name: /var/log
-    file:
-      path: /var/log
-      # apps that have own accounts & directories under /var/log need the x-bit (like freerad in Debian)
-      mode: '0751'
-      owner: root
-      group: adm
-  - name: Slackware pkgtools
-    when: ansible_distribution == "Slackware"
-    file:
-      path: "{{ item }}"
-      mode: '0750'
-      owner: root
-      group: adm
-    with_items:
-      - /var/log/pkgtools
-      - /var/lib/pkgtools
   - name: LDAP secrets
     file:
       path: "{{ item }}"
@@ -136,5 +99,55 @@
       mode: '0700'
       owner: root
       group: root
+  # Stuff that is usually readable, but have no reason why they should be
+  - name: /etc/modprobe.d
+    file:
+      path: /etc/modprobe.d
+      mode: '0700'
+      owner: root
+      group: root
+  - name: /etc/security
+    file:
+      path: /etc/security
+      mode: '0700'
+      owner: root
+      group: root
+  - name: Restrict visibility to /etc/cron.{d,hourly,daily,weekly,monthly}/
+    file:
+      path: /etc/{{ item }}
+      mode: '0700'
+    with_items:
+      - cron.d
+      - cron.hourly
+      - cron.daily
+      - cron.weekly
+      - cron.monthly
+  - name: /var/log/lastlog
+    file:
+      path: /var/log/lastlog
+      mode: o-rwx
+  - name: /var/log/wtmp
+    file:
+      path: /var/log/wtmp
+      mode: '0660'
+      owner: root
+      group: utmp
+  - name: /var/log
+    file:
+      path: /var/log
+      # apps that have own accounts & directories under /var/log need the x-bit (like freerad in Debian)
+      mode: '0751'
+      owner: root
+      group: adm
+  - name: Slackware pkgtools
+    when: ansible_distribution == "Slackware"
+    file:
+      path: "{{ item }}"
+      mode: '0750'
+      owner: root
+      group: adm
+    with_items:
+      - /var/log/pkgtools
+      - /var/lib/pkgtools
   become: yes
   ignore_errors: yes
