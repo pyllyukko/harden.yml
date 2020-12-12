@@ -106,12 +106,19 @@
       owner: root
       group: root
   # Stuff that is usually readable, but have no reason why they should be
-  - name: /etc/modprobe.d
+  - name: chmod /etc/modprobe.d
     file:
       path: /etc/modprobe.d
       mode: '0700'
       owner: root
       group: root
+  - name: chmod /etc/rc.d
+    file:
+      path: /etc/rc.d
+      mode: '0700'
+      owner: root
+      group: root
+    when: ansible_distribution == "Slackware"
   - name: Restrict visibility to /etc/cron.{d,hourly,daily,weekly,monthly}/
     file:
       path: /etc/{{ item }}
@@ -149,5 +156,12 @@
     with_items:
       - /var/log/pkgtools
       - /var/lib/pkgtools
+  - name: Slackware httpd logs
+    when: ansible_distribution == "Slackware"
+    file:
+      path: /var/log/httpd
+      mode: '0750'
+      owner: root
+      group: adm
   become: yes
   ignore_errors: yes
