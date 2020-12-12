@@ -146,7 +146,7 @@
       mode: '0751'
       owner: root
       group: adm
-  - name: Slackware pkgtools
+  - name: Slackware pkgtools & sbopkg
     when: ansible_distribution == "Slackware"
     file:
       path: "{{ item }}"
@@ -156,6 +156,7 @@
     with_items:
       - /var/log/pkgtools
       - /var/lib/pkgtools
+      - /var/log/sbopkg
   - name: Slackware httpd logs
     when: ansible_distribution == "Slackware"
     file:
