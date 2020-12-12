@@ -157,12 +157,20 @@
       - /var/log/pkgtools
       - /var/lib/pkgtools
       - /var/log/sbopkg
-  - name: Slackware httpd logs
+  # bzgrep 'var/log/.\+/$' MANIFEST.bz2
+  - name: Slackware log dirs
     when: ansible_distribution == "Slackware"
     file:
-      path: /var/log/httpd
+      path: /var/log/{{ item }}
       mode: '0750'
       owner: root
       group: adm
+    with_items:
+      - httpd
+      - nfsd
+      - cups
+      - samba
+      - sa
+      - iptraf-ng
   become: yes
   ignore_errors: yes
