@@ -1,13 +1,19 @@
 ---
-- name: Mount /proc with hidepid=2 (Slackware)
+- name: Slackware hidepid=2
+  block:
+  - name: getent group polkitd
+    getent:
+      database: group
+      key: polkitd
+  - name: Mount /proc with hidepid=2 (Slackware)
+    lineinfile:
+      path: /etc/rc.d/rc.S
+      state: present
+      insertafter: '/sbin/mount -v proc /proc -n -t proc 2> /dev/null$'
+      regexp: '^/sbin/mount -o remount,hidepid=2,gid={{ getent_group.polkitd[1] }} /proc$'
+      line: '/sbin/mount -o remount,hidepid=2,gid={{ getent_group.polkitd[1] }} /proc'
   become: yes
   when: ansible_distribution == "Slackware"
-  lineinfile:
-    path: /etc/rc.d/rc.S
-    state: present
-    insertafter: '/sbin/mount -v proc /proc -n -t proc 2> /dev/null$'
-    regexp: '^/sbin/mount -o remount,hidepid=2 /proc$'
-    line: '/sbin/mount -o remount,hidepid=2 /proc'
 - name: Remount /proc with hidepid=2
   become: yes
   mount:
