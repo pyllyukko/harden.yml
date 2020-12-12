@@ -106,12 +106,6 @@
       mode: '0700'
       owner: root
       group: root
-  - name: /etc/security
-    file:
-      path: /etc/security
-      mode: '0700'
-      owner: root
-      group: root
   - name: Restrict visibility to /etc/cron.{d,hourly,daily,weekly,monthly}/
     file:
       path: /etc/{{ item }}
