@@ -64,6 +64,10 @@
       mode: '0600'
       owner: root
       group: root
+    register: result
+    failed_when:
+      - result.failed == true
+      - result.state != "absent"
   - name: Install acl (Slackware)
     when: ansible_distribution == "Slackware"
     slackpkg:
@@ -94,6 +98,10 @@
       # pam_ldap(5)
       - /etc/pam_ldap.secret
       - /etc/nslcd.conf
+    register: result
+    failed_when:
+      - result.failed == true
+      - result.state != "absent"
   - name: /etc/ssl/private
     file:
       path: /etc/ssl/private
@@ -157,6 +165,10 @@
       - /var/log/pkgtools
       - /var/lib/pkgtools
       - /var/log/sbopkg
+    register: result
+    failed_when:
+      - result.failed == true
+      - result.state != "absent"
   # bzgrep 'var/log/.\+/$' MANIFEST.bz2
   - name: Slackware log dirs
     when: ansible_distribution == "Slackware"
@@ -172,6 +184,10 @@
       - samba
       - sa
       - iptraf-ng
+    register: result
+    failed_when:
+      - result.failed == true
+      - result.state != "absent"
   - name: Slackware log dirs not owned by root
     when: ansible_distribution == "Slackware"
     file:
@@ -180,5 +196,8 @@
     with_items:
       - icecream
       - uucp
+    register: result
+    failed_when:
+      - result.failed == true
+      - result.state != "absent"
   become: yes
-  ignore_errors: yes
