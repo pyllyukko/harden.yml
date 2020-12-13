@@ -21,13 +21,16 @@
 - name: Disable unwanted services (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
-  ignore_errors: yes
   file:
     path: "/etc/rc.d/rc.{{ item }}"
     owner: root
     group: root
     mode: ugo-x
   with_items: "{{ slackware_services }}"
+  register: result
+  failed_when:
+    - result.failed == true
+    - result.state != "absent"
 # Cron
 - name: Restrict cron (cron.allow)
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
