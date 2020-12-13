@@ -124,7 +124,7 @@
     failed_when:
       - result.failed == true
       - result.state != "absent"
-  - name: chmod GRUB configurations
+  - name: chmod boot loader configurations
     file:
       path: "{{ item }}"
       mode: o-rwx
@@ -132,6 +132,7 @@
       - /etc/grub.d
       - /boot/grub/grub.cfg
       - /etc/default/grub
+      - /etc/lilo.conf
     register: result
     failed_when:
       - result.failed == true
