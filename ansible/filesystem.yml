@@ -143,6 +143,17 @@
       mode: '0700'
       owner: root
       group: root
+  - name: chmod sysctl configurations
+    file:
+      path: "{{ item }}"
+      mode: o-rwx
+    with_items:
+      - /etc/sysctl.conf
+      - /etc/sysctl.d
+    register: result
+    failed_when:
+      - result.failed == true
+      - result.state != "absent"
   - name: chmod /etc/rc.d
     file:
       path: /etc/rc.d
