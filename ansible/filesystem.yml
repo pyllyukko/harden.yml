@@ -114,6 +114,28 @@
       owner: root
       group: root
   # Stuff that is usually readable, but have no reason why they should be
+  - name: chmod /etc/ssh/sshd_config
+    file:
+      path: /etc/ssh/sshd_config
+      mode: '0600'
+      owner: root
+      group: root
+    register: result
+    failed_when:
+      - result.failed == true
+      - result.state != "absent"
+  - name: chmod GRUB configurations
+    file:
+      path: "{{ item }}"
+      mode: o-rwx
+    with_items:
+      - /etc/grub.d
+      - /boot/grub/grub.cfg
+      - /etc/default/grub
+    register: result
+    failed_when:
+      - result.failed == true
+      - result.state != "absent"
   - name: chmod /etc/modprobe.d
     file:
       path: /etc/modprobe.d
