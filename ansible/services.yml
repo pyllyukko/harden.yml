@@ -96,30 +96,42 @@
   when: ansible_distribution == "Slackware"
   become: yes
 # SSH
-- name: Harden SSH daemon configuration
-  become: yes
-  template:
-    src: "{{ playbook_dir }}/templates/sshd_config-{{ ansible_distribution }}.j2"
-    dest: /etc/ssh/sshd_config
-    validate: /usr/sbin/sshd -t -f %s
-  register: result
-  failed_when:
-    - result.failed == true
-    - '"sshd: no hostkeys available -- exiting." not in result.stderr'
-- name: Restart sshd
+- name: Check SSH daemon service state
+  service_facts:
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+- name: sshd
+  block:
+  - name: Harden SSH daemon configuration
+    template:
+      src: "{{ playbook_dir }}/templates/sshd_config-{{ ansible_distribution }}.j2"
+      dest: /etc/ssh/sshd_config
+      validate: /usr/sbin/sshd -t -f %s
+    register: result
+    # sshd validation fails when the hostkeys do not exist
+    failed_when:
+      - result.failed == true
+      - '"sshd: no hostkeys available -- exiting." not in result.stderr'
+  - name: Restart sshd (Debian)
+    service:
+      name: ssh
+      state: restarted
+    when: >
+      (ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux") and
+      ansible_facts.services.ssh.state == "running"
+  # rc.sshd exits if /var/run/sshd.pid doesn't exist
+  - name: Restart sshd (Slackware)
+    when: ansible_distribution == "Slackware"
+    become: yes
+    command: /bin/sh /etc/rc.d/rc.sshd restart
+    register: result
+    failed_when:
+      - result.failed == true
+      - '"WARNING: There does not appear to be a parent instance of sshd running." not in result.stdout'
   become: yes
-  service:
-    name: ssh
-    state: restarted
-- name: Restart sshd (Slackware)
-  when: ansible_distribution == "Slackware"
-  become: yes
-  command: /bin/sh /etc/rc.d/rc.sshd restart
-  register: result
-  failed_when:
-    - result.failed == true
-    - '"WARNING: There does not appear to be a parent instance of sshd running." not in result.stdout'
+  # Skip the whole block in Debian if ssh.service does not exist
+  when: >
+    ((ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux") and ansible_facts.services.ssh is defined) or
+    ansible_distribution == "Slackware"
 - name: Harden SSH client configuration
   become: yes
   when: ansible_distribution == "Slackware"
