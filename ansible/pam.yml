@@ -41,6 +41,13 @@
     path: /etc/pam.d/system-auth
     regexp: '\s+nullok'
     replace: ''
+- name: Create faillock directory
+  file:
+    path: /var/run/faillock
+    state: directory
+    mode: '0700'
+  when: ansible_distribution == "Slackware"
+  become: yes
 - name: Enable pam_wheel.so in /etc/pam.d/su
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
   become: yes
