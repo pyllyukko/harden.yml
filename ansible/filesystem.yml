@@ -197,6 +197,13 @@
       mode: '0600'
       owner: root
       group: root
+  # CIS Slackware Linux Benchmark v1.1 - 7.8 Restrict Root Logins To System Console
+  - name: chmod /etc/securetty
+    file:
+      path: /etc/securetty
+      mode: '0400'
+      owner: root
+      group: root
   - name: Slackware pkgtools & sbopkg
     when: ansible_distribution == "Slackware"
     file:
