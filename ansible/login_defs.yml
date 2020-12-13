@@ -62,6 +62,7 @@
   when: ansible_lsb.id == "Raspbian"
   become: yes
   command: gpasswd -d pi adm
+  register: result
   failed_when:
     - result.failed == true
     - '"is not a member of" not in result.stderr'

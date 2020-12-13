@@ -107,7 +107,10 @@
   when: ansible_distribution == "Slackware"
   become: yes
   command: gpasswd -d daemon adm
-  ignore_errors: yes
+  register: result
+  failed_when:
+    - result.failed == true
+    - '"is not a member of" not in result.stderr'
 - name: Fix gshadow (Slackware)
   when: ansible_distribution == "Slackware"
   ignore_errors: yes
