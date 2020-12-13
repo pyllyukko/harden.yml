@@ -172,5 +172,13 @@
       - samba
       - sa
       - iptraf-ng
+  - name: Slackware log dirs not owned by root
+    when: ansible_distribution == "Slackware"
+    file:
+      path: /var/log/{{ item }}
+      mode: o-rwx
+    with_items:
+      - icecream
+      - uucp
   become: yes
   ignore_errors: yes
