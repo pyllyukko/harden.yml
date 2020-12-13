@@ -59,10 +59,12 @@
   become: yes
   command: grpck -r
 - name: Remove pi from adm group (Debian)
-  when: ansible_distribution == "Debian"
+  when: ansible_lsb.id == "Raspbian"
   become: yes
   command: gpasswd -d pi adm
-  ignore_errors: yes
+  failed_when:
+    - result.failed == true
+    - '"is not a member of" not in result.stderr'
 - name: Inactive password lock
   block:
   - name: Set the number of days after a password expires until the account is permanently disabled (inactive)
