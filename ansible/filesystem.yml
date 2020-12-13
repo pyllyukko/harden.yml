@@ -24,7 +24,7 @@
     fstype: proc
 - name: Create /etc/fstab.new
   block:
-  - name: Create temp file
+  - name: Create temp file for fstab.awk
     tempfile:
       state: file
       suffix: temp
@@ -68,7 +68,7 @@
     failed_when:
       - result.failed == true
       - result.state != "absent"
-  - name: Install acl (Slackware)
+  - name: Install acl package (Slackware)
     when: ansible_distribution == "Slackware"
     slackpkg:
       name: acl
@@ -182,7 +182,7 @@
       mode: '0660'
       owner: root
       group: utmp
-  - name: /var/log
+  - name: chmod o-r /var/log
     file:
       path: /var/log
       # apps that have own accounts & directories under /var/log need the x-bit (like freerad in Debian)
