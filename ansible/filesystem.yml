@@ -143,6 +143,7 @@
       mode: '0700'
       owner: root
       group: root
+  # Slackware Linux Benchmark v1.1 - 4.1 Network Parameter Modifications, 4.2 Additional Network Parameter Modifications & SN.8 Additional Kernel Tunings
   - name: chmod sysctl configurations
     file:
       path: "{{ item }}"
@@ -188,6 +189,14 @@
       mode: '0751'
       owner: root
       group: adm
+  # CIS Slackware Linux Benchmark v1.1 - 3.3 Disable GUI Login If Possible
+  - name: chmod inittab
+    when: ansible_distribution == "Slackware"
+    file:
+      path: /etc/inittab
+      mode: '0600'
+      owner: root
+      group: root
   - name: Slackware pkgtools & sbopkg
     when: ansible_distribution == "Slackware"
     file:
