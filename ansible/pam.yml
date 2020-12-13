@@ -7,7 +7,7 @@
     key: "{{ allowed_group }}"
   failed_when: getent_group.{{ allowed_group }}[2] == ""
 - name: Configure login access control table (PAM)
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_distribution == "Slackware"
   become: yes
   blockinfile:
     path: /etc/security/access.conf
