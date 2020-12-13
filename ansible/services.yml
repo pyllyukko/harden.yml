@@ -3,12 +3,15 @@
 - name: Stop & disable unwanted services (Debian)
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-  ignore_errors: yes
   service:
     name: "{{ item }}"
     state: stopped
     enabled: no
   with_items: "{{ debian_services }}"
+  failed_when:
+    - result.failed == true
+    - '"Could not find the requested service" not in result.msg'
+  register: result
 - name: Stop unwanted services (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
