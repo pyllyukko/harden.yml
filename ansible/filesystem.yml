@@ -6,12 +6,17 @@
       database: group
       key: polkitd
   - name: Mount /proc with hidepid=2 (Slackware)
-    lineinfile:
+    replace:
       path: /etc/rc.d/rc.S
-      state: present
-      insertafter: '/sbin/mount -v proc /proc -n -t proc 2> /dev/null$'
-      regexp: '^/sbin/mount -o remount,hidepid=2,gid={{ getent_group.polkitd[1] }} /proc$'
-      line: '/sbin/mount -o remount,hidepid=2,gid={{ getent_group.polkitd[1] }} /proc'
+      regexp: '^(/sbin/mount -v proc /proc -n -t proc).*$'
+      replace: '\g<1> -o hidepid=2,gid={{ getent_group.polkitd[1] }} 2> /dev/null'
+      validate: '/bin/grep "^/sbin/mount -v proc /proc -n -t proc -o hidepid=2,gid={{ getent_group.polkitd[1] }} 2> /dev/null$" %s'
+  - name: Fix mkinitrd so initrd image mounts with hidepid
+    lineinfile:
+      path: /sbin/mkinitrd
+      insertbefore: '# Wrap the initrd as an initramfs image and move it into place:$'
+      regexp: '^sed -i ''s:^\(mount -n proc /proc -t proc\)$:\\1 -o hidepid=2,gid={{ getent_group.polkitd[1] }}'' "${SOURCE_TREE}/init"$'
+      line: sed -i 's:^\(mount -n proc /proc -t proc\)$:\1 -o hidepid=2,gid={{ getent_group.polkitd[1] }}:' "${SOURCE_TREE}/init"
   become: yes
   when: ansible_distribution == "Slackware"
 - name: Remount /proc with hidepid=2
