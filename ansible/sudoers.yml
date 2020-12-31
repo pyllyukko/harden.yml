@@ -26,7 +26,7 @@
       group: root
   - name: Create /etc/sudo_env
     copy:
-      content: "LESSSECURE=1\nPAGER=/usr/bin/less\nMANPAGER=/usr/bin/less\nSYSTEMD_PAGER=/usr/bin/less\n"
+      content: "LESSSECURE=1\nPAGER=/usr/bin/less\nMANPAGER=/usr/bin/less\nSYSTEMD_PAGER=/usr/bin/less\nTMOUT=900\n"
       dest: /etc/sudo_env
       owner: root
       group: root

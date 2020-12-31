@@ -96,6 +96,7 @@ Defaults	sudoedit_checkdir, !sudoedit_follow
 Defaults	ignore_dot
 Defaults	env_file=/etc/sudo_env
 Defaults	use_pty
+Defaults	command_timeout=15m
 
 ##
 ## Runas alias specification
@@ -105,17 +106,17 @@ Defaults	use_pty
 ## User privilege specification
 ##
 root {{ ansible_hostname }}=(ALL) ALL
-{{ ansible_user_id }}	{{ ansible_hostname }}=(root) PASSWD:EXEC: ANSIBLE
+{{ ansible_user_id }}	{{ ansible_hostname }}=(root) TIMEOUT=0 PASSWD:EXEC: ANSIBLE
 
 ## Uncomment to allow members of group wheel to execute any command
 # %wheel ALL=(ALL) ALL
 {% if ansible_distribution == "Slackware" or ansible_os_family == "RedHat" %}
 %wheel {{ ansible_hostname }}=(root) PASSWD:EXEC: SHELLS
 %wheel {{ ansible_hostname }}=(root) PASSWD:NOEXEC: sudoedit
-%wheel {{ ansible_hostname }}=(:adm) PASSWD:NOEXEC: READ_FILES
+%wheel {{ ansible_hostname }}=(:adm) TIMEOUT=0 PASSWD:NOEXEC: READ_FILES
 %wheel {{ ansible_hostname }}=(:adm) PASSWD:NOEXEC: LOGIN_RECORD_VIEWERS
 {% if ansible_os_family == "RedHat" %}
-%wheel {{ ansible_hostname }}=(root) PASSWD:EXEC: /bin/yum update
+%wheel {{ ansible_hostname }}=(root) TIMEOUT=0 PASSWD:EXEC: /bin/yum update
 {% endif %}
 {% endif %}
 
@@ -126,9 +127,9 @@ root {{ ansible_hostname }}=(ALL) ALL
 # %sudo	ALL=(ALL) ALL
 {% if ansible_distribution == "Debian" %}
 %sudo	{{ ansible_hostname }}=(root) PASSWD:EXEC: SHELLS
-%sudo	{{ ansible_hostname }}=(:systemd-journal) PASSWD:EXEC: /bin/journalctl
-%sudo	{{ ansible_hostname }}=(:adm) PASSWD:NOEXEC: READ_FILES
-%sudo	{{ ansible_hostname }}=(root) PASSWD:EXEC: APT_GET
+%sudo	{{ ansible_hostname }}=(:systemd-journal) TIMEOUT=0 PASSWD:EXEC: /bin/journalctl
+%sudo	{{ ansible_hostname }}=(:adm) TIMEOUT=0 PASSWD:NOEXEC: READ_FILES
+%sudo	{{ ansible_hostname }}=(root) TIMEOUT=0 PASSWD:EXEC: APT_GET
 %sudo	{{ ansible_hostname }}=(root) PASSWD:NOEXEC: sudoedit
 {% endif %}
 
