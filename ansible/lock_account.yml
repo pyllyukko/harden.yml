@@ -59,18 +59,6 @@
           firstmatch: yes
           line: "- : {{ user }} : ALL"
         when: stat_result.stat.exists == True
-      - name: Stat /etc/login.access
-        stat:
-          path: /etc/login.access
-        register: stat_result
-      - name: Add user to /etc/login.access
-        lineinfile:
-          path: /etc/login.access
-          # first match wins, so this needs to be in the beginning
-          insertbefore: '^[^#]'
-          firstmatch: yes
-          line: "-:{{ user }}:ALL"
-        when: stat_result.stat.exists == True
       - name: Add user to /etc/ftpusers
         lineinfile:
           path: /etc/ftpusers
