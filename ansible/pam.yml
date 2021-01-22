@@ -92,11 +92,11 @@
     - umask
     - time
     - inactive
-- name: Update PAM
+- name: Run pam-auth-update (Debian)
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
   command: /usr/sbin/pam-auth-update --package
-- name: Enable additional PAM modules
+- name: Enable additional PAM modules with authconfig (RH)
   when: ansible_os_family == "RedHat"
   become: yes
   command: /sbin/authconfig --enable{{ item }}
