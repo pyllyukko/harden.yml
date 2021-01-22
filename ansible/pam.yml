@@ -103,3 +103,27 @@
   with_items:
     #- pamaccess
     - faillock
+- name: Configure pwquality
+  replace:
+    path: /etc/security/pwquality.conf
+    regexp: '^(# ?)?({{ item.key }}\s+)=.*$'
+    replace: '\g<2>= {{ item.value }}'
+    validate: '/bin/grep "^{{ item.key }}\s\+= {{ item.value }}$" %s'
+  when: ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
+  become: yes
+  with_dict:
+    retry: 3
+    minlen: 14
+    minclass: 4
+    dcredit: -1
+    ucredit: -1
+    ocredit: -1
+    lcredit: -1
+- name: Configure minlen -> 14 in /etc/pam.d/system-auth
+  replace:
+    path: /etc/pam.d/system-auth
+    regexp: '^(password.+\sminlen=)[0-9]+(.*)$'
+    replace: '\g<1>14\g<2>'
+    validate: '/bin/grep "^password.\+minlen=14.*$" %s'
+  when: ansible_distribution == "Slackware"
+  become: yes
