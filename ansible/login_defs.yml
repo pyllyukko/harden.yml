@@ -21,6 +21,7 @@
       CHFN_RESTRICT: "rwh"
       DEFAULT_HOME: "no"
       FAIL_DELAY: "{{ fail_delay }}"
+      CREATE_HOME: "yes"
 - name: Install glibc package (Slackware)
   when: ansible_distribution == "Slackware"
   become: yes

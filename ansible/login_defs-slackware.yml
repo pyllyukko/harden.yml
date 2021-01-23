@@ -12,7 +12,6 @@
     defs_slackware:
       LASTLOG_ENAB: "yes"
       PASS_MIN_LEN: 8
-      CREATE_HOME: "yes"
       HOME_MODE: "0700"
       SU_WHEEL_ONLY: "yes"
       PORTTIME_CHECKS_ENAB: "yes"
