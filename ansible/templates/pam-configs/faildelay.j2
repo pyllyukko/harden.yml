@@ -3,4 +3,4 @@ Default: yes
 Priority: 257
 Auth-Type: Primary
 Auth:
-	optional			pam_faildelay.so delay=10000000
+	optional			pam_faildelay.so delay={{ fail_delay * 1000000 }}

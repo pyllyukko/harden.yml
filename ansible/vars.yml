@@ -32,3 +32,5 @@ sshd_config:
   MACs: hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com
   KexAlgorithms: curve25519-sha256@libssh.org,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256
   MaxAuthTries: 3
+# Value from system-hardening-10.2.txt
+fail_delay: 20

@@ -83,7 +83,6 @@
     dest: /usr/share/pam-configs/{{ item }}
   with_items:
     - access
-    - faildelay
     - lastlog
     - polyinstation
     - pwhistory
@@ -92,6 +91,16 @@
     - umask
     - time
     - inactive
+- name: Copying new pam-configs (templates)
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  become: yes
+  template:
+    src: "{{ playbook_dir }}/templates/pam-configs/{{ item }}.j2"
+    dest: /usr/share/pam-configs/{{ item }}
+    owner: root
+    group: root
+  with_items:
+    - faildelay
 - name: Run pam-auth-update (Debian)
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes

@@ -12,7 +12,7 @@
     defs_slackware:
       LASTLOG_ENAB: "yes"
       PASS_MIN_LEN: 8
-      FAIL_DELAY: 20
+      FAIL_DELAY: {{ fail_delay }}
       CREATE_HOME: "yes"
       HOME_MODE: "0700"
       SU_WHEEL_ONLY: "yes"
