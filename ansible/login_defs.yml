@@ -20,6 +20,7 @@
       ENCRYPT_METHOD: "SHA512"
       CHFN_RESTRICT: "rwh"
       DEFAULT_HOME: "no"
+      FAIL_DELAY: "{{ fail_delay }}"
 - name: Install glibc package (Slackware)
   when: ansible_distribution == "Slackware"
   become: yes
