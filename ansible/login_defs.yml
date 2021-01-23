@@ -21,6 +21,7 @@
       DEFAULT_HOME: "no"
       FAIL_DELAY: "{{ fail_delay }}"
       CREATE_HOME: "yes"
+      HOME_MODE: "0700"
 - name: Install glibc package (Slackware)
   when: ansible_distribution == "Slackware"
   become: yes

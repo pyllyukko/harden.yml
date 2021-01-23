@@ -1,16 +1,4 @@
 ---
-- name: Configure shadow password suite (Slackware specific)
-  become: yes
-  when: ansible_distribution == "Slackware"
-  replace:
-    path: /etc/login.defs
-    regexp: '^(# ?)?({{ item.key }}\s+)[^\s]+$'
-    replace: '\g<2>{{ item.value }}'
-    validate: '/bin/grep "^{{ item.key }}\s\+{{ item.value }}$" %s'
-  with_dict: "{{ defs_slackware }}"
-  vars:
-    defs_slackware:
-      HOME_MODE: "0700"
 - name: Slackware authorization
   block:
   # The login ACL following this task will actually start blocking access, so
