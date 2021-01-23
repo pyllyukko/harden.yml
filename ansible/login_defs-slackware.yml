@@ -33,18 +33,6 @@
         regexp: '^(ca::ctrlaltdel:/sbin/shutdown -t5 -r now)$'
         replace: '\g<1> -a'
         validate: '/bin/grep "^ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a$" %s'
-  - name: Setup faillog (Slackware)
-    block:
-    - name: Initialize /var/log/faillog (Slackware)
-      command: dd if=/dev/zero of=/var/log/faillog bs=32 count=60001
-    - name: Set login failure limits (Slackware)
-      command: faillog -a -l 900 -m 5 -u 1000-60000
-    - name: Change perms of /var/log/faillog
-      file:
-        path: /var/log/faillog
-        owner: root
-        group: adm
-        mode: '0640'
   become: yes
   when: ansible_distribution == "Slackware"
 - name: Set umask to 077 in /etc/profile (Slackware)
