@@ -10,13 +10,7 @@
   with_dict: "{{ defs_slackware }}"
   vars:
     defs_slackware:
-      LASTLOG_ENAB: "yes"
-      PASS_MIN_LEN: 8
       HOME_MODE: "0700"
-      SU_WHEEL_ONLY: "yes"
-      PORTTIME_CHECKS_ENAB: "yes"
-      NOLOGINS_FILE: "/etc/nologin"
-      CHFN_AUTH: "yes"
 - name: Slackware authorization
   block:
   # The login ACL following this task will actually start blocking access, so
