@@ -209,6 +209,8 @@ declare -ra PGP_KEYS=(
   "0xC8D62DEF767C1DB0DFF4E6EC358EAA9112CF7946"
   # https://www.php.net/downloads.php#gpg-7.4
   "0x5A52880781F755608BF815FC910DEB46F53EA312"
+  # https://web.mit.edu/Kerberos/dist/index.html
+  "0xC4493CB739F4A89F9852CBC20CBA08575F8372DF"
 )
 function import_pgp_keys() {
   local URL
