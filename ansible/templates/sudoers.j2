@@ -112,6 +112,7 @@ root {{ ansible_hostname }}=(ALL) ALL
 {% if ansible_distribution == "Slackware" or ansible_os_family == "RedHat" %}
 %wheel {{ ansible_hostname }}=(root) TIMEOUT=15m PASSWD:EXEC: SHELLS
 %wheel {{ ansible_hostname }}=(root) TIMEOUT=15m PASSWD:NOEXEC: sudoedit
+%wheel {{ ansible_hostname }}=(root) TIMEOUT=1m PASSWD:NOEXEC: /bin/dmesg
 %wheel {{ ansible_hostname }}=(:adm) PASSWD:NOEXEC: READ_FILES
 %wheel {{ ansible_hostname }}=(:adm) PASSWD:NOEXEC: LOGIN_RECORD_VIEWERS
 {% if ansible_os_family == "RedHat" %}
@@ -127,6 +128,7 @@ root {{ ansible_hostname }}=(ALL) ALL
 {% if ansible_distribution == "Debian" %}
 %sudo	{{ ansible_hostname }}=(root) TIMEOUT=15m PASSWD:EXEC: SHELLS
 %sudo	{{ ansible_hostname }}=(:systemd-journal) PASSWD:EXEC: /bin/journalctl
+%sudo	{{ ansible_hostname }}=(root) TIMEOUT=1m PASSWD:NOEXEC: /bin/dmesg
 %sudo	{{ ansible_hostname }}=(:adm) PASSWD:NOEXEC: READ_FILES
 %sudo	{{ ansible_hostname }}=(root) PASSWD:EXEC: APT_GET
 %sudo	{{ ansible_hostname }}=(root) TIMEOUT=15m PASSWD:NOEXEC: sudoedit
