@@ -170,3 +170,7 @@ $(CWD)/manifests/$(slackware)-$(slackware_version)/MANIFEST.bz2: $(CWD)/manifest
 
 .PHONY: manifest
 manifest: $(manifest_files)
+
+.PHONY: manifest-suid-diff
+manifest-suid-diff: manifests/slackware64-14.2/MANIFEST.bz2 manifests/slackware64-current/MANIFEST.bz2
+	-diff <(bzgrep -i '^[^d].\{2\}\(s\|.\{3\}s\)' $< | gawk '{print$$1,$$2,$$6}' | sort) <(bzgrep -i '^[^d].\{2\}\(s\|.\{3\}s\)' $(word 2,$^) | gawk '{print$$1,$$2,$$6}' | sort)
