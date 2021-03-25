@@ -16,10 +16,23 @@
       dest: /etc/audit/rules.d/{{ item }}
     with_items:
       - 10-base-config.rules
+      - 11-loginuid.rules
+      - 20-dont-audit.rules
       - 30-stig.rules.gz
       - 42-injection.rules
       - 43-module-load.rules
       - 99-finalize.rules
+  - name: Modify 20-dont-audit.rules
+    block:
+    - name: Uncomment exclude CRYPTO_KEY_USER
+      replace:
+        path: /etc/audit/rules.d/20-dont-audit.rules
+        regexp: "^#?(-a always,exclude -F msgtype=CRYPTO_KEY_USER)$"
+        replace: '\1'
+    - name: Exclude CRYPTO_SESSION message type
+      lineinfile:
+        path: /etc/audit/rules.d/20-dont-audit.rules
+        line: '-a always,exclude -F msgtype=CRYPTO_SESSION'
   - name: Unzip stig.rules
     command: /bin/gunzip -f /etc/audit/rules.d/30-stig.rules.gz
   - name: Disable noisy STIG rules

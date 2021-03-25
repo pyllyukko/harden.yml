@@ -1,0 +1,5 @@
+-a always,exit -F dir=/etc/iptables/ -F perm=wa -F key=firewall-change
+-w /sbin/iptables -p x -k firewall-change
+-w /sbin/ip6tables -p x -k firewall-change
+-w /bin/firewall-cmd -p x -k firewall-change
+-w /usr/sbin/ufw -p x -k firewall-change
