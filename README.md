@@ -26,6 +26,7 @@ What does it do?
   * IP stack hardening
   * Enables [SAK](https://en.wikipedia.org/wiki/Secure_attention_key) and disables the other [magic SysRq stuff](https://www.kernel.org/doc/Documentation/sysrq.txt)
   * Restricts the use of `dmesg` by regular users
+  * Enable [YAMA](https://www.kernel.org/doc/Documentation/security/Yama.txt)
   * For the complete list, see [sysctl.conf.new](https://github.com/pyllyukko/harden.sh/blob/master/newconfs/sysctl.d/sysctl.conf.new)
 * Hardens mount options (creates `/etc/fstab.new`)
   * Also, mount [/proc](https://www.kernel.org/doc/Documentation/filesystems/proc.txt) with `hidepid=2`
