@@ -1,7 +1,7 @@
 ---
 - name: Install auditing
   block:
-  - name: Install necessary software
+  - name: Install necessary software (Debian)
     apt:
       name: "{{ packages }}"
       update_cache: yes
@@ -9,19 +9,26 @@
       packages:
       - auditd
       - libcap-ng-utils
+    when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   - name: Copy rules
-    copy:
-      remote_src: yes
-      src: /usr/share/doc/auditd/examples/rules/{{ item }}
+    get_url:
+      url: https://raw.githubusercontent.com/linux-audit/audit-userspace/master/rules/{{ item }}
       dest: /etc/audit/rules.d/{{ item }}
     with_items:
       - 10-base-config.rules
       - 11-loginuid.rules
+      - 12-ignore-error.rules
       - 20-dont-audit.rules
-      - 30-stig.rules.gz
+      - 30-stig.rules
       - 42-injection.rules
       - 43-module-load.rules
       - 99-finalize.rules
+  - name: Fix 10-base-config.rules for CentOS 7
+    replace:
+      path: /etc/audit/rules.d/10-base-config.rules
+      regexp: "^(--backlog_wait_time [0-9]+)$"
+      replace: '#\1'
+    when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
   - name: Modify 20-dont-audit.rules
     block:
     - name: Uncomment exclude CRYPTO_KEY_USER
@@ -33,8 +40,6 @@
       lineinfile:
         path: /etc/audit/rules.d/20-dont-audit.rules
         line: '-a always,exclude -F msgtype=CRYPTO_SESSION'
-  - name: Unzip stig.rules
-    command: /bin/gunzip -f /etc/audit/rules.d/30-stig.rules.gz
   - name: Disable noisy STIG rules
     replace:
       path: /etc/audit/rules.d/30-stig.rules
@@ -73,7 +78,12 @@
       remote_src: no
       src: "{{ playbook_dir }}/../newconfs/rules.d"
       dest: /etc/audit/rules.d/40-local.rules
+  - name: Make the configuration immutable
+    replace:
+      path: /etc/audit/rules.d/99-finalize.rules
+      regexp: "^#?(-e 2)$"
+      replace: '\1'
   - name: Load the rules
     command: augenrules --load
   become: yes
-  when: ( ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian" ) or ansible_distribution == "Kali GNU/Linux"
+  when: ( ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian" ) or ansible_distribution == "Kali GNU/Linux" or ansible_distribution == "Slackware" or ansible_os_family == "RedHat"
