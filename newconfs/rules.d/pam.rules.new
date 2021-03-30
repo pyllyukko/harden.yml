@@ -1,0 +1,8 @@
+-w /etc/pam.d/ -p wa -k pam
+-w /etc/security/ -p wa -k pam
+# CentOS/RH specific
+-w /usr/sbin/authconfig -p x -k pam
+-w /etc/sysconfig/authconfig -p wa -k pam
+# Debian specific
+-w /usr/share/pam-configs/ -p wa -k pam
+-w /usr/sbin/pam-auth-update -p x -k pam
