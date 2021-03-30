@@ -2,6 +2,11 @@
 -a always,exit -F dir=/etc/apparmor.d/ -F perm=wa -F key=MAC-policy
 -w /sbin/setenforce -p x -k MAC-policy
 -w /sbin/semanage -p x -k MAC-policy
+-w /sbin/setsebool -p x -k MAC-policy
+-w /sbin/restorecon -p x -k MAC-policy
+-w /bin/chcon -p x -k MAC-policy
+-w /sbin/genhomedircon -p x -k MAC-policy
+-w /sbin/semodule -p x -k MAC-policy
 -w /usr/sbin/aa-enforce -p x -k MAC-policy
 -w /usr/sbin/aa-disable -p x -k MAC-policy
 -w /usr/sbin/aa-complain -p x -k MAC-policy
