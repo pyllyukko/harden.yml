@@ -36,10 +36,12 @@
         path: /etc/audit/rules.d/20-dont-audit.rules
         regexp: "^#?(-a always,exclude -F msgtype=CRYPTO_KEY_USER)$"
         replace: '\1'
-    - name: Exclude CRYPTO_SESSION message type
-      lineinfile:
+    - name: Exclude some noisy and irrelevant events
+      blockinfile:
         path: /etc/audit/rules.d/20-dont-audit.rules
-        line: '-a always,exclude -F msgtype=CRYPTO_SESSION'
+        block: |
+          -a always,exclude -F msgtype=CRYPTO_SESSION
+          -a never,exit -F arch=b64 -S adjtimex -F auid=unset -F uid=ntp -F subj_type=ntpd_t
   - name: Disable noisy STIG rules
     replace:
       path: /etc/audit/rules.d/30-stig.rules
