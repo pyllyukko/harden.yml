@@ -1,0 +1,5 @@
+-w /etc/ca-certificates.conf -p wa -k ca-certificates
+-a always,exit -F dir=/etc/ssl/certs/ -F perm=wa -F key=ca-certificates
+-a always,exit -F dir=/etc/ca-certificates/ -F perm=wa -F key=ca-certificates
+-a always,exit -F dir=/usr/local/share/ca-certificates/ -F perm=wa -F key=ca-certificates
+-w /usr/sbin/update-ca-certificates -p x -k ca-certificates
