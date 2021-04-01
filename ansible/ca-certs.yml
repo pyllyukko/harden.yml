@@ -1,21 +1,24 @@
 ---
-- name: Install ca-certificates package
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+- name: CA certs
+  block:
+  - name: Remove /etc/ssl/certs/ssl-cert-snakeoil.pem
+    file:
+      path: /etc/ssl/certs/ssl-cert-snakeoil.pem
+      state: absent
+  - name: Install ca-certificates package (Debian)
+    when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+    apt:
+      name: ca-certificates
+      update_cache: yes
+  - name: Copy ca-certificates.conf
+    when: ansible_os_family != "RedHat"
+    copy:
+      src: "{{ playbook_dir }}/../newconfs/ca-certificates.conf.new"
+      dest: /etc/ca-certificates.conf
+  - name: Install OpenSSL (Slackware)
+    when: ansible_distribution == "Slackware"
+    command: slackpkg -batch=on -default_answer=y install openssl
+  - name: Run update-ca-certificates
+    when: ansible_os_family != "RedHat"
+    command: /usr/sbin/update-ca-certificates --verbose --fresh
   become: yes
-  apt:
-    name: ca-certificates
-    update_cache: yes
-- name: Copy ca-certificates.conf
-  when: ansible_os_family != "RedHat"
-  become: yes
-  copy:
-    src: "{{ playbook_dir }}/../newconfs/ca-certificates.conf.new"
-    dest: /etc/ca-certificates.conf
-- name: Install OpenSSL
-  when: ansible_distribution == "Slackware"
-  become: yes
-  command: slackpkg -batch=on -default_answer=y install openssl
-- name: Run update-ca-certificates
-  when: ansible_os_family != "RedHat"
-  become: yes
-  command: /usr/sbin/update-ca-certificates --verbose --fresh
