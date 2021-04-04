@@ -92,5 +92,14 @@
       replace: '\1'
   - name: Load the rules
     command: augenrules --load
+  - name: Configure auditd.conf
+    replace:
+      path: /etc/audit/auditd.conf
+      regexp: '^({{ item.key }}) = .*$'
+      replace: '\1 = {{ item.value }}'
+    with_dict:
+      space_left_action: email
+      action_mail_acct: root
+      max_log_file_action: keep_logs
   become: yes
   when: ( ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian" ) or ansible_distribution == "Kali GNU/Linux" or ansible_distribution == "Slackware" or ansible_os_family == "RedHat"
