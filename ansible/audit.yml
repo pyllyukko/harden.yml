@@ -107,4 +107,4 @@
       state: started
       enabled: yes
   become: yes
-  when: ( ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian" ) or ansible_distribution == "Kali GNU/Linux" or ansible_distribution == "Slackware" or ansible_os_family == "RedHat"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_distribution == "Slackware" or ansible_os_family == "RedHat"
