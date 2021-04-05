@@ -48,7 +48,7 @@
       - usr.bin.passwd
       - usr.bin.wireshark
       - usr.sbin.dhcpd
-      - usr.sbin.sshd
+      #- usr.sbin.sshd
       - usr.sbin.useradd
       - usr.sbin.userdel
   become: yes
