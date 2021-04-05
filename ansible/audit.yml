@@ -101,5 +101,10 @@
       space_left_action: email
       action_mail_acct: root
       max_log_file_action: keep_logs
+  - name: Start & enable auditing
+    service:
+      name: auditd
+      state: started
+      enabled: yes
   become: yes
   when: ( ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian" ) or ansible_distribution == "Kali GNU/Linux" or ansible_distribution == "Slackware" or ansible_os_family == "RedHat"
