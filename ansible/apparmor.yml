@@ -1,6 +1,6 @@
 ---
 - name: Install AppArmor
-  when: ( ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian" ) or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
   apt:
     name: "{{ packages }}"
@@ -11,6 +11,15 @@
     - apparmor-profiles
     - apparmor-utils
     #- apparmor-notify
+# https://github.com/raspberrypi/linux/pull/1698
+- name: Add lsm=apparmor to /boot/cmdline.txt (Raspbian)
+  replace:
+    path: /boot/cmdline.txt
+    # https://stackoverflow.com/a/61974725
+    regexp: '^(.(?!.*\blsm=apparmor\b).*)$'
+    replace: '\1 lsm=apparmor'
+  become: yes
+  when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
 # https://github.com/pyllyukko/harden.sh/wiki/AppArmor
 - name: Enable extra profiles
   block:
@@ -21,6 +30,7 @@
       owner: root
       group: root
       mode: '0600'
+      remote_src: yes
     with_items: '{{ apparmor_profiles }}'
   - name: Enable extra profiles
     command: /usr/sbin/aa-enforce /etc/apparmor.d/{{ item }}
@@ -42,4 +52,4 @@
       - usr.sbin.useradd
       - usr.sbin.userdel
   become: yes
-  when: ( ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian" ) or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
