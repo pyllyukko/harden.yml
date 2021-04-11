@@ -5,12 +5,26 @@
       apt:
         name: aide
         update_cache: yes
-    - name: Check for /var/lib/aide/aide.db
-      stat:
-        path: /var/lib/aide/aide.db
-      register: stat_result
+    - name: Configure AIDE
+      replace:
+        path: /etc/aide/aide.conf
+        regexp: '^({{ item.key }}\s+=\s)+.*$'
+        replace: '\g<1>{{ item.value }}'
+      with_dict:
+        Checksums: sha256
+    - name: Exclude /net
+      copy:
+        content: "!/net\n"
+        dest: /etc/aide/aide.conf.d/70_net
+        owner: root
+        group: root
+        mode: '0644'
+        force: no
+    - name: Run update-aide.conf
+      command: /usr/sbin/update-aide.conf
     - name: Create aide.db
-      command: /usr/sbin/aideinit
-      when: stat_result.stat.exists == False
+      command: /usr/sbin/aideinit --yes
+      args:
+        creates: /var/lib/aide/aide.db
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
