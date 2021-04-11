@@ -64,3 +64,11 @@
     option: verify_ap_req_nofail
     value: "true"
   become: yes
+# https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/FAQ: "3.3) How can I automatically run Rootkit Hunter every day?"
+- name: Add rkhunter cronjob
+  cron:
+    name: "Run rkhunter"
+    minute: "30"
+    hour: "5"
+    job: "/bin/test -x /usr/bin/rkhunter && /usr/bin/rkhunter --cronjob --update --rwo"
+  become: yes
