@@ -44,3 +44,6 @@ net.ipv4.icmp_echo_ignore_all = 0
 net.ipv4.icmp_ignore_bogus_error_responses = 1
 
 net.ipv4.tcp_timestamps = 0
+
+# https://www.kernel.org/doc/html/latest/admin-guide/sysctl/net.html#bpf-jit-harden
+net.core.bpf_jit_harden = 2

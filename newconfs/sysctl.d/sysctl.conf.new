@@ -18,6 +18,10 @@ fs.suid_dumpable = 0
 fs.protected_symlinks = 1
 # "hardlinks cannot be created by users if they do not already own the source file, or do not have read/write access to it"
 fs.protected_hardlinks = 1
+# https://www.kernel.org/doc/html/latest/admin-guide/sysctl/fs.html#protected-fifos
+fs.protected_fifos = 2
+# https://www.kernel.org/doc/html/latest/admin-guide/sysctl/fs.html#protected-regular
+fs.protected_regular = 2
 
 # got the idea from:
 # https://secure.wikimedia.org/wikibooks/en/wiki/Grsecurity/Appendix/Grsecurity_and_PaX_Configuration_Options#Larger_entropy_pools
@@ -47,6 +51,7 @@ kernel.ctrl-alt-del = 0
 # https://tools.ietf.org/html/rfc1620
 
 # https://www.cert.fi/haavoittuvuudet/2013/haavoittuvuus-2013-071.html
+# https://www.kernel.org/doc/html/v5.7/admin-guide/perf-security.html#perf-events-perf-unprivileged-users
 kernel.perf_event_paranoid = 2
 
 # https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings#sysctls
@@ -63,3 +68,6 @@ kernel.yama.ptrace_scope = 3
 
 # Disable User Namespaces, as it opens up a large attack surface to unprivileged users.
 user.max_user_namespaces = 0
+
+# https://www.kernel.org/doc/html/latest/admin-guide/sysctl/kernel.html#unprivileged-bpf-disabled
+kernel.unprivileged_bpf_disabled = 1
