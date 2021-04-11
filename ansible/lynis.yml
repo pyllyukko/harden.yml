@@ -37,3 +37,10 @@
       update_cache: yes
   when: ansible_distribution == "CentOS"
   become: yes
+- name: Configure Lynis
+  lineinfile:
+    path: /etc/lynis/default.prf
+    insertafter: '^# Skip a particular option within a test'
+    regexp: '^skip-test=SSH-7408:port$'
+    line: skip-test=SSH-7408:port
+  become: yes
