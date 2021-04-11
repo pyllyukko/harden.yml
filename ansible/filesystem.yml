@@ -184,16 +184,17 @@
       owner: root
       group: root
     when: ansible_distribution == "Slackware"
-  - name: Restrict visibility to /etc/cron.{d,hourly,daily,weekly,monthly}/
+  - name: Restrict visibility to /etc/cron{tab,.{d,hourly,daily,weekly,monthly}/}
     file:
       path: /etc/{{ item }}
-      mode: '0700'
+      mode: g-rwx,o-rwx
     with_items:
       - cron.d
       - cron.hourly
       - cron.daily
       - cron.weekly
       - cron.monthly
+      - crontab
   - name: /var/log/lastlog
     file:
       path: /var/log/lastlog
