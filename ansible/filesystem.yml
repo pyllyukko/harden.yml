@@ -112,12 +112,29 @@
       path: /etc/ssl/private
       mode: o-rwx
       owner: root
+  # Home directories
   - name: /root
     file:
       path: /root
       mode: '0700'
       owner: root
       group: root
+  - name: Home dirs
+    block:
+    - name: getent passwd
+      getent:
+        database: passwd
+    - name: chmod home directories
+      file:
+        path: "{{ item.value[4] }}"
+        mode: '0700'
+      with_dict: "{{ getent_passwd }}"
+      # Debian: nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
+      when: item.value[1] | int >= 1000 and item.value[1] != "65534"
+      register: result
+      failed_when:
+        - result.failed == true
+        - result.state != "absent"
   # Stuff that is usually readable, but have no reason why they should be
   - name: chmod /etc/ssh/sshd_config
     file:
