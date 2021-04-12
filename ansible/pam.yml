@@ -34,6 +34,13 @@
     path: /etc/pam.d/common-auth
     regexp: '\s+nullok(_secure)?'
     replace: ''
+- name: Add rounds=500000 to pam_unix in /etc/pam.d/common-passwd
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  replace:
+    path: /etc/pam.d/common-password
+    regexp: '^(password\s+.+\s+pam_unix\.so(?!.*\brounds=[0-9]+\b).*)$'
+    replace: '\1 rounds=500000'
+  become: yes
 - name: Disallow blank passwords (Slackware)
   when: ansible_distribution == "Slackware"
   become: yes
