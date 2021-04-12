@@ -38,9 +38,22 @@
   when: ansible_distribution == "CentOS"
   become: yes
 - name: Configure Lynis
-  lineinfile:
-    path: /etc/lynis/default.prf
-    insertafter: '^# Skip a particular option within a test'
-    regexp: '^skip-test=SSH-7408:port$'
-    line: skip-test=SSH-7408:port
+  block:
+  - name: Configure Lynis to skip certain SSH tests
+    lineinfile:
+      path: /etc/lynis/custom.prf
+      regexp: '^skip-test=SSH-7408:port$'
+      line: skip-test=SSH-7408:port
+      create: yes
+  - name: Configure Lynis to skip certain tests
+    blockinfile:
+      path: /etc/lynis/custom.prf
+      marker: "# {mark} ANSIBLE MANAGED BLOCK - Skip RPM related tests"
+      block: |
+        skip-test=PKGS-7308
+        skip-test=PKGS-7383
+        skip-test=PKGS-7384
+        skip-test=PKGS-7386
+        skip-test=PKGS-7387
+    when: ansible_os_family != "RedHat"
   become: yes
