@@ -129,8 +129,8 @@
         path: "{{ item.value[4] }}"
         mode: '0700'
       with_dict: "{{ getent_passwd }}"
-      # Debian: nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin
-      when: item.value[1] | int >= 1000 and item.value[1] != "65534"
+      # UID_MIN & UID_MAX in /etc/login.defs
+      when: item.value[1] | int >= 1000 and item.value[1] | int <= 60000
       register: result
       failed_when:
         - result.failed == true
