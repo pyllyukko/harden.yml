@@ -42,7 +42,7 @@
 - name: Warn users about expiring password
   become: yes
   copy:
-    src: "{{ playbook_dir }}/../newconfs/expiry.sh.new"
+    src: "{{ playbook_dir }}/../newconfs/profile.d/expiry.sh.new"
     dest: /etc/profile.d/expiry.sh
     owner: root
     group: root
