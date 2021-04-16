@@ -37,6 +37,7 @@ Host *
   Ciphers {{ sshd_config["Ciphers"] }}
   MACs {{ sshd_config["MACs"] }}
   KexAlgorithms {{ sshd_config["KexAlgorithms"] }}
+  HostKeyAlgorithms {{ sshd_config["HostKeyAlgorithms"] }}
 #   EscapeChar ~
 #   Tunnel no
 #   TunnelDevice any:any
