@@ -51,6 +51,31 @@
     regexp: '^(password\s+.+\s+pam_unix\.so(?!.*\brounds=[0-9]+\b).*)$'
     replace: '\1 rounds=500000'
   become: yes
+- name: Configure pam_faillock & pam_faildelay
+  block:
+    - name: Configure /etc/security/faillock.conf
+      template:
+        src: "{{ playbook_dir }}/../newconfs/faillock.conf.new"
+        dest: /etc/security/faillock.conf
+        owner: root
+        group: root
+    - name: Create faillock directory
+      file:
+        path: /var/run/faillock
+        state: directory
+        mode: '0700'
+    - name: Add pam_faillock to /etc/pam.d/system-auth
+      replace:
+        path: /etc/pam.d/system-auth.TEST
+        regexp: '^auth\s+required\s+pam_unix\.so.*$\n'
+        replace: |
+          auth        optional      pam_faildelay.so delay={{ fail_delay * 1000000 }}
+          auth        [success=1 default=bad] pam_unix.so likeauth
+          auth        [default=die] pam_faillock.so authfail
+          auth        required      pam_faillock.so authsucc
+  when: ansible_distribution == "Slackware"
+  become: yes
+# There are other lines also than auth pam_unix.so that is handled by the previous task
 - name: Disallow blank passwords (Slackware)
   when: ansible_distribution == "Slackware"
   become: yes
@@ -58,13 +83,6 @@
     path: /etc/pam.d/system-auth
     regexp: '\s+nullok'
     replace: ''
-- name: Create faillock directory
-  file:
-    path: /var/run/faillock
-    state: directory
-    mode: '0700'
-  when: ansible_distribution == "Slackware"
-  become: yes
 - name: Enable pam_wheel.so in /etc/pam.d/su
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
   become: yes
