@@ -63,7 +63,7 @@
       file:
         path: /var/run/faillock
         state: directory
-        mode: '0700'
+        mode: '0751'
     - name: Add pam_faillock and pam_faildelay to /etc/pam.d/system-auth
       replace:
         path: /etc/pam.d/system-auth.TEST
