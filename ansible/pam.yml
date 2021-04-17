@@ -92,36 +92,34 @@
     regexp: '^(.+),adm$'
     replace: '\1'
     validate: '/bin/grep "^\(/var\)\?/tmp\s\+\(/var/tmp\)\?/tmp-inst/\s\+level\s\+root$" %s'
-- name: Copying new pam-configs
+- name: Debian pam-configs
+  block:
+    - name: Copying new pam-configs
+      copy:
+        src: "{{ playbook_dir }}/../newconfs/pam-configs/{{ item }}.new"
+        dest: /usr/share/pam-configs/{{ item }}
+      with_items:
+        - access
+        - lastlog
+        - polyinstation
+        - pwhistory
+        - tally2
+        - uid_ge_1000
+        - umask
+        - time
+        - inactive
+    - name: Copying new pam-configs (templates)
+      template:
+        src: "{{ playbook_dir }}/templates/pam-configs/{{ item }}.j2"
+        dest: /usr/share/pam-configs/{{ item }}
+        owner: root
+        group: root
+      with_items:
+        - faildelay
+    - name: Run pam-auth-update (Debian)
+      command: /usr/sbin/pam-auth-update --package
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
-  copy:
-    src: "{{ playbook_dir }}/../newconfs/pam-configs/{{ item }}.new"
-    dest: /usr/share/pam-configs/{{ item }}
-  with_items:
-    - access
-    - lastlog
-    - polyinstation
-    - pwhistory
-    - tally2
-    - uid_ge_1000
-    - umask
-    - time
-    - inactive
-- name: Copying new pam-configs (templates)
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-  become: yes
-  template:
-    src: "{{ playbook_dir }}/templates/pam-configs/{{ item }}.j2"
-    dest: /usr/share/pam-configs/{{ item }}
-    owner: root
-    group: root
-  with_items:
-    - faildelay
-- name: Run pam-auth-update (Debian)
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-  become: yes
-  command: /usr/sbin/pam-auth-update --package
 - name: Enable additional PAM modules with authconfig (RH)
   when: ansible_os_family == "RedHat"
   become: yes
