@@ -64,7 +64,7 @@
         path: /var/run/faillock
         state: directory
         mode: '0700'
-    - name: Add pam_faillock to /etc/pam.d/system-auth
+    - name: Add pam_faillock and pam_faildelay to /etc/pam.d/system-auth
       replace:
         path: /etc/pam.d/system-auth.TEST
         regexp: '^auth\s+required\s+pam_unix\.so.*$\n'
