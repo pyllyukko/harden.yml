@@ -45,21 +45,7 @@
     owner: root
     group: root
     mode: '0644'
-- name: Disallow blank passwords
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-  become: yes
-  replace:
-    path: /etc/pam.d/common-auth
-    regexp: '\s+nullok(_secure)?'
-    replace: ''
-- name: Add rounds=500000 to pam_unix in /etc/pam.d/common-passwd
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-  replace:
-    path: /etc/pam.d/common-password
-    regexp: '^(password\s+.+\s+pam_unix\.so(?!.*\brounds=[0-9]+\b).*)$'
-    replace: '\1 rounds=500000'
-  become: yes
-- name: Configure pam_faillock & pam_faildelay
+- name: Configure pam_faillock & pam_faildelay (Slackware)
   block:
     - name: Configure /etc/security/faillock.conf
       template:
@@ -83,14 +69,24 @@
           auth        required      pam_faillock.so authsucc
   when: ansible_distribution == "Slackware"
   become: yes
-# There are other lines also than auth pam_unix.so that is handled by the previous task
-- name: Disallow blank passwords (Slackware)
-  when: ansible_distribution == "Slackware"
+# https://github.com/pyllyukko/harden.sh/issues/64
+- name: nullok
+  block:
+    - name: Disallow blank passwords (Debian)
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+      replace:
+        path: /etc/pam.d/common-auth
+        regexp: '\s+nullok(_secure)?'
+        replace: ''
+    # There are other lines also than auth pam_unix.so that is handled by the "Add
+    # pam_faillock and pam_faildelay to /etc/pam.d/system-auth" task
+    - name: Disallow blank passwords (Slackware)
+      when: ansible_distribution == "Slackware"
+      replace:
+        path: /etc/pam.d/system-auth
+        regexp: '\s+nullok'
+        replace: ''
   become: yes
-  replace:
-    path: /etc/pam.d/system-auth
-    regexp: '\s+nullok'
-    replace: ''
 - name: Enable pam_wheel.so in /etc/pam.d/su
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
   become: yes
@@ -153,27 +149,34 @@
   with_items:
     #- pamaccess
     - faillock
-- name: Configure pwquality
-  replace:
-    path: /etc/security/pwquality.conf
-    regexp: '^(# ?)?({{ item.key }}\s+)=.*$'
-    replace: '\g<2>= {{ item.value }}'
-    validate: '/bin/grep "^{{ item.key }}\s\+= {{ item.value }}$" %s'
-  when: ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
-  become: yes
-  with_dict:
-    retry: 3
-    minlen: 14
-    minclass: 4
-    dcredit: -1
-    ucredit: -1
-    ocredit: -1
-    lcredit: -1
-- name: Configure minlen -> 14 in /etc/pam.d/system-auth
-  replace:
-    path: /etc/pam.d/system-auth
-    regexp: '^(password.+\sminlen=)[0-9]+(.*)$'
-    replace: '\g<1>14\g<2>'
-    validate: '/bin/grep "^password.\+minlen=14.*$" %s'
-  when: ansible_distribution == "Slackware"
+- name: Password related
+  block:
+    - name: Add rounds=500000 to pam_unix in /etc/pam.d/common-passwd
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+      replace:
+        path: /etc/pam.d/common-password
+        regexp: '^(password\s+.+\s+pam_unix\.so(?!.*\brounds=[0-9]+\b).*)$'
+        replace: '\1 rounds=500000'
+    - name: Configure pwquality
+      replace:
+        path: /etc/security/pwquality.conf
+        regexp: '^(# ?)?({{ item.key }}\s+)=.*$'
+        replace: '\g<2>= {{ item.value }}'
+        validate: '/bin/grep "^{{ item.key }}\s\+= {{ item.value }}$" %s'
+      when: ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
+      with_dict:
+        retry: 3
+        minlen: 14
+        minclass: 4
+        dcredit: -1
+        ucredit: -1
+        ocredit: -1
+        lcredit: -1
+    - name: Configure minlen -> 14 in /etc/pam.d/system-auth (Slackware)
+      replace:
+        path: /etc/pam.d/system-auth
+        regexp: '^(password.+\sminlen=)[0-9]+(.*)$'
+        replace: '\g<1>14\g<2>'
+        validate: '/bin/grep "^password.\+minlen=14.*$" %s'
+      when: ansible_distribution == "Slackware"
   become: yes
