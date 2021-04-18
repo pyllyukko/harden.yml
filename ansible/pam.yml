@@ -36,6 +36,22 @@
         regexp: '^account\s+required\s+pam_access\.so\b.*$'
         line: 'account     required      pam_access.so nodefgroup'
         insertafter: '^account {5}required {6}pam_time\.so\b.*$'
+# This needs to happen before populating /etc/pam.d/other with pam_deny or otherwise sudo will stop working
+- name: Create /etc/pam.d/sudo (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: yes
+  copy:
+    dest: /etc/pam.d/sudo
+    owner: root
+    group: root
+    mode: '0644'
+    content: |
+      #%PAM-1.0
+
+      auth       include      system-auth
+      account    include      system-auth
+      password   include      system-auth
+      session    include      system-auth
 - name: Create secure default /etc/pam.d/other
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
   become: yes
