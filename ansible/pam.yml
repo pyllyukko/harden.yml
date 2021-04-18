@@ -28,6 +28,14 @@
           + : ({{ allowed_group }}) : ALL
           + : Debian-gdm lightdm : LOCAL
           - : ALL : ALL
+    - name: Add pam_access to system-auth (Slackware)
+      when: ansible_distribution == "Slackware"
+      become: yes
+      lineinfile:
+        path: /etc/pam.d/system-auth
+        regexp: '^account\s+required\s+pam_access\.so.*$'
+        line: 'account     required      pam_access.so'
+        insertafter: '^account {5}required {6}pam_time\.so.*$'
 - name: Create secure default /etc/pam.d/other
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
   become: yes
