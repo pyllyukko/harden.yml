@@ -85,6 +85,18 @@
           auth        required      pam_faillock.so authsucc
   when: ansible_distribution == "Slackware"
   become: yes
+- name: Remove auth include postlogin (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: yes
+  lineinfile:
+    path: /etc/pam.d/{{ item }}
+    regexp: '^auth\s+include\s+postlogin$'
+    state: absent
+  with_items:
+    - kde
+    - login
+    - sddm
+    - sshd
 # https://github.com/pyllyukko/harden.sh/issues/64
 - name: nullok
   block:
