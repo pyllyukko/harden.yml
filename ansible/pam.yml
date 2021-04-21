@@ -52,6 +52,8 @@
       account    include      system-auth
       password   include      system-auth
       session    include      system-auth
+# http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html
+# https://tldp.org/HOWTO/User-Authentication-HOWTO/x263.html#AEN266
 - name: Create secure default /etc/pam.d/other
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
   become: yes
