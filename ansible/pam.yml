@@ -52,6 +52,13 @@
       account    include      system-auth
       password   include      system-auth
       session    include      system-auth
+- name: Add pam_umask to /etc/pam.d/postlogin (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: yes
+  lineinfile:
+    path: /etc/pam.d/postlogin
+    regexp: '^session\s+optional\s+pam_umask\.so\b.*$'
+    line: 'session     optional      pam_umask.so'
 # http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html
 # https://tldp.org/HOWTO/User-Authentication-HOWTO/x263.html#AEN266
 - name: Create secure default /etc/pam.d/other
