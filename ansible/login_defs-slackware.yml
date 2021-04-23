@@ -44,7 +44,7 @@
   - name: Remove S from System initialization (Slackware)
     replace:
       path: /etc/inittab
-      regexp: '^si:S:sysinit:/etc/rc.d/rc.S$'
+      regexp: '^si:S:sysinit:/etc/rc\.d/rc\.S$'
       replace: 'si::sysinit:/etc/rc.d/rc.S'
       validate: '/bin/grep "^si::sysinit:/etc/rc.d/rc.S$" %s'
   - name: Create separate entry for single user mode which requires authentication (Slackware)
