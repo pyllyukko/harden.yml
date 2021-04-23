@@ -93,6 +93,7 @@
       user:
         name: '{{ item.key }}'
         shell: /sbin/nologin
+        # pam_unix(account) will deny access if account is expired
         expires: '{{ 60 * 60 * 24 }}'
         password_lock: yes
       when: item.value[1] | int < 1000 and item.value[1] != "0"
