@@ -149,7 +149,7 @@
     replace: '\1'
     validate: '/bin/grep "^auth\s\+required\s\+pam_wheel\.so.*$" %s'
 - name: Enable polyinstantiated temp directories
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
   become: yes
   replace:
     path: /etc/security/namespace.conf
