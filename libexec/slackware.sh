@@ -1,6 +1,4 @@
 #!/bin/bash
-declare -r SENDMAIL_CF_DIR="/usr/share/sendmail/cf/cf"
-declare -r SENDMAIL_CONF_PREFIX="sendmail-slackware"
 declare -r SLACKWARE_VERSION=$( sed 's/^.*[[:space:]]\([0-9]\+\.[0-9]\+\).*$/\1/' /etc/slackware-version 2>/dev/null )
 declare -r ETC_PATCH_FILE="harden_etc-${SLACKWARE_VERSION}.patch"
 # the rc.modules* should match at least the following:
@@ -749,64 +747,6 @@ function disable_unnecessary_services() {
 
   return 0
 } # disable_unnecessary_services()
-################################################################################
-function patch_sendmail() {
-  # $1 = [reverse]
-
-  local REV=""
-
-  if [ ${#} -eq 1 ]
-  then
-    REV="${1}"
-  fi
-
-  if [ ! -d "/etc/mail" ]
-  then
-    echo "${FUNCNAME}(): error: sendmail config dir not found!" 1>&2
-    return 1
-  elif [ ! -d "${SENDMAIL_CF_DIR}" ]
-  then
-    echo "${FUNCNAME}(): error: no such directory \`${SENDMAIL_CF_DIR}'! you might not have the sendmail-cf package installed." 1>&2
-    return 1
-  elif [ ! -f "${SENDMAIL_CF_DIR}/${SENDMAIL_CONF_PREFIX}.mc" ]
-  then
-    echo "${FUNCNAME}(): error: no such file \`${SENDMAIL_CF_DIR}/${SENDMAIL_CONF_PREFIX}.mc'! you might not have the sendmail-cf package installed." 1>&2
-    return 1
-  fi
-
-  check_and_patch /usr/share/sendmail "${SENDMAIL_PATCH_FILE}" 1 "${REV}" || {
-    echo "${FUNCNAME}(): error!" 1>&2
-    return 1
-  }
-  pushd ${SENDMAIL_CF_DIR} || {
-    echo "${FUNCNAME}(): error!" 1>&2
-    return 1
-  }
-  # build the config
-  sh ./Build "./${SENDMAIL_CONF_PREFIX}.mc" || {
-    echo "${FUNCNAME}(): error: error while building the sendmail config!" 1>&2
-    popd
-    return 1
-  }
-  if [ ! -f "/etc/mail/sendmail.cf.bak" ]
-  then
-    cp -v /etc/mail/sendmail.cf /etc/mail/sendmail.cf.bak
-  fi
-  cp -v "./${SENDMAIL_CONF_PREFIX}.cf" /etc/mail/sendmail.cf
-  popd
-
-  # don't reveal the sendmail version
-  # no patch file for single line! =)
-  sed -i 's/^smtp\tThis is sendmail version \$v$/smtp\tThis is sendmail/' /etc/mail/helpfile
-
-  # if sendmail is running, restart it
-  if [ -f "/var/run/sendmail.pid" ] && [ -x "/etc/rc.d/rc.sendmail" ]
-  then
-    /etc/rc.d/rc.sendmail restart
-  fi
-
-  return 0
-} # patch_sendmail()
 ################################################################################
 function check_integrity() {
   local    manifest="${MANIFEST_DIR}/MANIFEST.bz2"

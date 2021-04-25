@@ -550,7 +550,6 @@ function usage() {
 	      ssh
 	      etc
 	      apache
-	      sendmail
 	      php
 	      wipe **HIGHLY EXPERIMENTAL AND DANGEROUS**
 
@@ -860,7 +859,6 @@ do
 	;;
 	"etc")		check_and_patch /etc "${ETC_PATCH_FILE}" 1 && ETC_CHANGED=1	;;
         "apache")	check_and_patch /etc/httpd "${APACHE_PATCH_FILE}" 3		;;
-	"sendmail")	patch_sendmail							;;
 	"php")		check_and_patch /etc/httpd php_harden.patch 1			;;
 	"wipe")
 	  check_and_patch /etc wipe.patch 1
@@ -884,7 +882,6 @@ do
 	;;
 	"etc")		check_and_patch /etc "${ETC_PATCH_FILE}" 1 reverse && ETC_CHANGED=1	;;
         "apache")	check_and_patch /etc/httpd "${APACHE_PATCH_FILE}" 3 reverse		;;
-        "sendmail")	patch_sendmail reverse							;;
 	"php")		check_and_patch /etc/httpd php_harden.patch 1 reverse			;;
 	"wipe")
 	  check_and_patch /etc wipe.patch 1 reverse
