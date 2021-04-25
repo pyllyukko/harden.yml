@@ -67,32 +67,6 @@ case "${SSH_VERSION}" in
 esac
 # /PATCHES
 ################################################################################
-function remove_packages() {
-  # BIG FAT NOTE: make sure you don't actually need these!
-  #               although, i tried to keep the list short.
-
-  echo "${FUNCNAME}(): removing potentially dangerous packages"
-
-  # TODO: if -x removepkg && apt-get stuff
-  {
-    # CIS 7.1 Disable rhosts Support
-    /sbin/removepkg netkit-rsh 2>/dev/null
-
-    # from system-hardening-10.2.txt (Misc Stuff -> Stuff to remove)
-    #
-    # NOTE: uucp comes with a bunch of SUID binaries, plus i think most people
-    #       won't need it nowadays anyway.
-    /sbin/removepkg uucp 2>/dev/null
-
-    # remove the floppy package. get rid of the fdmount SUID binary.
-    /sbin/removepkg floppy 2>/dev/null
-
-    # TODO: remove xinetd package?
-  } | tee -a "${logdir}/removed_packages.txt"
-
-  return 0
-} # remove_packages()
-################################################################################
 function check_and_patch() {
   # $1 = dir
   # $2 = patch file

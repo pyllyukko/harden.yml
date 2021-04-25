@@ -73,6 +73,10 @@
     job: "/usr/bin/test -x /usr/bin/rkhunter && /usr/bin/rkhunter --cronjob --update --rwo"
   become: yes
 # These are packages that ship SUID/SGID binaries, pam.d configurations or similar stuff that provides unnecessary attack surface
+# Slackware Linux Benchmark v1.1:
+#   * SN.5 Evaluate Packages Associated With Startup Scripts
+#   * 7.1 Disable rhosts Support
+# system-hardening-10.2.txt: Misc Stuff -> Stuff to remove
 - name: Remove unneeded/unwanted packages (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"

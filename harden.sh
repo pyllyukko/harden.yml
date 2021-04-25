@@ -470,7 +470,6 @@ function usage() {
 	  -a		apache
 	  -A		all (for Slackware)
 	  		  - hardens user accounts
-	  		  - removes unnecessary packages
 	  		  - removes unnecessary shells
 	  		  - imports PGP keys
 	  		  - applies the etc hardening patch
@@ -768,7 +767,6 @@ do
 
       #configure_apache
       user_accounts
-      remove_packages
       remove_shells
       create_limited_ca_list
       enable_pacct
