@@ -72,3 +72,15 @@
     hour: "5"
     job: "/usr/bin/test -x /usr/bin/rkhunter && /usr/bin/rkhunter --cronjob --update --rwo"
   become: yes
+# These are packages that ship SUID/SGID binaries, pam.d configurations or similar stuff that provides unnecessary attack surface
+- name: Remove unneeded/unwanted packages (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  slackpkg:
+    name: '{{ item }}'
+    state: absent
+  with_items:
+    - netkit-rsh
+    - uucp
+    - floppy
+    - netatalk
