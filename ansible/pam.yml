@@ -153,7 +153,7 @@
   become: yes
   replace:
     path: /etc/security/namespace.conf
-    regexp: '^#({{ item }}\s+({{ item }})?/tmp-inst/\s+level\s+root,adm)$'
+    regexp: '^#({{ item }}\b.+)$'
     replace: '\1'
     validate: '/bin/grep "^{{ item }}\s\+\({{ item }}\)\?/tmp-inst/\s\+level\s\+root,adm$" %s'
   with_items:
