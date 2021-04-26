@@ -54,28 +54,12 @@ do
   }
 done
 unset file
-#declare -ra LOG_FILES=(
-#  btmp
-#  cron*
-#  debug*
-#  dmesg
-#  faillog
-#  lastlog
-#  maillog*
-#  messages*
-#  secure*
-#  spooler*
-#  syslog*
-#  wtmp
-#  xferlog
-#)
 
 # determine distro
 if [ -f /etc/os-release ]
 then
   DISTRO=$( sed -n '/^ID=/s/^ID="\?\([^"]*\)"\?$/\1/p' /etc/os-release )
 fi
-declare -r WWWROOT="/var/www"
 declare -i ETC_CHANGED=0
 declare -r RBINDIR="/usr/local/rbin"
 declare -r CADIR="/usr/share/ca-certificates/local"
