@@ -39,7 +39,6 @@ function user_accounts() {
   create_ftpusers
   restrict_cron
   lock_system_accounts
-  user_home_directories_permissions
 
   # CUSTOM
 
@@ -192,30 +191,6 @@ function lock_account() {
 
   return 0
 } # lock_account()
-################################################################################
-function user_home_directories_permissions() {
-  # this has been split into it's own function, since it relates to both
-  # "hardening categories", user accounts & file permissions.
-  local DIR
-  print_topic "setting permissions of home directories"
-  if [ -z "${UID_MIN}" -o -z "${UID_MAX}" ]
-  then
-    echo '[-] error: UID_MIN or UID_MAX not known' 1>&2
-    return 1
-  fi
-  # 8.7 User Home Directories Should Be Mode 750 or More Restrictive (modified)
-  for DIR in \
-    $( awk -F: -v uid_min=${UID_MIN} -v uid_max=${UID_MAX} '($3 >= uid_min && $3 <= uid_max) { print $6 }' /etc/passwd ) \
-    /root
-  do
-    if [ "x${DIR}" != "x/" ]
-    then
-      chmod -c 700 ${DIR} | tee -a "${logdir}/file_perms.txt"
-    fi
-  done
-
-  return
-} # user_home_directories_permissions()
 ################################################################################
 function create_ftpusers() {
   local NAME

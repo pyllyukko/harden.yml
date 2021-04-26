@@ -112,14 +112,6 @@ declare -rA PWQUALITY_SETTINGS=(
   ["ocredit"]="-1"
   ["lcredit"]="-1"
 )
-declare -rA FILE_PERMS=(
-  ["/boot/grub/grub.cfg"]="og-rwx"
-  ["/etc/ssh/sshd_config"]="600"
-  ["/etc/ssh/ssh_config"]="644"
-  ["/etc/lilo.conf"]="600"
-  ["/root/.ssh"]="700"
-  ["/etc/krb5.keytab"]="600"
-)
 declare -r CERTS_DIR="/etc/ssl/certs"
 
 # from CIS Apache HTTP Server 2.4 Benchmark v1.1.0 - 12-03-2013
@@ -211,28 +203,6 @@ function harden_fstab() {
 
   return ${?}
 } # harden_fstab()
-################################################################################
-function file_permissions2() {
-  local FILE
-  print_topic "hardening file permissions"
-  (( ${LYNIS_TESTS} )) && local LYNIS_SCORE_BEFORE=$( get_lynis_hardening_index file_permissions )
-  # new RH/Debian safe file permissions function
-  {
-    for FILE in ${!FILE_PERMS[*]}
-    do
-      if [ -f "${FILE}" -o -d "${FILE}" ]
-      then
-	chmod -c ${FILE_PERMS[${FILE}]} ${FILE}
-      fi
-    done
-  } | tee -a "${logdir}/file_perms.txt"
-  (( ${LYNIS_TESTS} )) && {
-    local LYNIS_SCORE_AFTER=$( get_lynis_hardening_index file_permissions )
-    compare_lynis_scores "${LYNIS_SCORE_BEFORE}" "${LYNIS_SCORE_AFTER}"
-    # TODO: authentication & boot_services is not run in the above invocation
-    check_lynis_tests FILE-7524 AUTH-9252 BOOT-5184
-  }
-} # file_permissions2()
 ################################################################################
 function enable_bootlog() {
   print_topic "enabling bootlog"
@@ -476,7 +446,6 @@ function usage() {
 	  		  - applies the SSH hardening patch
 	  		  - disables unnecessary services
 	  		  - miscellaneous_settings()
-	  		  - hardens file permissions
 	  		  - creates hardened fstab.new
 	  -b		toggle USB authorized_default
 	  -c		create limited CA conf
@@ -490,7 +459,6 @@ function usage() {
 	  		create_ftpusers
 	  		set_failure_limits
 	  		password_policies
-	  		homedir_perms
 	  		configure_pam
 	  		configure_securetty
 
@@ -528,8 +496,6 @@ function usage() {
 	  		create_banners
 	  		enable_apparmor
 	  		enable_bootlog
-	  		file_permissions
-	  		file_permissions2
 	  		sysctl_harden
 	  		set_usb_authorized_default
 	  		harden_fstab (you can also run "make /etc/fstab.new")
@@ -781,7 +747,6 @@ do
       miscellaneous_settings
 
       # these should be the last things to run
-      file_permissions
       restrict_cron
 
       harden_fstab
@@ -808,8 +773,6 @@ do
 	"enable_apparmor")	enable_apparmor			;;
 	"enable_bootlog")	enable_bootlog			;;
 	"enable_sysstat")	enable_sysstat			;;
-	"file_permissions")	file_permissions		;;
-	"file_permissions2")	file_permissions2		;;
 	"gnome_settings")	gnome_settings			;;
 	"lock_system_accounts")	lock_system_accounts		;;
 	"password_policies")	configure_password_policies	;;
@@ -817,7 +780,6 @@ do
 	"sshd_config")		configure_sshd			;;
 	"ssh_config")		configure_ssh			;;
 	"sysctl_harden")	sysctl_harden			;;
-	"homedir_perms")	user_home_directories_permissions ;;
 	"disable_gdm3_user_list") disable_gdm3_user_list        ;;
 	"configure_umask")	configure_umask			;;
 	"configure_shells")	configure_shells		;;
