@@ -5,6 +5,39 @@ This is a work-in-progress. Don't expect all the same functionality/hardenings a
 
 [![asciicast](https://asciinema.org/a/Hq1esBXvDZz95MHLnPxPyEAor.png)](https://asciinema.org/a/Hq1esBXvDZz95MHLnPxPyEAor)
 
+Files
+-----
+
+### System
+
+* logging
+* filesystem
+* entropy
+* ca-certs
+* network
+* services
+* sysctl
+* debian\_packages
+
+### AAA
+
+* login\_defs
+    * login\_defs-slackware
+* pam
+* sysstat
+* banners
+
+### Application specific
+
+* sudoers
+    * filesystem-sudoers
+* aide
+* apparmor
+* audit
+* clamav
+* lynis
+* display\_managers.yml
+
 Supported distros
 -----------------
 
