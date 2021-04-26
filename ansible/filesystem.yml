@@ -112,6 +112,12 @@
       path: /etc/ssl/private
       mode: o-rwx
       owner: root
+  - name: /etc/audit
+    file:
+      path: /etc/audit
+      mode: o-rwx
+      owner: root
+      group: root
   # Home directories
   - name: /root
     file:
