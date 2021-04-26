@@ -195,6 +195,10 @@
       - cron.weekly
       - cron.monthly
       - crontab
+    register: result
+    failed_when:
+      - result.failed == true
+      - result.state != "absent"
   - name: /var/log/lastlog
     file:
       path: /var/log/lastlog
