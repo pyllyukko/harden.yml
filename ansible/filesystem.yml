@@ -112,12 +112,15 @@
       path: /etc/ssl/private
       mode: o-rwx
       owner: root
-  - name: /etc/audit
+  - name: audit files
     file:
-      path: /etc/audit
+      path: "{{ item }}"
       mode: o-rwx
       owner: root
       group: root
+    with_items:
+      - /etc/audit
+      - /var/log/audit
   # Home directories
   - name: /root
     file:
