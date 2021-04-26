@@ -50,11 +50,15 @@
 - name: getent passwd
   getent:
     database: passwd
+# Slackware Linux Benchmark v1.1 - 7.3 Create ftpusers Files
 - name: Create /etc/ftpusers
   become: yes
   template:
     src: "{{ playbook_dir }}/templates/ftpusers.j2"
     dest: /etc/ftpusers
+    owner: root
+    group: root
+    mode: '0600'
 - include: login_defs-slackware.yml
   when: ansible_distribution == "Slackware"
 - name: Verify integrity of group files
