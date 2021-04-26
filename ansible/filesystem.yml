@@ -73,6 +73,16 @@
     failed_when:
       - result.failed == true
       - result.state != "absent"
+  - name: Kerberos KDC dir
+    file:
+      path: /var/kerberos/krb5kdc
+      mode: '0700'
+      owner: root
+      group: root
+    register: result
+    failed_when:
+      - result.failed == true
+      - result.state != "absent"
   - name: Install acl package (Slackware)
     when: ansible_distribution == "Slackware"
     slackpkg:
