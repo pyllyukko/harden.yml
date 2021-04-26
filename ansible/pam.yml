@@ -195,13 +195,17 @@
       command: /usr/sbin/pam-auth-update --package
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
-- name: Enable additional PAM modules with authconfig (RH)
+- name: authconfig
+  block:
+    - name: Enable additional PAM modules with authconfig (RH)
+      command: /sbin/authconfig --enable{{ item }}
+      with_items:
+        #- pamaccess
+        - faillock
+    - name: Configure password policy via authconfig
+      command: /sbin/authconfig --passalgo=sha512 --passminlen=14 --enablereqlower --enablerequpper --enablereqdigit --enablereqother --update
   when: ansible_os_family == "RedHat"
   become: yes
-  command: /sbin/authconfig --enable{{ item }}
-  with_items:
-    #- pamaccess
-    - faillock
 - name: Password related
   block:
     - name: Add rounds=500000 to pam_unix in /etc/pam.d/common-passwd
