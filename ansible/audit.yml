@@ -106,5 +106,17 @@
       name: auditd
       state: started
       enabled: yes
+  - name: Add audit=1 to GRUB
+    replace:
+      path: /etc/default/grub
+      regexp: '^(GRUB_CMDLINE_LINUX="(?!.*\baudit=1\b).*)"$'
+      replace: '\1 audit=1"'
+    when: (ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian") or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
+  - name: Add audit=1 to /boot/cmdline.txt (Raspbian)
+    replace:
+      path: /boot/cmdline.txt
+      regexp: '^(.(?!.*\baudit=1\b).*)$'
+      replace: '\1 audit=1'
+    when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_distribution == "Slackware" or ansible_os_family == "RedHat"
