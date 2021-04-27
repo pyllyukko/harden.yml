@@ -13,6 +13,8 @@ declare -a ALLOWED_UDP_PORTS=()
 #declare -r EXT="eth1"
 umask 077
 export PATH="/usr/sbin:/sbin:/usr/bin:/bin"
+# eu-v20.events.data.microsoft.com
+declare -a microsoft_telemetry_hosts=(52.114.74.44 52.114.77.33 52.114.75.79 52.114.75.149 52.114.75.150 52.114.74.43 52.114.77.34 52.114.75.78 52.114.76.35 52.114.77.164 52.114.74.45 52.114.76.34 52.114.76.37)
 ################################################################################
 function log_and_reject() {
   # $1 = log-prefix
@@ -195,6 +197,20 @@ function start() {
   # drop replys                                                                #
   ##############################################################################
   iptables -t filter -A OUTPUT -p icmp --icmp-type timestamp-reply -j LOGNDROP
+
+  ##############################################################################
+  # drop outgoing packets to Microsoft's telemetry hosts                       #
+  ##############################################################################
+  # https://serverfault.com/a/812952
+  if ! ipset list telemetry &>/dev/null
+  then
+    ipset -N telemetry iphash
+    for i in ${microsoft_telemetry_hosts[*]}
+    do
+      ipset add telemetry "${i}"
+    done
+  fi
+  iptables -A OUTPUT -m set --match-set telemetry dst -j DROP
 
   ##############################################################################
   # log other incoming packets                                                 #
