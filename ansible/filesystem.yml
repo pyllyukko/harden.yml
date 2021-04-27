@@ -100,6 +100,16 @@
       - /var/log/lastlog
       - /var/log/btmp
       - /var/log/wtmp
+  - name: chmod o-rwx /var/log/lastlog
+    file:
+      path: /var/log/lastlog
+      mode: o-rwx
+  - name: chmod & chown /var/log/wtmp
+    file:
+      path: /var/log/wtmp
+      mode: '0660'
+      owner: root
+      group: utmp
   - name: LDAP secrets
     file:
       path: "{{ item }}"
@@ -218,16 +228,6 @@
     failed_when:
       - result.failed == true
       - result.state != "absent"
-  - name: /var/log/lastlog
-    file:
-      path: /var/log/lastlog
-      mode: o-rwx
-  - name: /var/log/wtmp
-    file:
-      path: /var/log/wtmp
-      mode: '0660'
-      owner: root
-      group: utmp
   - name: chmod o-r /var/log
     file:
       path: /var/log
