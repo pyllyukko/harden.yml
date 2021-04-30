@@ -195,6 +195,9 @@ declare -ra PGP_KEYS=(
   "0x0F20257417E1CE16"
   # OpenWrt Build System pgpsign-19.07@openwrt.org
   "0xD9C6901F45C9B86858687DFF28A39BC32074BE7A"
+  # OpenWrt Build System (PGP key for 21.02 release builds)
+  # https://openwrt.org/releases/21.02/start#signature
+  "0x667205E379BAF348863A5C6688CA59E88F681580"
   # https://www.php.net/downloads.php#gpg-7.2
   "0xDC9FF8D3EE5AF27F"
   # Bintray (by JFrog) <bintray@bintray.com> (boost library)
