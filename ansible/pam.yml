@@ -61,15 +61,22 @@
     line: 'session     optional      pam_umask.so'
 # http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html
 # https://tldp.org/HOWTO/User-Authentication-HOWTO/x263.html#AEN266
-- name: Create secure default /etc/pam.d/other
+- name: /etc/pam.d/other
+  block:
+    - name: Create secure default /etc/pam.d/other
+      copy:
+        src: "{{ playbook_dir }}/../newconfs/pam.d/other.new"
+        dest: /etc/pam.d/other
+        owner: root
+        group: root
+        mode: '0644'
+    - name: Remove /etc/pam.d/other.new
+      file:
+        path: /etc/pam.d/other.new
+        state: absent
+      when: ansible_distribution == "Slackware"
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
   become: yes
-  copy:
-    src: "{{ playbook_dir }}/../newconfs/pam.d/other.new"
-    dest: /etc/pam.d/other
-    owner: root
-    group: root
-    mode: '0644'
 - name: Check some Slackware's PAM files
   become: yes
   when: ansible_distribution == "Slackware"
