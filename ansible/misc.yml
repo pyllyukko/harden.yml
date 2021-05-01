@@ -77,16 +77,25 @@
 #   * SN.5 Evaluate Packages Associated With Startup Scripts
 #   * 7.1 Disable rhosts Support
 # system-hardening-10.2.txt: Misc Stuff -> Stuff to remove
-- name: Remove unneeded/unwanted packages (Slackware)
+- name: Remove stuff
+  block:
+    - name: Remove unneeded/unwanted packages (Slackware)
+      slackpkg:
+        name: '{{ item }}'
+        state: absent
+      with_items:
+        - netkit-rsh
+        - uucp
+        - floppy
+        - netatalk
+        - slrn
+        - yptools
+    - name: Remove leftover files from removed packages
+      file:
+        path: '{{ item }}'
+        state: absent
+      with_items:
+        - /etc/pam.d/netatalk
+        - /etc/rc.d/rc.atalk
   become: yes
   when: ansible_distribution == "Slackware"
-  slackpkg:
-    name: '{{ item }}'
-    state: absent
-  with_items:
-    - netkit-rsh
-    - uucp
-    - floppy
-    - netatalk
-    - slrn
-    - yptools
