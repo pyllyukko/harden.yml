@@ -63,6 +63,20 @@
 - name: Chmod sensitive files
   block:
   - include: filesystem-sudoers.yml
+  - name: Wireless configurations
+    file:
+      path: /etc/{{ item }}
+      mode: '0600'
+      owner: root
+      group: root
+    with_items:
+      - wpa_supplicant.conf
+      - rc.d/rc.inet1.conf
+      - rc.d/rc.wireless.conf
+    register: result
+    failed_when:
+      - result.failed == true
+      - result.state != "absent"
   - name: Kerberos keytab
     file:
       path: /etc/krb5.keytab
