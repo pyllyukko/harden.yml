@@ -7,7 +7,7 @@
       update_cache: yes
   - name: Add Lynis signing key
     apt_key:
-      id: C80E383C3DE9F082E01391A0366C67DE91CA5D5F
+      id: 84FAA9983B24AEF24D6C87F1FEBB7D1812576482
       url: https://packages.cisofy.com/keys/cisofy-software-public.key
       state: present
   - name: Add Lynis repository
