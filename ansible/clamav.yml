@@ -1,51 +1,102 @@
 ---
-- name: Configure ClamAV
+- name: ClamAV
+  block:
+  - name: Generate fresh configs
+    shell: /usr/bin/clamconf -g {{ item }}.conf 1>/etc/{{ item }}.conf
+    with_items:
+      - freshclam
+      - clamd
+  - name: Comment out Example lines
+    replace:
+      path: /etc/{{ item }}.conf
+      regexp: '^(Example)$'
+      replace: '#\g<1>'
+    with_items:
+      - freshclam
+      - clamd
+  # https://docs.clamav.net/manual/Usage/Configuration.html#clamdconf
+  - name: Configure ClamAV
+    replace:
+      path: /etc/clamd.conf
+      regexp: '^#?({{ item.key }} ).*$'
+      replace: '\g<1>{{ item.value }}'
+      validate: '/bin/grep "^{{ item.key }} {{ item.value }}$" %s'
+    with_dict: "{{ clamav_settings }}"
+    vars:
+      clamav_settings:
+        LogTime: yes
+        LogSyslog: yes
+        LogFacility: LOG_LOCAL6
+        ExtendedDetectionInfo: yes
+        CrossFilesystems: yes
+        DetectPUA: yes
+        HeuristicAlerts: yes
+        HeuristicScanPrecedence: no
+        AlertBrokenExecutables: yes
+        ScanPE: yes
+        ScanELF: yes
+        ScanOLE2: yes
+        ScanPDF: yes
+        ScanSWF: yes
+        ScanXMLDOCS: yes
+        ScanHWP3: yes
+        ScanMail: yes
+        PhishingSignatures: yes
+        PhishingScanURLs: yes
+        ScanHTML: yes
+        ScanArchive: yes
+        Bytecode: yes
+        BytecodeSecurity: Paranoid
+        LocalSocket: /var/run/clamd.socket
+        User: clamav
+  # https://docs.clamav.net/manual/Usage/Configuration.html#freshclamconf
+  - name: Configure freshclam
+    replace:
+      path: /etc/freshclam.conf
+      regexp: '^#?({{ item.key }} ).*$'
+      replace: '\g<1>{{ item.value }}'
+      validate: '/bin/grep "^{{ item.key }} {{ item.value }}$" %s'
+    with_dict: "{{ freshclam_settings }}"
+    vars:
+      freshclam_settings:
+        LogTime: yes
+        LogFacility: LOG_LOCAL6
+        ScriptedUpdates: yes
+        CompressLocalDatabase: no
+        ReceiveTimeout: 300
+        TestDatabases: yes
+        Bytecode: yes
+        DatabaseMirror: database.clamav.net
+        DatabaseOwner: clamav
+  - name: Remove .new configs
+    file:
+      path: '/etc/{{ item }}.conf.new'
+      state: absent
+    with_items:
+      - clamav-milter
+      - clamd
+      - freshclam
+  # Make the dir and the necessary files readable by other users so they can run clamscan
+  - name: Make /var/lib/clamav/ +rx
+    file:
+      path: /var/lib/clamav/
+      mode: '0755'
+  # "CLD files are uncompressed and unsigned versions of the CVD that have had CDIFFs applied"
+  - name: Make /var/lib/clamav/*.c[lv]d +r
+    file:
+      path: /var/lib/clamav/{{ item }}
+      mode: '0644'
+    with_items:
+      - daily.cld
+      - bytecode.cld
+      - main.cvd
+  # https://blog.didierstevens.com/2017/02/15/quickpost-clamav-and-zip-file-decryption/
+  - name: Create a password signature file
+    copy:
+      dest: /var/lib/clamav/passwords.pwdb
+      owner: root
+      group: root
+      mode: '0644'
+      content: |
+        ZipPasswordInfected;Engine:81-255;0;infected
   become: yes
-  replace:
-    path: /etc/clamd.conf
-    regexp: '^#?({{ item.key }} ).*$'
-    replace: '\g<1>{{ item.value }}'
-    validate: '/bin/grep "^{{ item.key }} {{ item.value }}$" %s'
-  with_dict: "{{ clamav_settings }}"
-  vars:
-    clamav_settings:
-      LogTime: yes
-      LogSyslog: yes
-      LogFacility: LOG_LOCAL6
-      ExtendedDetectionInfo: yes
-      CrossFilesystems: yes
-      DetectPUA: yes
-      HeuristicAlerts: yes
-      HeuristicScanPrecedence: no
-      AlertBrokenExecutables: yes
-      ScanPE: yes
-      ScanELF: yes
-      ScanOLE2: yes
-      ScanPDF: yes
-      ScanSWF: yes
-      ScanXMLDOCS: yes
-      ScanHWP3: yes
-      ScanMail: yes
-      PhishingSignatures: yes
-      PhishingScanURLs: yes
-      ScanHTML: yes
-      ScanArchive: yes
-      Bytecode: yes
-      BytecodeSecurity: Paranoid
-- name: Configure freshclam
-  become: yes
-  replace:
-    path: /etc/freshclam.conf
-    regexp: '^#?({{ item.key }} ).*$'
-    replace: '\g<1>{{ item.value }}'
-    validate: '/bin/grep "^{{ item.key }} {{ item.value }}$" %s'
-  with_dict: "{{ freshclam_settings }}"
-  vars:
-    freshclam_settings:
-      LogTime: yes
-      LogFacility: LOG_LOCAL6
-      ScriptedUpdates: yes
-      CompressLocalDatabase: no
-      ReceiveTimeout: 300
-      TestDatabases: yes
-      Bytecode: yes
