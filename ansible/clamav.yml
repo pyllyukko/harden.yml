@@ -14,6 +14,13 @@
     with_items:
       - freshclam
       - clamd
+  - name: mkdir /var/run/clamav/
+    file:
+      path: /var/run/clamav
+      state: directory
+      owner: clamav
+      group: clamav
+      mode: '0771'
   # https://docs.clamav.net/manual/Usage/Configuration.html#clamdconf
   - name: Configure ClamAV
     replace:
@@ -33,6 +40,7 @@
         HeuristicAlerts: yes
         HeuristicScanPrecedence: no
         AlertBrokenExecutables: yes
+        AlertBrokenMedia: yes
         ScanPE: yes
         ScanELF: yes
         ScanOLE2: yes
@@ -47,7 +55,9 @@
         ScanArchive: yes
         Bytecode: yes
         BytecodeSecurity: Paranoid
-        LocalSocket: /var/run/clamd.socket
+        LocalSocket: /var/run/clamav/clamd.socket
+        LocalSocketMode: 660
+        PidFile: /var/run/clamav/clamd.pid
         User: clamav
   # https://docs.clamav.net/manual/Usage/Configuration.html#freshclamconf
   - name: Configure freshclam
@@ -68,6 +78,7 @@
         Bytecode: yes
         DatabaseMirror: database.clamav.net
         DatabaseOwner: clamav
+        PidFile: /var/run/clamav/freshclam.pid
   - name: Remove .new configs
     file:
       path: '/etc/{{ item }}.conf.new'
