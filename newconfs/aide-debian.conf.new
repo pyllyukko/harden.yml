@@ -38,6 +38,10 @@
 /var/lib/apt/periodic/(download-upgradeable|unattended-upgrades|update|upgrade)-stamp$	f VarTime
 /var/log/unattended-upgrades/unattended-upgrades\.log$					f VarFile
 
+# Docker
+/var/lib/docker$	d VarDir
+/var/lib/docker/	OwnerMode+ANF+ARF
+
 # not var
 /run/systemd/timesync/synchronized$	f VarTime
 /var/lib/systemd/timesync/clock$	f VarTime
