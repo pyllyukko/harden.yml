@@ -1,10 +1,10 @@
 # System accounting
 # The compressed files are static
-/var/log/sysstat/sar?[0-9]{8}\.xz$	f Full
+# if /etc/sysstat/sysstat is configured with HISTORY=99999 we don't need ARF
+/var/log/sysstat/sar?[0-9]{8}\.xz$	f Full+ANF
 # Directory itself
 /var/log/sysstat$			d VarDir
-# if /etc/sysstat/sysstat is configured with HISTORY=99999 we don't need ARF
-/var/log/sysstat/			f OwnerMode+ANF
+/var/log/sysstat/sar?[0-9]{8}$		f OwnerMode+ANF+ARF
 
 # Linux audit logs
 /var/log/audit/audit\.log$	f Log
