@@ -5,7 +5,7 @@ database_out=file:/var/lib/aide/aide.db.new
 OwnerMode = p+u+g+ftype
 VarFile = OwnerMode+n+l+X
 VarDir = OwnerMode+n+i+X
-R = R+sha256
+R = R-md5+sha256
 
 /boot					R
 =/home/*                                OwnerMode
