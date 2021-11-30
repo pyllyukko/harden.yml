@@ -1,0 +1,54 @@
+# System accounting
+# The compressed files are static
+/var/log/sysstat/sar?[0-9]{8}\.xz$	f Full
+# Directory itself
+/var/log/sysstat$			d VarDir
+# if /etc/sysstat/sysstat is configured with HISTORY=99999 we don't need ARF
+/var/log/sysstat/			f OwnerMode+ANF
+
+# Linux audit logs
+/var/log/audit/audit\.log$	f Log
+# Directory itself
+/var/log/audit$			d VarDir
+# Rest of the files
+/var/log/audit/			f OwnerMode+ANF+ARF
+
+# Process accounting
+/var/log/account/pacct$	f Log
+# Directory itself
+/var/log/account$	d VarDir
+# Rest of the files
+/var/log/account/	f OwnerMode+ANF+ARF
+
+# Misc
+/var/spool/prelude/					OwnerMode+ANF+ARF
+/var/lib/prelude-lml/					OwnerMode+ANF+ARF
+/var/lib/collectd/rrd$					d VarDir
+/var/lib/collectd/rrd/					OwnerMode+ANF+ARF
+/var/cache/nscd/(group|hosts|netgroup|passwd|services)$	f VarFile
+/var/lib/tripwire/report$				VarDirTime
+
+# apt
+/var/cache/apt-show-versions$								d VarDir
+/var/cache/apt-show-versions/([ai]packages-multiarch|files)$				f VarFile
+/var/cache/apt/archives$								d VarDir
+/var/cache/apt/archives/								OwnerMode+ANF+ARF
+/var/cache/apt$										d VarDir
+/var/cache/apt/(pkgcache|srcpkgcache)\.bin$						f VarFile
+/var/lib/apt/periodic/(download-upgradeable|unattended-upgrades|update|upgrade)-stamp$	f VarTime
+/var/log/unattended-upgrades/unattended-upgrades\.log$					f VarFile
+
+# not var
+/run/systemd/timesync/synchronized$	f VarTime
+/var/lib/systemd/timesync/clock$	f VarTime
+# Raspbian vfat
+/boot/ VarInode
+
+# /home
+# Keep track of authentication related dotfiles and dirs and nothing else
+# https://www.ipi.fi/pipermail/aide/2021-March/001686.html
+!/home/[^/]+/(?!\.(ssh|k5login))
+# Just the perms of home directories (without content)
+/home/[^/]+$	d VarDir
+
+/root$		d VarDir

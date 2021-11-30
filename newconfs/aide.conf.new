@@ -1,57 +1,48 @@
-database=file:/var/lib/aide/aide.db
+database_in=file:/var/lib/aide/aide.db
 database_out=file:/var/lib/aide/aide.db.new
 
 # from Debian:
 OwnerMode = p+u+g+ftype
+VarFile = OwnerMode+n+l+X
+VarDir = OwnerMode+n+i+X
 R = R+sha256
 
 /boot					R
 =/home/*                                OwnerMode
 
 # exceptions:
-/etc/resolv.conf			R-m-c-md5-sha256
+/etc/resolv\.conf$			f VarFile
 /etc/udev$				R-m-c
-/etc/udev/hwdb\.bin			R-m-c-i
-/etc$					R-m-c
+/etc/udev/hwdb\.bin$			f VarFile
+/etc$					d VarDir
 ## hwclock?
-/etc/adjtime				R-m-c-md5-sha256
+/etc/adjtime$				f VarFile
 ## modified by rc.S
-/etc/motd				R-m-c-i
-/etc/random-seed			R-m-c-md5-sha256
+/etc/motd$				f R-m-c-i
+/etc/random-seed$			f VarFile
 ## modified by system:
-/etc/mtab				OwnerMode
-/etc/ld.so.cache			R-m-c-i
-/etc/ntp/drift				R-m-c-i-md5-sha256
+/etc/mtab$				f OwnerMode
+/etc/ld\.so\.cache$			f R-m-c-i
+/etc/ntp/drift$				f VarFile
 /etc/ntp				R-m-c
 
 /etc					R
 
 # binaries
-/usr/local/sbin				R
-/usr/local/bin				R
-/usr/sbin				R
-/usr/bin				R
-/sbin					R
-/bin					R
-/usr/games				R
-/usr/local/games			R
+/usr/(local/)?s?bin			R
+/s?bin					R
+/usr/(local/)?games			R
 ## libexec : Binaries run by other programs
 /usr/libexec				R
 
 # libs
-/lib					R
-/usr/lib				R
-/usr/local/lib				R
+/lib(64)?				R
+/usr/(local/)?lib(64)?			R
 /usr/i486-slackware-linux/lib		R
-# libs x86_64
-/lib64					R
-/usr/lib64				R
-/usr/local/lib64			R
 /usr/x86_64-slackware-linux/lib64	R
 
 # CA certs
-/usr/share/ca-certificates		R
-/usr/local/share/ca-certificates	R
+/usr/(local/)?share/ca-certificates	R
 
 #/var/log/[^/]+-[0-9]+			R
 /var/log/.*-[0-9]{8}(\.gz)?$		R+ANF+ARF
