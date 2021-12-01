@@ -73,5 +73,7 @@ R = R-md5+sha256
 # Kerberos client keytabs (CKTNAME or KRB5_CLIENT_KTNAME)
 # https://web.mit.edu/kerberos/krb5-1.12/doc/mitK5defaults.html#paths
 /var/(kerberos/)?krb5			R
+# empty directory should be empty :)
+/var/empty				R
 
 =/					OwnerMode
