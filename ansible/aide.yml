@@ -20,6 +20,14 @@
         group: root
         mode: '0644'
         force: no
+    - name: Exclude /media
+      copy:
+        content: "!/media$\n"
+        dest: /etc/aide/aide.conf.d/70_media
+        owner: root
+        group: root
+        mode: '0644'
+        force: no
     - name: Create /etc/aide/aide.conf.d/70_misc
       copy:
         src: "{{ playbook_dir }}/../newconfs/aide-debian.conf.new"
