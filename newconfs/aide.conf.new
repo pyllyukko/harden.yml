@@ -1,3 +1,8 @@
+# This is a simple AIDE configuration for harden.sh project.
+# This is not comprehensive by any means, but just to keep
+# track of the most essential configuration files, binaries
+# and authentication/authorization related files and dirs.
+
 database_in=file:/var/lib/aide/aide.db
 database_out=file:/var/lib/aide/aide.db.new
 
@@ -65,8 +70,8 @@ R = R-md5+sha256
 =/var/spool/				OwnerMode
 =/var/spool/mail/			OwnerMode
 /var/spool/cron/crontabs		R
-# DEFCKTNAME
+# Kerberos client keytabs (CKTNAME or KRB5_CLIENT_KTNAME)
 # https://web.mit.edu/kerberos/krb5-1.12/doc/mitK5defaults.html#paths
-/var/(krb5|kerberos)			R
+/var/(kerberos/)?krb5			R
 
 =/					OwnerMode
