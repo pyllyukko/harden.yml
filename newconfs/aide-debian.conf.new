@@ -36,11 +36,23 @@
 /var/cache/apt$										d VarDir
 /var/cache/apt/(pkgcache|srcpkgcache)\.bin$						f VarFile
 /var/lib/apt/periodic/(download-upgradeable|unattended-upgrades|update|upgrade)-stamp$	f VarTime
-/var/log/unattended-upgrades/unattended-upgrades\.log$					f VarFile
+/var/log/unattended-upgrades$								d VarDir
+/var/log/unattended-upgrades/unattended-upgrades(-(dpkg|shutdown))?\.log$		f Log
+/var/log/unattended-upgrades/unattended-upgrades(-shutdown)?\.log\.1\.@@{LOGEXT}$	f LoSerMemberLog
+/var/log/unattended-upgrades/unattended-upgrades(-shutdown)?\.log\.[2-5]\.@@{LOGEXT}$	f SerMemberLog
+/var/log/unattended-upgrades/unattended-upgrades(-shutdown)?\.log\.6\.@@{LOGEXT}$	f HiSerMemberLog
+/var/log/autolog\.log$									f Log
+/var/log/autolog\.log\.1\.@@{LOGEXT}$							f LoSerMemberLog
+/var/log/autolog\.log\.[23]\.@@{LOGEXT}$						f SerMemberLog
+/var/log/autolog\.log\.4\.@@{LOGEXT}$							f HiSerMemberLog
 
 # Docker
 /var/lib/docker$	d VarDir
 /var/lib/docker/	OwnerMode+ANF+ARF
+
+# Tor
+/var/lib/tor$	d VarDir
+/var/lib/tor/	OwnerMode+ANF+ARF
 
 # not var
 /run/systemd/timesync/synchronized$	f VarTime
