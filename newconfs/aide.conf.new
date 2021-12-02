@@ -32,9 +32,9 @@ R = R-md5+sha256
 /etc/random-seed$			f VarFile
 # Modified by system:
 /etc/mtab$				f OwnerMode
-/etc/ld\.so\.cache$			f R-m-c-i
+/etc/ld\.so\.cache$			f VarFile
 /etc/ntp/drift$				f VarFile
-/etc/ntp				R-m-c
+/etc/ntp$				d VarDir
 
 /(usr/local/)?etc			R
 
