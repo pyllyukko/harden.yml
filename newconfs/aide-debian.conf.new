@@ -27,6 +27,10 @@
 /var/lib/collectd/rrd/					OwnerMode+ANF+ARF
 /var/cache/nscd/(group|hosts|netgroup|passwd|services)$	f VarFile
 /var/lib/tripwire/report$				VarDirTime
+# This could be copied from /etc/aide/aide.conf.d/31_aide_nfs
+!/run/rpc_pipefs$
+# dphys-swapfile
+/var/swap$						f VarFile
 
 # apt
 /var/cache/apt-show-versions$								d VarDir
@@ -41,6 +45,8 @@
 /var/log/unattended-upgrades/unattended-upgrades(-shutdown)?\.log\.1\.@@{LOGEXT}$	f LoSerMemberLog
 /var/log/unattended-upgrades/unattended-upgrades(-shutdown)?\.log\.[2-5]\.@@{LOGEXT}$	f SerMemberLog
 /var/log/unattended-upgrades/unattended-upgrades(-shutdown)?\.log\.6\.@@{LOGEXT}$	f HiSerMemberLog
+
+# autolog
 /var/log/autolog\.log$									f Log
 /var/log/autolog\.log\.1\.@@{LOGEXT}$							f LoSerMemberLog
 /var/log/autolog\.log\.[23]\.@@{LOGEXT}$						f SerMemberLog
