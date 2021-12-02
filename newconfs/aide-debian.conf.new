@@ -1,7 +1,7 @@
 # System accounting
 # The compressed files are static
 # if /etc/sysstat/sysstat is configured with HISTORY=99999 we don't need ARF
-/var/log/sysstat/sar?[0-9]{8}\.xz$	f Full+ANF
+/var/log/sysstat/sar?[0-9]{8}\.(xz|bz2)$	f Full+ANF
 # Directory itself
 /var/log/sysstat$			d VarDir
 /var/log/sysstat/sar?[0-9]{8}$		f OwnerMode+ANF+ARF
