@@ -10,6 +10,7 @@ database_out=file:/var/lib/aide/aide.db.new
 OwnerMode = p+u+g+ftype
 VarFile = OwnerMode+n+l+X
 VarDir = OwnerMode+n+i+X
+Log = OwnerMode+n+S+X
 # Replace MD5 with SHA256
 R = R-md5+sha256
 
@@ -56,6 +57,7 @@ R = R-md5+sha256
 
 #/var/log/[^/]+-[0-9]+			R
 /var/log/.*-[0-9]{8}(\.gz)?$		R+ANF+ARF
+/var/log/(cron|debug|maillog|messages|secure|spooler|syslog)$	f Log
 =/var/					OwnerMode
 
 =/usr/(local/)?				OwnerMode
