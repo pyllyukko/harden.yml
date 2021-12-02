@@ -174,6 +174,21 @@
     regexp: '^(.+),adm$'
     replace: '\1'
     validate: '/bin/grep "^\(/var\)\?/tmp\s\+\(/var/tmp\)\?/tmp-inst/\s\+level\s\+root$" %s'
+# For some reason some Debian systems have had random group ownership on these (e.g. audio or systemd-journal)
+- name: Make sure polyinstantiated directories are owned by root:root
+  become: yes
+  file:
+    path: '{{ item }}'
+    owner: root
+    group: root
+    mode: '0'
+  register: result
+  failed_when:
+    - result.failed == true
+    - result.state != "absent"
+  with_items:
+    - /tmp-inst
+    - /var/tmp/tmp-inst
 - name: Debian pam-configs
   block:
     - name: Copying new pam-configs
