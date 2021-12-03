@@ -31,34 +31,36 @@
     with_dict: "{{ clamav_settings }}"
     vars:
       clamav_settings:
-        LogTime: yes
-        LogSyslog: yes
+        LogTime: "yes"
+        LogSyslog: "yes"
         LogFacility: LOG_LOCAL6
-        ExtendedDetectionInfo: yes
-        CrossFilesystems: yes
-        DetectPUA: yes
-        HeuristicAlerts: yes
-        HeuristicScanPrecedence: no
-        AlertBrokenExecutables: yes
-        AlertBrokenMedia: yes
-        ScanPE: yes
-        ScanELF: yes
-        ScanOLE2: yes
-        ScanPDF: yes
-        ScanSWF: yes
-        ScanXMLDOCS: yes
-        ScanHWP3: yes
-        ScanMail: yes
-        PhishingSignatures: yes
-        PhishingScanURLs: yes
-        ScanHTML: yes
-        ScanArchive: yes
-        Bytecode: yes
+        ExtendedDetectionInfo: "yes"
+        CrossFilesystems: "yes"
+        DetectPUA: "yes"
+        HeuristicAlerts: "yes"
+        HeuristicScanPrecedence: "no"
+        AlertBrokenExecutables: "yes"
+        AlertBrokenMedia: "yes"
+        ScanPE: "yes"
+        ScanELF: "yes"
+        ScanOLE2: "yes"
+        ScanPDF: "yes"
+        ScanSWF: "yes"
+        ScanXMLDOCS: "yes"
+        ScanHWP3: "yes"
+        ScanMail: "yes"
+        PhishingSignatures: "yes"
+        PhishingScanURLs: "yes"
+        ScanHTML: "yes"
+        ScanArchive: "yes"
+        Bytecode: "yes"
         BytecodeSecurity: Paranoid
         LocalSocket: /var/run/clamav/clamd.socket
         LocalSocketMode: 660
         PidFile: /var/run/clamav/clamd.pid
         User: clamav
+        AlertOLE2Macros: "yes"
+        FixStaleSocket: "yes"
   # https://docs.clamav.net/manual/Usage/Configuration.html#freshclamconf
   - name: Configure freshclam
     replace:
