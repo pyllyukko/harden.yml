@@ -46,6 +46,13 @@
 /var/log/unattended-upgrades/unattended-upgrades(-shutdown)?\.log\.[2-5]\.@@{LOGEXT}$	f SerMemberLog
 /var/log/unattended-upgrades/unattended-upgrades(-shutdown)?\.log\.6\.@@{LOGEXT}$	f HiSerMemberLog
 
+# MPD
+/var/log/mpd$										d VarDir
+/var/log/mpd/mpd\.log$									f Log
+/var/log/mpd/mpd\.log\.1\.@@{LOGEXT}$							f LoSerMemberLog
+/var/log/mpd/mpd\.log\.[2-6]\.@@{LOGEXT}$						f SerMemberLog
+/var/log/mpd/mpd\.log\.7\.@@{LOGEXT}$							f HiSerMemberLog
+
 # autolog
 /var/log/autolog\.log$									f Log
 /var/log/autolog\.log\.1\.@@{LOGEXT}$							f LoSerMemberLog
