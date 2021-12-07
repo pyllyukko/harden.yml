@@ -140,6 +140,21 @@ I think it's justified and recommended to run an antivirus software on all of yo
 
 So consider getting [ClamAV](https://www.clamav.net/).
 
+### Daily checks and reports
+
+At least the following tools support daily checks and reporting via e-mail out-of-the-box:
+
+* Tiger (via `tigercron`)
+* Logwatch
+* `rkhunter --cron`
+* `sudo` (well not daily, but by event)
+
+Debian specific:
+
+* `debsecan` (run `dpkg-reconfigure debsecan` to configure it)
+* AIDE (in Debian via `/etc/cron.daily/aide`)
+* `unattended-upgrades`
+
 Post-hardening checklist
 ------------------------
 
