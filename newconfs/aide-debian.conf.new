@@ -53,11 +53,19 @@
 /var/log/mpd/mpd\.log\.[2-6]\.@@{LOGEXT}$						f SerMemberLog
 /var/log/mpd/mpd\.log\.7\.@@{LOGEXT}$							f HiSerMemberLog
 
+# sudo
+/var/log/sudo\.log$									f Log
+
 # autolog
 /var/log/autolog\.log$									f Log
 /var/log/autolog\.log\.1\.@@{LOGEXT}$							f LoSerMemberLog
 /var/log/autolog\.log\.[23]\.@@{LOGEXT}$						f SerMemberLog
 /var/log/autolog\.log\.4\.@@{LOGEXT}$							f HiSerMemberLog
+
+# Additions to /etc/aide/aide.conf.d/31_aide_aide
+# When /tmp is a bind mount of /var/tmp or AIDE is configured with TMPBASE="/tmp"
+!/tmp/aide\.cron\.daily$					d
+!/tmp/aide\.cron\.daily/((error|a(run|err))log|mailfile)$	f
 
 # Docker
 /var/lib/docker$	d VarDir
