@@ -18,7 +18,10 @@
 # Directory itself
 /var/log/account$	d VarDir
 # Rest of the files
-/var/log/account/	f OwnerMode+ANF+ARF
+/var/log/account/pacct\.0$			f LowLog
+/var/log/account/pacct\.1\.@@{LOGEXT}$		f LoSerMemberLog
+/var/log/account/pacct\.29\.@@{LOGEXT}$		f HiSerMemberLog
+/var/log/account/pacct\.[0-9]+\.@@{LOGEXT}$	f SerMemberLog
 
 # Misc
 /var/spool/prelude/					OwnerMode+ANF+ARF
