@@ -1,0 +1,9 @@
+---
+- name: 'Create /etc/rkhunter.conf'
+  become: yes
+  template:
+    src: "{{ playbook_dir }}/templates/rkhunter.conf.j2"
+    dest: /etc/rkhunter.conf
+    mode: '0400'
+    owner: root
+    group: root
