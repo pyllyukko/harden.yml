@@ -147,6 +147,7 @@ At least the following tools support daily checks and reporting via e-mail out-o
 * Tiger (via `tigercron`)
 * Logwatch
 * `rkhunter --cron`
+    * Read "How can I automatically run Rootkit Hunter every day?" in the FAQ
 * `sudo` (well not daily, but by event)
 
 Debian specific:
