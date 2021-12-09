@@ -600,6 +600,13 @@ SCRIPTWHITELIST=/usr/bin/which
 SCRIPTWHITELIST=/bin/egrep
 SCRIPTWHITELIST=/bin/fgrep
 {% endif %}
+{% if ansible_distribution == "Slackware" %}
+SCRIPTWHITELIST=/usr/sbin/adduser
+SCRIPTWHITELIST=/usr/bin/ldd
+SCRIPTWHITELIST=/usr/bin/whatis
+SCRIPTWHITELIST=/bin/egrep
+SCRIPTWHITELIST=/bin/fgrep
+{% endif %}
 
 #
 # Allow the specified file to have the immutable attribute set.
@@ -657,6 +664,16 @@ SCRIPTWHITELIST=/bin/fgrep
 #ALLOWHIDDENFILE=/usr/lib/hmaccalc/sha1hmac.hmac
 #ALLOWHIDDENFILE=/usr/lib/hmaccalc/sha256hmac.hmac
 #ALLOWHIDDENFILE=/usr/sbin/.sshd.hmac
+{% if ansible_distribution == "Slackware" %}
+{% if ansible_distribution_version == "15.0" %}
+ALLOWHIDDENFILE=/usr/man/man5/.k5identity.5
+ALLOWHIDDENFILE=/usr/man/man5/.k5login.5
+{% endif %}
+{% if ansible_distribution_version == "14.2" %}
+ALLOWHIDDENFILE=/usr/man/man5/.k5identity.5.gz
+ALLOWHIDDENFILE=/usr/man/man5/.k5login.5.gz
+{% endif %}
+{% endif %}
 
 #
 # Allow the specified process to use deleted files. The process name may be
