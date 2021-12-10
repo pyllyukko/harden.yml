@@ -1,0 +1,6 @@
+# Cleanup /tmp on boot
+D! /tmp 1777 root root 0
+# Make sure /var/tmp doesn't have old garbage
+d /var/tmp 1777 root root 30d
+# This is for pam_namespace
+D! /tmp-inst 0000 root root 0

@@ -60,6 +60,15 @@
     regexp: '^(rm -rf) /tmp/\{.*\}$'
     replace: '\g<1> /tmp/*'
     validate: '/bin/grep "^rm -rf /tmp/\*$" %s'
+- name: Clean up /tmp during boot (Debian)
+  become: yes
+  when: ansible_distribution == "Debian"
+  copy:
+    src: "{{ playbook_dir }}/../newconfs/tmp.conf.new"
+    dest: /etc/tmpfiles.d/tmp.conf
+    mode: '0644'
+    owner: root
+    group: root
 - name: Chmod sensitive files
   block:
   - include: filesystem-sudoers.yml
