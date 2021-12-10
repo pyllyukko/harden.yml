@@ -65,6 +65,11 @@
 /var/log/autolog\.log\.[23]\.@@{LOGEXT}$						f SerMemberLog
 /var/log/autolog\.log\.4\.@@{LOGEXT}$							f HiSerMemberLog
 
+# We don't want to monitor temp dirs. It could help us catch some malicious stuff
+# dropped in them, but the noise is too much and there is no point in monitoring
+# the *integrity* of temporary files and directories.
+!/tmp(-inst)?/
+!/var/tmp/
 # Additions to /etc/aide/aide.conf.d/31_aide_aide
 # When /tmp is a bind mount of /var/tmp or AIDE is configured with TMPBASE="/tmp"
 !/tmp/aide\.cron\.daily$					d
