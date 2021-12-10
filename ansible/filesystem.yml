@@ -111,6 +111,11 @@
     slackpkg:
       name: acl
       state: present
+  - name: Install acl package (Debian)
+    when: ansible_distribution == "Debian"
+    apt:
+      name: acl
+      state: present
   # we don't want to mess with the group ownerships because these might be needed to be writable by utmp group
   - name: Grant group adm read rights on login records
     acl:
