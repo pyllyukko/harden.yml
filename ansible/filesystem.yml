@@ -169,6 +169,10 @@
     with_items:
       - /etc/audit
       - /var/log/audit
+    register: result
+    failed_when:
+      - result.failed == true
+      - result.state != "absent"
   # Home directories
   - name: /root
     file:
