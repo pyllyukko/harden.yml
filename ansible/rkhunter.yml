@@ -7,3 +7,12 @@
     mode: '0400'
     owner: root
     group: root
+# https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/FAQ: "3.3) How can I automatically run Rootkit Hunter every day?"
+# We don't use --update as rkhunter.sourceforge.net doesn't have HTTPS
+- name: Add rkhunter cronjob
+  cron:
+    name: "Run rkhunter"
+    minute: "30"
+    hour: "5"
+    job: "/usr/bin/test -x /usr/bin/rkhunter && /usr/bin/rkhunter --cronjob --rwo"
+  become: yes
