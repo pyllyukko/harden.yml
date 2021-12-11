@@ -674,6 +674,10 @@ ALLOWHIDDENFILE=/usr/man/man5/.k5identity.5.gz
 ALLOWHIDDENFILE=/usr/man/man5/.k5login.5.gz
 {% endif %}
 {% endif %}
+{% if ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian" %}
+# dphys-swapfile does this
+ALLOWHIDDENFILE=/etc/.fstab
+{% endif %}
 
 #
 # Allow the specified process to use deleted files. The process name may be
