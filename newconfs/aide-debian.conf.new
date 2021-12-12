@@ -65,6 +65,9 @@
 /var/log/autolog\.log\.[23]\.@@{LOGEXT}$						f SerMemberLog
 /var/log/autolog\.log\.4\.@@{LOGEXT}$							f HiSerMemberLog
 
+# Lynis
+/var/log/lynis(-report\.dat|\.log)$							f VarFile
+
 # We don't want to monitor temp dirs. It could help us catch some malicious stuff
 # dropped in them, but the noise is too much and there is no point in monitoring
 # the *integrity* of temporary files and directories.
