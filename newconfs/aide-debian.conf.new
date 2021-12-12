@@ -101,3 +101,4 @@
 
 /root$		d VarDir
 /root/\.(bash_history|viminfo|lesshst)$	f OwnerMode
+!/root/\.ansible_async$			d
