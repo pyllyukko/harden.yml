@@ -8,10 +8,17 @@
     - name: Configure AIDE
       replace:
         path: /etc/aide/aide.conf
-        regexp: '^({{ item.key }}\s+=\s)+.*$'
+        regexp: '^({{ item.key }}\s+=\s+).*$'
         replace: '\g<1>{{ item.value }}'
       with_dict:
         Checksums: sha256
+    - name: Configure AIDE (/etc/default/aide)
+      replace:
+        path: /etc/default/aide
+        regexp: '^({{ item.key }}=).*$'
+        replace: '\g<1>{{ item.value }}'
+      with_dict:
+        COPYNEWDB: ifnochange
     - name: Exclude /net
       copy:
         content: "!/net$\n"
