@@ -16,6 +16,13 @@
       minute: "30"
       hour: "5"
       job: "/usr/bin/test -x /usr/bin/rkhunter && /usr/bin/rkhunter --cronjob --rwo"
+    when: ansible_distribution != "Debian"
+  - name: Enable daily rkhunter check in Debian
+    replace:
+      path: /etc/default/rkhunter
+      regexp: '^(CRON_DAILY_RUN=).*'
+      replace: '\g<1>"yes"'
+    when: ansible_distribution == "Debian"
   - name: Create rkhunter.dat
     command: /usr/bin/rkhunter --propupd
     args:
