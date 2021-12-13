@@ -22,7 +22,7 @@
     - name: Exclude /net
       copy:
         content: "!/net$\n"
-        dest: /etc/aide/aide.conf.d/70_harden.sh_net
+        dest: /etc/aide/aide.conf.d/70_hardensh_net
         owner: root
         group: root
         mode: '0644'
@@ -30,15 +30,15 @@
     - name: Exclude /media
       copy:
         content: "!/media$\n"
-        dest: /etc/aide/aide.conf.d/70_harden.sh_media
+        dest: /etc/aide/aide.conf.d/70_hardensh_media
         owner: root
         group: root
         mode: '0644'
         force: no
-    - name: Create /etc/aide/aide.conf.d/70_harden.sh_misc
+    - name: Create /etc/aide/aide.conf.d/70_hardensh_misc
       copy:
         src: "{{ playbook_dir }}/../newconfs/aide-debian.conf.new"
-        dest: /etc/aide/aide.conf.d/70_harden.sh_misc
+        dest: /etc/aide/aide.conf.d/70_hardensh_misc
         owner: root
         group: root
         mode: 0600
