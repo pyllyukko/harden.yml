@@ -82,14 +82,7 @@
 /var/log/aide/aideinit\.(errors|log)$	f VarFile
 
 # rkhunter
-# I'm not sure how this should be handled as rkhunter.log is created daily and
-# log rotation is done weekly
-/var/log/rkhunter\.log$			f Log
-/var/log/rkhunter\.log\.1$		f LowLog
-/var/log/rkhunter\.log\.2\.@@{LOGEXT}$	f LoSerMemberLog
-/var/log/rkhunter\.log\.3\.@@{LOGEXT}$	f SerMemberLog
-/var/log/rkhunter\.log\.4\.@@{LOGEXT}$	f HiSerMemberLog
-# This file is created by rkhunter itself when APPEND_LOG=0
+# This file is created by rkhunter itself when APPEND_LOG=0 and is not covered by 31_aide_rkhunter
 !/var/log/rkhunter\.log\.old$		f
 
 # Docker
