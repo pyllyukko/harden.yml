@@ -22,7 +22,7 @@
     - name: Exclude /net
       copy:
         content: "!/net$\n"
-        dest: /etc/aide/aide.conf.d/70_net
+        dest: /etc/aide/aide.conf.d/70_harden.sh_net
         owner: root
         group: root
         mode: '0644'
@@ -30,18 +30,28 @@
     - name: Exclude /media
       copy:
         content: "!/media$\n"
-        dest: /etc/aide/aide.conf.d/70_media
+        dest: /etc/aide/aide.conf.d/70_harden.sh_media
         owner: root
         group: root
         mode: '0644'
         force: no
-    - name: Create /etc/aide/aide.conf.d/70_misc
+    - name: Create /etc/aide/aide.conf.d/70_harden.sh_misc
       copy:
         src: "{{ playbook_dir }}/../newconfs/aide-debian.conf.new"
-        dest: /etc/aide/aide.conf.d/70_misc
+        dest: /etc/aide/aide.conf.d/70_harden.sh_misc
         owner: root
         group: root
         mode: 0600
+    - name: Fix /var/log/exim4/(main|reject)log rule
+      replace:
+        path: /etc/aide/aide.conf.d/31_aide_exim4_logs
+        regexp: '^(/var/log/exim4/@@{EXIM4_LOGS}log\$ f )Log$'
+        replace: '\g<1>FreqRotLog'
+    - name: Fix /var/tmp rule
+      replace:
+        path: /etc/aide/aide.conf.d/70_aide_var
+        regexp: '^(/var/tmp\$ d )VarDir-n$'
+        replace: '\g<1>VarDirInode-n'
     - name: Check aide.conf
       command: /usr/bin/aide --config-check --config=/etc/aide/aide.conf
     - name: Create aide.db

@@ -14,7 +14,7 @@
 /var/log/audit/			f OwnerMode+ANF+ARF
 
 # Process accounting
-/var/log/account/pacct$	f Log
+/var/log/account/pacct$	f FreqRotLog
 # Directory itself
 /var/log/account$	d VarDir
 # Rest of the files
@@ -78,6 +78,20 @@
 !/tmp/aide\.cron\.daily$					d
 !/tmp/aide\.cron\.daily/((error|a(run|err))log|mailfile)$	f
 
+# aideinit -b
+/var/log/aide/aideinit\.(errors|log)$	f VarFile
+
+# rkhunter
+# I'm not sure how this should be handled as rkhunter.log is created daily and
+# log rotation is done weekly
+/var/log/rkhunter\.log$			f Log
+/var/log/rkhunter\.log\.1$		f LowLog
+/var/log/rkhunter\.log\.2\.@@{LOGEXT}$	f LoSerMemberLog
+/var/log/rkhunter\.log\.3\.@@{LOGEXT}$	f SerMemberLog
+/var/log/rkhunter\.log\.4\.@@{LOGEXT}$	f HiSerMemberLog
+# This file is created by rkhunter itself when APPEND_LOG=0
+!/var/log/rkhunter\.log\.old$		f
+
 # Docker
 /var/lib/docker$	d VarDir
 /var/lib/docker/	OwnerMode+ANF+ARF
@@ -101,4 +115,5 @@
 
 /root$		d VarDir
 /root/\.(bash_history|viminfo|lesshst)$	f OwnerMode
-!/root/\.ansible_async$			d
+/root/\.ansible_async$			d VarDir
+!/root/\.ansible_async/			f
