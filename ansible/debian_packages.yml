@@ -45,3 +45,10 @@
     replace: '\g<1>weekly'
   become: yes
   when: ansible_distribution == "Debian"
+- name: Enable daily chkrootkit run
+  replace:
+    path: /etc/chkrootkit.conf
+    regexp: '^(RUN_DAILY=).*'
+    replace: '\g<1>"true"'
+  become: yes
+  when: ansible_distribution == "Debian"
