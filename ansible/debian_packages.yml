@@ -38,3 +38,10 @@
     question: debsecan/suite
     vtype: select
     value: "{{ ansible_distribution_release }}"
+- name: Enable weekly debsums run
+  replace:
+    path: /etc/default/debsums
+    regexp: '^(CRON_CHECK=).*'
+    replace: '\g<1>weekly'
+  become: yes
+  when: ansible_distribution == "Debian"
