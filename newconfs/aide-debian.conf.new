@@ -31,7 +31,7 @@
 /var/cache/nscd/(group|hosts|netgroup|passwd|services)$	f VarFile
 /var/lib/tripwire/report$				VarDirTime
 # This could be copied from /etc/aide/aide.conf.d/31_aide_nfs
-!/run/rpc_pipefs$
+!/@@{RUN}/rpc_pipefs$
 # dphys-swapfile
 /var/swap$						f VarFile
 
@@ -93,11 +93,19 @@
 /var/lib/tor$	d VarDir
 /var/lib/tor/	OwnerMode+ANF+ARF
 
+# dhcpcd
+!/var/lib/dhcpcd/			f
+
 # not var
-/run/systemd/timesync/synchronized$	f VarTime
+/@@{RUN}/systemd/timesync$		d VarDirInode
+/@@{RUN}/systemd/timesync/synchronized$	f VarInode
 /var/lib/systemd/timesync/clock$	f VarTime
 # Raspbian vfat
 /boot/ VarInode
+
+# resolvconf
+/@@{RUN}/resolvconf/metrics$		d VarDir
+!/@@{RUN}/resolvconf/metrics/		f
 
 # /home
 # Keep track of authentication related dotfiles and dirs and nothing else
