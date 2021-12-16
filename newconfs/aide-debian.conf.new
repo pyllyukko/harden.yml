@@ -7,7 +7,7 @@
 /var/log/sysstat/sar?[0-9]{8}$		f OwnerMode+ANF+ARF
 
 # Linux audit logs
-/var/log/audit/audit\.log$	f Log
+/var/log/audit/audit\.log$	f FreqRotLog
 # Directory itself
 /var/log/audit$			d VarDir
 # Rest of the files
