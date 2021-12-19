@@ -55,6 +55,8 @@
 /var/log/mpd/mpd\.log\.1\.@@{LOGEXT}$							f LoSerMemberLog
 /var/log/mpd/mpd\.log\.[2-6]\.@@{LOGEXT}$						f SerMemberLog
 /var/log/mpd/mpd\.log\.7\.@@{LOGEXT}$							f HiSerMemberLog
+/var/lib/mpd$										d VarDir
+!/var/lib/mpd/
 
 # sudo
 /var/log/sudo\.log$									f Log
