@@ -55,6 +55,9 @@ R = R-md5+sha256
 # CA certs
 /usr/(local/)?share/ca-certificates	R
 
+# Polkit
+/usr/share/polkit-1			R
+
 #/var/log/[^/]+-[0-9]+			R
 /var/log/.*-[0-9]{8}(\.gz)?$		R+ANF+ARF
 /var/log/(cron|debug|maillog|messages|secure|spooler|syslog)$	f Log
