@@ -198,6 +198,8 @@ Some of these documents are quite old, but most of the stuff still applies.
 * [PAM Mastery book](https://www.tiltedwindmillpress.com/?product=pam) by [Michael W Lucas](https://www.michaelwlucas.com/)
 * [The Linux-PAM System Administrators' Guide](http://linux-pam.org/Linux-PAM-html/Linux-PAM_SAG.html)
 * [Sudo Mastery, 2nd Edition](https://www.tiltedwindmillpress.com/product/sudo-mastery-2nd-edition/)
+* [Linux Firewalls](https://nostarch.com/firewalls.htm)
+* [Secure Secure Shell](https://stribika.github.io/2015/01/04/secure-secure-shell.html)
 
 [1]: http://benchmarks.cisecurity.org/downloads/browse/index.cfm?category=benchmarks.os.linux.slackware
 [2]: http://dentonj.freeshell.org/system-hardening-10.2.txt
