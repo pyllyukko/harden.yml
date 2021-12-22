@@ -20,3 +20,7 @@
     - include: banners.yml
     - include: network.yml
     - include: entropy.yml
+    #- include: aide.yml
+    #- include: rkhunter.yml
+    #- include: clamav.yml
+    #- include: display_managers.yml
