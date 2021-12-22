@@ -6,6 +6,7 @@
     database: group
     key: "{{ allowed_group }}"
   failed_when: getent_group.{{ allowed_group }}[2] == ""
+# https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.15
 - name: Configure access.conf
   block:
     - name: Stat /etc/security/access.conf
@@ -189,6 +190,7 @@
   with_items:
     - /tmp-inst
     - /var/tmp/tmp-inst
+# https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.19
 - name: Debian pam-configs
   block:
     - name: Copying new pam-configs

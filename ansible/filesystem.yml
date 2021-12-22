@@ -185,6 +185,7 @@
     - name: getent passwd
       getent:
         database: passwd
+    # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#limit-user-perm
     - name: chmod home directories
       file:
         path: "{{ item.value[4] }}"

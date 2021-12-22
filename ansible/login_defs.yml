@@ -1,4 +1,5 @@
 ---
+# https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.10
 - name: Configure shadow password suite (common)
   become: yes
   replace:
@@ -26,6 +27,7 @@
   when: ansible_distribution == "Slackware"
   become: yes
   command: slackpkg -batch=on -default_answer=y install glibc
+# https://www.debian.org/doc/manuals/securing-debian-manual/restrict-console-login.en.html
 - name: Limit the list of terminals from which root can log in (securetty)
   become: yes
   copy:
@@ -51,6 +53,7 @@
   getent:
     database: passwd
 # Slackware Linux Benchmark v1.1 - 7.3 Create ftpusers Files
+# https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.12
 - name: Create /etc/ftpusers
   become: yes
   template:
