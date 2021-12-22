@@ -22,6 +22,7 @@
         - clamav
         - usbguard
         - unattended-upgrades
+        - checksecurity
     - include: aide.yml
     - name: Symlink /usr/lib/tiger/systems/Linux/5 -> 4
       file:
