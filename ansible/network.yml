@@ -5,6 +5,8 @@
   apt:
     name: libwrap0
     update_cache: yes
+  tags:
+  - packages
 - name: 'TCP wrappers: create /etc/hosts.allow'
   become: yes
   template:
@@ -57,6 +59,8 @@
     apt:
       name: iptables-persistent
       update_cache: yes
+    tags:
+    - packages
   - name: Create temp file
     tempfile:
       state: file

@@ -82,6 +82,8 @@
         - netatalk
         - slrn
         - yptools
+      tags:
+      - packages
     - name: Remove leftover files from removed packages
       file:
         path: '{{ item }}'

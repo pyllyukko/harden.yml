@@ -11,6 +11,8 @@
     - apparmor-profiles
     - apparmor-utils
     #- apparmor-notify
+  tags:
+  - packages
 # https://github.com/raspberrypi/linux/pull/1698
 - name: Add lsm=apparmor to /boot/cmdline.txt (Raspbian)
   replace:

@@ -5,6 +5,8 @@
       apt:
         name: aide
         update_cache: yes
+      tags:
+      - packages
     - name: Configure AIDE
       replace:
         path: /etc/aide/aide.conf

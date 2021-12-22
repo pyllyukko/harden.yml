@@ -10,6 +10,8 @@
     apt:
       name: rng-tools
       update_cache: yes
+    tags:
+    - packages
   - name: Start & enable rng-tools service
     service:
       name: rng-tools

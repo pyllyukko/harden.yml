@@ -27,6 +27,8 @@
   when: ansible_distribution == "Slackware"
   become: yes
   command: slackpkg -batch=on -default_answer=y install glibc
+  tags:
+  - packages
 # https://www.debian.org/doc/manuals/securing-debian-manual/restrict-console-login.en.html
 - name: Limit the list of terminals from which root can log in (securetty)
   become: yes

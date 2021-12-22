@@ -6,6 +6,8 @@
   apt:
     name: sysstat
     update_cache: yes
+  tags:
+  - packages
 - name: Enable system accounting (sysstat)
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
@@ -20,6 +22,8 @@
   slackpkg:
     name: sysstat
     state: present
+  tags:
+  - packages
 - name: Enable rc.sysstat (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
@@ -48,6 +52,8 @@
   apt:
     name: acct
     update_cache: yes
+  tags:
+  - packages
 - name: Enable acct
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
@@ -61,6 +67,8 @@
   slackpkg:
     name: acct
     state: present
+  tags:
+  - packages
 - name: Create /var/log/pacct (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"

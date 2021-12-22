@@ -20,6 +20,8 @@
       update_cache: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
+  tags:
+  - packages
 - name: Install Lynis into CentOS
   block:
   - name: Add Lynis repository
@@ -37,6 +39,8 @@
       update_cache: yes
   when: ansible_distribution == "CentOS"
   become: yes
+  tags:
+  - packages
 - name: Configure Lynis
   block:
   - name: Configure Lynis to skip certain SSH tests

@@ -45,6 +45,8 @@
     apt:
       name: gawk
       update_cache: yes
+    tags:
+    - packages
   - name: Create /etc/fstab.new
     become: yes
     shell: gawk -f {{ tempfile_1.path }} /etc/fstab 1>/etc/fstab.new
@@ -111,11 +113,15 @@
     slackpkg:
       name: acl
       state: present
+    tags:
+    - packages
   - name: Install acl package (Debian)
     when: ansible_distribution == "Debian"
     apt:
       name: acl
       state: present
+    tags:
+    - packages
   # we don't want to mess with the group ownerships because these might be needed to be writable by utmp group
   - name: Grant group adm read rights on login records
     acl:

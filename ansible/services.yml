@@ -148,12 +148,16 @@
 #  apt:
 #    name: icmpinfo
 #    update_cache: yes
+#  tags:
+#  - packages
 - name: Install icmpinfo (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
   slackpkg:
     name: icmpinfo
     state: present
+  tags:
+  - packages
 - name: Slackware rc.d
   block:
   - name: Create /etc/rc.d/rc.local (Slackware)

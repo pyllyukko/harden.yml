@@ -3,6 +3,8 @@
   when: ansible_distribution == "Slackware"
   become: yes
   command: slackpkg -batch=on -default_answer=y install glibc
+  tags:
+  - packages
 - name: 'Check that some user(s) exist in "sudo" group'
   getent:
     database: group

@@ -10,6 +10,8 @@
     apt:
       name: ca-certificates
       update_cache: yes
+    tags:
+    - packages
   - name: Copy ca-certificates.conf
     when: ansible_os_family != "RedHat"
     copy:

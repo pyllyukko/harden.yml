@@ -10,6 +10,8 @@
       - auditd
       - libcap-ng-utils
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+    tags:
+    - packages
   - name: Copy rules
     get_url:
       url: https://raw.githubusercontent.com/linux-audit/audit-userspace/master/rules/{{ item }}
