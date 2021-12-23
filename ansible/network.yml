@@ -5,8 +5,7 @@
   apt:
     name: libwrap0
     update_cache: yes
-  tags:
-  - packages
+  tags: packages
 - name: 'TCP wrappers: create /etc/hosts.allow'
   become: yes
   template:
@@ -32,13 +31,16 @@
       - libpcap
       - libnl3
       - dbus
+    tags: packages
   - name: Create /etc/rc.d/rc.firewall (Slackware)
     template:
       src: "{{ playbook_dir }}/templates/rc.firewall.j2"
       dest: /etc/rc.d/rc.firewall
       mode: '0700'
+    tags: services
   - name: Start firewall (Slackware)
     command: /etc/rc.d/rc.firewall start
+    tags: services
   become: yes
   when: ansible_distribution == "Slackware" and stat_result.stat.exists == False
 - name: Enable Slackware firewall
@@ -48,6 +50,9 @@
     mode: '0700'
     owner: root
     group: root
+  tags:
+  - services
+  - permissions
 - name: Stat /etc/iptables/rules.v4
   stat:
     path: /etc/iptables/rules.v4
@@ -61,6 +66,7 @@
       update_cache: yes
     tags:
     - packages
+    - services
   - name: Create temp file
     tempfile:
       state: file
@@ -92,11 +98,13 @@
       name: netfilter-persistent
       state: started
       enabled: yes
+    tags: services
   - name: Chmod /etc/iptables
     file:
       path: /etc/iptables
       mode: '0700'
       owner: root
       group: root
+    tags: permissions
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
