@@ -8,6 +8,8 @@
     update_cache: yes
   tags:
   - packages
+  - services
+  - accounting
 - name: Enable system accounting (sysstat)
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
@@ -16,6 +18,9 @@
     regexp: '^ENABLED=.*$'
     replace: 'ENABLED="true"'
     validate: '/bin/grep "^ENABLED=\"true\"$" %s'
+  tags:
+  - services
+  - accounting
 - name: Install sysstat (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
@@ -24,6 +29,8 @@
     state: present
   tags:
   - packages
+  - services
+  - accounting
 - name: Enable rc.sysstat (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
@@ -32,12 +39,19 @@
     owner: root
     group: root
     mode: 0700
+  tags:
+  - services
+  - accounting
+  - permissions
 - name: Create sysstat cron jobs
   when: ansible_distribution == "Slackware"
   become: yes
   copy:
     src: "{{ playbook_dir }}/../newconfs/cron.d/sysstat.new"
     dest: /etc/cron.d/sysstat
+  tags:
+  - services
+  - accounting
 - name: Configure sysstat
   become: yes
   replace:
@@ -45,6 +59,11 @@
     regexp: '^HISTORY=[0-9]+$'
     replace: 'HISTORY=99999'
     validate: '/bin/grep "^HISTORY=99999$" %s'
+  tags:
+  - services
+  - accounting
+# </System accounting>
+
 # Process accounting
 - name: Install acct
   become: yes
@@ -54,6 +73,8 @@
     update_cache: yes
   tags:
   - packages
+  - services
+  - accounting
 - name: Enable acct
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
@@ -61,6 +82,9 @@
     name: acct
     state: started
     enabled: yes
+  tags:
+  - services
+  - accounting
 - name: Install acct (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
@@ -69,6 +93,8 @@
     state: present
   tags:
   - packages
+  - services
+  - accounting
 - name: Create /var/log/pacct (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
@@ -79,13 +105,23 @@
     owner: root
     group: adm
     mode: '0640'
+  tags:
+  - services
+  - accounting
 - name: Create /etc/logrotate.d/pacct (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
   copy:
     src: "{{ playbook_dir }}/../newconfs/logrotate.d/pacct.new"
     dest: /etc/logrotate.d/pacct
+  tags:
+  - services
+  - accounting
 - name: Start process accounting (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
   command: /sbin/accton /var/log/pacct
+  tags:
+  - services
+  - accounting
+# </Process accounting>

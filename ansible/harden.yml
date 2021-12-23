@@ -13,7 +13,7 @@
     - include: pam.yml
     - include: services.yml
     - include: sysctl.yml
-    - include: sysstat.yml
+    - include: services-accounting.yml
     - include: apparmor.yml
     - include: logging.yml
     - include: misc.yml
