@@ -21,6 +21,7 @@
   tags:
   - services
   - accounting
+  - configuration
 - name: Install sysstat (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
@@ -43,6 +44,7 @@
   - services
   - accounting
   - permissions
+  - configuration
 - name: Create sysstat cron jobs
   when: ansible_distribution == "Slackware"
   become: yes
@@ -52,6 +54,7 @@
   tags:
   - services
   - accounting
+  - configuration
 - name: Configure sysstat
   become: yes
   replace:
@@ -62,6 +65,7 @@
   tags:
   - services
   - accounting
+  - configuration
 # </System accounting>
 
 # Process accounting
@@ -85,6 +89,7 @@
   tags:
   - services
   - accounting
+  - configuration
 - name: Install acct (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
