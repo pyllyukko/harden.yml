@@ -25,12 +25,14 @@
         - checksecurity
       tags:
       - packages
+      - services
     - include: aide.yml
     - name: Symlink /usr/lib/tiger/systems/Linux/5 -> 4
       file:
         src: /usr/lib/tiger/systems/Linux/4
         dest: /usr/lib/tiger/systems/Linux/5
         state: link
+      tags: configuration
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
 - name: Configure debsecan
@@ -41,6 +43,7 @@
     question: debsecan/suite
     vtype: select
     value: "{{ ansible_distribution_release }}"
+  tags: configuration
 - name: Enable weekly debsums run
   replace:
     path: /etc/default/debsums
@@ -48,6 +51,7 @@
     replace: '\g<1>weekly'
   become: yes
   when: ansible_distribution == "Debian"
+  tags: configuration
 - name: Create /etc/chkrootkit.ignore
   become: yes
   when: ansible_distribution == "Debian"
@@ -64,6 +68,7 @@
       ^ ?/usr/lib/ruby/vendor_ruby/rubygems/ssl_certs/\.document$
       ^ ?/usr/lib/pypy/lib_pypy/ctypes_config_cache/\.empty$
       ^eth[0-9]+: PACKET SNIFFER\(/usr/sbin/dhcpcd\[[0-9]+\](, /usr/sbin/collectd\[[0-9]+\])?\)$
+  tags: configuration
 - name: Configure /etc/cron.daily/chkrootkit to use chkrootkit.ignore
   replace:
     path: /etc/cron.daily/chkrootkit
@@ -71,6 +76,7 @@
     replace: '\g<1>/etc/chkrootkit.ignore'
   become: yes
   when: ansible_distribution == "Debian"
+  tags: configuration
 - name: Enable daily chkrootkit run
   replace:
     path: /etc/chkrootkit.conf
@@ -78,3 +84,4 @@
     replace: '\g<1>"true"'
   become: yes
   when: ansible_distribution == "Debian"
+  tags: configuration

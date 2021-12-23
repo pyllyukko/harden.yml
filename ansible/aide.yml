@@ -14,6 +14,7 @@
         replace: '\g<1>{{ item.value }}'
       with_dict:
         Checksums: sha256
+      tags: configuration
     - name: Configure AIDE (/etc/default/aide)
       replace:
         path: /etc/default/aide
@@ -21,6 +22,7 @@
         replace: '\g<1>{{ item.value }}'
       with_dict:
         COPYNEWDB: ifnochange
+      tags: configuration
     - name: Exclude /net
       copy:
         content: "!/net$\n"
@@ -29,6 +31,7 @@
         group: root
         mode: '0644'
         force: no
+      tags: configuration
     - name: Exclude /media
       copy:
         content: "!/media$\n"
@@ -37,6 +40,7 @@
         group: root
         mode: '0644'
         force: no
+      tags: configuration
     - name: Create /etc/aide/aide.conf.d/70_hardensh_misc
       copy:
         src: "{{ playbook_dir }}/../newconfs/aide-debian.conf.new"
@@ -44,16 +48,19 @@
         owner: root
         group: root
         mode: 0600
+      tags: configuration
     - name: Fix /var/log/exim4/(main|reject)log rule
       replace:
         path: /etc/aide/aide.conf.d/31_aide_exim4_logs
         regexp: '^(/var/log/exim4/@@{EXIM4_LOGS}log\$ f )Log$'
         replace: '\g<1>FreqRotLog'
+      tags: configuration
     - name: Fix /var/tmp rule
       replace:
         path: /etc/aide/aide.conf.d/70_aide_var
         regexp: '^(/var/tmp\$ d )VarDir-n$'
         replace: '\g<1>VarDirInode-n'
+      tags: configuration
     - name: Check aide.conf
       command: /usr/bin/aide --config-check --config=/etc/aide/aide.conf
     - name: Create aide.db
