@@ -5,6 +5,9 @@
     file:
       path: /etc/ssl/certs/ssl-cert-snakeoil.pem
       state: absent
+    tags:
+    - pki
+    - configuration
   - name: Install ca-certificates package (Debian)
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
     apt:
@@ -12,15 +15,23 @@
       update_cache: yes
     tags:
     - packages
+    - pki
   - name: Copy ca-certificates.conf
     when: ansible_os_family != "RedHat"
     copy:
       src: "{{ playbook_dir }}/../newconfs/ca-certificates.conf.new"
       dest: /etc/ca-certificates.conf
+    tags:
+    - configuration
+    - pki
   - name: Install OpenSSL (Slackware)
     when: ansible_distribution == "Slackware"
     command: slackpkg -batch=on -default_answer=y install openssl
+    tags: packages
   - name: Run update-ca-certificates
     when: ansible_os_family != "RedHat"
     command: /usr/sbin/update-ca-certificates --verbose --fresh
+    tags:
+    - configuration
+    - pki
   become: yes
