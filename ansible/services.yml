@@ -12,25 +12,30 @@
     - result.failed == true
     - '"Could not find the requested service" not in result.msg'
   register: result
-- name: Stop unwanted services (Slackware)
+  tags: services
+
+- name: Slackware services
   become: yes
   when: ansible_distribution == "Slackware"
-  ignore_errors: yes
-  command: /bin/sh /etc/rc.d/rc.{{ item }} stop
-  with_items: "{{ slackware_services }}"
-- name: Disable unwanted services (Slackware)
-  become: yes
-  when: ansible_distribution == "Slackware"
-  file:
-    path: "/etc/rc.d/rc.{{ item }}"
-    owner: root
-    group: root
-    mode: ugo-x
-  with_items: "{{ slackware_services }}"
-  register: result
-  failed_when:
-    - result.failed == true
-    - result.state != "absent"
+  tags: services
+  block:
+  - name: Stop unwanted services (Slackware)
+    ignore_errors: yes
+    command: /bin/sh /etc/rc.d/rc.{{ item }} stop
+    with_items: "{{ slackware_services }}"
+  - name: Disable unwanted services (Slackware)
+    file:
+      path: "/etc/rc.d/rc.{{ item }}"
+      owner: root
+      group: root
+      mode: ugo-x
+    with_items: "{{ slackware_services }}"
+    register: result
+    failed_when:
+      - result.failed == true
+      - result.state != "absent"
+    tags: permissions
+
 # Cron
 - name: Restrict cron (cron.allow)
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
@@ -41,12 +46,16 @@
     owner: root
     group: crontab
     mode: '0640'
+  tags:
+  - permissions
+  - services
 - name: Restrict cron (cron.deny)
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
   file:
     path: /etc/cron.deny
     state: absent
+  tags: services
 - name: Create a job that checks systemd's state
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
@@ -63,23 +72,34 @@
       regexp: '^(CROND_OPTS=".*)-l [a-z]+(.*")$'
       replace: '\g<1>-l info\g<2>'
       validate: '/bin/grep "^CROND_OPTS=\".*-l info.*\"$" %s'
+    tags: services
+  # From dcron's README
   - name: Restrict cron (Slackware)
     file:
       path: /usr/bin/crontab
       group: wheel
       mode: '4710'
+    tags:
+    - permissions
+    - services
   - name: Set permissions for /var/spool/cron
     file:
       path: /var/spool/cron
       owner: root
       group: root
       mode: '0700'
+    tags:
+    - permissions
+    - services
   - name: Set permissions for /var/spool/cron/crontabs
     file:
       path: /var/spool/cron/crontabs
       owner: root
       group: root
       mode: '0700'
+    tags:
+    - permissions
+    - services
   # user needs to have x perms into the directory where the temp file is created
   # Slackware 14.2 has /var/spool/cron as TMPDIR and 14.2+ has /run/cron
   - name: Fix /etc/rc.d/rc.crond
@@ -89,16 +109,24 @@
       block: |
         /bin/chgrp wheel /run/cron
         /bin/chmod 0710 /run/cron
+    tags: services
+  # From dcron's README
   - name: chmod crond (Slackware)
     file:
       path: /usr/sbin/crond
       mode: '0700'
+    tags:
+    - permissions
+    - services
   when: ansible_distribution == "Slackware"
   become: yes
+# </Cron>
+
 # SSH
 - name: Check SSH daemon service state
   service_facts:
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  tags: services
 - name: sshd
   block:
   - name: Harden SSH daemon configuration
@@ -111,6 +139,7 @@
     failed_when:
       - result.failed == true
       - '"sshd: no hostkeys available -- exiting." not in result.stderr'
+    tags: services
   - name: Restart sshd (Debian)
     service:
       name: ssh
@@ -118,6 +147,7 @@
     when: >
       (ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux") and
       ansible_facts.services.ssh.state == "running"
+    tags: services
   # rc.sshd exits if /var/run/sshd.pid doesn't exist
   - name: Restart sshd (Slackware)
     when: ansible_distribution == "Slackware"
@@ -127,6 +157,7 @@
     failed_when:
       - result.failed == true
       - '"WARNING: There does not appear to be a parent instance of sshd running." not in result.stdout'
+    tags: services
   become: yes
   # Skip the whole block in Debian if ssh.service does not exist
   when: >
@@ -141,6 +172,8 @@
     owner: root
     group: root
     mode: '0644'
+# </SSH>
+
 # Misc
 #- name: Install icmpinfo
 #  become: yes
@@ -158,6 +191,7 @@
     state: present
   tags:
   - packages
+  - services
 - name: Slackware rc.d
   block:
   - name: Create /etc/rc.d/rc.local (Slackware)
@@ -167,6 +201,7 @@
       owner: root
       group: root
       mode: '0700'
+    tags: services
   - name: Create /etc/rc.d/rc.local_shutdown symlink (Slackware)
     file:
       src: /etc/rc.d/rc.local
@@ -174,6 +209,7 @@
       owner: root
       group: root
       state: link
+    tags: services
   - name: Enable smartd (Slackware)
     file:
       path: /etc/rc.d/rc.smartd
@@ -184,6 +220,7 @@
     failed_when:
       - result.failed == true
       - result.state != "absent"
+    tags: services
   - name: Disable atd (Slackware)
     replace:
       path: /etc/rc.d/rc.M
@@ -191,6 +228,7 @@
       before: '# Slackware-Mini-Quota-HOWTO:'
       regexp: '^#?(.+)$'
       replace: '#\g<1>'
+    tags: services
   - name: NFSv4 support in rc.inet2
     blockinfile:
       path: /etc/rc.d/rc.inet2
@@ -210,5 +248,6 @@
           /sbin/mount -a -t nfs4
           /sbin/mount -v -t nfs4
         fi
+    tags: services
   when: ansible_distribution == "Slackware"
   become: yes
