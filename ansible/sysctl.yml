@@ -10,7 +10,11 @@
   with_items:
     - sysctl
     - network
+  tags:
+  - configuration
+  - kernel
 - name: Load sysctl settings
   ignore_errors: yes
   become: yes
   command: /sbin/sysctl -p /etc/sysctl.d/sysctl.conf /etc/sysctl.d/network.conf
+  tags: kernel

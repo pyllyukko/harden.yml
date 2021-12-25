@@ -21,7 +21,9 @@
     owner: root
     group: root
     mode: 0600
-  tags: configuration
+  tags:
+  - configuration
+  - kernel
   with_items:
     - CIS
     - bashbunny
