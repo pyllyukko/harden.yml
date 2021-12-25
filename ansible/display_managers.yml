@@ -1,6 +1,7 @@
 ---
 # https://github.com/canonical/lightdm#configuration
 - name: Configure LightDM
+  tags: configuration
   block:
   - name: Disable VNC in LightDM
     ini_file:
@@ -22,6 +23,7 @@
       value: "false"
   become: yes
 - name: Configure GDM3
+  tags: configuration
   replace:
     regexp: '^(# ?)?({{ item.key }})=.+$'
     replace: '\g<2>={{ item.value }}'

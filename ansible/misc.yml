@@ -7,6 +7,7 @@
     limit_type: hard
     limit_item: core
     value: 0
+  tags: configuration
 - name: Create /etc/modprobe.d/
   become: yes
   file:
@@ -20,6 +21,7 @@
     owner: root
     group: root
     mode: 0600
+  tags: configuration
   with_items:
     - CIS
     - bashbunny
@@ -33,6 +35,7 @@
     regexp: '^(MD5SUM)=[0-9]+$'
     replace: '\g<1>=1'
     validate: '/bin/grep "^MD5SUM=1$" %s'
+  tags: configuration
 # https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/sect-security-enhanced_linux-working_with_selinux-disable_ptrace
 - name: Disable ptrace() with SELinux
   become: yes
@@ -41,7 +44,9 @@
     name: deny_ptrace
     state: yes
     persistent: yes
+  tags: configuration
 - name: Configure certbot to use 4096 bit keys
+  tags: pki
   block:
     - name: Check for /etc/letsencrypt
       stat:
@@ -56,8 +61,10 @@
         value: 4096
         mode: '0600'
       when: stat_result.stat.exists == True
+      tags: configuration
   become: yes
 - name: Set verify_ap_req_nofail -> true in krb5.conf
+  tags: configuration
   ini_file:
     path: /etc/krb5.conf
     section: libdefaults
@@ -82,8 +89,7 @@
         - netatalk
         - slrn
         - yptools
-      tags:
-      - packages
+      tags: packages
     - name: Remove leftover files from removed packages
       file:
         path: '{{ item }}'

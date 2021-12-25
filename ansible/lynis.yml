@@ -22,6 +22,7 @@
   become: yes
   tags:
   - packages
+  - lynis
 - name: Install Lynis into CentOS
   block:
   - name: Add Lynis repository
@@ -41,7 +42,11 @@
   become: yes
   tags:
   - packages
+  - lynis
 - name: Configure Lynis
+  tags:
+  - configuration
+  - lynis
   block:
   - name: Configure Lynis to skip certain SSH tests
     lineinfile:

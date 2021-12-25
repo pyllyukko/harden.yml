@@ -6,6 +6,7 @@
     with_items:
       - freshclam
       - clamd
+    tags: configuration
   - name: Comment out Example lines
     replace:
       path: /etc/{{ item }}.conf
@@ -14,6 +15,7 @@
     with_items:
       - freshclam
       - clamd
+    tags: configuration
   - name: mkdir /var/run/clamav/
     file:
       path: /var/run/clamav
@@ -61,6 +63,7 @@
         User: clamav
         AlertOLE2Macros: "yes"
         FixStaleSocket: "yes"
+    tags: configuration
   # https://docs.clamav.net/manual/Usage/Configuration.html#freshclamconf
   - name: Configure freshclam
     replace:
@@ -81,6 +84,7 @@
         DatabaseMirror: database.clamav.net
         DatabaseOwner: clamav
         PidFile: /var/run/clamav/freshclam.pid
+    tags: configuration
   - name: Remove .new configs
     file:
       path: '/etc/{{ item }}.conf.new'
@@ -94,6 +98,7 @@
     file:
       path: /var/lib/clamav/
       mode: '0755'
+    tags: permissions
   # "CLD files are uncompressed and unsigned versions of the CVD that have had CDIFFs applied"
   - name: Make /var/lib/clamav/*.c[lv]d +r
     file:
@@ -103,6 +108,7 @@
       - daily.cld
       - bytecode.cld
       - main.cvd
+    tags: permissions
   # https://blog.didierstevens.com/2017/02/15/quickpost-clamav-and-zip-file-decryption/
   - name: Create a password signature file
     copy:
@@ -112,4 +118,6 @@
       mode: '0644'
       content: |
         ZipPasswordInfected;Engine:81-255;0;infected
+    tags: configuration
   become: yes
+  tags: clamav

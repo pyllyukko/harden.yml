@@ -1,5 +1,6 @@
 ---
 - name: Setup AIDE
+  tags: aide
   block:
     - name: Install AIDE package
       apt:

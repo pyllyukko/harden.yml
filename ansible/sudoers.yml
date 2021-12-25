@@ -34,6 +34,7 @@
       group: root
       mode: '0400'
       force: no
+    tags: configuration
   # https://jpmens.net/2013/02/06/don-t-try-this-at-the-office-etc-sudoers/
   - name: 'Validate /etc/sudoers.new'
     command: visudo -cs -f /etc/sudoers.new
@@ -42,6 +43,7 @@
       remote_src: yes
       src: /etc/sudoers.new
       dest: /etc/sudoers
+    tags: configuration
   - name: 'Remove /etc/sudoers.new'
     file:
       path: /etc/sudoers.new
@@ -55,4 +57,5 @@
     path: /etc/sudoers.d/010_pi-nopasswd
     state: absent
   when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
+  tags: configuration
 - include: filesystem-sudoers.yml
