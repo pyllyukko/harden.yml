@@ -23,6 +23,7 @@
       FAIL_DELAY: "{{ fail_delay }}"
       CREATE_HOME: "yes"
       HOME_MODE: "0700"
+  tags: configuration
 - name: Install glibc package (Slackware)
   when: ansible_distribution == "Slackware"
   become: yes
@@ -35,6 +36,9 @@
   copy:
     src: "{{ playbook_dir }}/../newconfs/securetty.new"
     dest: /etc/securetty
+  tags:
+  - configuration
+  - authorization
 - name: Create /etc/profile.d/tmout.sh
   become: yes
   copy:
@@ -43,6 +47,7 @@
     owner: root
     group: root
     mode: '0755'
+  tags: configuration
 - name: Warn users about expiring password
   become: yes
   copy:
@@ -51,6 +56,7 @@
     owner: root
     group: root
     mode: '0755'
+  tags: configuration
 - name: getent passwd
   getent:
     database: passwd
@@ -64,6 +70,9 @@
     owner: root
     group: root
     mode: '0600'
+  tags:
+  - configuration
+  - authorization
 - include: login_defs-slackware.yml
   when: ansible_distribution == "Slackware"
 - name: Verify integrity of group files
@@ -81,6 +90,7 @@
   block:
   - name: Set the number of days after a password expires until the account is permanently disabled (inactive)
     command: useradd -D -f 30
+    tags: configuration
   - name: Same as above for existing users
     command: chage --inactive 30 {{ item.key }}
     when: item.value[1] | int >= 1000 and item.value[1] | int <= 60000

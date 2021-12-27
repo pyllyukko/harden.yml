@@ -9,6 +9,7 @@
       key: "{{ allowed_group }}"
     failed_when: getent_group.{{ allowed_group }}[2] == ""
   - name: /etc/shutdown.allow
+    tags: configuration
     block:
     - name: Create /etc/shutdown.allow
       copy:
@@ -24,6 +25,7 @@
   become: yes
   when: ansible_distribution == "Slackware"
 - name: Set umask to 077 in /etc/profile (Slackware)
+  tags: configuration
   become: yes
   when: ansible_distribution == "Slackware"
   replace:
@@ -32,6 +34,7 @@
     replace: '\g<1> 077'
     validate: '/bin/grep "^umask 077$" %s'
 - name: Set defchmod to 700 in /usr/sbin/adduser (Slackware)
+  tags: configuration
   become: yes
   when: ansible_distribution == "Slackware"
   replace:
@@ -40,6 +43,7 @@
     replace: '\g<1>=700 # home dir permissions'
     validate: '/bin/grep "^defchmod=700 # home dir permissions$" %s'
 - name: Single user mode authentication
+  tags: configuration
   block:
   - name: Remove S from System initialization (Slackware)
     replace:
@@ -62,6 +66,7 @@
   become: yes
   when: ansible_distribution == "Slackware"
 - name: Add LESS variables and disable core dumps
+  tags: configuration
   blockinfile:
     path: /etc/profile
     block: |
@@ -109,3 +114,6 @@
     mode: '0644'
   when: ansible_distribution == "Slackware"
   become: yes
+  tags:
+  - configuration
+  - pam
