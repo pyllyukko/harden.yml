@@ -14,6 +14,7 @@
       section: VNCServer
       option: enabled
       value: "false"
+    tags: network
   - name: Hide user list and disallow guest login in LightDM
     ini_file:
       path: /etc/lightdm/lightdm.conf
