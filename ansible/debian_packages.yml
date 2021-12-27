@@ -18,7 +18,6 @@
         - chkrootkit
         - needrestart
         - arpwatch
-        - clamav
         - usbguard
         - unattended-upgrades
         - checksecurity

@@ -1,6 +1,14 @@
 ---
 - name: ClamAV
   block:
+  - name: Install ClamAV (Debian)
+    apt:
+      name: clamav
+      update_cache: yes
+    when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+    tags:
+    - packages
+    - services
   - name: Generate fresh configs
     shell: /usr/bin/clamconf -g {{ item }}.conf 1>/etc/{{ item }}.conf
     with_items:
