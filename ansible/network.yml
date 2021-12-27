@@ -1,11 +1,19 @@
 ---
-- name: Install TCP wrappers library
+
+# TCP wrappers
+- name: Install TCP wrappers library and iptables-persistent (Debian)
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
   apt:
-    name: libwrap0
     update_cache: yes
-  tags: packages
+    pkg:
+    - libwrap0
+    - iptables-persistent
+  tags:
+  - packages
+  - network
+  - firewall
+  - services
 - name: 'TCP wrappers: create /etc/hosts.allow'
   become: yes
   template:
@@ -65,20 +73,22 @@
   tags:
   - services
   - permissions
-- name: Stat /etc/iptables/rules.v4
+  - network
+  - firewall
+# </Slackware firewall>
+
+# Debian firewall
+- name: Stat /etc/iptables/rules.v4 (Debian)
   stat:
     path: /etc/iptables/rules.v4
   register: stat_result
   become: yes
+  tags: firewall
 - name: Firewall rules for Debian
+  tags:
+  - firewall
+  - network
   block:
-  - name: Install iptables-persistent
-    apt:
-      name: iptables-persistent
-      update_cache: yes
-    tags:
-    - packages
-    - services
   - name: Create temp file
     tempfile:
       state: file
