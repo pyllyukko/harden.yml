@@ -11,18 +11,29 @@
   template:
     src: "{{ playbook_dir }}/templates/hosts.allow.j2"
     dest: /etc/hosts.allow
+  tags: network
 - name: 'TCP wrappers: create /etc/hosts.deny'
   become: yes
   copy:
     src: "{{ playbook_dir }}/../newconfs/hosts.deny.new"
     dest: /etc/hosts.deny
-- name: Stat /etc/rc.d/rc.firewall
+  tags: network
+# </TCP wrappers>
+
+# Slackware firewall
+- name: Stat /etc/rc.d/rc.firewall (Slackware)
   stat:
     path: /etc/rc.d/rc.firewall
   register: stat_result
   become: yes
   when: ansible_distribution == "Slackware"
+  tags:
+  - network
+  - firewall
 - name: Firewall for Slackware
+  tags:
+  - network
+  - firewall
   block:
   - name: Install iptables (Slackware)
     command: slackpkg -batch=on -default_answer=y install {{ item }}
@@ -31,14 +42,15 @@
       - libpcap
       - libnl3
       - dbus
-    tags: packages
+    tags:
+    - packages
   - name: Create /etc/rc.d/rc.firewall (Slackware)
     template:
       src: "{{ playbook_dir }}/templates/rc.firewall.j2"
       dest: /etc/rc.d/rc.firewall
       mode: '0700'
     tags: services
-  - name: Start firewall (Slackware)
+  - name: Start Slackware firewall
     command: /etc/rc.d/rc.firewall start
     tags: services
   become: yes
@@ -98,13 +110,19 @@
       name: netfilter-persistent
       state: started
       enabled: yes
-    tags: services
+    tags:
+    - services
+    - network
+    - firewall
   - name: Chmod /etc/iptables
     file:
       path: /etc/iptables
       mode: '0700'
       owner: root
       group: root
-    tags: permissions
+    tags:
+    - permissions
+    - firewall
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+# </Debian firewall>

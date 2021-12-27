@@ -13,6 +13,7 @@
   tags:
   - configuration
   - kernel
+  - network
 - name: Load sysctl settings
   ignore_errors: yes
   become: yes

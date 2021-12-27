@@ -14,6 +14,7 @@
         path: /etc/security/access.conf
         checksum_algorithm: sha512
       register: stat_result
+      tags: pam
     - name: Configure login access control table (PAM)
       # Only modify access.conf when it's unmodified. Otherwise expect it to have
       # custom modifications and our hardening might break existing configuration.
@@ -29,6 +30,9 @@
           + : ({{ allowed_group }}) : ALL
           + : Debian-gdm lightdm : LOCAL
           - : ALL : ALL
+      tags:
+      - configuration
+      - pam
     - name: Add pam_access to system-auth (Slackware)
       when: ansible_distribution == "Slackware"
       become: yes
@@ -37,6 +41,9 @@
         regexp: '^account\s+required\s+pam_access\.so\b.*$'
         line: 'account     required      pam_access.so nodefgroup'
         insertafter: '^account {5}required {6}pam_time\.so\b.*$'
+      tags:
+      - configuration
+      - pam
 # This needs to happen before populating /etc/pam.d/other with pam_deny or otherwise sudo will stop working
 - name: Create /etc/pam.d/sudo (Slackware)
   when: ansible_distribution == "Slackware"
@@ -53,6 +60,9 @@
       account    include      system-auth
       password   include      system-auth
       session    include      system-auth
+  tags:
+  - configuration
+  - pam
 - name: Add pam_umask to /etc/pam.d/postlogin (Slackware)
   when: ansible_distribution == "Slackware"
   become: yes
@@ -60,6 +70,9 @@
     path: /etc/pam.d/postlogin
     regexp: '^session\s+optional\s+pam_umask\.so\b.*$'
     line: 'session     optional      pam_umask.so'
+  tags:
+  - configuration
+  - pam
 # http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html
 # https://tldp.org/HOWTO/User-Authentication-HOWTO/x263.html#AEN266
 - name: /etc/pam.d/other
@@ -71,11 +84,15 @@
         owner: root
         group: root
         mode: '0644'
+      tags:
+      - configuration
+      - pam
     - name: Remove /etc/pam.d/other.new
       file:
         path: /etc/pam.d/other.new
         state: absent
       when: ansible_distribution == "Slackware"
+      tags: pam
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
   become: yes
 - name: Check some Slackware's PAM files
@@ -94,6 +111,7 @@
     - useradd
     - userdel
     - usermod
+  tags: pam
 - name: Configure pam_faillock & pam_faildelay (Slackware)
   block:
     - name: Configure /etc/security/faillock.conf
@@ -102,11 +120,15 @@
         dest: /etc/security/faillock.conf
         owner: root
         group: root
+      tags:
+      - configuration
+      - pam
     - name: Create faillock directory
       file:
         path: /var/run/faillock
         state: directory
         mode: '0751'
+      tags: pam
     - name: Add pam_faillock and pam_faildelay to /etc/pam.d/system-auth
       replace:
         path: /etc/pam.d/system-auth
@@ -116,8 +138,12 @@
           auth        [success=1 default=bad] pam_unix.so likeauth
           auth        [default=die] pam_faillock.so authfail
           auth        required      pam_faillock.so authsucc
+      tags:
+      - configuration
+      - pam
   when: ansible_distribution == "Slackware"
   become: yes
+# postlogin doesn't include any auth lines
 - name: Remove auth include postlogin (Slackware)
   when: ansible_distribution == "Slackware"
   become: yes
@@ -130,6 +156,9 @@
     - login
     - sddm
     - sshd
+  tags:
+  - configuration
+  - pam
 # https://github.com/pyllyukko/harden.sh/issues/64
 - name: nullok
   block:
@@ -148,6 +177,9 @@
         regexp: '\s+nullok'
         replace: ''
   become: yes
+  tags:
+  - configuration
+  - pam
 - name: Enable pam_wheel.so in /etc/pam.d/su
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
   become: yes
@@ -156,6 +188,9 @@
     regexp: '^#\s*(auth\s+required\s+pam_wheel\.so(\s+use_uid)?)$'
     replace: '\1'
     validate: '/bin/grep "^auth\s\+required\s\+pam_wheel\.so.*$" %s'
+  tags:
+  - configuration
+  - pam
 - name: Enable polyinstantiated temp directories
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
   become: yes
@@ -167,6 +202,9 @@
   with_items:
     - '/tmp'
     - '/var/tmp'
+  tags:
+  - configuration
+  - pam
 - name: Remove adm user from /etc/security/namespace.conf
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
@@ -175,6 +213,9 @@
     regexp: '^(.+),adm$'
     replace: '\1'
     validate: '/bin/grep "^\(/var\)\?/tmp\s\+\(/var/tmp\)\?/tmp-inst/\s\+level\s\+root$" %s'
+  tags:
+  - configuration
+  - pam
 # For some reason some Debian systems have had random group ownership on these (e.g. audio or systemd-journal)
 - name: Make sure polyinstantiated directories are owned by root:root
   become: yes
@@ -190,6 +231,9 @@
   with_items:
     - /tmp-inst
     - /var/tmp/tmp-inst
+  tags:
+  - permissions
+  - pam
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.19
 - name: Debian pam-configs
   block:
@@ -219,6 +263,9 @@
       command: /usr/sbin/pam-auth-update --package
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
+  tags:
+  - configuration
+  - pam
 - name: authconfig
   block:
     - name: Enable additional PAM modules with authconfig (RH)
@@ -230,6 +277,9 @@
       command: /sbin/authconfig --passalgo=sha512 --passminlen=14 --enablereqlower --enablerequpper --enablereqdigit --enablereqother --update
   when: ansible_os_family == "RedHat"
   become: yes
+  tags:
+  - configuration
+  - pam
 - name: Password related
   block:
     - name: Add rounds=500000 to pam_unix in /etc/pam.d/common-passwd
@@ -261,3 +311,6 @@
         validate: '/bin/grep "^password.\+minlen=14.*$" %s'
       when: ansible_distribution == "Slackware"
   become: yes
+  tags:
+  - configuration
+  - pam

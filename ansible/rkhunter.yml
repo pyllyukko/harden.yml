@@ -1,5 +1,6 @@
 ---
 - name: rkhunter
+  tags: rkhunter
   block:
   - name: Install rkhunter (Debian)
     apt:
@@ -14,6 +15,7 @@
       mode: '0400'
       owner: root
       group: root
+    tags: configuration
   # https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/FAQ: "3.3) How can I automatically run Rootkit Hunter every day?"
   # We don't use --update as rkhunter.sourceforge.net doesn't have HTTPS
   - name: Add rkhunter cronjob
@@ -23,12 +25,14 @@
       hour: "5"
       job: "/usr/bin/test -x /usr/bin/rkhunter && /usr/bin/rkhunter --cronjob --rwo"
     when: ansible_distribution != "Debian"
+    tags: configuration
   - name: Enable daily rkhunter check in Debian
     replace:
       path: /etc/default/rkhunter
       regexp: '^(CRON_DAILY_RUN=).*'
       replace: '\g<1>"yes"'
     when: ansible_distribution == "Debian"
+    tags: configuration
   - name: Create rkhunter.dat
     command: /usr/bin/rkhunter --propupd
     args:

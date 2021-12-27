@@ -10,12 +10,12 @@
     apt:
       name: rng-tools
       update_cache: yes
-    tags:
-    - packages
+    tags: packages
   - name: Start & enable rng-tools service
     service:
       name: rng-tools
       state: started
       enabled: yes
+    tags: services
   when: rng_current['content'] | b64decode != "none\n" and ansible_distribution == "Debian"
   become: yes

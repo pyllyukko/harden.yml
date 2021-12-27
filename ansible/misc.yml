@@ -46,7 +46,9 @@
     name: deny_ptrace
     state: yes
     persistent: yes
-  tags: configuration
+  tags:
+  - configuration
+  - kernel
 - name: Configure certbot to use 4096 bit keys
   tags: pki
   block:
