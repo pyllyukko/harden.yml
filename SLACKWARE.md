@@ -157,7 +157,7 @@ What does it do?
 
 Some things are added to cron: **TODO**
 
-* [rkhunter](https://github.com/pyllyukko/harden.sh/blob/master/newconfs/cron.d/rkhunter.new)
+* rkhunter
 
 ##### sysstat
 

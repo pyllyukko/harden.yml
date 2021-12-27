@@ -1,1 +1,0 @@
-30 * * * * /bin/test -x /usr/bin/rkhunter && /usr/bin/rkhunter --cronjob --rwo

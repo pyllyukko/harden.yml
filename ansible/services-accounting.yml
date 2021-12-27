@@ -45,12 +45,24 @@
   - accounting
   - permissions
   - configuration
+# https://github.com/sysstat/sysstat/blob/master/cron/sysstat.crond.in
+# Ansible states that it's cron module requires "any 'vixie cron' conformant variant"
+# dcron states that "Our crontab format is roughly similar to that used by vixiecron."
 - name: Create sysstat cron jobs
   when: ansible_distribution == "Slackware"
   become: yes
-  copy:
-    src: "{{ playbook_dir }}/../newconfs/cron.d/sysstat.new"
-    dest: /etc/cron.d/sysstat
+  block:
+    - name: Create cron job for sysstat activity accounting
+      cron:
+        name: "Run system activity accounting tool every 10 minutes"
+        minute: "*/10"
+        job: "if [ -x /usr/lib64/sa/sa1 ]; then /usr/lib64/sa/sa1 1 1; elif [ -x /usr/lib/sa/sa1 ]; then /usr/lib/sa/sa1 1 1; fi"
+    - name: Create cron job for sysstat summary
+      cron:
+        name: "Generate a text summary of previous day process accounting at 00:07"
+        minute: "7"
+        hour: "0"
+        job: "if [ -x /usr/lib64/sa/sa2 ]; then /usr/lib64/sa/sa2 -A; elif [ -x /usr/lib/sa/sa2 ]; then /usr/lib/sa/sa2 -A; fi"
   tags:
   - services
   - accounting

@@ -721,7 +721,7 @@ do
       enable_pacct
       import_pgp_keys
       check_and_patch /etc	"${ETC_PATCH_FILE}"	1 && ETC_CHANGED=1
-      apply_newconfs . cron.d logrotate.d rc.d modprobe.d
+      apply_newconfs . logrotate.d rc.d modprobe.d
       check_and_patch /etc	"${SSH_PATCH_FILE}"	1
 
       # this should be run after patching etc,
