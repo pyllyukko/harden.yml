@@ -50,36 +50,33 @@
   become: yes
   when: ansible_distribution == "Debian"
   tags: configuration
-- name: Create /etc/chkrootkit.ignore
-  become: yes
-  when: ansible_distribution == "Debian"
-  copy:
-    dest: /etc/chkrootkit.ignore
-    owner: root
-    group: root
-    mode: '0400'
-    content: |
-      ^-e The following suspicious files and directories were found:$
-      ^$
-      ^ ?/usr/lib/debug/\.build-id$
-      ^ ?/usr/lib/libreoffice/share/\.registry$
-      ^ ?/usr/lib/ruby/vendor_ruby/rubygems/ssl_certs/\.document$
-      ^ ?/usr/lib/pypy/lib_pypy/ctypes_config_cache/\.empty$
-      ^eth[0-9]+: PACKET SNIFFER\(/usr/sbin/dhcpcd\[[0-9]+\](, /usr/sbin/collectd\[[0-9]+\])?\)$
-  tags: configuration
-- name: Configure /etc/cron.daily/chkrootkit to use chkrootkit.ignore
-  replace:
-    path: /etc/cron.daily/chkrootkit
-    regexp: '^(IGNORE_FILE=).*'
-    replace: '\g<1>/etc/chkrootkit.ignore'
+
+- name: Configure chkrootkit
   become: yes
   when: ansible_distribution == "Debian"
   tags: configuration
-- name: Enable daily chkrootkit run
-  replace:
-    path: /etc/chkrootkit.conf
-    regexp: '^(RUN_DAILY=).*'
-    replace: '\g<1>"true"'
-  become: yes
-  when: ansible_distribution == "Debian"
-  tags: configuration
+  block:
+  - name: Create /etc/chkrootkit.ignore
+    copy:
+      dest: /etc/chkrootkit.ignore
+      owner: root
+      group: root
+      mode: '0400'
+      content: |
+        ^-e The following suspicious files and directories were found:$
+        ^$
+        ^ ?/usr/lib/debug/\.build-id$
+        ^ ?/usr/lib/libreoffice/share/\.registry$
+        ^ ?/usr/lib/ruby/vendor_ruby/rubygems/ssl_certs/\.document$
+        ^ ?/usr/lib/pypy/lib_pypy/ctypes_config_cache/\.empty$
+        ^eth[0-9]+: PACKET SNIFFER\(/usr/sbin/dhcpcd\[[0-9]+\](, /usr/sbin/collectd\[[0-9]+\])?\)$
+  - name: Configure /etc/cron.daily/chkrootkit to use chkrootkit.ignore
+    replace:
+      path: /etc/cron.daily/chkrootkit
+      regexp: '^(IGNORE_FILE=).*'
+      replace: '\g<1>/etc/chkrootkit.ignore'
+  - name: Enable daily chkrootkit run
+    replace:
+      path: /etc/chkrootkit.conf
+      regexp: '^(RUN_DAILY=).*'
+      replace: '\g<1>"true"'
