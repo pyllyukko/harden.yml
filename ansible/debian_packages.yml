@@ -10,7 +10,6 @@
         - debsums
         - bootlogd
         - tiger
-        - iptables-persistent
         - libpam-passwdqc
         #- libpam-tmpdir
         - debsecan
