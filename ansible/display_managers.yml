@@ -1,7 +1,12 @@
 ---
 # https://github.com/canonical/lightdm#configuration
+- name: Stat /etc/lightdm/lightdm.conf
+  stat:
+    path: /etc/lightdm/lightdm.conf
+  register: stat_result
 - name: Configure LightDM
   tags: configuration
+  when: stat_result.stat.exists == True
   block:
   - name: Disable VNC in LightDM
     ini_file:
@@ -33,3 +38,7 @@
     banner-message-enable: "true"
     banner-message-text: "'Authorized uses only'"
   become: yes
+  register: result
+  failed_when:
+    - result.failed == true
+    - result.msg != "Path /etc/gdm3/greeter.dconf-defaults does not exist !"
