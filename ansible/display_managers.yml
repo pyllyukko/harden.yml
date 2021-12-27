@@ -14,18 +14,15 @@
       section: VNCServer
       option: enabled
       value: "false"
-  - name: Hide user list in LightDM
+  - name: Hide user list and disallow guest login in LightDM
     ini_file:
       path: /etc/lightdm/lightdm.conf
       section: Seat:*
-      option: greeter-hide-users
-      value: "true"
-  - name: Disallow guest login in LightDM
-    ini_file:
-      path: /etc/lightdm/lightdm.conf
-      section: Seat:*
-      option: allow-guest
-      value: "false"
+      option: '{{ item.key }}'
+      value: '{{ item.value }}'
+    with_dict:
+      greeter-hide-users: "true"
+      allow-guest: "false"
   become: yes
 - name: Configure GDM3
   tags: configuration
