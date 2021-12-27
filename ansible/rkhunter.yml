@@ -1,6 +1,12 @@
 ---
 - name: rkhunter
   block:
+  - name: Install rkhunter (Debian)
+    apt:
+      name: rkhunter
+      update_cache: yes
+    when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+    tags: packages
   - name: 'Create /etc/rkhunter.conf'
     template:
       src: "{{ playbook_dir }}/templates/rkhunter.conf.j2"

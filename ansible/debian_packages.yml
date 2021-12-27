@@ -15,7 +15,6 @@
         #- libpam-tmpdir
         - debsecan
         - autolog
-        - rkhunter
         - chkrootkit
         - needrestart
         - arpwatch
