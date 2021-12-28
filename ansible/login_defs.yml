@@ -117,20 +117,17 @@
     slurp:
       src: /etc/login.defs
     register: login_defs
-  - name: Set uid_min, uid_max & sys_uid_max variables
+  - name: Set uid_min & uid_max variables
     set_fact:
       uid_min: "{{ login_defs['content'] | b64decode | regex_search('^UID_MIN\\s+([0-9]+)$', '\\1', multiline=True) | first }}"
       uid_max: "{{ login_defs['content'] | b64decode | regex_search('^UID_MAX\\s+([0-9]+)$', '\\1', multiline=True) | first }}"
-      sys_uid_max: "{{ login_defs['content'] | b64decode | regex_search('^SYS_UID_MAX\\s+([0-9]+)$', '\\1', multiline=True) | first }}"
-  - name: Verify uid_min, uid_max & sys_uid_max values
+  - name: Verify uid_min & uid_max values
     assert:
       that:
         - uid_min is regex('^[0-9]+$')
         - uid_max is regex('^[0-9]+$')
-        - sys_uid_max is regex('^[0-9]+$')
         - uid_min | int != 0
         - uid_max | int != 0
-        - sys_uid_max | int != 0
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.1.4 Ensure inactive password lock is 30 days or less
 - name: Inactive password lock
   block:
@@ -159,7 +156,7 @@
     expires: '{{ 60 * 60 * 24 }}'
     password_lock: yes
   # CIS Debian Benchmark also has accounts sync, shutdown & halt
-  when: item.value[1] | int <= sys_uid_max | int and (item.value[1] != "0" and item.key != "root") and item.key != "Debian-gdm" and item.key != "lightdm" and item.key != "daemon" and item.key != "logcheck"
+  when: item.value[1] | int < uid_min | int and (item.value[1] != "0" and item.key != "root") and item.key != "Debian-gdm" and item.key != "lightdm" and item.key != "daemon" and item.key != "logcheck"
   with_dict: "{{ getent_passwd }}"
   tags: accounts
   become: yes
