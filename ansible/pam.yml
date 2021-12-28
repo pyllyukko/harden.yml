@@ -26,6 +26,7 @@
         block: |
           + : root : LOCAL
           + : daemon : cron
+          + : logcheck : cron
           - : ALL : cron
           + : ({{ allowed_group }}) : ALL
           + : Debian-gdm lightdm : LOCAL
