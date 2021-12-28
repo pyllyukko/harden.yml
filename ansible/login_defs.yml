@@ -30,6 +30,7 @@
   command: slackpkg -batch=on -default_answer=y install glibc
   tags:
   - packages
+# Slackware Linux Benchmark v1.1 - 7.8 Restrict Root Logins To System Console
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.5 Ensure root login is restricted to system console
 # https://www.debian.org/doc/manuals/securing-debian-manual/restrict-console-login.en.html
 - name: Limit the list of terminals from which root can log in (securetty)
@@ -40,6 +41,8 @@
   tags:
   - configuration
   - authorization
+
+# profile.d
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.5 Ensure default user shell timeout is 900 seconds or less
 - name: Create /etc/profile.d/{tmout,expiry}.sh
   become: yes
@@ -65,29 +68,34 @@
     mode: '0755'
   tags: configuration
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-- name: getent passwd
-  getent:
-    database: passwd
+# </profile.d>
+
 # Slackware Linux Benchmark v1.1 - 7.3 Create ftpusers Files
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.12
-- name: Create /etc/ftpusers
-  become: yes
-  template:
-    src: "{{ playbook_dir }}/templates/ftpusers.j2"
-    dest: /etc/ftpusers
-    owner: root
-    group: root
-    mode: '0600'
-  tags:
-  - configuration
-  - authorization
+- name: ftpusers
+  block:
+  - name: getent passwd
+    getent:
+      database: passwd
+  - name: Create /etc/ftpusers
+    become: yes
+    template:
+      src: "{{ playbook_dir }}/templates/ftpusers.j2"
+      dest: /etc/ftpusers
+      owner: root
+      group: root
+      mode: '0600'
+    tags:
+    - configuration
+    - authorization
+
 - include: login_defs-slackware.yml
   when: ansible_distribution == "Slackware"
 # CIS Debian Linux 10 Benchmark v1.0.0 - 6.2.17 Ensure no duplicate GIDs exist
 - name: Verify integrity of group files
   become: yes
   command: grpck -r
-- name: Remove pi from adm group (Debian)
+- name: Remove pi from adm group (Raspbian)
   when: ansible_lsb.id == "Raspbian"
   become: yes
   command: gpasswd -d pi adm

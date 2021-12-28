@@ -34,6 +34,7 @@
       tags:
       - configuration
       - pam
+      - authorization
     - name: Add pam_access to system-auth (Slackware)
       when: ansible_distribution == "Slackware"
       become: yes
@@ -45,6 +46,7 @@
       tags:
       - configuration
       - pam
+      - authorization
 # This needs to happen before populating /etc/pam.d/other with pam_deny or otherwise sudo will stop working
 - name: Create /etc/pam.d/sudo (Slackware)
   when: ansible_distribution == "Slackware"

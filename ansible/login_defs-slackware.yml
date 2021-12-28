@@ -84,6 +84,7 @@
   failed_when:
     - result.failed == true
     - '"is not a member of" not in result.stderr'
+  tags: accounts
 - name: Fix gshadow (Slackware)
   when: ansible_distribution == "Slackware"
   ignore_errors: yes
