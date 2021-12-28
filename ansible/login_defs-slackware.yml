@@ -89,23 +89,6 @@
   ignore_errors: yes
   become: yes
   shell: yes | grpck
-# Slackware Linux Benchmark v1.1 - 8.1 Block System Accounts
-- name: Lock system accounts
-  block:
-    - name: getent passwd
-      getent:
-        database: passwd
-    - name: Lock system accounts
-      user:
-        name: '{{ item.key }}'
-        shell: /sbin/nologin
-        # pam_unix(account) will deny access if account is expired
-        expires: '{{ 60 * 60 * 24 }}'
-        password_lock: yes
-      when: item.value[1] | int < 1000 and item.value[1] != "0"
-      with_dict: "{{ getent_passwd }}"
-  when: ansible_distribution == "Slackware"
-  become: yes
 - name: Deny use of su
   copy:
     src: "{{ playbook_dir }}/../newconfs/pam.d/su.new"
