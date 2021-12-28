@@ -6,6 +6,9 @@
     regexp: '^(rotate\s+)[0-9]+$'
     replace: '\g<1>{{ log_retention_time_in_months * 4 }}'
     validate: '/bin/grep "^rotate\s\+{{ log_retention_time_in_months * 4 }}$" %s'
+  tags:
+  - configuration
+  - logging
 # this applies to Slackware & CentOS. Debian has these in /etc/logrotate.d/[bw]tmp
 - name: Configure [bw]tmp retention period to {{ log_retention_time_in_months }} months
   become: yes
@@ -14,7 +17,14 @@
     regexp: '^(\s+rotate\s+)1$'
     replace: '\g<1>{{ log_retention_time_in_months }}'
     validate: '/bin/grep "^\s\+rotate\s\+{{ log_retention_time_in_months }}$" %s'
+  tags:
+  - configuration
+  - logging
+
 - name: Debian specific logrotate changes
+  tags:
+  - configuration
+  - logging
   block:
   - name: Configure [bw]tmp retention period to {{ log_retention_time_in_months }} months (Debian)
     replace:
@@ -32,9 +42,15 @@
       regexp: '^(\s+create\s+)0664 root utmp$'
       replace: '\g<1>0660 root utmp'
       validate: '/bin/grep "^\s\+create\s\+0660 root utmp$" %s'
+    tags: permissions
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+
 - name: Slackware specific logrotate changes
+  tags:
+  - logging
+  - configuration
+  - permissions
   block:
   - name: Make new log file default permissions group adm readable (Slackware)
     replace:
@@ -70,7 +86,11 @@
       dest: /etc/logrotate.d/syslog
   become: yes
   when: ansible_distribution == "Slackware"
+
 - name: Slackware specific log file changes
+  tags:
+  - logging
+  - configuration
   block:
   - name: Make existing log files group adm readable (Slackware)
     file:
@@ -86,6 +106,7 @@
       - secure
       - spooler
       - syslog
+    tags: permissions
   - name: Make /var/log/dmesg group adm readable
     lineinfile:
       insertafter: 'chmod 640 /var/log/dmesg$'
@@ -93,6 +114,7 @@
       path: /etc/rc.d/rc.M
       regexp: '^ {4}chgrp adm /var/log/dmesg$'
       line: '    chgrp adm /var/log/dmesg'
+    tags: permissions
   - name: Enable bootlogd
     blockinfile:
       insertafter: '^PATH='
