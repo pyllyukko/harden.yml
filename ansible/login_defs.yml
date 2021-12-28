@@ -96,7 +96,7 @@
   become: yes
   command: grpck -r
 - name: Remove pi from adm group (Raspbian)
-  when: ansible_lsb.id == "Raspbian"
+  when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
   become: yes
   command: gpasswd -d pi adm
   register: result
