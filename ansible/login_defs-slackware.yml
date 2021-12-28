@@ -89,6 +89,7 @@
   ignore_errors: yes
   become: yes
   shell: yes | grpck
+# Slackware Linux Benchmark v1.1 - 8.1 Block System Accounts
 - name: Lock system accounts
   block:
     - name: getent passwd
