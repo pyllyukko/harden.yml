@@ -1,5 +1,6 @@
 ---
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.10
+# Regarding SHA_CRYPT_MIN_ROUNDS: https://github.com/linux-pam/linux-pam/issues/352
 - name: Configure shadow password suite (common)
   become: yes
   replace:
