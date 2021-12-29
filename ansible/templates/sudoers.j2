@@ -132,6 +132,7 @@ root {{ ansible_hostname }}=(ALL) ALL
 %sudo	{{ ansible_hostname }}=(:adm) PASSWD:NOEXEC: READ_FILES
 %sudo	{{ ansible_hostname }}=(root) PASSWD:EXEC: APT_GET
 %sudo	{{ ansible_hostname }}=(root) TIMEOUT={{ timeout }}m PASSWD:NOEXEC: sudoedit
+%sudo	{{ ansible_hostname }}=(logcheck) TIMEOUT=1m PASSWD:EXEC: /usr/sbin/logcheck
 {% endif %}
 
 ## Uncomment to allow any user to run sudo if they know the password
