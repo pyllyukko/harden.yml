@@ -648,8 +648,6 @@ function configure_apt() {
 function configure_shells() {
   print_topic "configuring shells"
   (( ${LYNIS_TESTS} )) && local LYNIS_SCORE_BEFORE=$( get_lynis_hardening_index shells )
-  echo '[+] creating /etc/profile.d/tmout.sh'
-  make -f ${CWD}/Makefile /etc/profile.d/tmout.sh
   configure_umask
   remove_shells
   (( ${LYNIS_TESTS} )) && {

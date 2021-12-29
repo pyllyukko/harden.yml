@@ -35,3 +35,4 @@ sshd_config:
   MaxAuthTries: 3
 # Value from system-hardening-10.2.txt
 fail_delay: 20
+timeout: 15

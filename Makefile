@@ -40,9 +40,6 @@ bash_syntax:
 /etc/issue.net: /etc/issue
 	@cp -vf $< $@
 
-/etc/profile.d/tmout.sh: $(CWD)/newconfs/profile.d/tmout.sh.new FORCE
-	/usr/bin/install -m 755 $< $@
-
 /etc/profile.d/umask.sh: $(CWD)/newconfs/profile.d/umask.sh.new FORCE
 	/usr/bin/install -m 755 $< $@
 
