@@ -145,16 +145,25 @@ So consider getting [ClamAV](https://www.clamav.net/).
 At least the following tools support daily checks and reporting via e-mail out-of-the-box:
 
 * Tiger (via `tigercron`)
+    * Can also run `chkrootkit` & AIDE
 * Logwatch
 * `rkhunter --cron`
     * Read "How can I automatically run Rootkit Hunter every day?" in the FAQ
+    * Debian has `/etc/cron.{daily,weekly}/rkhunter` for this
 * `sudo` (well not daily, but by event)
 
 Debian specific:
 
-* `debsecan` (run `dpkg-reconfigure debsecan` to configure it)
-* AIDE (in Debian via `/etc/cron.daily/aide`)
-* `unattended-upgrades`
+| Tool                | Cron job                                 | Configuration                             |
+| ------------------- | ---------------------------------------- | ----------------------------------------- |
+| debsecan            | /etc/cron.d/debsecan                     | /etc/default/debsecan                     |
+| AIDE                | /etc/cron.daily/aide                     | /etc/default/aide                         |
+| unattended-upgrades | N/A - systemd service                    | /etc/apt/apt.conf.d/50unattended-upgrades |
+| logcheck            | /etc/cron.d/logcheck                     | /etc/logcheck/                            |
+| john                | /etc/cron.d/john                         | `JOHN_OPTIONS` & /etc/john/john-mail.conf |
+| debsums             | /etc/cron.{daily,weekly,monthly}/debsums | /etc/default/debsums                      |
+| chkrootkit          | /etc/cron.daily/chkrootkit               | /etc/chkrootkit.conf                      |
+| checksecurity       | /etc/cron.{daily,weekly}/checksecurity   | /etc/checksecurity.conf                   |
 
 Post-hardening checklist
 ------------------------
