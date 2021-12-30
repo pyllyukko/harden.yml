@@ -37,10 +37,11 @@
       become: yes
       command: /sbin/sysctl -p /etc/sysctl.d/sysctl.conf /etc/sysctl.d/network.conf
       tags: kernel
-      register: result
-      failed_when:
-        - result.failed
-        - "result.stderr != 'sysctl: cannot stat /proc/sys/sys/kernel/modify_ldt: No such file or directory'"
+      ignore_errors: yes
+      #register: result
+      #failed_when:
+      #  - result.failed
+      #  - "result.stderr != 'sysctl: cannot stat /proc/sys/sys/kernel/modify_ldt: No such file or directory'"
     - name: Create rkhunter.dat
       command: /usr/bin/rkhunter --propupd
       become: yes
