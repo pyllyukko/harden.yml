@@ -60,3 +60,16 @@ Host 10.0.3.*
         StrictHostKeyChecking no
         UserKnownHostsFile=/dev/null
 ```
+
+Tags
+----
+
+Tags that you can use with `ansible-playbook --tags`:
+
+* `rkhunter`
+* `aide`
+* `pki`
+* `kernel`
+* `pam`?
+
+Other tags are just metadata for now.

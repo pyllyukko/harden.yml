@@ -16,6 +16,7 @@
       with_dict:
         Checksums: sha256
       tags: configuration
+      notify: "Create aide.db"
     - name: Configure AIDE (/etc/default/aide)
       replace:
         path: /etc/default/aide
@@ -24,6 +25,7 @@
       with_dict:
         COPYNEWDB: ifnochange
       tags: configuration
+      notify: "Create aide.db"
     - name: Exclude /net
       copy:
         content: "!/net$\n"
@@ -33,6 +35,7 @@
         mode: '0644'
         force: no
       tags: configuration
+      notify: "Create aide.db"
     - name: Exclude /media
       copy:
         content: "!/media$\n"
@@ -42,6 +45,7 @@
         mode: '0644'
         force: no
       tags: configuration
+      notify: "Create aide.db"
     - name: Create /etc/aide/aide.conf.d/70_hardensh_misc
       copy:
         src: "{{ playbook_dir }}/../newconfs/aide-debian.conf.new"
@@ -50,23 +54,22 @@
         group: root
         mode: 0600
       tags: configuration
+      notify: "Create aide.db"
     - name: Fix /var/log/exim4/(main|reject)log rule
       replace:
         path: /etc/aide/aide.conf.d/31_aide_exim4_logs
         regexp: '^(/var/log/exim4/@@{EXIM4_LOGS}log\$ f )Log$'
         replace: '\g<1>FreqRotLog'
       tags: configuration
+      notify: "Create aide.db"
     - name: Fix /var/tmp rule
       replace:
         path: /etc/aide/aide.conf.d/70_aide_var
         regexp: '^(/var/tmp\$ d )VarDir-n$'
         replace: '\g<1>VarDirInode-n'
       tags: configuration
+      notify: "Create aide.db"
     - name: Check aide.conf
       command: /usr/bin/aide --config-check --config=/etc/aide/aide.conf
-    - name: Create aide.db
-      command: /usr/sbin/aideinit --yes
-      args:
-        creates: /var/lib/aide/aide.db
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes

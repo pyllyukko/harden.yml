@@ -8,6 +8,7 @@
     tags:
     - pki
     - configuration
+    notify: "Run update-ca-certificates"
   - name: Install ca-certificates package (Debian)
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
     apt:
@@ -24,14 +25,9 @@
     tags:
     - configuration
     - pki
+    notify: "Run update-ca-certificates"
   - name: Install OpenSSL (Slackware)
     when: ansible_distribution == "Slackware"
     command: slackpkg -batch=on -default_answer=y install openssl
     tags: packages
-  - name: Run update-ca-certificates
-    when: ansible_os_family != "RedHat"
-    command: /usr/sbin/update-ca-certificates --verbose --fresh
-    tags:
-    - configuration
-    - pki
   become: yes

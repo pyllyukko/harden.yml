@@ -254,6 +254,7 @@
         - umask
         - time
         - inactive
+      notify: "Run pam-auth-update"
     - name: Copying new pam-configs (templates)
       template:
         src: "{{ playbook_dir }}/templates/pam-configs/{{ item }}.j2"
@@ -262,8 +263,7 @@
         group: root
       with_items:
         - faildelay
-    - name: Run pam-auth-update (Debian)
-      command: /usr/sbin/pam-auth-update --package
+      notify: "Run pam-auth-update"
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
   tags:

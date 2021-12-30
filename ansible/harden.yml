@@ -24,3 +24,39 @@
     #- include: rkhunter.yml
     #- include: clamav.yml
     #- include: display_managers.yml
+
+  handlers:
+    - name: Run update-ca-certificates
+      become: yes
+      when: ansible_os_family != "RedHat"
+      command: /usr/sbin/update-ca-certificates --verbose --fresh
+      tags:
+      - configuration
+      - pki
+    - name: Load sysctl settings
+      become: yes
+      command: /sbin/sysctl -p /etc/sysctl.d/sysctl.conf /etc/sysctl.d/network.conf
+      tags: kernel
+      register: result
+      failed_when:
+        - result.failed
+        - "result.stderr != 'sysctl: cannot stat /proc/sys/sys/kernel/modify_ldt: No such file or directory'"
+    - name: Create rkhunter.dat
+      command: /usr/bin/rkhunter --propupd
+      become: yes
+      tags: rkhunter
+    # This takes a long time so we do it async
+    - name: Create aide.db
+      command: /usr/sbin/aideinit --yes --force
+      tags: aide
+      become: yes
+      async: 3600
+      poll: 0
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+    - name: Run pam-auth-update
+      command: /usr/sbin/pam-auth-update --package
+      become: yes
+      tags:
+      - pam
+      - configuration
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"

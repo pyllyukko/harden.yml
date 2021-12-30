@@ -16,6 +16,7 @@
       owner: root
       group: root
     tags: configuration
+    notify: "Create rkhunter.dat"
   # https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/FAQ: "3.3) How can I automatically run Rootkit Hunter every day?"
   # We don't use --update as rkhunter.sourceforge.net doesn't have HTTPS
   - name: Add rkhunter cronjob
@@ -33,8 +34,4 @@
       replace: '\g<1>"yes"'
     when: ansible_distribution == "Debian"
     tags: configuration
-  - name: Create rkhunter.dat
-    command: /usr/bin/rkhunter --propupd
-    args:
-      creates: /var/lib/rkhunter/db/rkhunter.dat
   become: yes
