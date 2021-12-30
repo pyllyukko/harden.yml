@@ -129,7 +129,7 @@
   become: yes
   when: ansible_distribution == "Slackware"
   copy:
-    src: "{{ playbook_dir }}/../newconfs/logrotate.d/pacct.new"
+    src: "{{ playbook_dir }}/newconfs/logrotate.d/pacct.new"
     dest: /etc/logrotate.d/pacct
   tags:
   - services

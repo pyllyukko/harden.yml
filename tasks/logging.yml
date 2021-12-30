@@ -51,6 +51,7 @@
   - logging
   - configuration
   - permissions
+  - slackware
   block:
   - name: Make new log file default permissions group adm readable (Slackware)
     replace:
@@ -82,7 +83,7 @@
       validate: '/bin/grep "^\s\+create\s\+0640 root adm$" %s'
   - name: Make some log files append only (Slackware)
     copy:
-      src: "{{ playbook_dir }}/../newconfs/logrotate.d/syslog.new"
+      src: "{{ playbook_dir }}/newconfs/logrotate.d/syslog.new"
       dest: /etc/logrotate.d/syslog
   become: yes
   when: ansible_distribution == "Slackware"
@@ -91,6 +92,7 @@
   tags:
   - logging
   - configuration
+  - slackware
   block:
   - name: Make existing log files group adm readable (Slackware)
     file:

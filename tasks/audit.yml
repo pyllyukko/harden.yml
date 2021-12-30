@@ -66,7 +66,7 @@
       register: tempdir_1
     - name: Copy Makefile
       copy:
-        src: "{{ playbook_dir }}/../Makefile"
+        src: "{{ playbook_dir }}/Makefile"
         dest: "{{ tempdir_1.path }}/"
         mode: 0600
     - name: Generate 31-privileged.rules
@@ -85,7 +85,7 @@
   - name: Create few custom rules
     assemble:
       remote_src: no
-      src: "{{ playbook_dir }}/../newconfs/rules.d"
+      src: "{{ playbook_dir }}/newconfs/rules.d"
       dest: /etc/audit/rules.d/40-local.rules
   - name: Make the configuration immutable
     replace:

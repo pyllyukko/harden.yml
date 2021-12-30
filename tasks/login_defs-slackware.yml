@@ -92,7 +92,7 @@
   shell: yes | grpck
 - name: Deny use of su
   copy:
-    src: "{{ playbook_dir }}/../newconfs/pam.d/su.new"
+    src: "{{ playbook_dir }}/newconfs/pam.d/su.new"
     dest: /etc/pam.d/su
     owner: root
     group: root

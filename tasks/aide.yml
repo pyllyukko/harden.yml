@@ -48,7 +48,7 @@
       notify: "Create aide.db"
     - name: Create /etc/aide/aide.conf.d/70_hardensh_misc
       copy:
-        src: "{{ playbook_dir }}/../newconfs/aide-debian.conf.new"
+        src: "{{ playbook_dir }}/newconfs/aide-debian.conf.new"
         dest: /etc/aide/aide.conf.d/70_hardensh_misc
         owner: root
         group: root

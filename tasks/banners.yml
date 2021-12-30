@@ -11,6 +11,6 @@
 - name: Create /etc/motd
   become: yes
   copy:
-    src: "{{ playbook_dir }}/../newconfs/motd.new"
+    src: "{{ playbook_dir }}/newconfs/motd.new"
     dest: /etc/motd
   tags: configuration

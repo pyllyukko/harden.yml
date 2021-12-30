@@ -16,7 +16,7 @@
 - name: modprobe.d
   become: yes
   copy:
-    src: "{{ playbook_dir }}/../newconfs/modprobe.d/{{ item }}.conf.new"
+    src: "{{ playbook_dir }}/newconfs/modprobe.d/{{ item }}.conf.new"
     dest: /etc/modprobe.d/{{ item }}.conf
     owner: root
     group: root

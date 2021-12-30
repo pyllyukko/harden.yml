@@ -47,6 +47,7 @@
       - configuration
       - pam
       - authorization
+      - slackware
 # This needs to happen before populating /etc/pam.d/other with pam_deny or otherwise sudo will stop working
 - name: Create /etc/pam.d/sudo (Slackware)
   when: ansible_distribution == "Slackware"
@@ -66,6 +67,7 @@
   tags:
   - configuration
   - pam
+  - slackware
 - name: Add pam_umask to /etc/pam.d/postlogin (Slackware)
   when: ansible_distribution == "Slackware"
   become: yes
@@ -76,13 +78,14 @@
   tags:
   - configuration
   - pam
+  - slackware
 # http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html
 # https://tldp.org/HOWTO/User-Authentication-HOWTO/x263.html#AEN266
 - name: /etc/pam.d/other
   block:
     - name: Create secure default /etc/pam.d/other
       copy:
-        src: "{{ playbook_dir }}/../newconfs/pam.d/other.new"
+        src: "{{ playbook_dir }}/newconfs/pam.d/other.new"
         dest: /etc/pam.d/other
         owner: root
         group: root
@@ -95,7 +98,9 @@
         path: /etc/pam.d/other.new
         state: absent
       when: ansible_distribution == "Slackware"
-      tags: pam
+      tags:
+      - pam
+      - slackware
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
   become: yes
 - name: Check some Slackware's PAM files
@@ -114,12 +119,14 @@
     - useradd
     - userdel
     - usermod
-  tags: pam
+  tags:
+  - pam
+  - slackware
 - name: Configure pam_faillock & pam_faildelay (Slackware)
   block:
     - name: Configure /etc/security/faillock.conf
       template:
-        src: "{{ playbook_dir }}/../newconfs/faillock.conf.new"
+        src: "{{ playbook_dir }}/newconfs/faillock.conf.new"
         dest: /etc/security/faillock.conf
         owner: root
         group: root
@@ -144,6 +151,7 @@
       tags:
       - configuration
       - pam
+      - slackware
   when: ansible_distribution == "Slackware"
   become: yes
 # postlogin doesn't include any auth lines
@@ -162,6 +170,7 @@
   tags:
   - configuration
   - pam
+  - slackware
 # https://github.com/pyllyukko/harden.sh/issues/64
 - name: nullok
   block:
@@ -175,6 +184,7 @@
     # pam_faillock and pam_faildelay to /etc/pam.d/system-auth" task
     - name: Disallow blank passwords (Slackware)
       when: ansible_distribution == "Slackware"
+      tags: slackware
       replace:
         path: /etc/pam.d/system-auth
         regexp: '\s+nullok'
@@ -242,7 +252,7 @@
   block:
     - name: Copying new pam-configs
       copy:
-        src: "{{ playbook_dir }}/../newconfs/pam-configs/{{ item }}.new"
+        src: "{{ playbook_dir }}/newconfs/pam-configs/{{ item }}.new"
         dest: /usr/share/pam-configs/{{ item }}
       with_items:
         - access
@@ -306,6 +316,7 @@
         ucredit: -1
         ocredit: -1
         lcredit: -1
+      tags: slackware
     - name: Configure minlen -> 14 in /etc/pam.d/system-auth (Slackware)
       replace:
         path: /etc/pam.d/system-auth
@@ -313,6 +324,7 @@
         replace: '\g<1>14\g<2>'
         validate: '/bin/grep "^password.\+minlen=14.*$" %s'
       when: ansible_distribution == "Slackware"
+      tags: slackware
   become: yes
   tags:
   - configuration

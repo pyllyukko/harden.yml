@@ -41,7 +41,7 @@
   - name: Copy fstab.awk
     become: yes
     copy:
-      src: "{{ playbook_dir }}/../libexec/fstab.awk"
+      src: "{{ playbook_dir }}/legacy/libexec/fstab.awk"
       dest: "{{ tempfile_1.path }}"
   - name: Install Gawk
     become: yes
@@ -74,7 +74,7 @@
   when: ansible_distribution == "Debian"
   tags: configuration
   copy:
-    src: "{{ playbook_dir }}/../newconfs/tmp.conf.new"
+    src: "{{ playbook_dir }}/newconfs/tmp.conf.new"
     dest: /etc/tmpfiles.d/tmp.conf
     mode: '0644'
     owner: root

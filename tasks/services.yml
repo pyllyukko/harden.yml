@@ -17,7 +17,9 @@
 - name: Slackware services
   become: yes
   when: ansible_distribution == "Slackware"
-  tags: services
+  tags:
+  - services
+  - slackware
   block:
   - name: Stop unwanted services (Slackware)
     ignore_errors: yes
@@ -65,6 +67,7 @@
     minute: "*/5"
     state: present
 - name: Slackware's cron
+  tags: slackware
   block:
   - name: Increase crond's log level (Slackware)
     replace:
@@ -140,30 +143,18 @@
       - result.failed == true
       - '"sshd: no hostkeys available -- exiting." not in result.stderr'
     tags: services
-  - name: Restart sshd (Debian)
-    service:
-      name: ssh
-      state: restarted
-    when: >
-      (ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux") and
-      ansible_facts.services.ssh.state == "running"
-    tags: services
-  # rc.sshd exits if /var/run/sshd.pid doesn't exist
-  - name: Restart sshd (Slackware)
-    when: ansible_distribution == "Slackware"
-    become: yes
-    command: /bin/sh /etc/rc.d/rc.sshd restart
-    register: result
-    failed_when:
-      - result.failed == true
-      - '"WARNING: There does not appear to be a parent instance of sshd running." not in result.stdout'
-    tags: services
+    notify:
+      - "Restart sshd (Slackware)"
+      - "Restart sshd (Debian)"
   become: yes
   # Skip the whole block in Debian if ssh.service does not exist
   when: >
     ((ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux") and ansible_facts.services.ssh is defined) or
     ansible_distribution == "Slackware"
 - name: Harden SSH client configuration
+  tags:
+  - configuration
+  - slackware
   become: yes
   when: ansible_distribution == "Slackware"
   template:
@@ -192,11 +183,13 @@
   tags:
   - packages
   - services
+  - slackware
 - name: Slackware rc.d
+  tags: slackware
   block:
   - name: Create /etc/rc.d/rc.local (Slackware)
     copy:
-      src: "{{ playbook_dir }}/../newconfs/rc.d/rc.local.new"
+      src: "{{ playbook_dir }}/newconfs/rc.d/rc.local.new"
       dest: /etc/rc.d/rc.local
       owner: root
       group: root

@@ -23,7 +23,7 @@
 - name: 'TCP wrappers: create /etc/hosts.deny'
   become: yes
   copy:
-    src: "{{ playbook_dir }}/../newconfs/hosts.deny.new"
+    src: "{{ playbook_dir }}/newconfs/hosts.deny.new"
     dest: /etc/hosts.deny
   tags: network
 # </TCP wrappers>
