@@ -4,7 +4,9 @@
   slurp:
     src: /sys/class/misc/hw_random/rng_current
   register: rng_current
+  tags: rng
 - name: Use rng-tools
+  tags: rng
   block:
   - name: Install rng-tools
     apt:

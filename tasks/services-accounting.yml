@@ -127,6 +127,7 @@
   tags:
   - services
   - accounting
+  - slackware
 - name: Create /etc/logrotate.d/pacct (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
@@ -136,6 +137,7 @@
   tags:
   - services
   - accounting
+  - slackware
 - name: Start process accounting (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
@@ -143,4 +145,5 @@
   tags:
   - services
   - accounting
+  - slackware
 # </Process accounting>

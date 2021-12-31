@@ -51,13 +51,16 @@
   tags:
   - permissions
   - services
+  - configuration
 - name: Restrict cron (cron.deny)
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
   file:
     path: /etc/cron.deny
     state: absent
-  tags: services
+  tags:
+  - services
+  - configuration
 - name: Create a job that checks systemd's state
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
@@ -129,25 +132,28 @@
 - name: Check SSH daemon service state
   service_facts:
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-  tags: services
-- name: sshd
-  block:
-  - name: Harden SSH daemon configuration
-    template:
-      src: "{{ playbook_dir }}/templates/sshd_config-{{ ansible_distribution }}.j2"
-      dest: /etc/ssh/sshd_config
-      validate: /usr/sbin/sshd -t -f %s
-    register: result
-    # sshd validation fails when the hostkeys do not exist
-    failed_when:
-      - result.failed == true
-      - '"sshd: no hostkeys available -- exiting." not in result.stderr'
-    tags: services
-    notify:
-      - "Restart sshd (Slackware)"
-      - "Restart sshd (Debian)"
+  tags:
+  - services
+  - ssh
+- name: Harden SSH daemon configuration
+  template:
+    src: "{{ playbook_dir }}/templates/sshd_config-{{ ansible_distribution }}.j2"
+    dest: /etc/ssh/sshd_config
+    validate: /usr/sbin/sshd -t -f %s
+  register: result
+  # sshd validation fails when the hostkeys do not exist
+  failed_when:
+    - result.failed == true
+    - '"sshd: no hostkeys available -- exiting." not in result.stderr'
+  tags:
+  - services
+  - configuration
+  - ssh
+  notify:
+    - "Restart sshd (Slackware)"
+    - "Restart sshd (Debian)"
   become: yes
-  # Skip the whole block in Debian if ssh.service does not exist
+  # Skip the task in Debian if ssh.service does not exist
   when: >
     ((ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux") and ansible_facts.services.ssh is defined) or
     ansible_distribution == "Slackware"
@@ -155,6 +161,7 @@
   tags:
   - configuration
   - slackware
+  - ssh
   become: yes
   when: ansible_distribution == "Slackware"
   template:
