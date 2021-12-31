@@ -151,9 +151,9 @@
       tags:
       - configuration
       - pam
-      - slackware
   when: ansible_distribution == "Slackware"
   become: yes
+  tags: slackware
 # postlogin doesn't include any auth lines
 - name: Remove auth include postlogin (Slackware)
   when: ansible_distribution == "Slackware"
@@ -180,6 +180,7 @@
         path: /etc/pam.d/common-auth
         regexp: '\s+nullok(_secure)?'
         replace: ''
+      tags: debian
     # There are other lines also than auth pam_unix.so that is handled by the "Add
     # pam_faillock and pam_faildelay to /etc/pam.d/system-auth" task
     - name: Disallow blank passwords (Slackware)
@@ -193,6 +194,7 @@
   tags:
   - configuration
   - pam
+  - passwords
 - name: Enable pam_wheel.so in /etc/pam.d/su
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
   become: yes
@@ -204,6 +206,8 @@
   tags:
   - configuration
   - pam
+  - debian
+  - centos
 - name: Enable polyinstantiated temp directories
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
   become: yes
@@ -229,6 +233,7 @@
   tags:
   - configuration
   - pam
+  - debian
 # For some reason some Debian systems have had random group ownership on these (e.g. audio or systemd-journal)
 - name: Make sure polyinstantiated directories are owned by root:root
   become: yes
@@ -279,6 +284,7 @@
   tags:
   - configuration
   - pam
+  - debian
 - name: authconfig
   block:
     - name: Enable additional PAM modules with authconfig (RH)
@@ -288,19 +294,32 @@
         - faillock
     - name: Configure password policy via authconfig
       command: /sbin/authconfig --passalgo=sha512 --passminlen=14 --enablereqlower --enablerequpper --enablereqdigit --enablereqother --update
+      tags: passwords
   when: ansible_os_family == "RedHat"
   become: yes
   tags:
   - configuration
   - pam
+  - centos
 - name: Password related
   block:
+    - name: Install passwdqc (Debian)
+      apt:
+        name: libpam-passwdqc
+        update_cache: yes
+      tags:
+      - debian
+      - passwords
+      - packages
+    # https://github.com/linux-pam/linux-pam/issues/352
     - name: Add rounds=500000 to pam_unix in /etc/pam.d/common-passwd
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+      tags: debian
       replace:
         path: /etc/pam.d/common-password
         regexp: '^(password\s+.+\s+pam_unix\.so(?!.*\brounds=[0-9]+\b).*)$'
         replace: '\1 rounds=500000'
+    # CIS CentOS Linux 7 Benchmark v3.0.0 - 5.3.1 Ensure password creation requirements are configured
     - name: Configure pwquality
       replace:
         path: /etc/security/pwquality.conf
@@ -316,7 +335,9 @@
         ucredit: -1
         ocredit: -1
         lcredit: -1
-      tags: slackware
+      tags:
+      - slackware
+      - centos
     - name: Configure minlen -> 14 in /etc/pam.d/system-auth (Slackware)
       replace:
         path: /etc/pam.d/system-auth
@@ -329,3 +350,4 @@
   tags:
   - configuration
   - pam
+  - passwords

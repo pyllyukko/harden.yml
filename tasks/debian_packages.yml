@@ -1,5 +1,6 @@
 ---
 - name: Install security software
+  tags: debian
   block:
     - name: Install security software
       apt:
@@ -10,7 +11,6 @@
         - debsums
         - bootlogd
         - tiger
-        - libpam-passwdqc
         #- libpam-tmpdir
         - debsecan
         - autolog
@@ -40,7 +40,10 @@
     question: debsecan/suite
     vtype: select
     value: "{{ ansible_distribution_release }}"
-  tags: configuration
+  tags:
+  - configuration
+  - debsecan
+  - debian
 - name: Enable weekly debsums run
   replace:
     path: /etc/default/debsums
@@ -48,12 +51,18 @@
     replace: '\g<1>weekly'
   become: yes
   when: ansible_distribution == "Debian"
-  tags: configuration
+  tags:
+  - configuration
+  - debsums
+  - debian
 
 - name: Configure chkrootkit
   become: yes
   when: ansible_distribution == "Debian"
-  tags: configuration
+  tags:
+  - configuration
+  - chkrootkit
+  - debian
   block:
   - name: Create /etc/chkrootkit.ignore
     copy:
