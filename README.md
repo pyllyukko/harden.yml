@@ -154,6 +154,7 @@ Tags that you can use with `ansible-playbook --tags`:
 * `aide`
 * `pki`
 * `kernel`
+* `sysstat`
 * `pam`?
 
 Other tags are just metadata for now.
