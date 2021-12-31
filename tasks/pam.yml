@@ -301,6 +301,7 @@
   - configuration
   - pam
   - centos
+
 - name: Password related
   block:
     - name: Install passwdqc (Debian)
@@ -309,6 +310,15 @@
         update_cache: yes
       tags:
       - debian
+      - passwords
+      - packages
+    # TODO: Verify that pwquality is used by pam configs
+    - name: Install libpwquality (Slackware)
+      slackpkg:
+        name: libpwquality
+        state: present
+      tags:
+      - slackware
       - passwords
       - packages
     # https://github.com/linux-pam/linux-pam/issues/352
