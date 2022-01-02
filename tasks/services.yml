@@ -12,7 +12,9 @@
     - result.failed == true
     - '"Could not find the requested service" not in result.msg'
   register: result
-  tags: services
+  tags:
+  - services
+  - debian
 
 - name: Slackware services
   become: yes
@@ -52,6 +54,7 @@
   - permissions
   - services
   - configuration
+  - debian
 - name: Restrict cron (cron.deny)
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
@@ -61,6 +64,7 @@
   tags:
   - services
   - configuration
+  - debian
 - name: Create a job that checks systemd's state
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
@@ -69,6 +73,9 @@
     job: "/bin/systemctl show --property=SystemState | /bin/grep -v '^SystemState=running$'"
     minute: "*/5"
     state: present
+  tags:
+  - debian
+  - centos
 - name: Slackware's cron
   tags: slackware
   block:
@@ -137,6 +144,7 @@
   tags:
   - services
   - ssh
+  - debian
 - name: Harden SSH daemon configuration
   template:
     src: "{{ playbook_dir }}/templates/sshd_config-{{ ansible_distribution }}.j2"
