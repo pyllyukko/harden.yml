@@ -42,8 +42,13 @@
     regexp: '^(defchmod)=[0-9]+.*'
     replace: '\g<1>=700 # home dir permissions'
     validate: '/bin/grep "^defchmod=700 # home dir permissions$" %s'
+# Slackware Linux Benchmark v1.1 - 7.10 Require Authentication For Single-User Mode
+# https://web.archive.org/web/20070702234716/http://www.bastille-linux.org:80/jay/anyone-with-a-screwdriver.html
+# https://cisofy.com/lynis/controls/AUTH-9308/
 - name: Single user mode authentication
-  tags: configuration
+  tags:
+  - configuration
+  - authentication
   block:
   - name: Remove S from System initialization (Slackware)
     replace:
