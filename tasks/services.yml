@@ -78,7 +78,9 @@
       regexp: '^(CROND_OPTS=".*)-l [a-z]+(.*")$'
       replace: '\g<1>-l info\g<2>'
       validate: '/bin/grep "^CROND_OPTS=\".*-l info.*\"$" %s'
-    tags: services
+    tags:
+    - services
+    - logging
   # From dcron's README
   - name: Restrict cron (Slackware)
     file:
