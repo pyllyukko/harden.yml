@@ -83,6 +83,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * Sets shell to `/sbin/nologin`
     * Expire the account
 * Configures the default password inactivity period
+    * Run `ansible-playbook --list-tasks --tags passwords harden.yml` to list all password related tasks
 
 #### PAM
 
@@ -91,6 +92,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Configures `/etc/security/pwquality.conf` if available
 * Require [pam\_wheel](http://linux-pam.org/Linux-PAM-html/sag-pam_wheel.html) in `/etc/pam.d/su`
 * Creates a secure [/etc/pam.d/other](http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html)
+* Run `ansible-playbook --list-tasks --tags pam harden.yml` to list all PAM related tasks
 
 ### Miscellaneous
 
