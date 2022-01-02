@@ -83,6 +83,7 @@
       regexp: '^(\s+create\s+)0600 root root$'
       replace: '\g<1>0640 root adm'
       validate: '/bin/grep "^\s\+create\s\+0640 root adm$" %s'
+  # https://seifried.org/lasg/logging/ - "General log security"
   - name: Make some log files append only (Slackware)
     copy:
       src: "{{ playbook_dir }}/newconfs/logrotate.d/syslog.new"

@@ -9,7 +9,9 @@
       key: "{{ allowed_group }}"
     failed_when: getent_group.{{ allowed_group }}[2] == ""
   - name: /etc/shutdown.allow
-    tags: configuration
+    tags:
+    - configuration
+    - authorization
     block:
     - name: Create /etc/shutdown.allow
       copy:
