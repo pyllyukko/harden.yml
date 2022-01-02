@@ -25,6 +25,7 @@
   tags:
   - configuration
   - logging
+  - debian
   block:
   - name: Configure [bw]tmp retention period to {{ log_retention_time_in_months }} months (Debian)
     replace:
@@ -70,6 +71,7 @@
     blockinfile:
       insertafter: '/var/log/wtmp {'
       path: /etc/logrotate.conf
+      marker: "# {mark} ANSIBLE MANAGED BLOCK setfacl"
       block: |
         postrotate
         /usr/bin/setfacl -m g:adm:r /var/log/wtmp
@@ -130,3 +132,14 @@
         fi
   become: yes
   when: ansible_distribution == "Slackware"
+
+- name: Configure log file shredding
+  become: yes
+  tags:
+  - logging
+  - configuration
+  lineinfile:
+    state: present
+    path: /etc/logrotate.conf
+    regexp: '^shred$'
+    line: 'shred'
