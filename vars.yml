@@ -31,3 +31,4 @@ allowed_tcp_ports:
 fail_delay: 20
 timeout: 15
 nproc_limit: 4096
+crypt_rounds: 500000

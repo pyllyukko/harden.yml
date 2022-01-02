@@ -322,13 +322,13 @@
       - passwords
       - packages
     # https://github.com/linux-pam/linux-pam/issues/352
-    - name: Add rounds=500000 to pam_unix in /etc/pam.d/common-passwd
+    - name: Add rounds={{ crypt_rounds }} to pam_unix in /etc/pam.d/common-passwd
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
       tags: debian
       replace:
         path: /etc/pam.d/common-password
         regexp: '^(password\s+.+\s+pam_unix\.so(?!.*\brounds=[0-9]+\b).*)$'
-        replace: '\1 rounds=500000'
+        replace: '\1 rounds={{ crypt_rounds }}'
     # CIS CentOS Linux 7 Benchmark v3.0.0 - 5.3.1 Ensure password creation requirements are configured
     - name: Configure pwquality
       replace:

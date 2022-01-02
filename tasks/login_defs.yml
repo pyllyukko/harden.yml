@@ -34,7 +34,7 @@
     PASS_MAX_DAYS: 365
     PASS_MIN_DAYS: 7
     PASS_WARN_AGE: 30
-    SHA_CRYPT_MIN_ROUNDS: 500000
+    SHA_CRYPT_MIN_ROUNDS: "{{ crypt_rounds }}"
     ENCRYPT_METHOD: "SHA512"
     FAIL_DELAY: "{{ fail_delay }}"
   tags:
