@@ -30,3 +30,4 @@ allowed_tcp_ports:
 # Value from system-hardening-10.2.txt
 fail_delay: 20
 timeout: 15
+nproc_limit: 4096
