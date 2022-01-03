@@ -23,6 +23,7 @@
   tags:
   - packages
   - lynis
+  - debian
 - name: Install Lynis into CentOS
   block:
   - name: Add Lynis repository
@@ -43,6 +44,7 @@
   tags:
   - packages
   - lynis
+  - centos
 - name: Configure Lynis
   tags:
   - configuration
