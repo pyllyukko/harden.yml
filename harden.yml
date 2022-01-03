@@ -3,6 +3,11 @@
   vars_files:
     - vars.yml
   tasks:
+    - name: Check OS version
+      assert:
+        that:
+          - (ansible_distribution == "Slackware" and ansible_distribution_major_version | int >= 15) or (ansible_distribution == "Debian" and ansible_distribution_major_version | int >= 11) or (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7")
+        msg: "Unsupported operating system"
     #- include: tasks/sudoers.yml
     - include: tasks/lynis.yml
     - include: tasks/filesystem.yml
