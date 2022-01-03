@@ -305,6 +305,7 @@
 - name: Password related
   block:
     - name: Install passwdqc (Debian)
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
       apt:
         name: libpam-passwdqc
         update_cache: yes
@@ -314,6 +315,7 @@
       - packages
     # TODO: Verify that pwquality is used by pam configs
     - name: Install libpwquality (Slackware)
+      when: ansible_distribution == "Slackware"
       slackpkg:
         name: libpwquality
         state: present
