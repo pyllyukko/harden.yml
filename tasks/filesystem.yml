@@ -277,6 +277,13 @@
       group: root
     when: ansible_distribution == "Slackware"
     tags: permissions
+  # CIS Debian Linux 10 Benchmark v1.0.0
+  #   5.1.2 Ensure permissions on /etc/crontab are configured
+  #   5.1.3 Ensure permissions on /etc/cron.hourly are configured
+  #   5.1.4 Ensure permissions on /etc/cron.daily are configured
+  #   5.1.5 Ensure permissions on /etc/cron.weekly are configured
+  #   5.1.6 Ensure permissions on /etc/cron.monthly are configured
+  #   5.1.7 Ensure permissions on /etc/cron.d are configured
   - name: Restrict visibility to /etc/cron{tab,.{d,hourly,daily,weekly,monthly}/}
     file:
       path: /etc/{{ item }}

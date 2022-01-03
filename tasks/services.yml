@@ -41,7 +41,8 @@
     tags: permissions
 
 # Cron
-- name: Debian cron
+# CIS Debian Linux 10 Benchmark v1.0.0 - 5.1.8 Ensure at/cron is restricted to authorized users
+- name: Debian cron & at
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   tags:
@@ -59,11 +60,23 @@
       group: crontab
       mode: '0640'
     tags: permissions
-  - name: Restrict cron (cron.deny)
+  - name: Restrict at (at.allow)
     become: yes
     file:
-      path: /etc/cron.deny
+      path: /etc/at.allow
+      state: touch
+      owner: root
+      group: daemon
+      mode: '0640'
+    tags: permissions
+  - name: Restrict cron & at ({at,cron}.deny)
+    become: yes
+    file:
+      path: /etc/{{ item }}
       state: absent
+    with_items:
+      - cron.deny
+      - at.deny
 
 - name: Create a job that checks systemd's state
   become: yes
