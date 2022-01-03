@@ -44,6 +44,13 @@
       replace: '\g<1>0660 root utmp'
       validate: '/bin/grep "^\s\+create\s\+0660 root utmp$" %s'
     tags: permissions
+  - name: Restrict permissions of newly created log files
+    replace:
+      path: /etc/logrotate.conf
+      regexp: '^(create)\b.*'
+      replace: '\g<1> 0640 root adm'
+      validate: '/bin/grep "^create 0640 root adm$" %s'
+    tags: permissions
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
 
