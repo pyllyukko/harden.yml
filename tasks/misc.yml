@@ -1,26 +1,4 @@
 ---
-- name: Disable core dumps
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
-  become: yes
-  pam_limits:
-    domain: '*'
-    limit_type: hard
-    limit_item: core
-    value: 0
-  tags:
-  - configuration
-  - pam
-- name: Set maximum number of processes (nproc)
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
-  become: yes
-  pam_limits:
-    domain: '*'
-    limit_type: hard
-    limit_item: nproc
-    value: '{{ nproc_limit }}'
-  tags:
-  - configuration
-  - pam
 - name: Create /etc/modprobe.d/
   become: yes
   file:

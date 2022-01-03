@@ -361,3 +361,20 @@
   - configuration
   - pam
   - passwords
+
+# CIS Debian Linux 10 Benchmark v1.0.0 - 1.6.4 Ensure core dumps are restricted
+# https://en.wikipedia.org/wiki/Fork_bomb#Prevention
+- name: Configure /etc/security/limits.conf
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
+  become: yes
+  pam_limits:
+    domain: '*'
+    limit_type: hard
+    limit_item: '{{ item.key }}'
+    value: '{{ item.value }}'
+  tags:
+  - configuration
+  - pam
+  with_dict:
+    core: 0
+    nproc: '{{ nproc_limit }}'
