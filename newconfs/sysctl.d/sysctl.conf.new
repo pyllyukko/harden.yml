@@ -68,7 +68,7 @@ kernel.yama.ptrace_scope = 3
 
 # Disable User Namespaces, as it opens up a large attack surface to unprivileged users.
 # https://www.debian.org/releases/bullseye/amd64/release-notes/ch-information.en.html#linux-user-namespaces
-user.max_user_namespaces = 0
+#user.max_user_namespaces = 0
 
 # https://www.kernel.org/doc/html/latest/admin-guide/sysctl/kernel.html#unprivileged-bpf-disabled
 # https://www.debian.org/releases/bullseye/amd64/release-notes/ch-information.en.html#linux-unprivileged-bpf
