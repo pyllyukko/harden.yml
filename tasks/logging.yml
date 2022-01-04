@@ -46,11 +46,17 @@
     tags: permissions
   - name: Restrict permissions of newly created log files
     replace:
-      path: /etc/logrotate.conf
-      regexp: '^(create)\b.*'
+      path: '{{ item }}'
+      regexp: '^(\s*create)\b.*'
       replace: '\g<1> 0640 root adm'
-      validate: '/bin/grep "^create 0640 root adm$" %s'
+      validate: '/bin/grep "^\s*create 0640 root adm$" %s'
     tags: permissions
+    with_items:
+      - /etc/logrotate.conf
+      - /etc/logrotate.d/alternatives
+      - /etc/logrotate.d/autolog
+      - /etc/logrotate.d/dpkg
+      #- /etc/logrotate.d/cups-daemon
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
 
