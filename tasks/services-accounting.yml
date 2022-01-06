@@ -14,7 +14,8 @@
     tags:
     - packages
     - services
-  - name: Enable system accounting (sysstat)
+    - debian
+  - name: Enable system accounting in /etc/default/sysstat
     become: yes
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
     replace:
@@ -25,6 +26,18 @@
     tags:
     - services
     - configuration
+    - debian
+  - name: Enable system accounting systemd service
+    become: yes
+    when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+    service:
+      name: sysstat
+      state: started
+      enabled: yes
+    tags:
+    - services
+    - configuration
+    - debian
   - name: Install sysstat (Slackware)
     become: yes
     when: ansible_distribution == "Slackware"
