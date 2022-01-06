@@ -152,13 +152,14 @@ Tags
 
 Tags that you can use with `ansible-playbook --tags`:
 
-* `rkhunter`
-* `aide`
 * `pki`
 * `kernel`
-* `sysstat`
 * `rng`
-* `ssh`
+* Specific software:
+    * `sysstat`
+    * `ssh`
+    * `rkhunter`
+    * `aide`
 * `passwords`
 * `pam`?
 
