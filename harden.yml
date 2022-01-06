@@ -17,7 +17,7 @@
     - include: tasks/login_defs.yml
     - include: tasks/pam.yml
     - include: tasks/services.yml
-    - include: tasks/sysctl.yml
+    - include: tasks/kernel.yml
     - include: tasks/services-accounting.yml
     - include: tasks/apparmor.yml
     - include: tasks/logging.yml

@@ -1,0 +1,51 @@
+---
+- name: Create harden.conf sysctl settings file
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/newconfs/sysctl.d/{{ item }}.conf.new"
+    dest: /etc/sysctl.d/{{ item }}.conf
+    owner: root
+    group: root
+    mode: 0600
+  with_items:
+    - sysctl
+    - network
+  tags:
+  - configuration
+  - kernel
+  - network
+  notify: "Load sysctl settings"
+- name: Create /etc/modprobe.d/
+  become: yes
+  file:
+    path: /etc/modprobe.d
+    state: directory
+  tags: kernel
+- name: Blacklist certain kernel modules
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/newconfs/modprobe.d/{{ item }}.conf.new"
+    dest: /etc/modprobe.d/{{ item }}.conf
+    owner: root
+    group: root
+    mode: 0600
+  tags:
+  - configuration
+  - kernel
+  with_items:
+    - CIS
+    - bashbunny
+    - firewire
+    - usb-storage
+# https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/sect-security-enhanced_linux-working_with_selinux-disable_ptrace
+- name: Disable ptrace() with SELinux
+  become: yes
+  when: ansible_os_family == "RedHat"
+  seboolean:
+    name: deny_ptrace
+    state: yes
+    persistent: yes
+  tags:
+  - configuration
+  - kernel
+  - centos

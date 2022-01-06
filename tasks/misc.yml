@@ -1,25 +1,4 @@
 ---
-- name: Create /etc/modprobe.d/
-  become: yes
-  file:
-    path: /etc/modprobe.d
-    state: directory
-- name: modprobe.d
-  become: yes
-  copy:
-    src: "{{ playbook_dir }}/newconfs/modprobe.d/{{ item }}.conf.new"
-    dest: /etc/modprobe.d/{{ item }}.conf
-    owner: root
-    group: root
-    mode: 0600
-  tags:
-  - configuration
-  - kernel
-  with_items:
-    - CIS
-    - bashbunny
-    - firewire
-    - usb-storage
 - name: Make installpkg store md5sums (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
@@ -29,17 +8,6 @@
     replace: '\g<1>=1'
     validate: '/bin/grep "^MD5SUM=1$" %s'
   tags: configuration
-# https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/sect-security-enhanced_linux-working_with_selinux-disable_ptrace
-- name: Disable ptrace() with SELinux
-  become: yes
-  when: ansible_os_family == "RedHat"
-  seboolean:
-    name: deny_ptrace
-    state: yes
-    persistent: yes
-  tags:
-  - configuration
-  - kernel
 - name: Configure certbot to use 4096 bit keys
   tags: pki
   block:
