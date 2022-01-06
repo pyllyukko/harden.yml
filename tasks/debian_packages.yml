@@ -20,6 +20,7 @@
         - usbguard
         - unattended-upgrades
         - checksecurity
+        - checksec
       tags:
       - packages
       - services
