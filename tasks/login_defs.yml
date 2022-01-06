@@ -140,10 +140,12 @@
 
 # The tasks below require *local* user accounts
 - name: getent passwd
+  tags: accounts
   getent:
     database: passwd
     service: files
 - name: Get login.defs values
+  tags: accounts
   block:
   - name: slurp /etc/login.defs
     become: yes
@@ -207,3 +209,41 @@
   - permissions
   with_dict:
     DIR_MODE: "0700"
+
+# https://wiki.debian.org/SystemGroups
+- name: Remove users from legacy groups
+  tags: accounts
+  block:
+  - name: getent group
+    getent:
+      database: group
+      service: files
+  - name: Debian
+    become: yes
+    when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+    tags: debian
+    block:
+    - name: Remove all users from group "lpadmin"
+      command: gpasswd -d {{ item }} lpadmin
+      with_items: '{{ getent_group["lpadmin"][2] | split(",") }}'
+      when:
+        - '"lpadmin" in getent_group'
+        - getent_group["lpadmin"][2] != ""
+    - name: Remove all users from group "floppy"
+      command: gpasswd -d {{ item }} floppy
+      with_items: '{{ getent_group["floppy"][2] | split(",") }}'
+      when:
+        - '"floppy" in getent_group'
+        - getent_group["floppy"][2] != ""
+    - name: Remove all users from group "cdrom"
+      command: gpasswd -d {{ item }} cdrom
+      with_items: '{{ getent_group["cdrom"][2] | split(",") }}'
+      when:
+        - '"cdrom" in getent_group'
+        - getent_group["cdrom"][2] != ""
+    - name: Remove all users from group "games"
+      command: gpasswd -d {{ item }} games
+      with_items: '{{ getent_group["games"][2] | split(",") }}'
+      when:
+        - '"games" in getent_group'
+        - getent_group["games"][2] != ""
