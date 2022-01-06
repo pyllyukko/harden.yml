@@ -57,6 +57,10 @@
       - /etc/logrotate.d/autolog
       - /etc/logrotate.d/dpkg
       #- /etc/logrotate.d/cups-daemon
+    register: result
+    failed_when:
+      - result.failed == true
+      - '"does not exist !" not in result.msg'
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
 
