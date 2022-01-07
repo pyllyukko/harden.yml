@@ -192,7 +192,13 @@
     expires: '{{ 60 * 60 * 24 }}'
     password_lock: yes
   # CIS Debian Benchmark also has accounts sync, shutdown & halt
-  when: item.value[1] | int < uid_min | int and (item.value[1] != "0" and item.key != "root") and item.key != "Debian-gdm" and item.key != "lightdm" and item.key != "daemon" and item.key != "logcheck"
+  when:
+    - item.value[1] | int < uid_min | int
+    - (item.value[1] != "0" and item.key != "root")
+    - item.key != "Debian-gdm"
+    - item.key != "lightdm"
+    - item.key != "daemon"
+    - item.key != "logcheck"
   with_dict: "{{ getent_passwd }}"
   tags: accounts
   become: yes
@@ -228,22 +234,22 @@
       with_items: '{{ getent_group["lpadmin"][2] | split(",") }}'
       when:
         - '"lpadmin" in getent_group'
-        - getent_group["lpadmin"][2] != ""
+        - getent_group["lpadmin"][2] | length > 0
     - name: Remove all users from group "floppy"
       command: gpasswd -d {{ item }} floppy
       with_items: '{{ getent_group["floppy"][2] | split(",") }}'
       when:
         - '"floppy" in getent_group'
-        - getent_group["floppy"][2] != ""
+        - getent_group["floppy"][2] | length > 0
     - name: Remove all users from group "cdrom"
       command: gpasswd -d {{ item }} cdrom
       with_items: '{{ getent_group["cdrom"][2] | split(",") }}'
       when:
         - '"cdrom" in getent_group'
-        - getent_group["cdrom"][2] != ""
+        - getent_group["cdrom"][2] | length > 0
     - name: Remove all users from group "games"
       command: gpasswd -d {{ item }} games
       with_items: '{{ getent_group["games"][2] | split(",") }}'
       when:
         - '"games" in getent_group'
-        - getent_group["games"][2] != ""
+        - getent_group["games"][2] | length > 0
