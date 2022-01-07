@@ -11,7 +11,6 @@
         - debsums
         - bootlogd
         - tiger
-        #- libpam-tmpdir
         - debsecan
         - autolog
         - chkrootkit
