@@ -50,13 +50,19 @@
   - configuration
   - lynis
   block:
-  - name: Configure Lynis to skip certain SSH tests
-    lineinfile:
-      path: /etc/lynis/custom.prf
-      regexp: '^skip-test=SSH-7408:port$'
-      line: skip-test=SSH-7408:port
-      create: yes
   - name: Configure Lynis to skip certain tests
+    blockinfile:
+      path: /etc/lynis/custom.prf
+      create: yes
+      block: |
+        # Changing port number is just security through obscurity
+        skip-test=SSH-7408:port
+        # Even though this is true, partitioning is usually done during install and not necessarily that easy afterwards
+        skip-test=FILE-6310
+        # Attackers can get their tools into hosts in any case
+        skip-test=HRDN-7220
+        skip-test=HRDN-7222
+  - name: Configure Lynis to skip RPM related tests
     blockinfile:
       path: /etc/lynis/custom.prf
       marker: "# {mark} ANSIBLE MANAGED BLOCK - Skip RPM related tests"
