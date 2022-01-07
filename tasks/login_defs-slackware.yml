@@ -35,15 +35,20 @@
     regexp: '^(umask) [0-9]+$'
     replace: '\g<1> 077'
     validate: '/bin/grep "^umask 077$" %s'
-- name: Set defchmod to 700 in /usr/sbin/adduser (Slackware)
+# ftp://ftp.slackware.com/pub/slackware/slackware64-current/source/a/shadow/adduser
+# Default AGID is "audio cdrom floppy input lp netdev plugdev power scanner video"
+- name: Configure defchmod and AGID in /usr/sbin/adduser (Slackware)
   tags: configuration
   become: yes
   when: ansible_distribution == "Slackware"
   replace:
     path: /usr/sbin/adduser
-    regexp: '^(defchmod)=[0-9]+.*'
-    replace: '\g<1>=700 # home dir permissions'
-    validate: '/bin/grep "^defchmod=700 # home dir permissions$" %s'
+    regexp: '^({{ item.key }}=).+'
+    replace: '\g<1>{{ item.value }}'
+    validate: "/bin/grep '^{{ item.key }}={{ item.value }}$' %s"
+  with_dict:
+    defchmod: 700
+    AGID: '"audio input netdev plugdev power video"'
 # Slackware Linux Benchmark v1.1 - 7.10 Require Authentication For Single-User Mode
 # https://web.archive.org/web/20070702234716/http://www.bastille-linux.org:80/jay/anyone-with-a-screwdriver.html
 # https://cisofy.com/lynis/controls/AUTH-9308/

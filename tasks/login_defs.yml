@@ -213,6 +213,7 @@
   tags:
   - configuration
   - permissions
+  - debian
   with_dict:
     DIR_MODE: "0700"
 
