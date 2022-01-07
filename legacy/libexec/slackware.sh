@@ -365,8 +365,6 @@ function disable_unnecessary_services() {
 
   echo "${FUNCNAME}(): enabling recommended services"
 
-  enable_sysstat
-
   # CIS 2.2 Configure TCP Wrappers and Firewall to Limit Access (applied)
   #
   # NOTE: the rc.firewall script should be created by the etc patch

@@ -46,7 +46,7 @@ do
 done
 unset PROGRAM
 CWD=$( realpath $( dirname "${0}" ) )
-for file in sysstat.sh utils.sh pam.sh apparmor.sh gpg.sh banners.sh ssh.sh slackware.sh user_accounts.sh services.sh gnome.sh
+for file in utils.sh pam.sh apparmor.sh gpg.sh banners.sh ssh.sh slackware.sh user_accounts.sh services.sh gnome.sh
 do
   . ${CWD}/libexec/${file} || {
     echo "[-] couldn't find libexec/${file}" 1>&2
@@ -340,7 +340,6 @@ function quick_harden() {
     sysctl_harden                        \
     configure_shells                     \
     harden_fstab                         \
-    enable_sysstat                       \
     create_limited_ca_list               \
     configure_apt                        \
     configure_securetty                  \
@@ -437,7 +436,6 @@ function usage() {
 	  		disable_inetd_services
 	  		configure_basic_auditing
 	  		enable_pacct
-	  		enable_sysstat
 
 	  		GUI:
 
@@ -734,7 +732,6 @@ do
 	"disable_unnecessary_systemd_services") disable_unnecessary_systemd_services ;;
 	"enable_apparmor")	enable_apparmor			;;
 	"enable_bootlog")	enable_bootlog			;;
-	"enable_sysstat")	enable_sysstat			;;
 	"gnome_settings")	gnome_settings			;;
 	"lock_system_accounts")	lock_system_accounts		;;
 	"password_policies")	configure_password_policies	;;
