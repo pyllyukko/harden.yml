@@ -62,6 +62,8 @@
         # Attackers can get their tools into hosts in any case
         skip-test=HRDN-7220
         skip-test=HRDN-7222
+        # We have tooling and it's called Ansible :)
+        skip-test=TOOL-5002
   # https://github.com/CISOfy/lynis/issues/967
   - name: Configure /etc/{at,cron}.{allow,deny} permissions in /etc/lynis/default.prf
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
