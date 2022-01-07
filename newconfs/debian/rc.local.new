@@ -1,6 +1,0 @@
-#!/bin/bash
-for host in /sys/bus/usb/devices/usb*
-do
-  echo 0 1>${host}/authorized_default
-done
-unset host

@@ -126,9 +126,6 @@ aircrack-apparmor-profiles: $(aircrack-apparmor-profiles)
 /etc/fstab.new: $(CWD)/libexec/fstab.awk FORCE
 	/usr/bin/gawk -f $< /etc/fstab 1>$@
 
-/etc/rc.local.new: $(CWD)/newconfs/debian/rc.local.new FORCE
-	/usr/bin/install -m 700 $< $@
-
 /etc/modprobe.d/%: $(CWD)/newconfs/modprobe.d/%.new FORCE
 	/usr/bin/install -m 600 $< $@
 

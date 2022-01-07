@@ -71,3 +71,20 @@
 #    group: root
 #    mode: '0755'
 #    checksum: sha256:77b8a7fd9393d10def665658a41176ee745d5c7969a4a0f43cefcc8a4cd90947
+- name: Set USB authorized_default -> 0 in /etc/rc.local (Debian)
+  become: yes
+  blockinfile:
+    path: /etc/rc.local
+    marker: "# {mark} ANSIBLE MANAGED BLOCK - USB authorized_default"
+    insertbefore: '^exit 0$'
+    block: |
+      shopt -s nullglob
+      for host in /sys/bus/usb/devices/usb*
+      do
+        echo 0 1>"${host}/authorized_default"
+      done
+      unset host
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  tags:
+  - configuration
+  - debian

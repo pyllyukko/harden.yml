@@ -353,7 +353,6 @@ function quick_harden() {
     enable_apparmor                      \
     aa_enforce                           \
     user_accounts                        \
-    set_usb_authorized_default           \
     configure_modprobe.d                 \
     disable_gdm3_user_list
   do
@@ -372,24 +371,6 @@ function configure_modprobe.d() {
     make -f ${CWD}/Makefile /etc/modprobe.d/${file}
   done
 } # configure_modprobe.d()
-################################################################################
-function set_usb_authorized_default() {
-  print_topic "setting USB authorized_default -> 0"
-  if [ "${DISTRO}" = "debian" -o "${DISTRO}" = "raspbian" ]
-  then
-    if [ -f /etc/rc.local ]
-    then
-      echo '[-] /etc/rc.local already exists (appending not implemented yet)'
-      return 1
-    else
-      # this is launched by rc-local.service
-      make -f ${CWD}/Makefile /etc/rc.local
-    fi
-  else
-    echo '[-] this is only for Debian (for now)'
-    return 1
-  fi
-} # set_usb_authorized_default()
 ################################################################################
 function toggle_usb_authorized_default() {
   local host
@@ -481,7 +462,6 @@ function usage() {
 	  		enable_apparmor
 	  		enable_bootlog
 	  		sysctl_harden
-	  		set_usb_authorized_default
 	  		harden_fstab (you can also run "make /etc/fstab.new")
 
 	  -g		import Slackware, SBo & other PGP keys to trustedkeys.gpg keyring
@@ -766,7 +746,6 @@ do
 	"configure_umask")	configure_umask			;;
 	"configure_shells")	configure_shells		;;
 	"configure_tcp_wrappers") configure_tcp_wrappers	;;
-	"set_usb_authorized_default") set_usb_authorized_default ;;
 	"remove_shells")        remove_shells                   ;;
 	"create_ftpusers")      create_ftpusers                 ;;
 	"disable_inetd_services") disable_inetd_services        ;;
