@@ -62,6 +62,20 @@
         # Attackers can get their tools into hosts in any case
         skip-test=HRDN-7220
         skip-test=HRDN-7222
+  # https://github.com/CISOfy/lynis/issues/967
+  - name: Configure /etc/{at,cron}.{allow,deny} permissions in /etc/lynis/default.prf
+    when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+    tags: debian
+    replace:
+      path: /etc/lynis/default.prf
+      regexp: '^(permfile=/etc/{{ item.key }}):rw-------:root:-:WARN:'
+      replace: '\g<1>:{{ item.value }}:WARN:'
+      validate: '/bin/grep "^permfile=/etc/{{ item.key }}:{{ item.value }}:WARN:$" %s'
+    with_dict:
+      at.allow: rw-r-----:root:daemon
+      at.deny: rw-r-----:root:daemon
+      cron.allow: rw-r-----:root:crontab
+      cron.deny: rw-r-----:root:crontab
   - name: Configure Lynis to skip RPM related tests
     blockinfile:
       path: /etc/lynis/custom.prf
