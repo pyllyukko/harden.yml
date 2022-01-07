@@ -9,15 +9,24 @@
     tags:
     - packages
     - services
+    - debian
+  - name: Determine ClamAV sysconfdir
+    shell: clamconf | awk '/^Checking configuration files in/{print$5}'
+    register: clamav_sysconfdir
+  - name: Verify ClamAV sysconfdir
+    assert:
+      that:
+        - clamav_sysconfdir.stdout | length > 0
+        - clamav_sysconfdir.stdout | regex_search('^/etc')
   - name: Generate fresh configs
-    shell: /usr/bin/clamconf -g {{ item }}.conf 1>/etc/{{ item }}.conf
+    shell: /usr/bin/clamconf -g {{ item }}.conf 1>{{ clamav_sysconfdir.stdout }}/{{ item }}.conf
     with_items:
       - freshclam
       - clamd
     tags: configuration
   - name: Comment out Example lines
     replace:
-      path: /etc/{{ item }}.conf
+      path: '{{ clamav_sysconfdir.stdout }}/{{ item }}.conf'
       regexp: '^(Example)$'
       replace: '#\g<1>'
     with_items:
@@ -34,14 +43,14 @@
   # https://docs.clamav.net/manual/Usage/Configuration.html#clamdconf
   - name: Configure ClamAV
     replace:
-      path: /etc/clamd.conf
+      path: '{{ clamav_sysconfdir.stdout }}/clamd.conf'
       regexp: '^#?({{ item.key }} ).*$'
       replace: '\g<1>{{ item.value }}'
       validate: '/bin/grep "^{{ item.key }} {{ item.value }}$" %s'
     with_dict: "{{ clamav_settings }}"
     vars:
       clamav_settings:
-        LogTime: "yes"
+        LogTime: "no"
         LogSyslog: "yes"
         LogFacility: LOG_LOCAL6
         ExtendedDetectionInfo: "yes"
@@ -75,27 +84,29 @@
   # https://docs.clamav.net/manual/Usage/Configuration.html#freshclamconf
   - name: Configure freshclam
     replace:
-      path: /etc/freshclam.conf
+      path: '{{ clamav_sysconfdir.stdout }}/freshclam.conf'
       regexp: '^#?({{ item.key }} ).*$'
       replace: '\g<1>{{ item.value }}'
       validate: '/bin/grep "^{{ item.key }} {{ item.value }}$" %s'
     with_dict: "{{ freshclam_settings }}"
     vars:
       freshclam_settings:
-        LogTime: yes
+        LogTime: "no"
         LogFacility: LOG_LOCAL6
-        ScriptedUpdates: yes
-        CompressLocalDatabase: no
+        ScriptedUpdates: "yes"
+        CompressLocalDatabase: "no"
         ReceiveTimeout: 300
-        TestDatabases: yes
-        Bytecode: yes
+        TestDatabases: "yes"
+        Bytecode: "yes"
         DatabaseMirror: database.clamav.net
         DatabaseOwner: clamav
         PidFile: /var/run/clamav/freshclam.pid
     tags: configuration
   - name: Remove .new configs
+    when: ansible_distribution == "Slackware"
+    tags: slackware
     file:
-      path: '/etc/{{ item }}.conf.new'
+      path: '{{ clamav_sysconfdir.stdout }}/{{ item }}.conf.new'
       state: absent
     with_items:
       - clamav-milter
@@ -115,7 +126,13 @@
     with_items:
       - daily.cld
       - bytecode.cld
+      - bytecode.cvd
       - main.cvd
+      - main.cld
+    register: result
+    failed_when:
+      - result.failed == true
+      - result.state != "absent"
     tags: permissions
   # https://blog.didierstevens.com/2017/02/15/quickpost-clamav-and-zip-file-decryption/
   - name: Create a password signature file
