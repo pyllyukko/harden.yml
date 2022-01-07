@@ -253,3 +253,16 @@
       when:
         - '"games" in getent_group'
         - getent_group["games"][2] | length > 0
+    - name: Remove all users from group "dip"
+      command: gpasswd -d {{ item }} dip
+      with_items: '{{ getent_group["dip"][2] | split(",") }}'
+      when:
+        - '"dip" in getent_group'
+        - getent_group["dip"][2] | length > 0
+    - name: Remove almost all users from group "scanner"
+      command: gpasswd -d {{ item }} scanner
+      with_items: '{{ getent_group["scanner"][2] | split(",") }}'
+      when:
+        - '"scanner" in getent_group'
+        - getent_group["scanner"][2] | length > 0
+        - item != "saned"
