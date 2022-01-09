@@ -106,6 +106,7 @@
       content: |
         #!/bin/bash
 
+        set -e
         if ! hash lynis 2>/dev/null
         then
           exit 1
