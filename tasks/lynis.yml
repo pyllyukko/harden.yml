@@ -89,4 +89,30 @@
         skip-test=PKGS-7386
         skip-test=PKGS-7387
     when: ansible_os_family != "RedHat"
+  - name: Configure Slackware specific tests to skip
+    blockinfile:
+      path: /etc/lynis/custom.prf
+      marker: "# {mark} ANSIBLE MANAGED BLOCK - Slackware"
+      block: |
+        skip-test=PKGS-7398
+    when: ansible_distribution == "Slackware"
+    tags: slackware
+  - name: Create daily cron job to run Lynis
+    copy:
+      dest: /etc/cron.daily/run_lynis.sh
+      owner: root
+      group: root
+      mode: '0700'
+      content: |
+        #!/bin/bash
+
+        if ! hash lynis 2>/dev/null
+        then
+          exit 1
+        fi
+        lynis -Q -q
+        tests_performed="$(gawk '/Tests performed:/{print$5}' /var/log/lynis.log)"
+        hardening_index="$(sed -n 's/^.\+\(Hardening index : .\+\)$/\1/p' /var/log/lynis.log)"
+        lynis_version="$(gawk '$3=="Lynis" && $4 ~ /^[0-9.]+$/{print$4}' /var/log/lynis.log)"
+        /usr/bin/logger -t lynis "Lynis ${lynis_version} Tests performed: ${tests_performed} ${hardening_index}"
   become: yes
