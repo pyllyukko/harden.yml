@@ -99,7 +99,7 @@
     tags: slackware
   - name: Create daily cron job to run Lynis
     copy:
-      dest: /etc/cron.daily/run_lynis.sh
+      dest: /etc/cron.daily/run_lynis
       owner: root
       group: root
       mode: '0700'
