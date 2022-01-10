@@ -267,3 +267,19 @@
         - '"scanner" in getent_group'
         - getent_group["scanner"][2] | length > 0
         - item != "saned"
+
+# Unfortunately the hash_rounds_min doesn't seem to work
+- name: Configure libuser.conf
+  become: yes
+  when: ansible_os_family == "RedHat"
+  tags:
+  - centos
+  - configuration
+  ini_file:
+    path: /etc/libuser.conf
+    section: defaults
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict:
+    hash_rounds_min: "{{ crypt_rounds }}"
+    crypt_style: sha512
