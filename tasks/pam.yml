@@ -122,23 +122,36 @@
   tags:
   - pam
   - slackware
+- name: faillock
+  become: yes
+  when: ansible_distribution == "Slackware" or ansible_distribution == "Debian"
+  tags: pam
+  block:
+  - name: Configure /etc/security/faillock.conf
+    template:
+      src: "{{ playbook_dir }}/newconfs/faillock.conf.new"
+      dest: /etc/security/faillock.conf
+      owner: root
+      group: root
+    tags: configuration
+  - name: Create faillock directory
+    file:
+      path: /var/run/faillock
+      state: directory
+      mode: '0751'
+  # NOTE: This doesn't hurt even though we wouldn't enable pam_faillock via
+  # pam-auth-update as long as there are no failed logins recorded in
+  # /var/run/faillock/
+  - name: Insert "auth required pam_faillock.so preauth" into /etc/pam.d/common-auth
+    when: ansible_distribution == "Debian"
+    tags: configuration
+    lineinfile:
+      path: /etc/pam.d/common-auth
+      regexp: '^auth\s+required\s+pam_faillock\.so\s+preauth$'
+      line: "auth\trequired\t\t\tpam_faillock.so\tpreauth"
+      insertbefore: '^# here are the per-package modules \(the "Primary" block\)$'
 - name: Configure pam_faillock & pam_faildelay (Slackware)
   block:
-    - name: Configure /etc/security/faillock.conf
-      template:
-        src: "{{ playbook_dir }}/newconfs/faillock.conf.new"
-        dest: /etc/security/faillock.conf
-        owner: root
-        group: root
-      tags:
-      - configuration
-      - pam
-    - name: Create faillock directory
-      file:
-        path: /var/run/faillock
-        state: directory
-        mode: '0751'
-      tags: pam
     - name: Add pam_faillock and pam_faildelay to /etc/pam.d/system-auth
       replace:
         path: /etc/pam.d/system-auth
@@ -265,7 +278,7 @@
         - lastlog
         - polyinstation
         - pwhistory
-        - tally2
+        - faillock
         - uid_ge_1000
         - umask
         - time
