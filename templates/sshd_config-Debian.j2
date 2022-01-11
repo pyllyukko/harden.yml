@@ -71,9 +71,15 @@ ChallengeResponseAuthentication no
 #KerberosGetAFSToken no
 
 # GSSAPI options
-#GSSAPIAuthentication no
+{% if stat_keytab.stat.exists == True and stat_keytab.stat.size > 0 -%}
+GSSAPIAuthentication yes
+GSSAPICleanupCredentials yes
+GSSAPIStrictAcceptorCheck yes
+{% else -%}
+GSSAPIAuthentication no
 #GSSAPICleanupCredentials yes
 #GSSAPIStrictAcceptorCheck yes
+{% endif %}
 #GSSAPIKeyExchange no
 
 # Set this to 'yes' to enable PAM authentication, account processing,

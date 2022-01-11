@@ -159,6 +159,11 @@
   - services
   - ssh
   - debian
+- name: Stat /etc/krb5.keytab
+  stat:
+    path: /etc/krb5.keytab
+  register: stat_keytab
+  tags: ssh
 - name: Harden SSH daemon configuration
   template:
     src: "{{ playbook_dir }}/templates/sshd_config-{{ ansible_distribution }}.j2"
