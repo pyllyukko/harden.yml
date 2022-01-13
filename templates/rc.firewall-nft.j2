@@ -1,0 +1,35 @@
+#!/bin/bash
+
+function start() {
+  echo "[*] Starting nftables firewall"
+  /usr/sbin/nft -f - 0<<-EOF
+	flush ruleset
+
+	add table inet filter
+	add chain inet filter input { type filter hook input priority 0; policy drop; }
+	add chain inet filter forward { type filter hook forward priority 0; policy drop; }
+
+	add rule inet filter input ct state invalid counter drop
+	add rule inet filter input ct state related,established counter accept
+{% for port in allowed_tcp_ports %}
+	add rule inet filter input tcp dport {{ port }} accept
+{% endfor %}
+	add rule inet filter input iifname "lo" ip saddr 127.0.0.1 ip daddr 127.0.0.1 counter accept
+	add rule inet filter input iifname "lo" ip6 saddr ::1 ip6 daddr ::1 counter accept
+EOF
+}
+function usage() {
+  cat 0<<-EOF
+	${0##*/} start|stop|status|restart
+EOF
+}
+function stop() {
+  echo "[*] Flushing nftables ruleset"
+  /usr/sbin/nft flush ruleset
+}
+
+case "${1}" in
+  "start") start		;;
+  "stop")  stop			;;
+  "status") nft list ruleset	;;
+esac

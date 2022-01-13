@@ -43,18 +43,19 @@
   - network
   - firewall
   block:
-  - name: Install iptables (Slackware)
+  - name: Install nftables (Slackware)
     command: slackpkg -batch=on -default_answer=y install {{ item }}
     with_items:
-      - iptables
-      - libpcap
-      - libnl3
-      - dbus
+      - nftables
+      - jansson
+      - libnftnl
     tags:
     - packages
+  # https://wiki.nftables.org/wiki-nftables/index.php/Simple_ruleset_for_a_workstation
+  # https://wiki.nftables.org/wiki-nftables/index.php/Simple_ruleset_for_a_server
   - name: Create /etc/rc.d/rc.firewall (Slackware)
     template:
-      src: "{{ playbook_dir }}/templates/rc.firewall.j2"
+      src: "{{ playbook_dir }}/templates/rc.firewall-nft.j2"
       dest: /etc/rc.d/rc.firewall
       mode: '0700'
     tags: services
