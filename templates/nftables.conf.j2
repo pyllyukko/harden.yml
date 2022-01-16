@@ -11,8 +11,7 @@ table inet filter {
 		tcp dport {{ port }} accept
 {% endfor %}
 		icmp type echo-request accept
-		reject with icmp type admin-prohibited
-		reject with icmpv6 type admin-prohibited
+		counter reject with icmpx type admin-prohibited
 	}
 	chain forward {
 		type filter hook forward priority 0; policy drop;
