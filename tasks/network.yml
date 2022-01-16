@@ -1,14 +1,14 @@
 ---
 
 # TCP wrappers
-- name: Install TCP wrappers library and iptables-persistent (Debian)
+- name: Install TCP wrappers library and nftables (Debian)
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
   apt:
     update_cache: yes
     pkg:
     - libwrap0
-    - iptables-persistent
+    - nftables
   tags:
   - packages
   - network
@@ -79,60 +79,31 @@
 # </Slackware firewall>
 
 # Debian firewall
-- name: Stat /etc/iptables/rules.v4 (Debian)
-  stat:
-    path: /etc/iptables/rules.v4
-  register: stat_result
-  become: yes
-  tags: firewall
 - name: Firewall rules for Debian
   tags:
   - firewall
   - network
   block:
-  - name: Create temp file
-    tempfile:
-      state: file
-      suffix: temp
-    register: tempfile_1
-  - name: Copy firewall script
+  - name: Copy nftables.conf
     template:
-      src: "{{ playbook_dir }}/templates/rc.firewall.j2"
-      dest: "{{ tempfile_1.path }}"
-      mode: '0700'
-  - name: Run firewall script
-    command: /bin/bash {{ tempfile_1.path }} start
-  - name: Remove temp file
-    when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-    file:
-      path: "{{ tempfile_1.path }}"
-      state: absent
-  - name: Create /etc/iptables/rules.v4
-    shell: /sbin/iptables-save 1>/etc/iptables/rules.v4
-  - name: Create /etc/iptables/rules.v6
-    shell: /sbin/ip6tables-save 1>/etc/iptables/rules.v6
+      src: nftables.conf.j2
+      dest: /etc/nftables.conf
+      mode: '0600'
+  - name: Activate firewall
+    command: /usr/sbin/nft -f /etc/nftables.conf
   become: yes
-  # don't touch the firewall if rules.v4 already exists
-  when: (ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux") and stat_result.stat.exists == False
+  when: (ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux")
 - name: Final touches for Debian firewall
   block:
-  - name: Enable netfilter-persistent
+  # https://wiki.debian.org/nftables#nftables_in_Debian_the_easy_way
+  - name: Enable nftables
     systemd:
-      name: netfilter-persistent
+      name: nftables
       state: started
       enabled: yes
     tags:
     - services
     - network
-    - firewall
-  - name: Chmod /etc/iptables
-    file:
-      path: /etc/iptables
-      mode: '0700'
-      owner: root
-      group: root
-    tags:
-    - permissions
     - firewall
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"

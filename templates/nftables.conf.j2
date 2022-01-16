@@ -1,0 +1,23 @@
+#!/usr/sbin/nft -f
+
+flush ruleset
+
+table inet filter {
+	chain input {
+		type filter hook input priority 0;
+		ct state invalid counter drop
+		ct state established,related counter accept
+{% for port in allowed_tcp_ports %}
+		tcp dport {{ port }} accept
+{% endfor %}
+		icmp type echo-request accept
+		reject with icmp type admin-prohibited
+		reject with icmpv6 type admin-prohibited
+	}
+	chain forward {
+		type filter hook forward priority 0; policy drop;
+	}
+	chain output {
+		type filter hook output priority 0;
+	}
+}
