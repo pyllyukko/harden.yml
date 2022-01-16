@@ -8,7 +8,7 @@ table inet filter {
 		ct state invalid counter drop
 		ct state established,related counter accept
 {% for port in allowed_tcp_ports %}
-		tcp dport {{ port }} accept
+		tcp dport {{ port }} ct state new accept
 {% endfor %}
 		icmp type echo-request accept
 		counter reject with icmpx type admin-prohibited
