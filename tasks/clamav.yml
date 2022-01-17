@@ -74,7 +74,7 @@
         ScanArchive: "yes"
         Bytecode: "yes"
         BytecodeSecurity: Paranoid
-        LocalSocket: /var/run/clamav/clamd.socket
+        LocalSocket: /var/run/clamav/clamd.ctl
         LocalSocketMode: 660
         PidFile: /var/run/clamav/clamd.pid
         User: clamav
