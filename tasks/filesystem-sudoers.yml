@@ -1,9 +1,4 @@
 ---
-- name: Install sudo
-  apt:
-    name: sudo
-    update_cache: yes
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
 - name: Set file permissions/ownership for sudoers
   file:
     path: /etc/{{ item }}

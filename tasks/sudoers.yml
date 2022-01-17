@@ -5,6 +5,15 @@
   command: slackpkg -batch=on -default_answer=y install glibc
   tags:
   - packages
+- name: Install sudo (Debian)
+  become: yes
+  apt:
+    name: sudo
+    update_cache: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  tags:
+  - packages
+  - debian
 - name: 'Check that some user(s) exist in "sudo" group'
   getent:
     database: group
