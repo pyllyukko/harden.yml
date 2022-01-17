@@ -1,10 +1,13 @@
 # https://packages.cisofy.com/community/#debian-ubuntu
 - name: Install Lynis into Debian
   block:
-  - name: Install apt-transport-https
+  - name: Install apt-transport-https & gnupg2
     apt:
-      name: apt-transport-https
+      name: '{{ item }}'
       update_cache: yes
+    with_items:
+      - apt-transport-https
+      - gnupg2
   - name: Add Lynis signing key
     apt_key:
       id: 84FAA9983B24AEF24D6C87F1FEBB7D1812576482
