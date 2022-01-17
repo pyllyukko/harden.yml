@@ -3,12 +3,8 @@
   block:
   - name: Install necessary software (Debian)
     apt:
-      name: "{{ packages }}"
+      name: ['auditd', 'libcap-ng-utils']
       update_cache: yes
-    vars:
-      packages:
-      - auditd
-      - libcap-ng-utils
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
     tags:
     - packages

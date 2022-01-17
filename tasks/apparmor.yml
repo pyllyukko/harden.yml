@@ -3,14 +3,8 @@
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
   apt:
-    name: "{{ packages }}"
+    name: ['apparmor', 'apparmor-profiles', 'apparmor-utils']
     update_cache: yes
-  vars:
-    packages:
-    - apparmor
-    - apparmor-profiles
-    - apparmor-utils
-    #- apparmor-notify
   tags:
   - packages
 # https://github.com/raspberrypi/linux/pull/1698
