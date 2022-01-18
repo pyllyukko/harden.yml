@@ -133,37 +133,47 @@ Creates bunch of `pam-config`s that are toggleable with `pam-auth-update`:
 1. <span id="fn1"/>Not a `pam-config`, but a modification to existing `/etc/pam.d/` files
 2. <span id="fn2"/>For all login methods and not just the console login
 
-LXC tests
----------
+Usage
+-----
 
-* In order to build Debian container in Slackware you need [debootstrap](https://slackbuilds.org/repository/14.2/system/debootstrap/)
-* It doesn't work the other way around, so it's not currently possible to build the Slackware container in Debian because it lacks Slackware's `pkgtools`
+* Edit the `harden.yml` and modify `hosts` or create a completely new playbook by making a copy of the `harden.yml` file
+    * You can comment out the "task sets" that you don't need
+* You can check all the tasks before running the playbook by running `ansible-playbook --list-tasks harden.yml`
+* Harden your system by running `ansible-playbook harden.yml`
+    * You might need to provide credentials with [-K](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html) or via [inventory](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html)
 
-In order to run the LXC tests (`lxc.yml`), you need to configure SSH as described in [this post](https://gauvain.pocentek.net/ansible-to-deploy-lxc-containers.html):
-
-```
-Host 10.0.3.*
-        StrictHostKeyChecking no
-        UserKnownHostsFile=/dev/null
-```
-
-Tags
-----
+### Tags
 
 Tags that you can use with `ansible-playbook --tags`:
 
 * `pki`
 * `kernel`
 * `rng`
+* `accounting`
+* `network`
+    * `firewall`
+* `logging`
+* `permissions`
 * Specific software:
     * `sysstat`
     * `ssh`
     * `rkhunter`
+    * `chkrootkit`
     * `aide`
+    * `lynis` (to only configure Lynis you can use `--tags lynis --skip-tags packages`)
 * `passwords`
-* `pam`?
+* `pam`
 
-Other tags are just metadata for now.
+There are also operating system tags for tasks that only apply to specific OS.
+You can speed up the hardening by skipping OSs that don't apply. E.g. if you're
+hardening a Slackware system you can use `--skip-tags debian,centos`.
+
+Other tags are just metadata for now. You can list all the tags with
+`ansible-playbook --list-tags harden.yml`.
+
+### Other features
+
+There is a `lock_account.yml` playbook that you can use to lock user accounts. Just modify the `hosts` & `user`.
 
 References
 ----------
