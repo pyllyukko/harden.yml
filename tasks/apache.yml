@@ -1,0 +1,29 @@
+---
+# CIS Apache HTTP Server 2.4 Benchmark v2.0.0 - 10-15-2020
+#   * 2.3 Ensure the WebDAV Modules Are Disabled
+#   * 2.4 Ensure the Status Module Is Disabled
+#   * 2.5 Ensure the Autoindex Module Is Disabled
+#   * 2.6 Ensure the Proxy Modules Are Disabled
+#   * 2.7 Ensure the User Directories Module Is Disabled
+#   * 2.8 Ensure the Info Module Is Disabled
+#   * 2.9 Ensure the Basic and Digest Authentication Modules are Disabled
+- name: Disable Apache modules
+  become: yes
+  replace:
+    path: /etc/httpd/httpd.conf
+    regexp: '^(LoadModule\s+{{ item }}\b.+)$'
+    replace: '#\g<1>'
+    validate: '/bin/grep "^#LoadModule\s\+{{ item }}\b" %s'
+  with_items:
+    - dav_module
+    - dav_fs_module
+    - status_module
+    - autoindex_module
+    - proxy_.*module
+    - userdir_module
+    - info_module
+    - auth_basic_module
+    - auth_digest_module
+  tags:
+    - configuration
+    - apache

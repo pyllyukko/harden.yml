@@ -29,6 +29,7 @@
     #- include: tasks/rkhunter.yml
     #- include: tasks/clamav.yml
     #- include: tasks/display_managers.yml
+    - include: tasks/apache.yml
 
   handlers:
     - include: tasks/handlers.yml
