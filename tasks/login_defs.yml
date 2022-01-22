@@ -23,6 +23,10 @@
   - permissions
   - logging
 # This is separated so you can run "ansible-playbook --tags passwords"
+# https://www.redhat.com/sysadmin/more-lockdown-controls:
+#   * Minimum password lifetime
+#   * Maximum password lifetime
+#   * Failed login delay
 - name: Configure shadow password suite (password related)
   become: yes
   replace:
