@@ -271,6 +271,31 @@
         - '"scanner" in getent_group'
         - getent_group["scanner"][2] | length > 0
         - item != "saned"
+  # Raspbian gpio, i2c & spi groups
+  # https://www.raspberrypi.com/documentation/computers/os.html#permissions
+  - name: Raspbian
+    become: yes
+    when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
+    tags: debian
+    block:
+    - name: Remove all users from group "gpio"
+      command: gpasswd -d {{ item }} gpio
+      with_items: '{{ getent_group["gpio"][2] | split(",") }}'
+      when:
+        - '"gpio" in getent_group'
+        - getent_group["gpio"][2] | length > 0
+    - name: Remove all users from group "i2c"
+      command: gpasswd -d {{ item }} i2c
+      with_items: '{{ getent_group["i2c"][2] | split(",") }}'
+      when:
+        - '"i2c" in getent_group'
+        - getent_group["i2c"][2] | length > 0
+    - name: Remove all users from group "spi"
+      command: gpasswd -d {{ item }} spi
+      with_items: '{{ getent_group["spi"][2] | split(",") }}'
+      when:
+        - '"spi" in getent_group'
+        - getent_group["spi"][2] | length > 0
 
 # Unfortunately the hash_rounds_min doesn't seem to work
 - name: Configure libuser.conf
