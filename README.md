@@ -170,6 +170,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `lynis` (to only configure Lynis you can use `--tags lynis --skip-tags packages`)
 * `passwords`
 * `pam`
+* `banners`
 
 There are also operating system tags for tasks that only apply to specific OS.
 You can speed up the hardening by skipping OSs that don't apply. E.g. if you're
