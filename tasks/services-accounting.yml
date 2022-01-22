@@ -90,6 +90,7 @@
       regexp: '^HISTORY=[0-9]+$'
       replace: 'HISTORY=99999'
       validate: '/bin/grep "^HISTORY=99999$" %s'
+    when: ansible_os_family != "RedHat"
     tags:
     - services
     - configuration
