@@ -274,15 +274,22 @@
         src: "{{ playbook_dir }}/newconfs/pam-configs/{{ item }}.new"
         dest: /usr/share/pam-configs/{{ item }}
       with_items:
-        - access
         - lastlog
         - polyinstation
         - pwhistory
         - faillock
-        - uid_ge_1000
         - umask
-        - time
         - inactive
+      notify: "Run pam-auth-update"
+    - name: Copying new pam-configs related to authorization
+      tags: authorization
+      copy:
+        src: "{{ playbook_dir }}/newconfs/pam-configs/{{ item }}.new"
+        dest: /usr/share/pam-configs/{{ item }}
+      with_items:
+        - access
+        - uid_ge_1000
+        - time
       notify: "Run pam-auth-update"
     - name: Copying new pam-configs (templates)
       template:

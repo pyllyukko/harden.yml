@@ -73,11 +73,8 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 
 ### User accounts / authentication / authorization
 
-* Create a strict `securetty`
 * Sets default [umask](https://en.wikipedia.org/wiki/Umask) to a more stricter `077`
 * Sets console session timeout via `$TMOUT` (Bash)
-* Creates `/etc/ftpusers`
-* Restricts the use of [cron](https://en.wikipedia.org/wiki/Cron) and `at`
 * Properly locks down system accounts (0 - `SYS_UID_MAX` && !`root`)
     * Lock the user's password
     * Sets shell to `/sbin/nologin`
@@ -85,6 +82,13 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Configures the default password inactivity period
     * Run `ansible-playbook --list-tasks --tags passwords harden.yml` to list all password related tasks
 * Makes minor modifications to existing accounts. See `ansible-playbook --list-tasks --tags accounts harden.yml` for details.
+
+#### Authorization
+
+* Create a strict `securetty`
+* Creates `/etc/ftpusers`
+* Restricts the use of [cron](https://en.wikipedia.org/wiki/Cron) and `at`
+* Run `ansible-playbook --list-tasks --tags authorization` for a full list
 
 #### PAM
 
@@ -151,6 +155,7 @@ Tags that you can use with `ansible-playbook --tags`:
 * `kernel`
 * `rng`
 * `accounting`
+* `authorization`
 * `network`
     * `firewall`
 * `logging`
