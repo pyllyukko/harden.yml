@@ -84,6 +84,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * Expire the account
 * Configures the default password inactivity period
     * Run `ansible-playbook --list-tasks --tags passwords harden.yml` to list all password related tasks
+* Makes minor modifications to existing accounts. See `ansible-playbook --list-tasks --tags accounts harden.yml` for details.
 
 #### PAM
 

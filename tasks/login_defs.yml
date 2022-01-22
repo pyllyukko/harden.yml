@@ -175,7 +175,7 @@
       replace: '\g<2>30'
       validate: '/bin/grep "^INACTIVE=30$" %s'
     tags: configuration
-  - name: Same as above for existing users
+  - name: Set password expiry inactive days locking for existing users
     command: chage --inactive 30 {{ item.key }}
     when: item.value[1] | int >= uid_min | int and item.value[1] | int <= uid_max | int
     with_dict: "{{ getent_passwd }}"
