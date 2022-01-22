@@ -14,6 +14,7 @@
     - include: tasks/ca-certs.yml
     - include: tasks/debian_packages.yml
     - include: tasks/audit.yml
+      tags: audit
     - include: tasks/login_defs.yml
     - include: tasks/pam.yml
     - include: tasks/services.yml

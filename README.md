@@ -166,6 +166,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `rkhunter`
     * `chkrootkit`
     * `aide`
+    * `audit`
     * `lynis` (to only configure Lynis you can use `--tags lynis --skip-tags packages`)
 * `passwords`
 * `pam`
