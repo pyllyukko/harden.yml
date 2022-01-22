@@ -8,6 +8,10 @@
   failed_when: getent_group.{{ allowed_group }}[2] == ""
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.15
 - name: Configure access.conf
+  tags:
+  - configuration
+  - pam
+  - authorization
   block:
     - name: Stat /etc/security/access.conf
       stat:
@@ -31,10 +35,6 @@
           + : ({{ allowed_group }}) : ALL
           + : Debian-gdm lightdm : LOCAL
           - : ALL : ALL
-      tags:
-      - configuration
-      - pam
-      - authorization
     - name: Add pam_access to system-auth (Slackware)
       when: ansible_distribution == "Slackware"
       become: yes
@@ -43,11 +43,7 @@
         regexp: '^account\s+required\s+pam_access\.so\b.*$'
         line: 'account     required      pam_access.so nodefgroup'
         insertafter: '^account {5}required {6}pam_time\.so\b.*$'
-      tags:
-      - configuration
-      - pam
-      - authorization
-      - slackware
+      tags: slackware
 # This needs to happen before populating /etc/pam.d/other with pam_deny or otherwise sudo will stop working
 - name: Create /etc/pam.d/sudo (Slackware)
   when: ansible_distribution == "Slackware"

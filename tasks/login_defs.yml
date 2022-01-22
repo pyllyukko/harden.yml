@@ -117,9 +117,9 @@
       owner: root
       group: root
       mode: '0600'
-    tags:
-    - configuration
-    - authorization
+  tags:
+  - configuration
+  - authorization
 
 - include: login_defs-slackware.yml
   when: ansible_distribution == "Slackware"
