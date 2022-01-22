@@ -52,6 +52,7 @@ kernel.ctrl-alt-del = 0
 
 # https://www.cert.fi/haavoittuvuudet/2013/haavoittuvuus-2013-071.html
 # https://www.kernel.org/doc/html/v5.7/admin-guide/perf-security.html#perf-events-perf-unprivileged-users
+# https://www.kernel.org/doc/html/v5.7/admin-guide/sysctl/kernel.html#perf-event-paranoid
 kernel.perf_event_paranoid = 2
 
 # https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings#sysctls

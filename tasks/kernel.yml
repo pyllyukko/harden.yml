@@ -49,3 +49,18 @@
   - configuration
   - kernel
   - centos
+
+- name: Print Lynis score for kernel hardening
+  become: yes
+  tags: kernel
+  when: run_lynis_after_hardening
+  block:
+  - name: Run Lynis test group kernel hardening
+    command: lynis audit system -q --skip-plugins --tests-from-group kernel_hardening
+  - name: slurp /var/log/lynis.log
+    slurp:
+      src: /var/log/lynis.log
+    register: lynis_log
+  - name: Print Lynis score for kernel hardening
+    debug:
+      msg: "{{ lynis_log['content'] | b64decode | regex_search('Hardening index : \\[([0-9]+)\\]', '\\1', multiline=True) }}"
