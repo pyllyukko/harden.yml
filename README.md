@@ -155,8 +155,6 @@ Tags that you can use with `ansible-playbook --tags`:
 * `pki`
 * `kernel`
 * `rng`
-* `accounting`
-* `authorization`
 * `network`
     * `firewall`
 * `logging`
@@ -172,9 +170,12 @@ Tags that you can use with `ansible-playbook --tags`:
     * `debsums`
     * `lynis` (to only configure Lynis you can use `--tags lynis --skip-tags packages`)
     * `sudo`
-* `passwords`
-* `pam`
 * `banners`
+* [AAA](https://en.wikipedia.org/wiki/AAA_(computer_security)):
+    * `accounting` (includes `sysstat`)
+    * `authorization`
+    * `passwords`
+    * `pam`
 
 There are also operating system tags for tasks that only apply to specific OS.
 You can speed up the hardening by skipping OSs that don't apply. E.g. if you're
