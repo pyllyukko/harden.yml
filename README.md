@@ -115,6 +115,7 @@ Run `ansible-playbook --list-tasks --tags slackware harden.yml` for a list.
 * Disables unnecessary systemd services
 * Enables AppArmor
 * Configure `SUITE` in `debsecan`
+* Install `debsums` and enable weekly cron job
 * Installs a bunch of security related packages
 * Configures `chkrootkit` and enables daily checks
 
@@ -167,6 +168,8 @@ Tags that you can use with `ansible-playbook --tags`:
     * `chkrootkit`
     * `aide`
     * `audit`
+    * `debsecan`
+    * `debsums`
     * `lynis` (to only configure Lynis you can use `--tags lynis --skip-tags packages`)
 * `passwords`
 * `pam`

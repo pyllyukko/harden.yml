@@ -8,10 +8,8 @@
         update_cache: yes
       vars:
         packages:
-        - debsums
         - bootlogd
         - tiger
-        - debsecan
         - autolog
         - chkrootkit
         - needrestart
@@ -32,29 +30,46 @@
       tags: configuration
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
-- name: Configure debsecan
+
+# debsecan
+- name: debsecan
   when: ansible_distribution == "Debian"
-  become: yes
-  debconf:
-    name: debsecan
-    question: debsecan/suite
-    vtype: select
-    value: "{{ ansible_distribution_release }}"
   tags:
-  - configuration
   - debsecan
   - debian
-- name: Enable weekly debsums run
-  replace:
-    path: /etc/default/debsums
-    regexp: '^(CRON_CHECK=).*'
-    replace: '\g<1>weekly'
   become: yes
+  block:
+  - name: Install debsecan
+    apt:
+      name: debsecan
+    tags: packages
+  - name: Configure debsecan
+    debconf:
+      name: debsecan
+      question: debsecan/suite
+      vtype: select
+      value: "{{ ansible_distribution_release }}"
+    tags: configuration
+
+# debsums
+- name: debsums
   when: ansible_distribution == "Debian"
+  become: yes
   tags:
-  - configuration
   - debsums
   - debian
+  block:
+  - name: Install debsecan
+    apt:
+      name: debsecan
+    tags: packages
+  - name: Enable weekly debsums run
+    replace:
+      path: /etc/default/debsums
+      regexp: '^(CRON_CHECK=).*'
+      replace: '\g<1>weekly'
+    tags:
+    - configuration
 
 - name: Configure chkrootkit
   become: yes
