@@ -171,6 +171,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `debsecan`
     * `debsums`
     * `lynis` (to only configure Lynis you can use `--tags lynis --skip-tags packages`)
+    * `sudo`
 * `passwords`
 * `pam`
 * `banners`

@@ -21,7 +21,7 @@
       tags:
       - packages
       - services
-    - include: aide.yml
+    - import_tasks: aide.yml
     - name: Symlink /usr/lib/tiger/systems/Linux/5 -> 4
       file:
         src: /usr/lib/tiger/systems/Linux/4

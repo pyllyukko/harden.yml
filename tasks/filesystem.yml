@@ -82,7 +82,7 @@
 
 - name: Chmod sensitive files
   block:
-  - include: filesystem-sudoers.yml
+  - import_tasks: filesystem-sudoers.yml
   - name: chmod wireless configurations
     file:
       path: /etc/{{ item }}

@@ -67,4 +67,4 @@
     state: absent
   when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
   tags: configuration
-- include: filesystem-sudoers.yml
+- import_tasks: filesystem-sudoers.yml
