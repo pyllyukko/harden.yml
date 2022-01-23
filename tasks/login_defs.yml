@@ -239,7 +239,6 @@
       when:
         - '"lp" in getent_group'
         - getent_group["lp"][2] | length > 0
-        - item != "lp"
     - name: Remove all users from group "floppy"
       command: gpasswd -d {{ item }} floppy
       with_items: '{{ getent_group["floppy"][2] | split(",") }}'
