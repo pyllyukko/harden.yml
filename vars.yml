@@ -35,7 +35,7 @@ sshd_config:
   MaxAuthTries: 3
 # Value from system-hardening-10.2.txt
 fail_delay: 20
-timeout: 15
+session_timeout: 15
 nproc_limit: 4096
 crypt_rounds: 500000
 run_lynis_after_hardening: false
