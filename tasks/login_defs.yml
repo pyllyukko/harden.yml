@@ -229,17 +229,17 @@
     getent:
       database: group
       service: files
-  - name: Debian
+  - name: Legacy groups
     become: yes
-    when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-    tags: debian
     block:
-    - name: Remove all users from group "lpadmin"
-      command: gpasswd -d {{ item }} lpadmin
-      with_items: '{{ getent_group["lpadmin"][2] | split(",") }}'
+    # Common groups
+    - name: Remove almost all users from group "lp"
+      command: gpasswd -d {{ item }} lp
+      with_items: '{{ getent_group["lp"][2] | split(",") }}'
       when:
-        - '"lpadmin" in getent_group'
-        - getent_group["lpadmin"][2] | length > 0
+        - '"lp" in getent_group'
+        - getent_group["lp"][2] | length > 0
+        - item != "lp"
     - name: Remove all users from group "floppy"
       command: gpasswd -d {{ item }} floppy
       with_items: '{{ getent_group["floppy"][2] | split(",") }}'
@@ -258,12 +258,6 @@
       when:
         - '"games" in getent_group'
         - getent_group["games"][2] | length > 0
-    - name: Remove all users from group "dip"
-      command: gpasswd -d {{ item }} dip
-      with_items: '{{ getent_group["dip"][2] | split(",") }}'
-      when:
-        - '"dip" in getent_group'
-        - getent_group["dip"][2] | length > 0
     - name: Remove almost all users from group "scanner"
       command: gpasswd -d {{ item }} scanner
       with_items: '{{ getent_group["scanner"][2] | split(",") }}'
@@ -271,9 +265,26 @@
         - '"scanner" in getent_group'
         - getent_group["scanner"][2] | length > 0
         - item != "saned"
+    # Debian specific groups
+  - name: Debian specific groups
+    tags: debian
+    when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+    block:
+    - name: Remove all users from group "lpadmin"
+      command: gpasswd -d {{ item }} lpadmin
+      with_items: '{{ getent_group["lpadmin"][2] | split(",") }}'
+      when:
+        - '"lpadmin" in getent_group'
+        - getent_group["lpadmin"][2] | length > 0
+    - name: Remove all users from group "dip"
+      command: gpasswd -d {{ item }} dip
+      with_items: '{{ getent_group["dip"][2] | split(",") }}'
+      when:
+        - '"dip" in getent_group'
+        - getent_group["dip"][2] | length > 0
   # Raspbian gpio, i2c & spi groups
   # https://www.raspberrypi.com/documentation/computers/os.html#permissions
-  - name: Raspbian
+  - name: Raspbian specific groups
     become: yes
     when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
     tags: debian
