@@ -87,34 +87,46 @@
       ulimit -Hc 0
   become: yes
   when: ansible_distribution == "Slackware"
+
 # https://github.com/ansible/ansible/issues/11024
-- name: Remove daemon from adm group (Slackware)
+# Cleanup Slackware's groups
+- name: Slackware groups
   when: ansible_distribution == "Slackware"
   become: yes
-  command: gpasswd -d daemon adm
-  register: result
-  failed_when:
-    - result.failed == true
-    - '"is not a member of" not in result.stderr'
-  tags: accounts
-# root is root and that's enough :)
-- name: Remove root from all supplemental groups
-  when: ansible_distribution == "Slackware"
-  become: yes
-  command: gpasswd -d root {{ item }}
-  register: result
-  failed_when:
-    - result.failed == true
-    - '"is not a member of" not in result.stderr'
-  tags: accounts
-  with_items:
-    - bin
-    - daemon
-    - sys
-    - adm
-    - disk
-    - wheel
-    - audio
+  block:
+  - name: Remove all members from certain groups (Slackware)
+    command: gpasswd -M "" {{ item }}
+    register: result
+    failed_when:
+      - result.failed == true
+      - '"is not a member of" not in result.stderr'
+    tags: accounts
+    with_items:
+      - root
+      - bin
+      - daemon
+      - sys
+      - adm
+      - disk
+  - name: Remove uucp from dialout group (Slackware)
+    command: gpasswd -d uucp dialout
+    register: result
+    failed_when:
+      - result.failed == true
+      - '"is not a member of" not in result.stderr'
+    tags: accounts
+  # root is root and that's enough :)
+  - name: Remove root from all supplemental groups
+    command: gpasswd -d root {{ item }}
+    register: result
+    failed_when:
+      - result.failed == true
+      - '"is not a member of" not in result.stderr'
+    tags: accounts
+    with_items:
+      - wheel
+      - audio
+
 - name: Fix gshadow (Slackware)
   when: ansible_distribution == "Slackware"
   ignore_errors: yes
