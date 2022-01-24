@@ -266,6 +266,7 @@
         - item != "saned"
     # Debian specific groups
   - name: Debian specific groups
+    become: yes
     tags: debian
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
     block:
