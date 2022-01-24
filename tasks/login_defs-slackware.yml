@@ -97,6 +97,24 @@
     - result.failed == true
     - '"is not a member of" not in result.stderr'
   tags: accounts
+# root is root and that's enough :)
+- name: Remove root from all supplemental groups
+  when: ansible_distribution == "Slackware"
+  become: yes
+  command: gpasswd -d root {{ item }}
+  register: result
+  failed_when:
+    - result.failed == true
+    - '"is not a member of" not in result.stderr'
+  tags: accounts
+  with_items:
+    - bin
+    - daemon
+    - sys
+    - adm
+    - disk
+    - wheel
+    - audio
 - name: Fix gshadow (Slackware)
   when: ansible_distribution == "Slackware"
   ignore_errors: yes
