@@ -34,11 +34,20 @@
     option: verify_ap_req_nofail
     value: "true"
   become: yes
-# These are packages that ship SUID/SGID binaries, pam.d configurations or similar stuff that provides unnecessary attack surface
+# These are packages that ship SUID/SGID binaries, pam.d configurations, services or similar stuff that provides unnecessary attack surface
 # Slackware Linux Benchmark v1.1:
 #   * SN.5 Evaluate Packages Associated With Startup Scripts
 #   * 7.1 Disable rhosts Support
 # system-hardening-10.2.txt: Misc Stuff -> Stuff to remove
+#
+# Consider removing some of these packages as they were part of the most patched ones in Slackware 14.2
+# Parsed with: sed -n 's/^patches\/packages\/\(.\+\)-.\+-.\+-.\+\.t.z: .*$/\1/p' ChangeLog.txt | sort | uniq -c | sort -g
+#   * bind
+#   * seamonkey
+#   * seamonkey-solibs
+#   * samba
+#   * httpd & php
+#   * mariadb
 - name: Remove stuff
   block:
     - name: Remove unneeded/unwanted packages (Slackware)
@@ -52,6 +61,8 @@
         - netatalk
         - slrn
         - yptools
+        - ModemManager
+        - modemmanager-qt
       tags: packages
     - name: Remove leftover files from removed packages
       file:
