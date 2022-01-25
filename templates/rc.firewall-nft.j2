@@ -8,6 +8,7 @@ function start() {
 	add table inet filter
 	add chain inet filter input   { type filter hook input   priority 0; policy drop; }
 	add chain inet filter forward { type filter hook forward priority 0; policy drop; }
+	add chain inet filter output  { type filter hook output  priority 0; }
 
 	add rule inet filter input ct state invalid counter drop
 	add rule inet filter input ct state related,established counter accept
@@ -16,6 +17,12 @@ function start() {
 {% endfor %}
 	add rule inet filter input iifname "lo" ip saddr 127.0.0.1 ip daddr 127.0.0.1 counter accept
 	add rule inet filter input iifname "lo" ip6 saddr ::1 ip6 daddr ::1 counter accept
+
+	# NTP
+	add rule inet filter output udp sport 123 udp dport 123 meta skuid ntp counter accept
+	add rule inet filter output meta skuid ntp counter drop
+
+	add rule inet filter output meta skuid {bin, daemon, adm, lp, sync, shutdown, halt, uucp, operator, games, oprofile, haldaemon} counter drop
 EOF
 }
 function usage() {
