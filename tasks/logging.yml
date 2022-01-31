@@ -137,7 +137,7 @@
       regexp: '^ {4}chgrp adm /var/log/dmesg$'
       line: '    chgrp adm /var/log/dmesg'
     tags: permissions
-  - name: Enable bootlogd
+  - name: Enable bootlogd in rc.S
     blockinfile:
       insertafter: '^PATH='
       path: /etc/rc.d/rc.S
@@ -148,6 +148,13 @@
           /sbin/bootlogd
           echo 'Bootlogd started (this is the first boot message that appears in /var/log/boot).'
         fi
+  - name: Kill bootlogd in rc.M
+    lineinfile:
+      insertbefore: '^# All done\.$'
+      state: present
+      path: /etc/rc.d/rc.M
+      regexp: '^/bin/killall bootlogd$'
+      line: '/bin/killall bootlogd'
   become: yes
   when: ansible_distribution == "Slackware"
 
