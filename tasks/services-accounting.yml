@@ -173,6 +173,38 @@
   - accounting
   - slackware
 # </Process accounting>
+# systemd IP accounting
+# https://0pointer.net/blog/ip-accounting-and-access-lists-with-systemd.html
+- name: Enable systemd IP accounting in certain services
+  become: yes
+  tags:
+  - accounting
+  - configuration
+  - debian
+  when: ansible_distribution == "Debian"
+  notify: Run systemctl daemon-reload
+  ini_file:
+    path: /lib/systemd/system/{{ item }}.service
+    section: Service
+    option: IPAccounting
+    value: "yes"
+    create: no
+    no_extra_spaces: yes
+  with_items:
+    - ssh
+    - mpd
+    - collectd
+    - rsyslog
+    - clamav-freshclam
+    - systemd-timesyncd
+    - unattended-upgrades
+    - tor
+    - autofs
+    - ooniprobe-cli
+  register: result
+  failed_when:
+    - result.failed == true
+    - result.msg != "Destination /lib/systemd/system/{{ item }}.service does not exist!"
 - name: Print Lynis score for accounting
   become: yes
   tags: accounting
