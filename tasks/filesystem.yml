@@ -21,14 +21,14 @@
     tags: configuration
   become: yes
   when: ansible_distribution == "Slackware"
-- name: Remount /proc with hidepid=2
-  become: yes
-  mount:
-    path: /proc
-    opts: hidepid=2
-    state: mounted
-    src: proc
-    fstype: proc
+#- name: Remount /proc with hidepid=2
+#  become: yes
+#  mount:
+#    path: /proc
+#    opts: hidepid=2
+#    state: mounted
+#    src: proc
+#    fstype: proc
 
 # fstab
 - name: Create /etc/fstab.new

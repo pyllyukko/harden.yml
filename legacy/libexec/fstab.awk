@@ -76,8 +76,9 @@ BEGIN{
   $2 == "/proc" && \
   $3 == "proc" \
 ){
-  if($4 !~ /hidepid/)
-    $4 = $4 ",hidepid=2"
+  # https://github.com/systemd/systemd/issues/12955#issuecomment-508490893
+  #if($4 !~ /hidepid/)
+  #  $4 = $4 ",hidepid=2"
   proc_mount_found=1
 }
 $3 == "swap" {
@@ -112,6 +113,6 @@ $3 == "swap" {
 }END{
   if(!bind_mount_found)
     printf "/tmp /var/tmp none bind 0 0\n"
-  if(!proc_mount_found&&os!="slackware")
-    printf "proc /proc proc defaults,hidepid=2 0 0\n"
+  #if(!proc_mount_found&&os!="slackware")
+  #  printf "proc /proc proc defaults,hidepid=2 0 0\n"
 }
