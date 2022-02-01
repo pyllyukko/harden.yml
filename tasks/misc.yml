@@ -89,12 +89,7 @@
     marker: "# {mark} ANSIBLE MANAGED BLOCK - USB authorized_default"
     insertbefore: '^exit 0$'
     block: |
-      shopt -s nullglob
-      for host in /sys/bus/usb/devices/usb*
-      do
-        echo 0 1>"${host}/authorized_default"
-      done
-      unset host
+      /bin/bash -c 'shopt -s nullglob; for host in /sys/bus/usb/devices/usb*; do echo 0 1>"${host}/authorized_default"; done'
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   tags:
   - configuration
