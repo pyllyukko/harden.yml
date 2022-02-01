@@ -32,6 +32,7 @@
     #- import_tasks: tasks/clamav.yml
     #- import_tasks: tasks/display_managers.yml
     - import_tasks: tasks/apache.yml
+    - import_tasks: tasks/cgroup.yml
 
   handlers:
     - import_tasks: tasks/handlers.yml

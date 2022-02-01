@@ -1,0 +1,16 @@
+# /etc/cgrules.conf
+#The format of this file is described in cgrules.conf(5)
+#manual page.
+root:/usr/sbin/crond		net_cls	crond/
+root:/usr/sbin/syslogd		net_cls	syslogd/
+root:/sbin/haveged		net_cls	haveged/
+root:/usr/sbin/smartd		net_cls	smartd/
+root:/usr/sbin/acpid		net_cls	acpid/
+root:/usr/sbin/NetworkManager	net_cls	NetworkManager/
+messagebus:/usr/bin/dbus-daemon	net_cls	dbus-daemon/
+root:/sbin/udevd		net_cls	udevd/
+ntp:/usr/sbin/ntpd		net_cls	ntpd/
+root:/usr/sbin/httpd		net_cls	httpd/
+root:/usr/sbin/sshd		net_cls	sshd/
+root:/usr/sbin/postfix		net_cls	postfix/
+# End of file

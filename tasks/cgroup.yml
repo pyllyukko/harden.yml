@@ -1,0 +1,34 @@
+---
+- name: cgroups for Slackware
+  become: yes
+  when: ansible_distribution == "Slackware"
+  tags:
+    - slackware
+    - configuration
+    - cgroup
+  block:
+    - name: Configure libcgroup
+      copy:
+        src: '{{ item }}.new'
+        dest: /etc/{{ item }}
+        owner: root
+        group: root
+        mode: '0600'
+      with_items:
+        - cgconfig.conf
+        - cgrules.conf
+    - name: Configure /etc/rc.d/rc.cgconfig
+      replace:
+        path: /etc/rc.d/rc.cgconfig
+        regexp: '^(CREATE_DEFAULT=).+$'
+        replace: '\g<1>no'
+        validate: '/bin/grep "^CREATE_DEFAULT=no$" %s'
+    - name: Enable libcgroup services
+      file:
+        path: /etc/rc.d/{{ item }}
+        owner: root
+        group: root
+        mode: '0700'
+      with_items:
+        - rc.cgred
+        - rc.cgconfig

@@ -1,0 +1,228 @@
+#
+#  Copyright IBM Corporation. 2007
+#
+#  Authors:	Balbir Singh <balbir@linux.vnet.ibm.com>
+#  This program is free software; you can redistribute it and/or modify it
+#  under the terms of version 2.1 of the GNU Lesser General Public License
+#  as published by the Free Software Foundation.
+#
+#  This program is distributed in the hope that it would be useful, but
+#  WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+#
+group crond {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+		net_cls.classid = 0x72636e6f;
+	}
+}
+group syslogd {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+		net_cls.classid = 0x7379736c;
+	}
+}
+group smartd {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+		net_cls.classid = 0x736d6172;
+	}
+}
+group acpid {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+		net_cls.classid = 0x61637069;
+	}
+}
+group haveged {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+		net_cls.classid = 0x68617665;
+	}
+}
+group NetworkManager {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+		net_cls.classid = 0x4e657477;
+	}
+}
+group dbus-daemon {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+		net_cls.classid = 0x64627573;
+	}
+}
+group udevd {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+		net_cls.classid = 0x75646576;
+	}
+}
+group ntpd {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+		net_cls.classid = 0x6e747064;
+	}
+}
+group httpd {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+		net_cls.classid = 0x68747470;
+	}
+}
+group sshd {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+		net_cls.classid = 0x73736864;
+	}
+}
+group postfix {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+		net_cls.classid = 0x706f7374;
+	}
+}
