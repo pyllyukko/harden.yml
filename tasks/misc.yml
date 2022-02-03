@@ -30,11 +30,15 @@
   tags:
     - configuration
     - kerberos
+    - permissions
   ini_file:
     path: /etc/krb5.conf
     section: libdefaults
     option: '{{ item.key }}'
     value: '{{ item.value }}'
+    owner: root
+    group: root
+    mode: '0644'
   become: yes
   with_dict:
     verify_ap_req_nofail: "true"
