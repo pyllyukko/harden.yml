@@ -26,14 +26,23 @@
       when: stat_result.stat.exists == True
       tags: configuration
   become: yes
-- name: Set verify_ap_req_nofail -> true in krb5.conf
-  tags: configuration
+- name: Configure /etc/krb5.conf
+  tags:
+    - configuration
+    - kerberos
   ini_file:
     path: /etc/krb5.conf
     section: libdefaults
-    option: verify_ap_req_nofail
-    value: "true"
+    option: '{{ item.key }}'
+    value: '{{ item.value }}'
   become: yes
+  with_dict:
+    verify_ap_req_nofail: "true"
+    allow_weak_crypto: "false"
+    default_tgs_enctypes: aes256-cts-hmac-sha384-192 aes256-cts-hmac-sha1-96
+    default_tkt_enctypes: aes256-cts-hmac-sha384-192 aes256-cts-hmac-sha1-96
+    ignore_acceptor_hostname: "false"
+    clockskew: 300
 # These are packages that ship SUID/SGID binaries, pam.d configurations, services or similar stuff that provides unnecessary attack surface
 # Slackware Linux Benchmark v1.1:
 #   * SN.5 Evaluate Packages Associated With Startup Scripts
