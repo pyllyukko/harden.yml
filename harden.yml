@@ -27,10 +27,10 @@
     - import_tasks: tasks/banners.yml
     - import_tasks: tasks/network.yml
     - import_tasks: tasks/entropy.yml
-    #- import_tasks: tasks/aide.yml
-    #- import_tasks: tasks/rkhunter.yml
-    #- import_tasks: tasks/clamav.yml
-    #- import_tasks: tasks/display_managers.yml
+    - import_tasks: tasks/aide.yml
+    - import_tasks: tasks/rkhunter.yml
+    - import_tasks: tasks/clamav.yml
+    - import_tasks: tasks/display_managers.yml
     - import_tasks: tasks/apache.yml
     - import_tasks: tasks/cgroup.yml
 
