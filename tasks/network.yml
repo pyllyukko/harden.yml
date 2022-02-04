@@ -1,0 +1,110 @@
+---
+
+# TCP wrappers
+- name: Install TCP wrappers library and nftables (Debian)
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  become: yes
+  apt:
+    update_cache: yes
+    pkg:
+    - libwrap0
+    - nftables
+  tags:
+  - packages
+  - network
+  - firewall
+  - services
+- name: 'TCP wrappers: create /etc/hosts.allow'
+  become: yes
+  template:
+    src: "{{ playbook_dir }}/templates/hosts.allow.j2"
+    dest: /etc/hosts.allow
+  tags: network
+- name: 'TCP wrappers: create /etc/hosts.deny'
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/newconfs/hosts.deny.new"
+    dest: /etc/hosts.deny
+  tags: network
+# </TCP wrappers>
+
+# Slackware firewall
+- name: Stat /etc/rc.d/rc.firewall (Slackware)
+  stat:
+    path: /etc/rc.d/rc.firewall
+  register: stat_result
+  become: yes
+  when: ansible_distribution == "Slackware"
+  tags:
+  - network
+  - firewall
+- name: Firewall for Slackware
+  tags:
+  - network
+  - firewall
+  block:
+  - name: Install nftables (Slackware)
+    command: slackpkg -batch=on -default_answer=y install {{ item }}
+    with_items:
+      - nftables
+      - jansson
+      - libnftnl
+    tags:
+    - packages
+  # https://wiki.nftables.org/wiki-nftables/index.php/Simple_ruleset_for_a_workstation
+  # https://wiki.nftables.org/wiki-nftables/index.php/Simple_ruleset_for_a_server
+  - name: Create /etc/rc.d/rc.firewall (Slackware)
+    template:
+      src: "{{ playbook_dir }}/templates/rc.firewall-nft.j2"
+      dest: /etc/rc.d/rc.firewall
+      mode: '0700'
+    tags: services
+  - name: Start Slackware firewall
+    command: /etc/rc.d/rc.firewall start
+    tags: services
+  become: yes
+  when: ansible_distribution == "Slackware" and stat_result.stat.exists == False
+- name: Enable Slackware firewall
+  when: ansible_distribution == "Slackware" and stat_result.stat.exists == True and stat_result.stat.xusr == False
+  file:
+    path: /etc/rc.d/rc.firewall
+    mode: '0700'
+    owner: root
+    group: root
+  tags:
+  - services
+  - permissions
+  - network
+  - firewall
+# </Slackware firewall>
+
+# Debian firewall
+- name: Firewall rules for Debian
+  tags:
+  - firewall
+  - network
+  block:
+  - name: Copy nftables.conf
+    template:
+      src: nftables.conf.j2
+      dest: /etc/nftables.conf
+      mode: '0600'
+  - name: Activate firewall
+    command: /usr/sbin/nft -f /etc/nftables.conf
+  become: yes
+  when: (ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux")
+- name: Final touches for Debian firewall
+  block:
+  # https://wiki.debian.org/nftables#nftables_in_Debian_the_easy_way
+  - name: Enable nftables
+    systemd:
+      name: nftables
+      state: started
+      enabled: yes
+    tags:
+    - services
+    - network
+    - firewall
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+# </Debian firewall>

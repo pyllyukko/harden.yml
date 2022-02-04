@@ -1,0 +1,105 @@
+---
+- name: Install security software
+  tags: debian
+  block:
+    - name: Install security software
+      apt:
+        name: "{{ packages }}"
+        update_cache: yes
+      vars:
+        packages:
+        - bootlogd
+        - tiger
+        - autolog
+        - chkrootkit
+        - needrestart
+        - arpwatch
+        - usbguard
+        - unattended-upgrades
+        - checksecurity
+        - checksec
+      tags:
+      - packages
+      - services
+    - import_tasks: aide.yml
+    - name: Symlink /usr/lib/tiger/systems/Linux/5 -> 4
+      file:
+        src: /usr/lib/tiger/systems/Linux/4
+        dest: /usr/lib/tiger/systems/Linux/5
+        state: link
+      tags: configuration
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  become: yes
+
+# debsecan
+- name: debsecan
+  when: ansible_distribution == "Debian"
+  tags:
+  - debsecan
+  - debian
+  become: yes
+  block:
+  - name: Install debsecan
+    apt:
+      name: debsecan
+    tags: packages
+  - name: Configure debsecan
+    debconf:
+      name: debsecan
+      question: debsecan/suite
+      vtype: select
+      value: "{{ ansible_distribution_release }}"
+    tags: configuration
+
+# debsums
+- name: debsums
+  when: ansible_distribution == "Debian"
+  become: yes
+  tags:
+  - debsums
+  - debian
+  block:
+  - name: Install debsecan
+    apt:
+      name: debsecan
+    tags: packages
+  - name: Enable weekly debsums run
+    replace:
+      path: /etc/default/debsums
+      regexp: '^(CRON_CHECK=).*'
+      replace: '\g<1>weekly'
+    tags:
+    - configuration
+
+- name: Configure chkrootkit
+  become: yes
+  when: ansible_distribution == "Debian"
+  tags:
+  - configuration
+  - chkrootkit
+  - debian
+  block:
+  - name: Create /etc/chkrootkit.ignore
+    copy:
+      dest: /etc/chkrootkit.ignore
+      owner: root
+      group: root
+      mode: '0400'
+      content: |
+        ^-e The following suspicious files and directories were found:$
+        ^$
+        ^ ?/usr/lib/debug/\.build-id$
+        ^ ?/usr/lib/libreoffice/share/\.registry$
+        ^ ?/usr/lib/ruby/vendor_ruby/rubygems/ssl_certs/\.document$
+        ^ ?/usr/lib/pypy/lib_pypy/ctypes_config_cache/\.empty$
+        ^eth[0-9]+: PACKET SNIFFER\(/usr/sbin/dhcpcd\[[0-9]+\](, /usr/sbin/collectd\[[0-9]+\])?\)$
+  - name: Configure /etc/cron.daily/chkrootkit to use chkrootkit.ignore
+    replace:
+      path: /etc/cron.daily/chkrootkit
+      regexp: '^(IGNORE_FILE=).*'
+      replace: '\g<1>/etc/chkrootkit.ignore'
+  - name: Enable daily chkrootkit run
+    replace:
+      path: /etc/chkrootkit.conf
+      regexp: '^(RUN_DAILY=).*'
+      replace: '\g<1>"true"'

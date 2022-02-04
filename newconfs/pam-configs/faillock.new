@@ -1,0 +1,9 @@
+Name: Lockout for failed password attempts
+Default: yes
+Priority: 255
+Auth-Type: Primary
+Auth:
+        [default=die]                   pam_faillock.so authfail
+Account-Type: Additional
+Account:
+        required                        pam_faillock.so

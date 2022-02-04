@@ -1,0 +1,66 @@
+---
+- name: Create harden.conf sysctl settings file
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/newconfs/sysctl.d/{{ item }}.conf.new"
+    dest: /etc/sysctl.d/{{ item }}.conf
+    owner: root
+    group: root
+    mode: 0600
+  with_items:
+    - sysctl
+    - network
+  tags:
+  - configuration
+  - kernel
+  - network
+  notify: "Load sysctl settings"
+- name: Create /etc/modprobe.d/
+  become: yes
+  file:
+    path: /etc/modprobe.d
+    state: directory
+  tags: kernel
+- name: Blacklist certain kernel modules
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/newconfs/modprobe.d/{{ item }}.conf.new"
+    dest: /etc/modprobe.d/{{ item }}.conf
+    owner: root
+    group: root
+    mode: 0600
+  tags:
+  - configuration
+  - kernel
+  with_items:
+    - CIS
+    - bashbunny
+    - firewire
+    - usb-storage
+# https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/sect-security-enhanced_linux-working_with_selinux-disable_ptrace
+- name: Disable ptrace() with SELinux
+  become: yes
+  when: ansible_os_family == "RedHat"
+  seboolean:
+    name: deny_ptrace
+    state: yes
+    persistent: yes
+  tags:
+  - configuration
+  - kernel
+  - centos
+
+- name: Print Lynis score for kernel hardening
+  become: yes
+  tags: kernel
+  when: run_lynis_after_hardening
+  block:
+  - name: Run Lynis test group kernel hardening
+    command: lynis audit system -q --skip-plugins --tests-from-group kernel_hardening
+  - name: slurp /var/log/lynis.log
+    slurp:
+      src: /var/log/lynis.log
+    register: lynis_log
+  - name: Print Lynis score for kernel hardening
+    debug:
+      msg: "{{ lynis_log['content'] | b64decode | regex_search('Hardening index : \\[([0-9]+)\\]', '\\1', multiline=True) }}"

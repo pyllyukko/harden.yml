@@ -1,0 +1,38 @@
+---
+- hosts: localhost
+  vars_files:
+    - vars.yml
+  tasks:
+    - name: Check OS version
+      assert:
+        that:
+          - (ansible_distribution == "Slackware" and ansible_distribution_major_version | int >= 15) or (ansible_distribution == "Debian" and ansible_distribution_major_version | int >= 11) or (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7")
+        msg: "Unsupported operating system"
+    - import_tasks: tasks/sudoers.yml
+      tags: sudo
+    - import_tasks: tasks/lynis.yml
+    - import_tasks: tasks/filesystem.yml
+    - import_tasks: tasks/ca-certs.yml
+    - import_tasks: tasks/debian_packages.yml
+    - import_tasks: tasks/audit.yml
+      tags: audit
+    - import_tasks: tasks/login_defs.yml
+    - import_tasks: tasks/pam.yml
+    - import_tasks: tasks/services.yml
+    - import_tasks: tasks/kernel.yml
+    - import_tasks: tasks/services-accounting.yml
+    - import_tasks: tasks/apparmor.yml
+    - import_tasks: tasks/logging.yml
+    - import_tasks: tasks/misc.yml
+    - import_tasks: tasks/banners.yml
+    - import_tasks: tasks/network.yml
+    - import_tasks: tasks/entropy.yml
+    #- import_tasks: tasks/aide.yml
+    #- import_tasks: tasks/rkhunter.yml
+    #- import_tasks: tasks/clamav.yml
+    #- import_tasks: tasks/display_managers.yml
+    - import_tasks: tasks/apache.yml
+    - import_tasks: tasks/cgroup.yml
+
+  handlers:
+    - import_tasks: tasks/handlers.yml

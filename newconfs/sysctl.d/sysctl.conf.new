@@ -52,6 +52,7 @@ kernel.ctrl-alt-del = 0
 
 # https://www.cert.fi/haavoittuvuudet/2013/haavoittuvuus-2013-071.html
 # https://www.kernel.org/doc/html/v5.7/admin-guide/perf-security.html#perf-events-perf-unprivileged-users
+# https://www.kernel.org/doc/html/v5.7/admin-guide/sysctl/kernel.html#perf-event-paranoid
 kernel.perf_event_paranoid = 2
 
 # https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings#sysctls
@@ -68,7 +69,8 @@ kernel.yama.ptrace_scope = 3
 
 # Disable User Namespaces, as it opens up a large attack surface to unprivileged users.
 # https://www.debian.org/releases/bullseye/amd64/release-notes/ch-information.en.html#linux-user-namespaces
-user.max_user_namespaces = 0
+# https://www.openwall.com/lists/oss-security/2022/01/29/1
+#user.max_user_namespaces = 0
 
 # https://www.kernel.org/doc/html/latest/admin-guide/sysctl/kernel.html#unprivileged-bpf-disabled
 # https://www.debian.org/releases/bullseye/amd64/release-notes/ch-information.en.html#linux-unprivileged-bpf

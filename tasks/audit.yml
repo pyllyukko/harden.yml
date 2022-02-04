@@ -1,0 +1,120 @@
+---
+- name: Install auditing
+  block:
+  - name: Install necessary software (Debian)
+    apt:
+      name: ['auditd', 'libcap-ng-utils']
+      update_cache: yes
+    when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+    tags:
+    - packages
+  - name: Copy rules
+    get_url:
+      url: https://raw.githubusercontent.com/linux-audit/audit-userspace/master/rules/{{ item }}
+      dest: /etc/audit/rules.d/{{ item }}
+    with_items:
+      - 10-base-config.rules
+      - 11-loginuid.rules
+      - 12-ignore-error.rules
+      - 20-dont-audit.rules
+      - 30-stig.rules
+      - 42-injection.rules
+      - 43-module-load.rules
+      - 99-finalize.rules
+  - name: Fix 10-base-config.rules for CentOS 7
+    replace:
+      path: /etc/audit/rules.d/10-base-config.rules
+      regexp: "^(--backlog_wait_time [0-9]+)$"
+      replace: '#\1'
+    when: (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7") or (ansible_distribution == "Slackware" and ansible_distribution_version == "14.2")
+  - name: Remove 11-loginuid.rules for Slackware 14.2
+    file:
+      path: /etc/audit/rules.d/11-loginuid.rules
+      state: absent
+    when: ansible_distribution == "Slackware" and ansible_distribution_version == "14.2"
+  - name: Modify 20-dont-audit.rules
+    block:
+    - name: Uncomment exclude CRYPTO_KEY_USER
+      replace:
+        path: /etc/audit/rules.d/20-dont-audit.rules
+        regexp: "^#?(-a always,exclude -F msgtype=CRYPTO_KEY_USER)$"
+        replace: '\1'
+    - name: Exclude some noisy and irrelevant events
+      blockinfile:
+        path: /etc/audit/rules.d/20-dont-audit.rules
+        block: |
+          -a always,exclude -F msgtype=CRYPTO_SESSION
+          -a never,exit -F arch=b64 -S adjtimex -F auid=unset -F uid=ntp -F subj_type=ntpd_t
+  - name: Disable noisy STIG rules
+    replace:
+      path: /etc/audit/rules.d/30-stig.rules
+      regexp: "^(-.+-F key={{ item }})$"
+      replace: '#\1'
+    with_items:
+      - perm_mod
+      - delete
+  - name: Create 31-privileged.rules
+    block:
+    - name: Create temp dir
+      tempfile:
+        state: directory
+        suffix: temp
+      register: tempdir_1
+    - name: Copy Makefile
+      copy:
+        src: "{{ playbook_dir }}/Makefile"
+        dest: "{{ tempdir_1.path }}/"
+        mode: 0600
+    - name: Generate 31-privileged.rules
+      make:
+        chdir: "{{ tempdir_1.path }}"
+        target: /etc/audit/rules.d/31-privileged.rules
+    - name: Remove temp dir
+      file:
+        path: "{{ tempdir_1.path }}"
+        state: absent
+      when: tempdir_1.path is defined
+  - name: Remove unnecessary file
+    file:
+      state: absent
+      path: /etc/audit/rules.d/audit.rules
+  - name: Create few custom rules
+    assemble:
+      remote_src: no
+      src: "{{ playbook_dir }}/newconfs/rules.d"
+      dest: /etc/audit/rules.d/40-local.rules
+  - name: Make the configuration immutable
+    replace:
+      path: /etc/audit/rules.d/99-finalize.rules
+      regexp: "^#?(-e 2)$"
+      replace: '\1'
+  - name: Load the rules
+    command: augenrules --load
+  - name: Configure auditd.conf
+    replace:
+      path: /etc/audit/auditd.conf
+      regexp: '^({{ item.key }}) = .*$'
+      replace: '\1 = {{ item.value }}'
+    with_dict:
+      space_left_action: email
+      action_mail_acct: root
+      max_log_file_action: keep_logs
+  - name: Start & enable auditing
+    service:
+      name: auditd
+      state: started
+      enabled: yes
+  - name: Add audit=1 to GRUB
+    replace:
+      path: /etc/default/grub
+      regexp: '^(GRUB_CMDLINE_LINUX="(?!.*\baudit=1\b).*)"$'
+      replace: '\1 audit=1"'
+    when: (ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian") or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
+  - name: Add audit=1 to /boot/cmdline.txt (Raspbian)
+    replace:
+      path: /boot/cmdline.txt
+      regexp: '^(.(?!.*\baudit=1\b).*)$'
+      replace: '\1 audit=1'
+    when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_distribution == "Slackware" or ansible_os_family == "RedHat"

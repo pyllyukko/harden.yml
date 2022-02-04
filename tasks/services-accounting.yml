@@ -1,0 +1,221 @@
+---
+# System accounting
+- name: sysstat
+  tags:
+  - sysstat
+  - accounting
+  block:
+  - name: Install sysstat
+    become: yes
+    when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+    apt:
+      name: sysstat
+      update_cache: yes
+    tags:
+    - packages
+    - services
+    - debian
+  - name: Enable system accounting in /etc/default/sysstat
+    become: yes
+    when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+    replace:
+      path: /etc/default/sysstat
+      regexp: '^ENABLED=.*$'
+      replace: 'ENABLED="true"'
+      validate: '/bin/grep "^ENABLED=\"true\"$" %s'
+    tags:
+    - services
+    - configuration
+    - debian
+  - name: Enable system accounting systemd service
+    become: yes
+    when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+    service:
+      name: sysstat
+      state: started
+      enabled: yes
+    tags:
+    - services
+    - configuration
+    - debian
+  - name: Install sysstat (Slackware)
+    become: yes
+    when: ansible_distribution == "Slackware"
+    slackpkg:
+      name: sysstat
+      state: present
+    tags:
+    - packages
+    - services
+    - slackware
+  - name: Enable rc.sysstat (Slackware)
+    become: yes
+    when: ansible_distribution == "Slackware"
+    file:
+      path: /etc/rc.d/rc.sysstat
+      owner: root
+      group: root
+      mode: 0700
+    tags:
+    - services
+    - permissions
+    - configuration
+    - slackware
+  # https://github.com/sysstat/sysstat/blob/master/cron/sysstat.crond.in
+  # Ansible states that it's cron module requires "any 'vixie cron' conformant variant"
+  # dcron states that "Our crontab format is roughly similar to that used by vixiecron."
+  - name: Create sysstat cron jobs
+    when: ansible_distribution == "Slackware"
+    become: yes
+    block:
+      - name: Create cron job for sysstat activity accounting
+        cron:
+          name: "Run system activity accounting tool every 10 minutes"
+          minute: "*/10"
+          job: "if [ -x /usr/lib64/sa/sa1 ]; then /usr/lib64/sa/sa1 1 1; elif [ -x /usr/lib/sa/sa1 ]; then /usr/lib/sa/sa1 1 1; fi"
+      - name: Create cron job for sysstat summary
+        cron:
+          name: "Generate a text summary of previous day process accounting at 00:07"
+          minute: "7"
+          hour: "0"
+          job: "if [ -x /usr/lib64/sa/sa2 ]; then /usr/lib64/sa/sa2 -A; elif [ -x /usr/lib/sa/sa2 ]; then /usr/lib/sa/sa2 -A; fi"
+    tags:
+    - services
+    - configuration
+    - slackware
+  - name: Configure sysstat
+    become: yes
+    replace:
+      path: /etc/sysstat/sysstat
+      regexp: '^HISTORY=[0-9]+$'
+      replace: 'HISTORY=99999'
+      validate: '/bin/grep "^HISTORY=99999$" %s'
+    when: ansible_os_family != "RedHat"
+    tags:
+    - services
+    - configuration
+  - name: Configure sysstat (RH)
+    become: yes
+    when: ansible_os_family == "RedHat"
+    replace:
+      path: /etc/sysconfig/sysstat
+      regexp: '^HISTORY=[0-9]+$'
+      replace: 'HISTORY=99999'
+      validate: '/bin/grep "^HISTORY=99999$" %s'
+    tags:
+    - services
+    - configuration
+    - centos
+# </System accounting>
+
+# Process accounting
+- name: Install acct
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  apt:
+    name: acct
+    update_cache: yes
+  tags:
+  - packages
+  - services
+  - accounting
+- name: Enable acct
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  systemd:
+    name: acct
+    state: started
+    enabled: yes
+  tags:
+  - services
+  - accounting
+  - configuration
+- name: Install acct (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  slackpkg:
+    name: acct
+    state: present
+  tags:
+  - packages
+  - services
+  - accounting
+- name: Create /var/log/pacct (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  copy:
+    content: ""
+    dest: /var/log/pacct
+    force: no
+    owner: root
+    group: adm
+    mode: '0640'
+  tags:
+  - services
+  - accounting
+  - slackware
+- name: Create /etc/logrotate.d/pacct (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  copy:
+    src: "{{ playbook_dir }}/newconfs/logrotate.d/pacct.new"
+    dest: /etc/logrotate.d/pacct
+  tags:
+  - services
+  - accounting
+  - slackware
+- name: Start process accounting (Slackware)
+  become: yes
+  when: ansible_distribution == "Slackware"
+  command: /sbin/accton /var/log/pacct
+  tags:
+  - services
+  - accounting
+  - slackware
+# </Process accounting>
+# systemd IP accounting
+# https://0pointer.net/blog/ip-accounting-and-access-lists-with-systemd.html
+- name: Enable systemd IP accounting in certain services
+  become: yes
+  tags:
+  - accounting
+  - configuration
+  - debian
+  when: ansible_distribution == "Debian"
+  notify: Run systemctl daemon-reload
+  ini_file:
+    path: /lib/systemd/system/{{ item }}.service
+    section: Service
+    option: IPAccounting
+    value: "yes"
+    create: no
+    no_extra_spaces: yes
+  with_items:
+    - ssh
+    - mpd
+    - collectd
+    - rsyslog
+    - clamav-freshclam
+    - systemd-timesyncd
+    - unattended-upgrades
+    - tor
+    - autofs
+    - ooniprobe-cli
+  register: result
+  failed_when:
+    - result.failed == true
+    - result.msg != "Destination /lib/systemd/system/{{ item }}.service does not exist!"
+- name: Print Lynis score for accounting
+  become: yes
+  tags: accounting
+  when: run_lynis_after_hardening
+  block:
+  - name: Run Lynis test group accounting
+    command: lynis audit system -q --skip-plugins --tests-from-group accounting
+  - name: slurp /var/log/lynis.log
+    slurp:
+      src: /var/log/lynis.log
+    register: lynis_log
+  - name: Print Lynis score for accounting
+    debug:
+      msg: "{{ lynis_log['content'] | b64decode | regex_search('Hardening index : \\[([0-9]+)\\]', '\\1', multiline=True) }}"

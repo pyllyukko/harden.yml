@@ -1,0 +1,325 @@
+---
+# https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.10
+# Regarding SHA_CRYPT_MIN_ROUNDS: https://github.com/linux-pam/linux-pam/issues/352
+- name: Configure shadow password suite (generic)
+  become: yes
+  replace:
+    path: /etc/login.defs
+    regexp: '^(# ?)?({{ item.key }}\s+)[^\s]+$'
+    replace: '\g<2>{{ item.value }}'
+    validate: '/bin/grep "^{{ item.key }}\s\+{{ item.value }}$" %s'
+  with_dict: "{{ defs_common }}"
+  vars:
+    defs_common:
+      LOG_OK_LOGINS: "yes"
+      UMASK: "077"
+      SULOG_FILE: "/var/log/sulog"
+      CHFN_RESTRICT: "rwh"
+      DEFAULT_HOME: "no"
+      CREATE_HOME: "yes"
+      HOME_MODE: "0700"
+  tags:
+  - configuration
+  - permissions
+  - logging
+# This is separated so you can run "ansible-playbook --tags passwords"
+# https://www.redhat.com/sysadmin/more-lockdown-controls:
+#   * Minimum password lifetime
+#   * Maximum password lifetime
+#   * Failed login delay
+- name: Configure shadow password suite (password related)
+  become: yes
+  replace:
+    path: /etc/login.defs
+    regexp: '^(# ?)?({{ item.key }}\s+)[^\s]+$'
+    replace: '\g<2>{{ item.value }}'
+    validate: '/bin/grep "^{{ item.key }}\s\+{{ item.value }}$" %s'
+  with_dict:
+    PASS_MAX_DAYS: 365
+    PASS_MIN_DAYS: 7
+    PASS_WARN_AGE: 30
+    SHA_CRYPT_MIN_ROUNDS: "{{ crypt_rounds }}"
+    ENCRYPT_METHOD: "SHA512"
+    FAIL_DELAY: "{{ fail_delay }}"
+  tags:
+  - configuration
+  - passwords
+- name: Install glibc package (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: yes
+  command: slackpkg -batch=on -default_answer=y install glibc
+  tags:
+  - packages
+  - slackware
+# Slackware Linux Benchmark v1.1 - 7.8 Restrict Root Logins To System Console
+# CIS Debian Linux 10 Benchmark v1.0.0 - 5.5 Ensure root login is restricted to system console
+# https://www.debian.org/doc/manuals/securing-debian-manual/restrict-console-login.en.html
+# https://github.com/pyllyukko/harden.sh/issues/47
+- name: Limit the list of terminals from which root can log in (securetty)
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/newconfs/securetty.new"
+    dest: /etc/securetty
+  tags:
+  - configuration
+  - authorization
+
+# profile.d
+- name: Create /etc/profile.d/expiry.sh
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/newconfs/profile.d/{{ item }}.sh.new"
+    dest: /etc/profile.d/{{ item }}.sh
+    owner: root
+    group: root
+    mode: '0755'
+  tags:
+  - configuration
+  - passwords
+  with_items:
+    - expiry
+# CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.5 Ensure default user shell timeout is 900 seconds or less
+# Guide to the Secure Configuration of Red Hat Enterprise Linux 5 Revision 4.1 - 2.3.5.5 Implement Inactivity Time-out for Login Shells
+- name: Create /etc/profile.d/{tmout.sh,autologout.csh}
+  become: yes
+  tags: configuration
+  template:
+    src: "{{ playbook_dir }}/templates/{{ item }}.j2"
+    dest: /etc/profile.d/{{ item }}
+    owner: root
+    group: root
+    mode: '0755'
+  with_items:
+    - tmout.sh
+    - autologout.csh
+# CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.4 Ensure default user umask is 027 or more restrictive
+# Slackware and CentOS have umask in /etc/profile
+- name: Create /etc/profile.d/umask.sh (Debian)
+  become: yes
+  copy:
+    src: "{{ playbook_dir }}/newconfs/profile.d/umask.sh.new"
+    dest: /etc/profile.d/umask.sh
+    owner: root
+    group: root
+    mode: '0755'
+  tags: configuration
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+# </profile.d>
+
+# Slackware Linux Benchmark v1.1 - 7.3 Create ftpusers Files
+# https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.12
+- name: ftpusers
+  block:
+  - name: getent passwd
+    getent:
+      database: passwd
+  - name: Create /etc/ftpusers
+    become: yes
+    template:
+      src: "{{ playbook_dir }}/templates/ftpusers.j2"
+      dest: /etc/ftpusers
+      owner: root
+      group: root
+      mode: '0600'
+  tags:
+  - configuration
+  - authorization
+
+- import_tasks: login_defs-slackware.yml
+  when: ansible_distribution == "Slackware"
+  tags: slackware
+# CIS Debian Linux 10 Benchmark v1.0.0 - 6.2.17 Ensure no duplicate GIDs exist
+- name: Verify integrity of group files
+  become: yes
+  command: grpck -r
+- name: Remove pi from adm group (Raspbian)
+  when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
+  become: yes
+  command: gpasswd -d pi adm
+  register: result
+  failed_when:
+    - result.failed == true
+    - '"is not a member of" not in result.stderr'
+  tags: accounts
+
+# The tasks below require *local* user accounts
+- name: getent passwd
+  tags: accounts
+  getent:
+    database: passwd
+    service: files
+- name: Get login.defs values
+  tags: accounts
+  block:
+  - name: slurp /etc/login.defs
+    become: yes
+    slurp:
+      src: /etc/login.defs
+    register: login_defs
+  - name: Set uid_min & uid_max variables
+    set_fact:
+      uid_min: "{{ login_defs['content'] | b64decode | regex_search('^UID_MIN\\s+([0-9]+)$', '\\1', multiline=True) | first }}"
+      uid_max: "{{ login_defs['content'] | b64decode | regex_search('^UID_MAX\\s+([0-9]+)$', '\\1', multiline=True) | first }}"
+  - name: Verify uid_min & uid_max values
+    assert:
+      that:
+        - uid_min is regex('^[0-9]+$')
+        - uid_max is regex('^[0-9]+$')
+        - uid_min | int != 0
+        - uid_max | int != 0
+# CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.1.4 Ensure inactive password lock is 30 days or less
+- name: Inactive password lock
+  tags: passwords
+  block:
+  # Debian's "useradd -D -f 30" fails with "cannot create new defaults file"
+  - name: Set the number of days after a password expires until the account is permanently disabled (inactive)
+    replace:
+      path: /etc/default/useradd
+      regexp: '^(# ?)?(INACTIVE=).*$'
+      replace: '\g<2>30'
+      validate: '/bin/grep "^INACTIVE=30$" %s'
+    tags: configuration
+  - name: Set password expiry inactive days locking for existing users
+    command: chage --inactive 30 {{ item.key }}
+    when: item.value[1] | int >= uid_min | int and item.value[1] | int <= uid_max | int
+    with_dict: "{{ getent_passwd }}"
+    tags: accounts
+  become: yes
+# CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.2 Ensure system accounts are secured
+# Slackware Linux Benchmark v1.1 - 8.1 Block System Accounts
+- name: Lock system accounts
+  user:
+    name: '{{ item.key }}'
+    # Nowadays Debian has a symlink /bin -> /usr/bin, so this should be fine
+    shell: /sbin/nologin
+    # pam_unix(account) will deny access if account is expired
+    expires: '{{ 60 * 60 * 24 }}'
+    password_lock: yes
+  # CIS Debian Benchmark also has accounts sync, shutdown & halt
+  when:
+    - item.value[1] | int < uid_min | int
+    - (item.value[1] != "0" and item.key != "root")
+    - item.key != "Debian-gdm"
+    - item.key != "lightdm"
+    - item.key != "daemon"
+    - item.key != "logcheck"
+  with_dict: "{{ getent_passwd }}"
+  tags: accounts
+  become: yes
+- name: Configure /etc/adduser.conf (Debian)
+  become: yes
+  replace:
+    path: /etc/adduser.conf
+    regexp: '^({{ item.key }}=).*$'
+    replace: '\g<1>{{ item.value }}'
+    validate: '/bin/grep "^{{ item.key }}={{ item.value }}$" %s'
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  tags:
+  - configuration
+  - permissions
+  - debian
+  with_dict:
+    DIR_MODE: "0700"
+
+# https://wiki.debian.org/SystemGroups
+- name: Remove users from legacy groups
+  tags: accounts
+  block:
+  - name: getent group
+    getent:
+      database: group
+      service: files
+  - name: Legacy groups
+    become: yes
+    block:
+    # Common groups
+    - name: Remove almost all users from group "lp"
+      command: gpasswd -d {{ item }} lp
+      with_items: '{{ getent_group["lp"][2] | split(",") }}'
+      when:
+        - '"lp" in getent_group'
+        - getent_group["lp"][2] | length > 0
+    - name: Remove all users from group "floppy"
+      command: gpasswd -d {{ item }} floppy
+      with_items: '{{ getent_group["floppy"][2] | split(",") }}'
+      when:
+        - '"floppy" in getent_group'
+        - getent_group["floppy"][2] | length > 0
+    - name: Remove all users from group "cdrom"
+      command: gpasswd -d {{ item }} cdrom
+      with_items: '{{ getent_group["cdrom"][2] | split(",") }}'
+      when:
+        - '"cdrom" in getent_group'
+        - getent_group["cdrom"][2] | length > 0
+    - name: Remove all users from group "games"
+      command: gpasswd -d {{ item }} games
+      with_items: '{{ getent_group["games"][2] | split(",") }}'
+      when:
+        - '"games" in getent_group'
+        - getent_group["games"][2] | length > 0
+    - name: Remove almost all users from group "scanner"
+      command: gpasswd -d {{ item }} scanner
+      with_items: '{{ getent_group["scanner"][2] | split(",") }}'
+      when:
+        - '"scanner" in getent_group'
+        - getent_group["scanner"][2] | length > 0
+        - item != "saned"
+    # Debian specific groups
+  - name: Debian specific groups
+    become: yes
+    tags: debian
+    when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+    block:
+    - name: Remove all users from group "lpadmin"
+      command: gpasswd -d {{ item }} lpadmin
+      with_items: '{{ getent_group["lpadmin"][2] | split(",") }}'
+      when:
+        - '"lpadmin" in getent_group'
+        - getent_group["lpadmin"][2] | length > 0
+    - name: Remove all users from group "dip"
+      command: gpasswd -d {{ item }} dip
+      with_items: '{{ getent_group["dip"][2] | split(",") }}'
+      when:
+        - '"dip" in getent_group'
+        - getent_group["dip"][2] | length > 0
+  # Raspbian gpio, i2c & spi groups
+  # https://www.raspberrypi.com/documentation/computers/os.html#permissions
+  - name: Raspbian specific groups
+    become: yes
+    when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
+    tags: debian
+    block:
+    - name: Remove all users from group "gpio"
+      command: gpasswd -d {{ item }} gpio
+      with_items: '{{ getent_group["gpio"][2] | split(",") }}'
+      when:
+        - '"gpio" in getent_group'
+        - getent_group["gpio"][2] | length > 0
+    - name: Remove all users from group "i2c"
+      command: gpasswd -d {{ item }} i2c
+      with_items: '{{ getent_group["i2c"][2] | split(",") }}'
+      when:
+        - '"i2c" in getent_group'
+        - getent_group["i2c"][2] | length > 0
+    - name: Remove all users from group "spi"
+      command: gpasswd -d {{ item }} spi
+      with_items: '{{ getent_group["spi"][2] | split(",") }}'
+      when:
+        - '"spi" in getent_group'
+        - getent_group["spi"][2] | length > 0
+
+# Unfortunately the hash_rounds_min doesn't seem to work
+- name: Configure libuser.conf
+  become: yes
+  when: ansible_os_family == "RedHat"
+  tags:
+  - centos
+  - configuration
+  ini_file:
+    path: /etc/libuser.conf
+    section: defaults
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict:
+    hash_rounds_min: "{{ crypt_rounds }}"
+    crypt_style: sha512

@@ -4,9 +4,9 @@ Priority: 0
 Session-Type: Additional
 Session-Interactive-Only: yes
 Session:
-	[success=6 default=ignore]	pam_succeed_if.so service != sshd service !~ gdm-* service != lightdm
-	[success=5 default=ignore]	pam_succeed_if.so service = gdm-launch-environment
-	[success=1 default=ignore]	pam_succeed_if.so service = sshd
+	[success=6 default=ignore]	pam_succeed_if.so service != sshd service !~ gdm-* service != lightdm quiet
+	[success=5 default=ignore]	pam_succeed_if.so service = gdm-launch-environment quiet
+	[success=1 default=ignore]	pam_succeed_if.so service = sshd quiet
 	[default=3]			pam_lastlog.so showfailed silent nowtmp
 	optional			pam_echo.so [1;31m
 	optional			pam_lastlog.so showfailed silent noupdate

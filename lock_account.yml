@@ -1,0 +1,92 @@
+---
+- hosts: localhost
+  vars:
+    user: pyllyukko
+  tasks:
+    - name: Check that user exists
+      getent:
+        database: passwd
+        key: "{{ user }}"
+    - name: Groups
+      block:
+      - name: getent group
+        getent:
+          database: group
+          split: ':'
+      - name: slurp /etc/login.defs
+        become: yes
+        slurp:
+          src: /etc/login.defs
+        register: login_defs
+      - name: Set gid_min
+        set_fact:
+          gid_min: "{{ login_defs['content'] | b64decode | regex_search('^GID_MIN\\s+([0-9]+)$', '\\1', multiline=True) | first }}"
+      - name: Verify gid_min
+        assert:
+          that:
+            - gid_min is regex('^[0-9]+$')
+            - gid_min | int != 0
+      - name: Remove user from system groups
+        command: gpasswd -d {{ user }} {{ item.key }}
+        with_dict: "{{ getent_group }}"
+        when: item.value[1] | int < gid_min | int and user in item.value[2]
+        ignore_errors: yes
+        become: yes
+
+    - name: Remove ~{{ user }}/.ssh/authorized_keys
+      file:
+        path: "{{ getent_passwd[user][4] }}/.ssh/authorized_keys"
+        state: absent
+      become: yes
+    - name: Kill processes
+      block:
+      - name: Terminate all sessions of the user
+        command: loginctl terminate-user {{ user }}
+      - name: killall processes
+        command: killall -s SIGKILL -u {{ user }} -v
+      become: yes
+      ignore_errors: yes
+
+    - name: Crontab/at
+      block:
+      - name: Remove user's crontab (Slackware)
+        command: crontab -d -u {{ user }}
+        when: ansible_distribution == "Slackware"
+      - name: Remove user's crontab (Debian)
+        command: crontab -r -u {{ user }}
+        when: ansible_distribution == "Debian"
+        ignore_errors: yes
+      - name: Remove at jobs
+        shell: for job in $(atq|awk '$NF=="{{ user }}"{print$1}'); do atrm $job; done
+      become: yes
+
+    #- name: Login ACLs
+    #  block:
+    #  - name: Stat /etc/security/access.conf
+    #    stat:
+    #      path: /etc/security/access.conf
+    #    register: stat_result
+    #  - name: Add user to /etc/security/access.conf
+    #    lineinfile:
+    #      path: /etc/security/access.conf
+    #      # first match wins, so this needs to be in the beginning
+    #      insertbefore: '^[^#]'
+    #      firstmatch: yes
+    #      line: "- : {{ user }} : ALL"
+    #    when: stat_result.stat.exists == True
+    #  - name: Add user to /etc/ftpusers
+    #    lineinfile:
+    #      path: /etc/ftpusers
+    #      line: "{{ user }}"
+    #  become: yes
+
+    - name: Lock account
+      become: yes
+      user:
+        name: "{{ user }}"
+        # TODO: Debian vs. Slackware
+        #shell: /usr/sbin/nologin
+        shell: /sbin/nologin
+        # 1970-01-02
+        expires: 86400
+        password_lock: yes
