@@ -44,7 +44,9 @@
   - firewall
   block:
   - name: Install nftables (Slackware)
-    command: slackpkg -batch=on -default_answer=y install {{ item }}
+    slackpkg:
+      name: '{{ item }}'
+      state: present
     with_items:
       - nftables
       - jansson

@@ -2,7 +2,9 @@
 - name: Install glibc package (Slackware)
   when: ansible_distribution == "Slackware"
   become: yes
-  command: slackpkg -batch=on -default_answer=y install glibc
+  slackpkg:
+    name: glibc
+    state: present
   tags:
   - packages
 - name: Install sudo (Debian)

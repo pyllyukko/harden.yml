@@ -15,6 +15,7 @@ function start() {
 {% for port in allowed_tcp_ports %}
 	add rule inet filter input tcp dport {{ port }} accept
 {% endfor %}
+{% raw %}
 	add rule inet filter input iifname "lo" ip saddr 127.0.0.1 ip daddr 127.0.0.1 counter accept
 	add rule inet filter input iifname "lo" ip6 saddr ::1 ip6 daddr ::1 counter accept
 
@@ -53,3 +54,4 @@ case "${1}" in
     start
   ;;
 esac
+{% endraw %}

@@ -8,6 +8,13 @@
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
     tags:
     - packages
+  - name: mkdir /etc/audit/rules.d
+    file:
+      path: /etc/audit/rules.d
+      state: directory
+      owner: root
+      group: root
+      mode: '0700'
   - name: Copy rules
     get_url:
       url: https://raw.githubusercontent.com/linux-audit/audit-userspace/master/rules/{{ item }}

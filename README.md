@@ -165,12 +165,13 @@ Tags that you can use with `ansible-playbook --tags`:
     * `rkhunter`
     * `chkrootkit`
     * `aide`
-    * `audit`
+    * `audit` (use `--skip-tags audit` in Slackware if you don't have [audit](https://slackbuilds.org/repository/14.2/system/audit/) installed)
     * `debsecan`
     * `debsums`
     * `lynis` (to only configure Lynis you can use `--tags lynis --skip-tags packages`)
     * `sudo`
     * `kerberos`
+    * `clamav` (use `--skip-tags clamav` in Slackware if you don't have [clamav](https://slackbuilds.org/repository/14.2/system/clamav/) installed)
 * `banners`
 * [AAA](https://en.wikipedia.org/wiki/AAA_(computer_security)):
     * `accounting` (includes `sysstat`)

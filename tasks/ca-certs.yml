@@ -17,6 +17,7 @@
     tags:
     - packages
     - pki
+    - debian
   - name: Copy ca-certificates.conf
     when: ansible_os_family != "RedHat"
     copy:
@@ -28,6 +29,10 @@
     notify: "Run update-ca-certificates"
   - name: Install OpenSSL (Slackware)
     when: ansible_distribution == "Slackware"
-    command: slackpkg -batch=on -default_answer=y install openssl
-    tags: packages
+    slackpkg:
+      name: openssl
+      state: present
+    tags:
+    - packages
+    - slackware
   become: yes
