@@ -27,9 +27,9 @@ BEGIN{
 }
 # from system-hardening-10.2.txt
 ( $2 == "/var" && \
-  $4 !~ /(nosuid|nodev)/ \
+  $4 !~ /\ynosuid\y/ \
 ){
-  $4 = $4 ",nosuid,nodev"
+  $4 = $4 ",nosuid"
 }
 # from system-hardening-10.2.txt
 ( $2 == "/home" && \
@@ -43,8 +43,8 @@ BEGIN{
 #   - this somewhat overlaps with the first rule but the $4 rule takes care of this
 ( \
   $3 ~ /^(ext[234]|reiserfs)$/ && \
-  $2 != "/" && \
-  $4 !~ /nodev/ \
+  $2 !~ "^/(var)?$" && \
+  $4 !~ /\ynodev\y/ \
 ){
   $4 = $4 ",nodev"
 }
