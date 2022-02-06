@@ -20,8 +20,8 @@ BEGIN{
 # strict settings for filesystems mounted under /mnt
 ( \
   $3 ~ /^(ext[234]|reiserfs|vfat)$/ && \
-  $4 !~ /(nodev|nosuid|noexec)/ && \
-  ( $2 ~ /^\/m.*/ || $2 ~ /^\/boot/ ) \
+  $4 !~ /\y(nodev|nosuid|noexec)\y/ && \
+  ( $2 ~ /^\/m.+/ || $2 ~ /^\/boot/ ) \
 ){
   $4 = $4 ",nosuid,nodev,noexec"
 }
@@ -52,15 +52,15 @@ BEGIN{
 # NOTE: added noexec
 # NOTE: the "[0-9]?" comes from Debian, where the mount point is /media/cdrom0
 ( \
-  $2 ~ /^\/m.*\/(floppy|cdrom[0-9]?)$/ && \
-  $4 !~ /(nosuid|nodev|noexec)/ \
+  $2 ~ /^\/m.+\/(floppy|cdrom[0-9]?)$/ && \
+  $4 !~ /\y(nosuid|nodev|noexec)\y/ \
 ){
   $4 = $4 ",nosuid,nodev,noexec"
 }
 # NSA RHEL guide - 2.2.1.3.2 Add nodev, nosuid, and noexec Options to /dev/shm
 ( \
   $2 ~ /^\/dev\/shm$/ && \
-  $4 !~ /(nosuid|nodev|noexec)/ \
+  $4 !~ /\y(nosuid|nodev|noexec)\y/ \
 ){
   $4 = $4 ",nosuid,nodev,noexec"
 }
