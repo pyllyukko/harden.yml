@@ -222,7 +222,7 @@
       failed_when:
         - result.failed == true
         - result.state != "absent"
-      tags: permissions
+    tags: permissions
   # Stuff that is usually readable, but have no reason why they should be
   - name: chmod /etc/ssh/sshd_config
     file:
