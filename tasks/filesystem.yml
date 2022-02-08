@@ -379,4 +379,18 @@
       - result.failed == true
       - result.state != "absent"
     tags: permissions
+  - name: /etc/httpd o-rx
+    when: ansible_distribution == "Slackware"
+    file:
+      path: /etc/httpd
+      mode: '0750'
+      owner: root
+      group: apache
+    register: result
+    failed_when:
+      - result.failed == true
+      - result.state != "absent"
+    tags:
+      - permissions
+      - slackware
   become: yes
