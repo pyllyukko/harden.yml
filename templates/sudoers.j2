@@ -110,7 +110,7 @@ Defaults	use_pty
 ##
 ## User privilege specification
 ##
-root {{ ansible_hostname }}=(ALL) ALL
+root {{ ansible_hostname }}=(ALL:ALL) EXEC: ALL
 {{ ansible_user_id }}	{{ ansible_hostname }}=(root) PASSWD:EXEC: ANSIBLE
 
 ## Uncomment to allow members of group wheel to execute any command
