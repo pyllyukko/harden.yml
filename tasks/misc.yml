@@ -74,7 +74,8 @@
         - netatalk
         - slrn
         - yptools
-        - ModemManager
+        # libmm-glib.so is required by nm-applet
+        #- ModemManager
         - modemmanager-qt
       tags: packages
     - name: Remove leftover files from removed packages
