@@ -108,3 +108,26 @@
   tags:
   - configuration
   - debian
+- name: Docker
+  block:
+  - name: Stat /etc/docker
+    stat:
+      path: /etc/docker
+    register: docker
+  - name: Create /etc/docker/daemon.json
+    become: yes
+    copy:
+      dest: /etc/docker/daemon.json
+      force: no
+      owner: root
+      group: root
+      mode: '0600'
+      content: |
+        {
+          "experimental": false,
+          "icc": false,
+          "insecure-registries": [],
+          "no-new-privileges": true
+        }
+    when: docker.stat.exists
+  tags: docker
