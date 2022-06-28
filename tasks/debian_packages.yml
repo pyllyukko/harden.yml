@@ -18,6 +18,7 @@
         - unattended-upgrades
         - checksecurity
         - checksec
+        - hardening-runtime
       tags:
       - packages
       - services
