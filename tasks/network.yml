@@ -36,6 +36,8 @@
   become: yes
   when: ansible_distribution == "Slackware"
   tags:
+  - services
+  - permissions
   - network
   - firewall
 - name: Firewall for Slackware
