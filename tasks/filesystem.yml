@@ -80,6 +80,16 @@
     owner: root
     group: root
 
+- name: Make Xorg rootless
+  become: yes
+  when: ansible_distribution == "Slackware"
+  tags: permissions
+  file:
+    path: /usr/libexec/Xorg
+    mode: '0755'
+    owner: root
+    group: root
+
 - name: Chmod sensitive files
   block:
   - import_tasks: filesystem-sudoers.yml
