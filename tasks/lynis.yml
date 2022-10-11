@@ -115,7 +115,7 @@
         then
           exit 1
         fi
-        lynis audit system -Q -q --slow-warning 90
+        lynis audit system -Q -q --slow-warning 200
         tests_performed="$(gawk '/Tests performed:/{print$5}' /var/log/lynis.log)"
         hardening_index="$(sed -n 's/^.\+\(Hardening index : .\+\)$/\1/p' /var/log/lynis.log)"
         lynis_version="$(gawk '$3=="Lynis" && $4 ~ /^[0-9.]+$/{print$4}' /var/log/lynis.log)"
