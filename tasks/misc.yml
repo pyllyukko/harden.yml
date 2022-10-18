@@ -47,6 +47,8 @@
     default_tkt_enctypes: aes256-cts-hmac-sha384-192 aes256-cts-hmac-sha1-96
     ignore_acceptor_hostname: "false"
     clockskew: 300
+    # https://web.mit.edu/kerberos/krb5-current/doc/admin/spake.html#spake
+    spake_preauth_groups: edwards25519
 # These are packages that ship SUID/SGID binaries, pam.d configurations, services or similar stuff that provides unnecessary attack surface
 # Slackware Linux Benchmark v1.1:
 #   * SN.5 Evaluate Packages Associated With Startup Scripts
