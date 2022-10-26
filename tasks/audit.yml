@@ -111,6 +111,7 @@
       name: auditd
       state: started
       enabled: yes
+    when: ansible_distribution != "Slackware"
   - name: Add audit=1 to GRUB
     replace:
       path: /etc/default/grub
