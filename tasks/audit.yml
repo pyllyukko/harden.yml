@@ -124,5 +124,14 @@
       regexp: '^(.(?!.*\baudit=1\b).*)$'
       replace: '\1 audit=1'
     when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
+  # AUDISP-REMOTE(8): "you should edit auditd.conf to set the name_format to something meaningful and the log_format to enriched
+  #- name: Configure auditd.conf for audisp
+  #  replace:
+  #    path: /etc/audit/auditd.conf
+  #    regexp: '^({{ item.key }}) = .*$'
+  #    replace: '\1 = {{ item.value }}'
+  #  with_dict:
+  #    log_format: ENRICHED
+  #    name_format: HOSTNAME
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_distribution == "Slackware" or ansible_os_family == "RedHat"
