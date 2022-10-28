@@ -7,3 +7,4 @@
 -w /usr/sbin/ip6tables-restore -p x -k firewall-change
 -w /bin/firewall-cmd -p x -k firewall-change
 -w /usr/sbin/ufw -p x -k firewall-change
+-w /usr/sbin/nft -p x -k firewall-change
