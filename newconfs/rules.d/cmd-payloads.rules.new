@@ -1,0 +1,22 @@
+# From https://github.com/Neo23x0/auditd/blob/master/audit.rules
+-w /bin/nc -p x -k susp_activity
+-w /bin/netcat -p x -k susp_activity
+-w /usr/bin/ncat -p x -k susp_activity
+-w /bin/nc.openbsd -p x -k susp_activity
+-w /bin/nc.traditional -p x -k susp_activity
+# Modified to log only exe=/usr/bin/mkfifo
+# https://www.youtube.com/watch?v=lc1i9h1GyMA
+-a always,exit -F arch=b32 -S mknod -S mknodat -F exe=/usr/bin/mkfifo -k specialfiles
+-a always,exit -F arch=b64 -S mknod -S mknodat -F exe=/usr/bin/mkfifo -k specialfiles
+
+# Should catch various payloads such as msfvenom -p cmd/unix/...
+-a always,exit -F arch=b32 -S accept,connect -F exe=/bin/sh -F key=cmd-payload
+-a always,exit -F arch=b64 -S accept,connect -F exe=/bin/sh -F key=cmd-payload
+-a always,exit -F arch=b32 -S accept,connect -F exe=/bin/bash -F key=cmd-payload
+-a always,exit -F arch=b64 -S accept,connect -F exe=/bin/bash -F key=cmd-payload
+-a always,exit -F arch=b32 -S accept,connect -F exe=/bin/dash -F key=cmd-payload
+-a always,exit -F arch=b64 -S accept,connect -F exe=/bin/dash -F key=cmd-payload
+-a always,exit -F arch=b32 -S accept,connect -F exe=/usr/bin/awk -F key=cmd-payload
+-a always,exit -F arch=b64 -S accept,connect -F exe=/usr/bin/awk -F key=cmd-payload
+-a always,exit -F arch=b32 -S accept,connect -F exe=/usr/bin/gawk -F key=cmd-payload
+-a always,exit -F arch=b64 -S accept,connect -F exe=/usr/bin/gawk -F key=cmd-payload
