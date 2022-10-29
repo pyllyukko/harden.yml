@@ -14,14 +14,14 @@
 -a always,exit -F arch=b32 -S connect -F exe=/bin/sh -F a2=28 -F key=cmd-payload
 -a always,exit -F arch=b64 -S connect -F exe=/bin/sh -F a2=16 -F key=cmd-payload
 -a always,exit -F arch=b64 -S connect -F exe=/bin/sh -F a2=28 -F key=cmd-payload
--a always,exit -F arch=b32 -S connect -F exe=/bin/bash a2=16 -F key=cmd-payload
--a always,exit -F arch=b32 -S connect -F exe=/bin/bash a2=28 -F key=cmd-payload
--a always,exit -F arch=b64 -S connect -F exe=/bin/bash a2=16 -F key=cmd-payload
--a always,exit -F arch=b64 -S connect -F exe=/bin/bash a2=28 -F key=cmd-payload
--a always,exit -F arch=b32 -S connect -F exe=/bin/dash a2=16 -F key=cmd-payload
--a always,exit -F arch=b32 -S connect -F exe=/bin/dash a2=28 -F key=cmd-payload
--a always,exit -F arch=b64 -S connect -F exe=/bin/dash a2=16 -F key=cmd-payload
--a always,exit -F arch=b64 -S connect -F exe=/bin/dash a2=28 -F key=cmd-payload
+-a always,exit -F arch=b32 -S connect -F exe=/bin/bash -F a2=16 -F key=cmd-payload
+-a always,exit -F arch=b32 -S connect -F exe=/bin/bash -F a2=28 -F key=cmd-payload
+-a always,exit -F arch=b64 -S connect -F exe=/bin/bash -F a2=16 -F key=cmd-payload
+-a always,exit -F arch=b64 -S connect -F exe=/bin/bash -F a2=28 -F key=cmd-payload
+-a always,exit -F arch=b32 -S connect -F exe=/bin/dash -F a2=16 -F key=cmd-payload
+-a always,exit -F arch=b32 -S connect -F exe=/bin/dash -F a2=28 -F key=cmd-payload
+-a always,exit -F arch=b64 -S connect -F exe=/bin/dash -F a2=16 -F key=cmd-payload
+-a always,exit -F arch=b64 -S connect -F exe=/bin/dash -F a2=28 -F key=cmd-payload
 -a always,exit -F arch=b32 -S accept,connect -F exe=/usr/bin/awk -F key=cmd-payload
 -a always,exit -F arch=b64 -S accept,connect -F exe=/usr/bin/awk -F key=cmd-payload
 -a always,exit -F arch=b32 -S accept,connect -F exe=/usr/bin/gawk -F key=cmd-payload
