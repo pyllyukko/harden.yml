@@ -10,12 +10,18 @@
 -a always,exit -F arch=b64 -S mknod -S mknodat -F exe=/usr/bin/mkfifo -k specialfiles
 
 # Should catch various payloads such as msfvenom -p cmd/unix/...
--a always,exit -F arch=b32 -S accept,connect -F exe=/bin/sh -F key=cmd-payload
--a always,exit -F arch=b64 -S accept,connect -F exe=/bin/sh -F key=cmd-payload
--a always,exit -F arch=b32 -S accept,connect -F exe=/bin/bash -F key=cmd-payload
--a always,exit -F arch=b64 -S accept,connect -F exe=/bin/bash -F key=cmd-payload
--a always,exit -F arch=b32 -S accept,connect -F exe=/bin/dash -F key=cmd-payload
--a always,exit -F arch=b64 -S accept,connect -F exe=/bin/dash -F key=cmd-payload
+-a always,exit -F arch=b32 -S connect -F exe=/bin/sh -F a2=16 -F key=cmd-payload
+-a always,exit -F arch=b32 -S connect -F exe=/bin/sh -F a2=28 -F key=cmd-payload
+-a always,exit -F arch=b64 -S connect -F exe=/bin/sh -F a2=16 -F key=cmd-payload
+-a always,exit -F arch=b64 -S connect -F exe=/bin/sh -F a2=28 -F key=cmd-payload
+-a always,exit -F arch=b32 -S connect -F exe=/bin/bash a2=16 -F key=cmd-payload
+-a always,exit -F arch=b32 -S connect -F exe=/bin/bash a2=28 -F key=cmd-payload
+-a always,exit -F arch=b64 -S connect -F exe=/bin/bash a2=16 -F key=cmd-payload
+-a always,exit -F arch=b64 -S connect -F exe=/bin/bash a2=28 -F key=cmd-payload
+-a always,exit -F arch=b32 -S connect -F exe=/bin/dash a2=16 -F key=cmd-payload
+-a always,exit -F arch=b32 -S connect -F exe=/bin/dash a2=28 -F key=cmd-payload
+-a always,exit -F arch=b64 -S connect -F exe=/bin/dash a2=16 -F key=cmd-payload
+-a always,exit -F arch=b64 -S connect -F exe=/bin/dash a2=28 -F key=cmd-payload
 -a always,exit -F arch=b32 -S accept,connect -F exe=/usr/bin/awk -F key=cmd-payload
 -a always,exit -F arch=b64 -S accept,connect -F exe=/usr/bin/awk -F key=cmd-payload
 -a always,exit -F arch=b32 -S accept,connect -F exe=/usr/bin/gawk -F key=cmd-payload
