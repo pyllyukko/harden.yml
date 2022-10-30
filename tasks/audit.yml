@@ -1,4 +1,5 @@
 ---
+# Some documentation available at https://github.com/pyllyukko/harden.sh/wiki/audit
 - name: Install auditing
   block:
   - name: Install necessary software (Debian)
