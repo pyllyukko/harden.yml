@@ -60,9 +60,9 @@
   - debsums
   - debian
   block:
-  - name: Install debsecan
+  - name: Install debsums
     apt:
-      name: debsecan
+      name: debsums
     tags: packages
   - name: Enable weekly debsums run
     replace:
