@@ -6,7 +6,7 @@ auth            required        pam_deny.so
 #auth           sufficient      pam_wheel.so trust use_uid
 # Uncomment the following line to require a user to be in the "wheel" group.
 #auth           required        pam_wheel.so use_uid
-#auth           include         system-auth
+auth            include         system-auth
 account         include         system-auth
 password        include         system-auth
 session         include         system-auth

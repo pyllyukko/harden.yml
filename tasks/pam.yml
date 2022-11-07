@@ -205,6 +205,7 @@
   - pam
   - passwords
 # https://wiki.debian.org/WHEEL/PAM
+# This is not enabled in Slackware because it has a separate "Deny use of su" task
 - name: Enable pam_wheel.so in /etc/pam.d/su
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
   become: yes
