@@ -1,3 +1,3 @@
 -a always,exit -F dir=/etc/apt/trusted.gpg.d/ -F perm=wa -F key=apt-key
 -w /etc/apt/trusted.gpg -p wa -k apt-key
--w /usr/bin/apt-key -p x -k apt-key
+#-w /usr/bin/apt-key -p x -k apt-key
