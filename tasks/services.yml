@@ -278,5 +278,5 @@
   #        /sbin/mount -v -t nfs4
   #      fi
   #  tags: services
-  #when: ansible_distribution == "Slackware"
-  #become: yes
+  when: ansible_distribution == "Slackware"
+  become: yes
