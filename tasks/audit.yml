@@ -42,11 +42,15 @@
     when: ansible_distribution == "Slackware" and ansible_distribution_version == "14.2"
   - name: Modify 20-dont-audit.rules
     block:
-    - name: Uncomment exclude CRYPTO_KEY_USER
+    - name: Uncomment few exclusions in 20-dont-audit.rules
       replace:
         path: /etc/audit/rules.d/20-dont-audit.rules
-        regexp: "^#?(-a always,exclude -F msgtype=CRYPTO_KEY_USER)$"
+        regexp: "^#?({{ item }})$"
         replace: '\1'
+      with_items:
+        - -a always,exclude -F msgtype=CRYPTO_KEY_USER
+        # https://listman.redhat.com/archives/linux-audit/2009-November/006296.html
+        - -a never,user -F subj_type=crond_t
     - name: Exclude some noisy and irrelevant events
       blockinfile:
         path: /etc/audit/rules.d/20-dont-audit.rules
