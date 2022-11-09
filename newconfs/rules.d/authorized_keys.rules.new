@@ -1,0 +1,1 @@
+-w /root/.ssh/authorized_keys -p wa -k authorized_keys
