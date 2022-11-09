@@ -117,11 +117,14 @@
       state: started
       enabled: yes
     when: ansible_distribution != "Slackware"
-  - name: Add audit=1 to GRUB
+  - name: Configure GRUB
     replace:
       path: /etc/default/grub
-      regexp: '^(GRUB_CMDLINE_LINUX="(?!.*\baudit=1\b).*)"$'
-      replace: '\1 audit=1"'
+      regexp: '^(GRUB_CMDLINE_LINUX="(?!.*\b{{ item }}\b).*)"$'
+      replace: '\1 {{ item }}"'
+    with_items:
+      - audit=1
+      - audit_backlog_limit=8192
     when: (ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian") or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
   - name: Add audit=1 to /boot/cmdline.txt (Raspbian)
     replace:
