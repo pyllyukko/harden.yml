@@ -19,6 +19,7 @@
         - checksecurity
         - checksec
         - hardening-runtime
+        - apt-show-versions
       tags:
       - packages
       - services
