@@ -4,6 +4,9 @@
   stat:
     path: /etc/lightdm/lightdm.conf
   register: stat_result
+  tags:
+  - network
+  - configuration
 - name: Configure LightDM
   tags: configuration
   when: stat_result.stat.exists == True
