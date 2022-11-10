@@ -32,6 +32,7 @@
 
 # fstab
 - name: Create /etc/fstab.new
+  tags: fstab
   block:
   - name: Create temp file for fstab.awk
     tempfile:

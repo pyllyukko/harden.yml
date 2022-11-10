@@ -179,6 +179,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `authorization`
     * `passwords`
     * `pam`
+* `fstab`
 
 There are also operating system tags for tasks that only apply to specific OS.
 You can speed up the hardening by skipping OSs that don't apply. E.g. if you're
