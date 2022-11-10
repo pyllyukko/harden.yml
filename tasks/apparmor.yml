@@ -16,6 +16,7 @@
     replace: '\1 lsm=apparmor'
   become: yes
   when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
+  tags: configuration
 # https://github.com/pyllyukko/harden.sh/wiki/AppArmor
 - name: Enable extra profiles
   block:
@@ -31,6 +32,7 @@
   - name: Enable extra profiles
     command: /usr/sbin/aa-enforce /etc/apparmor.d/{{ item }}
     with_items: '{{ apparmor_profiles }}'
+    tags: configuration
   vars:
     apparmor_profiles:
       - usr.lib.firefox.firefox
