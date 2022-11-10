@@ -172,6 +172,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `sudo`
     * `kerberos`
     * `clamav` (use `--skip-tags clamav` in Slackware if you don't have [clamav](https://slackbuilds.org/repository/14.2/system/clamav/) installed)
+    * `apparmor`
 * `banners`
 * [AAA](https://en.wikipedia.org/wiki/AAA_(computer_security)):
     * `accounting` (includes `sysstat`)

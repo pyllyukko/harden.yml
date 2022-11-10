@@ -22,6 +22,9 @@
     - import_tasks: tasks/kernel.yml
     - import_tasks: tasks/services-accounting.yml
     - import_tasks: tasks/apparmor.yml
+      tags:
+      - apparmor
+      - debian
     - import_tasks: tasks/logging.yml
     - import_tasks: tasks/misc.yml
     - import_tasks: tasks/banners.yml
