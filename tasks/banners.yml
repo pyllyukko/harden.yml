@@ -34,6 +34,6 @@
     slurp:
       src: /var/log/lynis.log
     register: lynis_log
-  - name: Print Lynis score for accounting
+  - name: Print Lynis score for banners
     debug:
       msg: "{{ lynis_log['content'] | b64decode | regex_search('Hardening index : \\[([0-9]+)\\]', '\\1', multiline=True) }}"
