@@ -9,6 +9,7 @@
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
     tags:
     - packages
+    - debian
   - name: mkdir /etc/audit/rules.d
     file:
       path: /etc/audit/rules.d
@@ -35,11 +36,14 @@
       regexp: "^(--backlog_wait_time [0-9]+)$"
       replace: '#\1'
     when: (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7") or (ansible_distribution == "Slackware" and ansible_distribution_version == "14.2")
+    tags: centos
   - name: Remove 11-loginuid.rules for Slackware 14.2
     file:
       path: /etc/audit/rules.d/11-loginuid.rules
       state: absent
     when: ansible_distribution == "Slackware" and ansible_distribution_version == "14.2"
+    tags:
+    - slackware
   - name: Modify 20-dont-audit.rules
     block:
     - name: Uncomment few exclusions in 20-dont-audit.rules
@@ -102,6 +106,7 @@
       replace: '\1'
   - name: Load the rules
     command: augenrules --load
+    tags: configuration
   - name: Configure auditd.conf
     replace:
       path: /etc/audit/auditd.conf
@@ -111,12 +116,16 @@
       space_left_action: email
       action_mail_acct: root
       max_log_file_action: keep_logs
+    tags: configuration
   - name: Start & enable auditing
     service:
       name: auditd
       state: started
       enabled: yes
     when: ansible_distribution != "Slackware"
+    tags:
+    - services
+    - configuration
   - name: Configure GRUB
     replace:
       path: /etc/default/grub
@@ -126,12 +135,16 @@
       - audit=1
       - audit_backlog_limit=8192
     when: (ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian") or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
+    tags: configuration
   - name: Add audit=1 to /boot/cmdline.txt (Raspbian)
     replace:
       path: /boot/cmdline.txt
       regexp: '^(.(?!.*\baudit=1\b).*)$'
       replace: '\1 audit=1'
     when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
+    tags:
+    - debian
+    - configuration
   # AUDISP-REMOTE(8): "you should edit auditd.conf to set the name_format to something meaningful and the log_format to enriched
   #- name: Configure auditd.conf for audisp
   #  replace:

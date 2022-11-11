@@ -20,4 +20,5 @@
       enabled: yes
     tags: services
   when: rng_current['content'] | b64decode != "none\n" and ansible_distribution == "Debian"
+  tags: debian
   become: yes

@@ -140,7 +140,9 @@
   # /var/run/faillock/
   - name: Insert "auth required pam_faillock.so preauth" into /etc/pam.d/common-auth
     when: ansible_distribution == "Debian"
-    tags: configuration
+    tags:
+    - configuration
+    - debian
     lineinfile:
       path: /etc/pam.d/common-auth
       regexp: '^auth\s+required\s+pam_faillock\.so\s+preauth$'

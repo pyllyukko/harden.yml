@@ -119,6 +119,7 @@
   - packages
   - services
   - accounting
+  - debian
 - name: Enable acct
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
@@ -130,6 +131,7 @@
   - services
   - accounting
   - configuration
+  - debian
 - name: Install acct (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
@@ -140,6 +142,7 @@
   - packages
   - services
   - accounting
+  - slackware
 - name: Create /var/log/pacct (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"

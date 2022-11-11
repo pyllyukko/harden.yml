@@ -104,7 +104,9 @@
     owner: root
     group: root
     mode: '0755'
-  tags: configuration
+  tags:
+  - configuration
+  - debian
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
 # </profile.d>
 
@@ -126,6 +128,7 @@
   tags:
   - configuration
   - authorization
+  - network
 
 - import_tasks: login_defs-slackware.yml
   when: ansible_distribution == "Slackware"
@@ -142,7 +145,9 @@
   failed_when:
     - result.failed == true
     - '"is not a member of" not in result.stderr'
-  tags: accounts
+  tags:
+  - accounts
+  - debian
 
 # The tasks below require *local* user accounts
 - name: getent passwd

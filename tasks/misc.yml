@@ -7,7 +7,9 @@
     regexp: '^(MD5SUM)=[0-9]+$'
     replace: '\g<1>=1'
     validate: '/bin/grep "^MD5SUM=1$" %s'
-  tags: configuration
+  tags:
+  - configuration
+  - slackware
 - name: Configure certbot to use 4096 bit keys
   tags: pki
   block:
@@ -88,6 +90,7 @@
         - /etc/pam.d/netatalk
         - /etc/rc.d/rc.atalk
   become: yes
+  tags: slackware
   when: ansible_distribution == "Slackware"
 #- name: Download checksec into /usr/local/bin
 #  become: yes
