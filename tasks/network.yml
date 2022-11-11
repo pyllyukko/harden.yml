@@ -2,7 +2,7 @@
 
 # TCP wrappers
 - name: Install TCP wrappers library and nftables (Debian)
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   become: yes
   apt:
     update_cache: yes
@@ -96,7 +96,7 @@
   - name: Activate firewall
     command: /usr/sbin/nft -f /etc/nftables.conf
   become: yes
-  when: (ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux")
+  when: (ansible_distribution == "Debian" or ansible_distribution == "Kali")
 - name: Final touches for Debian firewall
   block:
   # https://wiki.debian.org/nftables#nftables_in_Debian_the_easy_way
@@ -110,5 +110,5 @@
     - network
     - firewall
   become: yes
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
 # </Debian firewall>
