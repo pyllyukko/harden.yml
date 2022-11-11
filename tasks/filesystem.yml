@@ -21,6 +21,7 @@
     tags: configuration
   become: yes
   when: ansible_distribution == "Slackware"
+  tags: slackware
 #- name: Remount /proc with hidepid=2
 #  become: yes
 #  mount:
@@ -52,6 +53,7 @@
       update_cache: yes
     tags:
     - packages
+    - debian
   - name: Create /etc/fstab.new
     become: yes
     shell: gawk -f {{ tempfile_1.path }} /etc/fstab 1>/etc/fstab.new
@@ -64,7 +66,9 @@
 - name: Clean up /tmp during boot (Slackware)
   become: yes
   when: ansible_distribution == "Slackware"
-  tags: configuration
+  tags:
+  - configuration
+  - slackware
   replace:
     path: /etc/rc.d/rc.S
     regexp: '^(rm -rf) /tmp/\{.*\}$'
@@ -73,7 +77,9 @@
 - name: Clean up /tmp during boot (Debian)
   become: yes
   when: ansible_distribution == "Debian"
-  tags: configuration
+  tags:
+  - configuration
+  - debian
   copy:
     src: "{{ playbook_dir }}/newconfs/tmp.conf.new"
     dest: /etc/tmpfiles.d/tmp.conf
@@ -84,7 +90,9 @@
 - name: Make Xorg rootless
   become: yes
   when: ansible_distribution == "Slackware"
-  tags: permissions
+  tags:
+  - permissions
+  - slackware
   file:
     path: /usr/libexec/Xorg
     mode: '0755'
@@ -138,6 +146,7 @@
       state: present
     tags:
     - packages
+    - slackware
   - name: Install acl package (Debian)
     when: ansible_distribution == "Debian"
     apt:
@@ -145,6 +154,7 @@
       state: present
     tags:
     - packages
+    - debian
   # we don't want to mess with the group ownerships because these might be needed to be writable by utmp group
   - name: Grant group adm read rights on login records
     acl:
@@ -287,7 +297,9 @@
       owner: root
       group: root
     when: ansible_distribution == "Slackware"
-    tags: permissions
+    tags:
+    - permissions
+    - slackware
   # CIS Debian Linux 10 Benchmark v1.0.0
   #   5.1.2 Ensure permissions on /etc/crontab are configured
   #   5.1.3 Ensure permissions on /etc/cron.hourly are configured
@@ -327,7 +339,9 @@
       mode: '0600'
       owner: root
       group: root
-    tags: permissions
+    tags:
+    - permissions
+    - slackware
   # CIS Slackware Linux Benchmark v1.1 - 7.8 Restrict Root Logins To System Console
   - name: chmod /etc/securetty
     file:
@@ -356,11 +370,15 @@
     failed_when:
       - result.failed == true
       - result.state != "absent"
-    tags: permissions
+    tags:
+    - permissions
+    - slackware
   # bzgrep 'var/log/.\+/$' MANIFEST.bz2
   - name: Slackware log dirs
     when: ansible_distribution == "Slackware"
-    tags: permissions
+    tags:
+    - permissions
+    - slackware
     file:
       path: /var/log/{{ item }}
       mode: '0750'
@@ -389,7 +407,9 @@
     failed_when:
       - result.failed == true
       - result.state != "absent"
-    tags: permissions
+    tags:
+    - permissions
+    - slackware
   - name: /etc/httpd o-rx
     when: ansible_distribution == "Slackware"
     file:
