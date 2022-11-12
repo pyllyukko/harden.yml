@@ -1,16 +1,16 @@
 # /etc/cgrules.conf
 #The format of this file is described in cgrules.conf(5)
 #manual page.
-root:/usr/sbin/crond		net_cls	crond/
-root:/usr/sbin/syslogd		net_cls	syslogd/
-root:/sbin/haveged		net_cls	haveged/
-root:/usr/sbin/smartd		net_cls	smartd/
-root:/usr/sbin/acpid		net_cls	acpid/
-root:/usr/sbin/NetworkManager	net_cls	NetworkManager/
-messagebus:/usr/bin/dbus-daemon	net_cls	dbus-daemon/
-root:/sbin/udevd		net_cls	udevd/
-ntp:/usr/sbin/ntpd		net_cls	ntpd/
-root:/usr/sbin/httpd		net_cls	httpd/
-root:/usr/sbin/sshd		net_cls	sshd/
-root:/usr/sbin/postfix		net_cls	postfix/
+root:/usr/sbin/crond		net_cls	daemons/crond/
+root:/usr/sbin/syslogd		net_cls	daemons/syslogd/
+root:/sbin/haveged		net_cls	daemons/haveged/
+root:/usr/sbin/smartd		net_cls	daemons/smartd/
+root:/usr/sbin/acpid		net_cls	daemons/acpid/
+root:/usr/sbin/NetworkManager	net_cls	daemons/NetworkManager/
+messagebus:/usr/bin/dbus-daemon	net_cls	daemons/dbus-daemon/
+root:/sbin/udevd		net_cls	daemons/udevd/
+ntp:/usr/sbin/ntpd		net_cls	daemons/ntpd/
+root:/usr/sbin/httpd		net_cls	daemons/httpd/
+root:/usr/sbin/sshd		net_cls	daemons/sshd/
+root:/usr/sbin/postfix		net_cls	daemons/postfix/
 # End of file

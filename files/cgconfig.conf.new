@@ -10,7 +10,7 @@
 #  WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 #
-group crond {
+group daemons/crond {
 	perm {
 		task {
 			uid = root;
@@ -28,7 +28,7 @@ group crond {
 		net_cls.classid = 0x72636e6f;
 	}
 }
-group syslogd {
+group daemons/syslogd {
 	perm {
 		task {
 			uid = root;
@@ -46,7 +46,7 @@ group syslogd {
 		net_cls.classid = 0x7379736c;
 	}
 }
-group smartd {
+group daemons/smartd {
 	perm {
 		task {
 			uid = root;
@@ -64,7 +64,7 @@ group smartd {
 		net_cls.classid = 0x736d6172;
 	}
 }
-group acpid {
+group daemons/acpid {
 	perm {
 		task {
 			uid = root;
@@ -82,7 +82,7 @@ group acpid {
 		net_cls.classid = 0x61637069;
 	}
 }
-group haveged {
+group daemons/haveged {
 	perm {
 		task {
 			uid = root;
@@ -100,7 +100,7 @@ group haveged {
 		net_cls.classid = 0x68617665;
 	}
 }
-group NetworkManager {
+group daemons/NetworkManager {
 	perm {
 		task {
 			uid = root;
@@ -118,7 +118,7 @@ group NetworkManager {
 		net_cls.classid = 0x4e657477;
 	}
 }
-group dbus-daemon {
+group daemons/dbus-daemon {
 	perm {
 		task {
 			uid = root;
@@ -136,7 +136,7 @@ group dbus-daemon {
 		net_cls.classid = 0x64627573;
 	}
 }
-group udevd {
+group daemons/udevd {
 	perm {
 		task {
 			uid = root;
@@ -154,7 +154,7 @@ group udevd {
 		net_cls.classid = 0x75646576;
 	}
 }
-group ntpd {
+group daemons/ntpd {
 	perm {
 		task {
 			uid = root;
@@ -172,7 +172,7 @@ group ntpd {
 		net_cls.classid = 0x6e747064;
 	}
 }
-group httpd {
+group daemons/httpd {
 	perm {
 		task {
 			uid = root;
@@ -190,7 +190,7 @@ group httpd {
 		net_cls.classid = 0x68747470;
 	}
 }
-group sshd {
+group daemons/sshd {
 	perm {
 		task {
 			uid = root;
@@ -208,7 +208,7 @@ group sshd {
 		net_cls.classid = 0x73736864;
 	}
 }
-group postfix {
+group daemons/postfix {
 	perm {
 		task {
 			uid = root;
