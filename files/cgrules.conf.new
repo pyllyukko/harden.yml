@@ -17,5 +17,7 @@ root:/usr/sbin/krb5kdc		net_cls	daemons/krb5/
 root:/usr/sbin/kadmind		net_cls	daemons/krb5/
 root:/sbin/auditd		net_cls	daemons/auditd/
 root:/sbin/audisp-remote	net_cls	daemons/auditd/
+root:/usr/sbin/clamd		net_cls	daemons/clamav/
+root:/usr/bin/freshclam		net_cls	daemons/clamav/
 @users				cpu,cpuacct,net_cls	users/%u
 # End of file
