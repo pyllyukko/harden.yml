@@ -12,11 +12,13 @@
 #
 group daemons/crond {
 	perm {
+# who can add tasks to this group
 		task {
 			uid = root;
 			gid = root;
 			fperm = 600;
 		}
+# who can manage limits
 		admin {
 			uid = root;
 			gid = root;
