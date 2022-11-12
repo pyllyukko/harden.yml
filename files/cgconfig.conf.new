@@ -226,6 +226,23 @@ group daemons/postfix {
 		net_cls.classid = 0x706f7374;
 	}
 }
+group daemons/krb5 {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+	}
+}
 group users {
 	cpuacct{
 	}
