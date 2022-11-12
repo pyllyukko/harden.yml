@@ -27,6 +27,8 @@ function start() {
 
 	# acpid, smartd & haveged
 	add rule inet filter output meta cgroup {0x61637069, 0x736d6172, 0x68617665} counter
+	# syslogd
+	add rule inet filter output meta cgroup 0x7379736c udp dport 514 counter accept
 EOF
 }
 function usage() {
