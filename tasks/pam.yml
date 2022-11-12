@@ -64,13 +64,16 @@
   - configuration
   - pam
   - slackware
-- name: Add pam_umask to /etc/pam.d/postlogin (Slackware)
+- name: Add pam_umask & pam_cgroup to /etc/pam.d/postlogin (Slackware)
   when: ansible_distribution == "Slackware"
   become: yes
   lineinfile:
     path: /etc/pam.d/postlogin
-    regexp: '^session\s+optional\s+pam_umask\.so\b.*$'
-    line: 'session     optional      pam_umask.so'
+    regexp: '^session\s+optional\s+pam_{{ item }}\.so\b.*$'
+    line: 'session     optional      pam_{{ item }}.so'
+  with_items:
+    - umask
+    - cgroup
   tags:
   - configuration
   - pam

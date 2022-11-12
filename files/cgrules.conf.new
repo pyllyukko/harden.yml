@@ -13,4 +13,5 @@ ntp:/usr/sbin/ntpd		net_cls	daemons/ntpd/
 root:/usr/sbin/httpd		net_cls	daemons/httpd/
 root:/usr/sbin/sshd		net_cls	daemons/sshd/
 root:/usr/sbin/postfix		net_cls	daemons/postfix/
+@users				cpu,cpuacct,net_cls	users/%u
 # End of file

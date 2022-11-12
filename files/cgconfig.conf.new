@@ -226,3 +226,19 @@ group daemons/postfix {
 		net_cls.classid = 0x706f7374;
 	}
 }
+group users {
+	cpuacct{
+	}
+	cpu {
+	}
+	net_cls {
+	}
+}
+template users/%u {
+	cpuacct{
+	}
+	cpu {
+	}
+	net_cls {
+	}
+}
