@@ -22,5 +22,6 @@ root:/sbin/audisp-remote	net_cls	daemons/auditd/
 clamav:/usr/sbin/clamd		net_cls	daemons/clamav/
 clamav:/usr/bin/freshclam	net_cls	daemons/clamav/
 ldap:/usr/libexec/slapd		net_cls daemons/openldap/
+opendkim:/usr/sbin/opendkim	net_cls daemons/opendkim/
 @users				cpu,cpuacct,net_cls	users/%u
 # End of file

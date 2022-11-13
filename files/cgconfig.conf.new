@@ -296,6 +296,23 @@ group daemons/openldap {
 	net_cls {
 	}
 }
+group daemons/opendkim {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+	}
+}
 group users {
 	cpuacct{
 	}
