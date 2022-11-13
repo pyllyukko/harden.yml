@@ -13,6 +13,8 @@ ntp:/usr/sbin/ntpd		net_cls	daemons/ntpd/
 *:/usr/sbin/httpd		net_cls	daemons/httpd/
 root:/usr/sbin/sshd		net_cls	daemons/sshd/
 root:/usr/sbin/postfix		net_cls	daemons/postfix/
+root:/usr/libexec/postfix/master	net_cls	daemons/postfix/
+postfix				net_cls	daemons/postfix/
 root:/usr/sbin/krb5kdc		net_cls	daemons/krb5/
 root:/usr/sbin/kadmind		net_cls	daemons/krb5/
 root:/sbin/auditd		net_cls	daemons/auditd/
