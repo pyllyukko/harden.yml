@@ -81,6 +81,7 @@
         # libmm-glib.so is required by nm-applet
         #- ModemManager
         - modemmanager-qt
+        - inetd
       tags: packages
     - name: Remove leftover files from removed packages
       file:
@@ -89,6 +90,8 @@
       with_items:
         - /etc/pam.d/netatalk
         - /etc/rc.d/rc.atalk
+        - /etc/rc.d/rc.inetd
+        - /etc/inetd.conf
   become: yes
   tags: slackware
   when: ansible_distribution == "Slackware"
