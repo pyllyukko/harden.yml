@@ -1,4 +1,9 @@
+# Firewall configurations
 -a always,exit -F dir=/etc/iptables/ -F perm=wa -F key=firewall-change
+-w /etc/nftables.conf -p wa -k firewall-change
+-w /etc/firewalld/ -p wa -k firewall-change
+-w /etc/sysconfig/firewalld -p wa -k firewall-change
+# Firewall binaries
 -w /sbin/iptables -p x -k firewall-change
 -w /sbin/ip6tables -p x -k firewall-change
 -w /usr/sbin/iptables-save -p x -k firewall-change
@@ -8,3 +13,7 @@
 -w /bin/firewall-cmd -p x -k firewall-change
 -w /usr/sbin/ufw -p x -k firewall-change
 -w /usr/sbin/nft -p x -k firewall-change
+# Firewall services
+-w /etc/rc.d/rc.firewall -p wa -k firewall-change
+-w /lib/systemd/system/nftables.service -p wa -k firewall-change
+-w /usr/lib/systemd/system/firewalld.service -p wa -k firewall-change
