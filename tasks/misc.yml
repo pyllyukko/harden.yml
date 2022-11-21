@@ -139,3 +139,34 @@
         }
     when: docker.stat.exists
   tags: docker
+
+- name: GNOME tracker
+  block:
+  - name: Stat /etc/xdg/autostart/tracker-miner-fs.desktop
+    stat:
+      path: '/etc/xdg/autostart/tracker-miner-fs.desktop'
+    register: stat
+  - name: Disable tracker-miner-fs XDG autostart
+    become: yes
+    lineinfile:
+      path: '/etc/xdg/autostart/tracker-miner-fs.desktop'
+      regexp: '^Hidden=true$'
+      line: Hidden=true
+      create: no
+    when: stat.stat.exists == True
+  - name: Stat /etc/xdg/autostart/tracker-extract.desktop
+    stat:
+      path: '/etc/xdg/autostart/tracker-extract.desktop'
+    register: stat
+  - name: Disable tracker-miner-fs XDG autostart
+    become: yes
+    lineinfile:
+      path: '/etc/xdg/autostart/tracker-extract.desktop'
+      regexp: '^Hidden=true$'
+      line: Hidden=true
+      create: no
+    when: stat.stat.exists == True
+  tags:
+  - configuration
+  - gnome
+  - services
