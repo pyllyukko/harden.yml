@@ -429,7 +429,6 @@ function usage() {
 	  		services:
 
 	  		disable_unnecessary_systemd_services
-	  		disable_unnecessary_services
 	  		restrict_cron
 	  		sshd_config
 	  		ssh_config
@@ -700,10 +699,6 @@ do
       apply_newconfs . logrotate.d rc.d modprobe.d
       check_and_patch /etc	"${SSH_PATCH_FILE}"	1
 
-      # this should be run after patching etc,
-      # there might be new rc scripts.
-      disable_unnecessary_services
-
       miscellaneous_settings
 
       # these should be the last things to run
@@ -750,7 +745,6 @@ do
 	"harden_fstab")         harden_fstab                    ;;
 	"user_accounts")        user_accounts                   ;;
 	"configure_basic_auditing") configure_basic_auditing    ;;
-	"disable_unnecessary_services") disable_unnecessary_services ;;
 	"enable_pacct")         enable_pacct                    ;;
 	*)
 	  echo "[-] unknown function" 1>&2

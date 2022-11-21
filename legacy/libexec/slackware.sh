@@ -1,42 +1,6 @@
 #!/bin/bash
 declare -r SLACKWARE_VERSION=$( sed 's/^.*[[:space:]]\([0-9]\+\.[0-9]\+\).*$/\1/' /etc/slackware-version 2>/dev/null )
 declare -r ETC_PATCH_FILE="harden_etc-${SLACKWARE_VERSION}.patch"
-# the rc.modules* should match at least the following:
-#   - rc.modules.local
-#   - rc.modules-2.6.33.4
-#   - rc.modules-2.6.33.4-smp
-SERVICES_WHITELIST=(
-  /etc/rc.d/rc.0
-  /etc/rc.d/rc.4
-  /etc/rc.d/rc.6
-  /etc/rc.d/rc.K
-  /etc/rc.d/rc.M
-  /etc/rc.d/rc.S
-  /etc/rc.d/rc.acpid
-  /etc/rc.d/rc.firewall
-  /etc/rc.d/rc.font
-  /etc/rc.d/rc.loop
-  /etc/rc.d/rc.inet1
-  /etc/rc.d/rc.inet2
-  /etc/rc.d/rc.keymap
-  /etc/rc.d/rc.local
-  /etc/rc.d/rc.local_shutdown
-  /etc/rc.d/rc.modules
-  /etc/rc.d/rc.modules-+([0-9.])?(-smp)
-  /etc/rc.d/rc.modules.local
-  /etc/rc.d/rc.netdevice
-  /etc/rc.d/rc.sshd
-  /etc/rc.d/rc.syslog
-  "${SA_RC}"
-  /etc/rc.d/rc.udev
-  /etc/rc.d/rc.ntpd
-  /etc/rc.d/rc.mcelog
-  /etc/rc.d/rc.sysvinit
-  # SBo:
-  /etc/rc.d/rc.clamav
-  /etc/rc.d/rc.snort
-  /etc/rc.d/rc.auditd
-)
 auditPATH='/etc/audit'
 declare -r ARCH=$( /bin/uname -m )
 case "${MACHTYPE%%-*}" in
@@ -307,74 +271,6 @@ function configure_apache() {
   # TODO: apachectl restart
   return ${RET}
 } # configure_apache()
-################################################################################
-# TODO: rename this function
-function disable_unnecessary_services() {
-  # NOTES:
-  #   - this should probably be run only on fresh installations
-  #   - this relates to CIS 3.4 "Disable Standard Boot Services"
-
-  # TODO:
-  #   - support for sysvinit scripts
-  local RC
-  local WHILELISTED
-  local service
-
-  echo "${FUNCNAME}(): disabling and shutting down unnecessary services"
-
-  # go through all the rc scripts
-  shopt -s nullglob
-  for RC in /etc/rc.d/rc.*
-  do
-    # there might also be directories...
-    if [ ! -f "${RC}" ]
-    then
-      echo "${FUNCNAME}(): DEBUG: \`${RC}' is not a file -> skipping" 1>&2
-      continue
-    # leftovers from patch
-    elif [ "${RC:(-5):5}" = ".orig" ]
-    then
-      echo ".orig file -> skipping" 1>&2
-      continue
-    elif [ "${RC:(-1):1}" = "~" ]
-    then
-      echo "tilde file -> skipping" 1>&2
-      continue
-    fi
-    #echo "${FUNCNAME}(): DEBUG: processing \`${RC}'"
-    # go through the whitelist
-    for WHITELISTED in ${SERVICES_WHITELIST[*]}
-    do
-      # service is whitelisted, continue with the next $RC
-      if [ "${RC}" = "${WHITELISTED}" ]
-      then
-        echo "${FUNCNAME}(): skipping whitelisted service: \`${RC}'"
-        continue 2
-      fi
-    done
-    #echo "${RC} -> NOT WHITELISTED"
-
-    # if it's executable, it's probably running -> shut it down
-    [ -x "${RC}" ] && sh "${RC}" stop
-
-    # and then disable it
-    /usr/bin/chmod -c 600 "${RC}" | tee -a "${logdir}/file_perms.txt"
-  done
-
-  disable_unnecessary_systemd_services
-
-  echo "${FUNCNAME}(): enabling recommended services"
-
-  # CIS 2.2 Configure TCP Wrappers and Firewall to Limit Access (applied)
-  #
-  # NOTE: the rc.firewall script should be created by the etc patch
-  /usr/bin/chmod -c 700 /etc/rc.d/rc.firewall | tee -a "${logdir}/file_perms.txt"
-
-  # inetd goes with the territory
-  disable_inetd_services
-
-  return 0
-} # disable_unnecessary_services()
 ################################################################################
 function check_integrity() {
   local    manifest="${MANIFEST_DIR}/MANIFEST.bz2"
