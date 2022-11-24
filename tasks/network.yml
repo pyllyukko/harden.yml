@@ -123,3 +123,31 @@
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
 # </Debian firewall>
+- name: IPv6
+  become: yes
+  tags:
+  - network
+  - configuration
+  - ipv6
+  - kernel
+  block:
+  - name: Blacklist IPv6 kernel module
+    copy:
+      src: "{{ playbook_dir }}/newconfs/modprobe.d/ipv6.conf.new"
+      dest: /etc/modprobe.d/ipv6.conf
+      owner: root
+      group: root
+      mode: 0600
+  - name: Set ipv6.disable=1 in /boot/cmdline.txt (Raspbian)
+    replace:
+      path: /boot/cmdline.txt
+      regexp: '^(.(?!.*\bipv6\.disable=1\b).*)$'
+      replace: '\1 ipv6.disable=1'
+    when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
+    tags: debian
+  - name: Set ipv6.disable=1 in /etc/default/grub
+    replace:
+      path: /etc/default/grub
+      regexp: '^(GRUB_CMDLINE_LINUX="(?!.*\bipv6\.disable=1\b).*)"$'
+      replace: '\1 ipv6.disable=1"'
+    when: (ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian") or ansible_distribution == "Kali" or ansible_os_family == "RedHat"

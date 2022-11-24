@@ -157,6 +157,7 @@ Tags that you can use with `ansible-playbook --tags`:
 * `rng`
 * `network`
     * `firewall`
+    * `ipv6`
 * `logging`
 * `permissions`
 * Specific software:

@@ -444,7 +444,6 @@ function usage() {
 	  		network:
 
 	  		configure_tcp_wrappers
-	  		disable_ipv6
 
 	  		others:
 
@@ -574,20 +573,6 @@ function configure_password_policies() {
     check_lynis_tests AUTH-9286
   }
 } # configure_password_policies()
-################################################################################
-function disable_ipv6() {
-  print_topic "disabling IPv6"
-  if [ -f /etc/default/grub ] && ! grep -q '^GRUB_CMDLINE_LINUX=".*ipv6.disable=1' /etc/default/grub
-  then
-    echo '[+] configuring /etc/default/grub'
-    sed_with_diff 's/^\(GRUB_CMDLINE_LINUX=".*\)"$/\1 ipv6.disable=1"/' /etc/default/grub
-  # raspbian
-  elif [ -f /boot/cmdline.txt ] && ! grep -q 'ipv6\.disable=1' /boot/cmdline.txt
-  then
-    echo '[+] configuring /boot/cmdline.txt'
-    sed_with_diff 's/$/ ipv6.disable=1/' /boot/cmdline.txt
-  fi
-} # disable_ipv6()
 ################################################################################
 function configure_iptables_persistent() {
   # TODO
@@ -723,7 +708,6 @@ do
 	"configure_securetty")	configure_securetty		;;
 	"create_banners")	create_banners			;;
 	"core_dumps")		configure_core_dumps		;;
-	"disable_ipv6")		disable_ipv6			;;
 	"disable_unnecessary_systemd_services") disable_unnecessary_systemd_services ;;
 	"enable_apparmor")	enable_apparmor			;;
 	"enable_bootlog")	enable_bootlog			;;
