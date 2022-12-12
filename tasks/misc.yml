@@ -166,6 +166,13 @@
       line: Hidden=true
       create: no
     when: stat.stat.exists == True
+  - name: Disable tracker-miner-fs systemd unit
+    become: yes
+    systemd:
+      name: tracker-miner-fs
+      enabled: no
+      state: stopped
+      scope: user
   tags:
   - configuration
   - gnome
