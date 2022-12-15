@@ -176,3 +176,23 @@
   - configuration
   - gnome
   - services
+
+- name: php.ini
+  tags:
+  - php
+  - configuration
+  block:
+  - name: Stat /etc/php.ini
+    stat:
+      path: /etc/php.ini
+    register: stat_result
+  # https://cheatsheetseries.owasp.org/cheatsheets/PHP_Configuration_Cheat_Sheet.html
+  # TODO: Moar content!
+  - name: Configure php.ini
+    become: yes
+    when: stat_result.stat.exists == True
+    ini_file:
+      path: /etc/php.ini
+      section: PHP
+      option: expose_php
+      value: 'Off'
