@@ -243,6 +243,7 @@ group daemons/krb5 {
 		}
 	}
 	net_cls {
+		net_cls.classid = 0x6b726235;
 	}
 }
 group daemons/auditd {
@@ -277,6 +278,7 @@ group daemons/clamav {
 		}
 	}
 	net_cls {
+		net_cls.classid = 0x636c616d;
 	}
 }
 group daemons/openldap {
@@ -294,9 +296,114 @@ group daemons/openldap {
 		}
 	}
 	net_cls {
+		net_cls.classid = 0x6c646170;
 	}
 }
 group daemons/opendkim {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+		net_cls.classid = 0x646b696d;
+	}
+}
+group daemons/nagios {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+	}
+}
+group daemons/collectd {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+	}
+}
+group daemons/arpwatch {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+		net_cls.classid = 0x61727077;
+	}
+}
+group daemons/icmpinfo {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+	}
+}
+group daemons/mdadm {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+	}
+}
+group daemons/rpc-gssd {
 	perm {
 		task {
 			uid = root;

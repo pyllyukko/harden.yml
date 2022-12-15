@@ -23,5 +23,11 @@ clamav:/usr/sbin/clamd		net_cls	daemons/clamav/
 clamav:/usr/bin/freshclam	net_cls	daemons/clamav/
 ldap:/usr/libexec/slapd		net_cls daemons/openldap/
 opendkim:/usr/sbin/opendkim	net_cls daemons/opendkim/
+nagios				net_cls daemons/nagios/
+root:/usr/sbin/collectd		net_cls daemons/collectd/
+root:/usr/sbin/arpwatch		net_cls daemons/arpwatch/
+root:/usr/sbin/icmpinfo		net_cls daemons/icmpinfo/
+root:/sbin/mdadm		net_cls daemons/mdadm/
+root:/usr/sbin/rpc.gssd		net_cls daemons/rpc-gssd/
 @users				cpu,cpuacct,net_cls	users/%u
 # End of file
