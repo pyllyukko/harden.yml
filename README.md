@@ -93,7 +93,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 #### PAM
 
 * Configures `/etc/security/namespace.conf`
-* Configures `/etc/security/access.conf`
+* Configures `/etc/security/access.conf` for `pam_access` (authorization)
 * Configures `/etc/security/pwquality.conf` if available
 * Require [pam\_wheel](http://linux-pam.org/Linux-PAM-html/sag-pam_wheel.html) in `/etc/pam.d/su`
 * Creates a secure [/etc/pam.d/other](http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html)
