@@ -127,7 +127,9 @@
     failed_when:
       - result.failed == true
       - result.state != "absent"
-    tags: permissions
+    tags:
+    - permissions
+    - kerberos
   - name: chmod Kerberos KDC dir
     file:
       path: /var/kerberos/krb5kdc
@@ -138,7 +140,9 @@
     failed_when:
       - result.failed == true
       - result.state != "absent"
-    tags: permissions
+    tags:
+    - permissions
+    - kerberos
   - name: Install acl package (Slackware)
     when: ansible_distribution == "Slackware"
     slackpkg:
