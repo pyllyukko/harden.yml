@@ -159,6 +159,7 @@
   - services
   - ssh
   - debian
+# This is used in sshd_config.j2 template(s)
 - name: Stat /etc/krb5.keytab
   stat:
     path: /etc/krb5.keytab
