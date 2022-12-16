@@ -19,7 +19,7 @@
         checksum_algorithm: sha512
       register: stat_result
       tags: pam
-    - name: Configure login access control table (PAM)
+    - name: Configure login access control table (/etc/security/access.conf) (PAM)
       # Only modify access.conf when it's unmodified. Otherwise expect it to have
       # custom modifications and our hardening might break existing configuration.
       # https://github.com/linux-pam/linux-pam/blob/master/modules/pam_access/access.conf
