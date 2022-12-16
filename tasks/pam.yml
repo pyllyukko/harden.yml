@@ -124,7 +124,9 @@
 - name: faillock
   become: yes
   when: ansible_distribution == "Slackware" or ansible_distribution == "Debian"
-  tags: pam
+  tags:
+  - pam
+  - authorization
   block:
   - name: Configure /etc/security/faillock.conf
     template:
@@ -146,6 +148,7 @@
     tags:
     - configuration
     - debian
+    - authorization
     lineinfile:
       path: /etc/pam.d/common-auth
       regexp: '^auth\s+required\s+pam_faillock\.so\s+preauth$'
@@ -165,6 +168,7 @@
       tags:
       - configuration
       - pam
+      - authorization
   when: ansible_distribution == "Slackware"
   become: yes
   tags: slackware
@@ -279,9 +283,7 @@
         - lastlog
         - polyinstation
         - pwhistory
-        - faillock
         - umask
-        - inactive
       notify: "Run pam-auth-update"
     - name: Copying new pam-configs related to authorization
       tags: authorization
@@ -292,6 +294,8 @@
         - access
         - uid_ge_1000
         - time
+        - faillock
+        - inactive
       notify: "Run pam-auth-update"
     - name: Copying new pam-configs (templates)
       template:
@@ -315,6 +319,7 @@
       with_items:
         #- pamaccess
         - faillock
+      tags: authorization
     - name: Configure password policy via authconfig
       command: /sbin/authconfig --passalgo=sha512 --passminlen=14 --enablereqlower --enablerequpper --enablereqdigit --enablereqother --update
       tags: passwords
