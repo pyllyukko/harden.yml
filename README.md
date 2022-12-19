@@ -127,6 +127,7 @@ Creates bunch of `pam-config`s that are toggleable with `pam-auth-update`:
 | [pam\_succeed\_if](http://www.linux-pam.org/Linux-PAM-html/sag-pam_succeed_if.html)          | auth & account | Require UID >= 1000 && UID <= 60000 (or 0 & `login`)                                    |
 | [pam\_unix](http://www.linux-pam.org/Linux-PAM-html/sag-pam_unix.html)[<sup>1</sup>](#fn1)   | auth           | Remove `nullok`                                                                         |
 | [pam\_faildelay](http://www.linux-pam.org/Linux-PAM-html/sag-pam_faildelay.html)             | auth           | Delay on authentication failure                                                         |
+| [pam\_ssh\_agent\_auth](https://pamsshagentauth.sourceforge.net/)                            | auth           | SSH agent authentication for sudo[<sup>3</sup>](#fn3)                                   |
 | `pam_faillock`                                                                               | auth & account | Deter brute-force attacks                                                               |
 | [pam\_access](http://linux-pam.org/Linux-PAM-html/sag-pam_access.html)                       | account        | Use login ACL (`/etc/security/access.conf`)                                             |
 | [pam\_time](http://www.linux-pam.org/Linux-PAM-html/sag-pam_time.html)                       | account        | `/etc/security/time.conf`                                                               |
@@ -138,6 +139,7 @@ Creates bunch of `pam-config`s that are toggleable with `pam-auth-update`:
 
 1. <span id="fn1"/>Not a `pam-config`, but a modification to existing `/etc/pam.d/` files
 2. <span id="fn2"/>For all login methods and not just the console login
+3. <span id="fn3"/>Disabled by default and requires [libpam-ssh-agent-auth](https://packages.debian.org/sid/libpam-ssh-agent-auth) package. Needs to have higher priority than `krb5` or other password auths.
 
 Usage
 -----

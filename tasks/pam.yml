@@ -284,6 +284,7 @@
         - polyinstation
         - pwhistory
         - umask
+        - ssh_agent
       notify: "Run pam-auth-update"
     - name: Copying new pam-configs related to authorization
       tags: authorization

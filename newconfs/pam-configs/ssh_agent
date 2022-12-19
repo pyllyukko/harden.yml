@@ -1,0 +1,7 @@
+Name: SSH agent authentication for sudo
+Default: no
+Priority: 705
+Auth-Type: Primary
+Auth:
+	[success=ignore default=1]	pam_succeed_if.so service = sudo uid >= 1000
+	[success=end default=ignore]	pam_ssh_agent_auth.so file=/etc/security/authorized_keys

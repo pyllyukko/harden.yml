@@ -102,6 +102,8 @@ Defaults	sudoedit_checkdir, !sudoedit_follow
 Defaults	ignore_dot
 Defaults	env_file=/etc/sudo_env
 Defaults	use_pty
+# For pam_ssh_agent_auth
+#Defaults	env_keep += "SSH_AUTH_SOCK"
 
 ##
 ## Runas alias specification
