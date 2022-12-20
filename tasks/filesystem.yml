@@ -72,8 +72,8 @@
   replace:
     path: /etc/rc.d/rc.S
     regexp: '^(rm -rf) /tmp/\{.+\}$'
-    replace: '\g<1> /tmp/*'
-    validate: '/bin/grep "^rm -rf /tmp/\*$" %s'
+    replace: 'shopt -s dotglob; \g<1> /tmp/*; shopt -u dotglob'
+    validate: '/bin/grep "^shopt -s dotglob; rm -rf /tmp/\*; shopt -u dotglob$" %s'
 - name: Clean up /tmp during boot (Debian)
   become: yes
   when: ansible_distribution == "Debian"
