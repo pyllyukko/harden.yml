@@ -71,7 +71,7 @@
   - slackware
   replace:
     path: /etc/rc.d/rc.S
-    regexp: '^(rm -rf) /tmp/\{.*\}$'
+    regexp: '^(rm -rf) /tmp/\{.+\}$'
     replace: '\g<1> /tmp/*'
     validate: '/bin/grep "^rm -rf /tmp/\*$" %s'
 - name: Clean up /tmp during boot (Debian)
