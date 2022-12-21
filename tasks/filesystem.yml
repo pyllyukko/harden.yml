@@ -5,12 +5,12 @@
     getent:
       database: group
       key: polkitd
-  - name: Mount /proc with hidepid=2 (Slackware)
+  - name: Fix /etc/rc.d/rc.S to mount /proc with hidepid=2 (Slackware)
     replace:
       path: /etc/rc.d/rc.S
-      regexp: '^(/sbin/mount -v proc /proc -n -t proc).*$'
+      regexp: '^(\s*/sbin/mount -v proc /proc -n -t proc).*$'
       replace: '\g<1> -o hidepid=2,gid={{ getent_group.polkitd[1] }} 2> /dev/null'
-      validate: '/bin/grep "^/sbin/mount -v proc /proc -n -t proc -o hidepid=2,gid={{ getent_group.polkitd[1] }} 2> /dev/null$" %s'
+      validate: '/bin/grep "^\s*/sbin/mount -v proc /proc -n -t proc -o hidepid=2,gid={{ getent_group.polkitd[1] }} 2> /dev/null$" %s'
     tags: configuration
   - name: Fix mkinitrd so initrd image mounts with hidepid
     lineinfile:
@@ -21,7 +21,9 @@
     tags: configuration
   become: yes
   when: ansible_distribution == "Slackware"
-  tags: slackware
+  tags:
+  - slackware
+  - hidepid
 #- name: Remount /proc with hidepid=2
 #  become: yes
 #  mount:

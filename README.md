@@ -187,6 +187,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `pam`
 * `fstab`
 * `cgroup` (Slackware)
+* `hidepid` (Slackware)
 
 There are also operating system tags for tasks that only apply to specific OS.
 You can speed up the hardening by skipping OSs that don't apply. E.g. if you're
