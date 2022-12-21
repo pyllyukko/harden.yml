@@ -42,6 +42,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Enables system accounting ([sysstat](http://sebastien.godard.pagesperso-orange.fr/))
     * Sets it's log retention to 99999 days (the logs are really small, so it doesn't eat up disk space)
 * Enables process accounting
+* Run `ansible-playbook --list-tasks --tags accounting harden.yml` for a full list
 
 ### Kernel
 
@@ -52,6 +53,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * Restricts the use of `dmesg` by regular users
     * Enable [YAMA](https://www.kernel.org/doc/Documentation/security/Yama.txt)
     * For the complete list, see [sysctl.conf.new](newconfs/sysctl.d/sysctl.conf.new)
+* Run `ansible-playbook --list-tasks --tags kernel harden.yml` for a full list
 
 ### Filesystem
 
