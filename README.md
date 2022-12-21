@@ -29,6 +29,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 
 * Enables [TCP wrappers](https://en.wikipedia.org/wiki/TCP_Wrapper)
 * IP stack hardening via sysctl settings
+    * For the complete list, see [network.conf.new](newconfs/sysctl.d/network.conf.new)
 * Creates a basic firewall
 
 ### Logging
@@ -50,7 +51,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * Enables [SAK](https://en.wikipedia.org/wiki/Secure_attention_key) and disables the other [magic SysRq stuff](https://www.kernel.org/doc/Documentation/sysrq.txt)
     * Restricts the use of `dmesg` by regular users
     * Enable [YAMA](https://www.kernel.org/doc/Documentation/security/Yama.txt)
-    * For the complete list, see [sysctl.conf.new](https://github.com/pyllyukko/harden.sh/blob/master/newconfs/sysctl.d/sysctl.conf.new)
+    * For the complete list, see [sysctl.conf.new](newconfs/sysctl.d/sysctl.conf.new)
 
 ### Filesystem
 
