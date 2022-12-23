@@ -265,7 +265,9 @@
   - name: chmod boot loader configurations
     file:
       path: "{{ item }}"
-      mode: o-rwx
+      mode: og-rwx
+      owner: root
+      group: root
     with_items:
       - /etc/grub.d
       - /boot/grub/grub.cfg
