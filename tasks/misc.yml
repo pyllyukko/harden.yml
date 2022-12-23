@@ -178,7 +178,7 @@
         scope: user
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
       tags:
-        - configuration
+        - debian
 
 - name: php.ini
   tags:
