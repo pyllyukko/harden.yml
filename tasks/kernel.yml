@@ -59,7 +59,7 @@
   when: run_lynis_after_hardening
   block:
     - name: Run Lynis test group kernel hardening
-      command: lynis audit system -q --skip-plugins --tests-from-group kernel_hardening
+      command: lynis audit system -q --skip-plugins --tests-from-group kernel_hardening # noqa no-changed-when
     - name: slurp /var/log/lynis.log
       slurp:
         src: /var/log/lynis.log

@@ -53,7 +53,7 @@
       tags: configuration
     # https://jpmens.net/2013/02/06/don-t-try-this-at-the-office-etc-sudoers/
     - name: 'Validate /etc/sudoers.new'
-      command: visudo -cs -f /etc/sudoers.new
+      command: visudo -cs -f /etc/sudoers.new # noqa no-changed-when
     - name: 'Copy /etc/sudoers.new to /etc/sudoers'
       copy:
         remote_src: true

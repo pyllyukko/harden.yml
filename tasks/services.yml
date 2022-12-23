@@ -25,7 +25,7 @@
   block:
     - name: Stop unwanted services (Slackware)
       ignore_errors: true
-      command: /bin/sh /etc/rc.d/rc.{{ item }} stop
+      command: /bin/sh /etc/rc.d/rc.{{ item }} stop # noqa no-changed-when
       with_items: "{{ slackware_services }}"
     - name: Disable unwanted services (Slackware)
       file:

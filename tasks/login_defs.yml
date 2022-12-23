@@ -139,7 +139,7 @@
 # CIS Debian Linux 10 Benchmark v1.0.0 - 6.2.17 Ensure no duplicate GIDs exist
 - name: Verify integrity of group files
   become: true
-  command: grpck -r
+  command: grpck -r # noqa no-changed-when
 - name: Remove pi from adm group (Raspbian)
   when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
   become: true

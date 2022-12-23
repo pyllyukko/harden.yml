@@ -13,7 +13,7 @@
       - services
       - debian
   - name: Determine ClamAV sysconfdir
-    shell: clamconf | awk '/^Checking configuration files in/{print$5}'
+    shell: clamconf | awk '/^Checking configuration files in/{print$5}' # noqa no-changed-when
     register: clamav_sysconfdir
   - name: Verify ClamAV sysconfdir
     assert:
@@ -26,6 +26,7 @@
       - freshclam
       - clamd
     tags: configuration
+    changed_when: true
   - name: Comment out Example lines
     replace:
       path: '{{ clamav_sysconfdir.stdout }}/{{ item }}.conf'

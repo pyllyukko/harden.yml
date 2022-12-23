@@ -72,4 +72,4 @@
       tags: configuration
       notify: "Create aide.db"
     - name: Check aide.conf
-      command: /usr/bin/aide --config-check --config=/etc/aide/aide.conf
+      command: /usr/bin/aide --config-check --config=/etc/aide/aide.conf # noqa no-changed-when

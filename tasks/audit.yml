@@ -114,6 +114,8 @@
       replace: '\1'
   - name: Load the rules
     command: augenrules --load
+    register: result
+    changed_when: '"/sbin/augenrules: No change" not in result.stdout'
     tags: configuration
   - name: Configure auditd.conf
     replace:

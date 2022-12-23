@@ -217,7 +217,7 @@
   when: run_lynis_after_hardening
   block:
     - name: Run Lynis test group accounting
-      command: lynis audit system -q --skip-plugins --tests-from-group accounting
+      command: lynis audit system -q --skip-plugins --tests-from-group accounting # noqa no-changed-when
     - name: slurp /var/log/lynis.log
       slurp:
         src: /var/log/lynis.log

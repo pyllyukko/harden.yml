@@ -78,6 +78,7 @@
         - services
         - slackware
     - name: Start Slackware firewall
+      changed_when: true
       command: /etc/rc.d/rc.firewall start
       tags:
         - services
@@ -114,6 +115,7 @@
       tags: configuration
     - name: Activate firewall
       command: /usr/sbin/nft -f /etc/nftables.conf
+      changed_when: true
     # https://wiki.debian.org/nftables#nftables_in_Debian_the_easy_way
     - name: Enable nftables
       tags: services

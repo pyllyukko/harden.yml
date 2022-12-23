@@ -35,7 +35,7 @@
   when: run_lynis_after_hardening
   block:
     - name: Run Lynis test group banners
-      command: lynis audit system -q --skip-plugins --tests-from-group banners
+      command: lynis audit system -q --skip-plugins --tests-from-group banners # noqa no-changed-when
     - name: slurp /var/log/lynis.log
       slurp:
         src: /var/log/lynis.log

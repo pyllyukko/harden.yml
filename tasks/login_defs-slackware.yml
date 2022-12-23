@@ -100,6 +100,7 @@
     - name: Remove all members from certain groups (Slackware)
       command: gpasswd -M "" {{ item }}
       register: result
+      changed_when: true
       failed_when:
         - result.failed == true
         - '"is not a member of" not in result.stderr'
@@ -114,6 +115,7 @@
     - name: Remove uucp from dialout group (Slackware)
       command: gpasswd -d uucp dialout
       register: result
+      changed_when: '"is not a member of" not in result.stderr'
       failed_when:
         - result.failed == true
         - '"is not a member of" not in result.stderr'
@@ -125,6 +127,7 @@
       failed_when:
         - result.failed == true
         - '"is not a member of" not in result.stderr'
+      changed_when: '"is not a member of" not in result.stderr'
       tags: accounts
       with_items:
         - wheel

@@ -340,6 +340,7 @@
       tags: authorization
     - name: Configure password policy via authconfig
       command: /sbin/authconfig --passalgo=sha512 --passminlen=14 --enablereqlower --enablerequpper --enablereqdigit --enablereqother --update
+      changed_when: true
       tags: passwords
 
 - name: Password related
