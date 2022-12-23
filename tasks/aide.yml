@@ -1,6 +1,8 @@
 ---
 - name: Setup AIDE
   tags: aide
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  become: yes
   block:
     - name: Install AIDE package
       apt:
@@ -71,5 +73,3 @@
       notify: "Create aide.db"
     - name: Check aide.conf
       command: /usr/bin/aide --config-check --config=/etc/aide/aide.conf
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-  become: yes

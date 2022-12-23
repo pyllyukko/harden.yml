@@ -116,6 +116,10 @@
 # Slackware Linux Benchmark v1.1 - 7.3 Create ftpusers Files
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.12
 - name: ftpusers
+  tags:
+  - configuration
+  - authorization
+  - network
   block:
   - name: getent passwd
     getent:
@@ -128,10 +132,6 @@
       owner: root
       group: root
       mode: '0600'
-  tags:
-  - configuration
-  - authorization
-  - network
 
 - import_tasks: login_defs-slackware.yml
   when: ansible_distribution == "Slackware"
@@ -180,6 +180,7 @@
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.1.4 Ensure inactive password lock is 30 days or less
 - name: Inactive password lock
   tags: passwords
+  become: yes
   block:
   # Debian's "useradd -D -f 30" fails with "cannot create new defaults file"
   - name: Set the number of days after a password expires until the account is permanently disabled (inactive)
@@ -194,7 +195,6 @@
     when: item.value[1] | int >= uid_min | int and item.value[1] | int <= uid_max | int
     with_dict: "{{ getent_passwd }}"
     tags: accounts
-  become: yes
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.2 Ensure system accounts are secured
 # Slackware Linux Benchmark v1.1 - 8.1 Block System Accounts
 - name: Lock system accounts

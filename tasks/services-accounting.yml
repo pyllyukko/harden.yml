@@ -67,6 +67,10 @@
   - name: Create sysstat cron jobs
     when: ansible_distribution == "Slackware"
     become: yes
+    tags:
+    - services
+    - configuration
+    - slackware
     block:
       - name: Create cron job for sysstat activity accounting
         cron:
@@ -79,10 +83,6 @@
           minute: "7"
           hour: "0"
           job: "if [ -x /usr/lib64/sa/sa2 ]; then /usr/lib64/sa/sa2 -A; elif [ -x /usr/lib/sa/sa2 ]; then /usr/lib/sa/sa2 -A; fi"
-    tags:
-    - services
-    - configuration
-    - slackware
   - name: Configure sysstat
     become: yes
     replace:

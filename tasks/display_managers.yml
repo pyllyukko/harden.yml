@@ -10,6 +10,7 @@
 - name: Configure LightDM
   tags: configuration
   when: stat_result.stat.exists == True
+  become: yes
   block:
   - name: Disable VNC in LightDM
     ini_file:
@@ -33,7 +34,6 @@
     with_dict:
       greeter-hide-users: "true"
       allow-guest: "false"
-  become: yes
 # CIS Debian Linux 10 Benchmark v1.0.0 - 02-13-2020
 # 1.8.2 Ensure GDM login banner is configured
 - name: Configure GDM3

@@ -1,5 +1,7 @@
 ---
 - name: Slackware authorization
+  become: yes
+  when: ansible_distribution == "Slackware"
   block:
   # The login ACL following this task will actually start blocking access, so
   # check that we are not locking ourselves out of the system being hardened.
@@ -27,8 +29,6 @@
         regexp: '^(ca::ctrlaltdel:/sbin/shutdown -t5 -r now)$'
         replace: '\g<1> -a'
         validate: '/bin/grep "^ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a$" %s'
-  become: yes
-  when: ansible_distribution == "Slackware"
 - name: Set umask to 077 in /etc/profile (Slackware)
   tags: configuration
   become: yes
@@ -59,6 +59,8 @@
   tags:
   - configuration
   - authentication
+  become: yes
+  when: ansible_distribution == "Slackware"
   block:
   - name: Remove S from System initialization (Slackware)
     replace:
@@ -78,8 +80,6 @@
       path: /etc/rc.d/rc.K
       regexp: '^/sbin/telinit'
       line: /sbin/telinit -t 1 S
-  become: yes
-  when: ansible_distribution == "Slackware"
 - name: Add LESS variables and disable core dumps
   tags: configuration
   blockinfile:

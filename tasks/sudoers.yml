@@ -32,6 +32,8 @@
   when: ansible_distribution == "Slackware"
   tags: slackware
 - name: 'Configure /etc/sudoers'
+  when: ansible_distribution == "Slackware" or ansible_distribution == "Debian"
+  become: yes
   block:
   - name: 'Create /etc/sudoers.new'
     template:
@@ -65,8 +67,6 @@
     file:
       path: /etc/sudoers.new
       state: absent
-  when: ansible_distribution == "Slackware" or ansible_distribution == "Debian"
-  become: yes
 # https://www.raspberrypi.org/documentation/configuration/security.md
 - name: 'Remove /etc/sudoers.d/010_pi-nopasswd'
   become: yes

@@ -26,6 +26,8 @@
   - configuration
   - logging
   - debian
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   block:
   - name: Configure [bw]tmp retention period to {{ log_retention_time_in_months }} months (Debian)
     replace:
@@ -61,8 +63,6 @@
     failed_when:
       - result.failed == true
       - '"does not exist !" not in result.msg'
-  become: yes
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
 
 - name: Slackware specific logrotate changes
   tags:
@@ -70,6 +70,8 @@
   - configuration
   - permissions
   - slackware
+  become: yes
+  when: ansible_distribution == "Slackware"
   block:
   - name: Make new log file default permissions group adm readable (Slackware)
     replace:
@@ -108,14 +110,14 @@
       owner: root
       group: root
       mode: '0600'
-  become: yes
-  when: ansible_distribution == "Slackware"
 
 - name: Slackware specific log file changes
   tags:
   - logging
   - configuration
   - slackware
+  become: yes
+  when: ansible_distribution == "Slackware"
   block:
   - name: Make existing log files group adm readable (Slackware)
     file:
@@ -162,8 +164,6 @@
       path: /etc/rc.d/rc.M
       regexp: '^/bin/killall bootlogd$'
       line: '/bin/killall bootlogd'
-  become: yes
-  when: ansible_distribution == "Slackware"
 
 - name: Configure log file shredding
   become: yes

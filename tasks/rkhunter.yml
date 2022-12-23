@@ -1,6 +1,7 @@
 ---
 - name: rkhunter
   tags: rkhunter
+  become: yes
   block:
   - name: Install rkhunter (Debian)
     apt:
@@ -38,4 +39,3 @@
     tags:
     - configuration
     - debian
-  become: yes

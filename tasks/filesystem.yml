@@ -1,5 +1,10 @@
 ---
 - name: Slackware hidepid=2
+  become: yes
+  when: ansible_distribution == "Slackware"
+  tags:
+  - slackware
+  - hidepid
   block:
   - name: getent group polkitd
     getent:
@@ -19,11 +24,6 @@
       regexp: '^sed -i ''s:^\(mount -n proc /proc -t proc\)$:\\1 -o hidepid=2,gid={{ getent_group.polkitd[1] }}'' "${SOURCE_TREE}/init"$'
       line: sed -i 's:^\(mount -n proc /proc -t proc\)$:\1 -o hidepid=2,gid={{ getent_group.polkitd[1] }}:' "${SOURCE_TREE}/init"
     tags: configuration
-  become: yes
-  when: ansible_distribution == "Slackware"
-  tags:
-  - slackware
-  - hidepid
 #- name: Remount /proc with hidepid=2
 #  become: yes
 #  mount:
@@ -105,6 +105,7 @@
     group: root
 
 - name: Chmod sensitive files
+  become: yes
   block:
   - import_tasks: filesystem-sudoers.yml
   - name: chmod wireless configurations
@@ -236,6 +237,7 @@
       group: root
     tags: permissions
   - name: chmod Home dirs
+    tags: permissions
     block:
     - name: getent passwd
       getent:
@@ -252,7 +254,6 @@
       failed_when:
         - result.failed == true
         - result.state != "absent"
-    tags: permissions
   # Stuff that is usually readable, but have no reason why they should be
   - name: chmod /etc/ssh/sshd_config
     file:
@@ -435,4 +436,3 @@
     tags:
       - permissions
       - slackware
-  become: yes

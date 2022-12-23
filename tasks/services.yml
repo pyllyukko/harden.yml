@@ -91,6 +91,8 @@
   - centos
 - name: Slackware's cron
   tags: slackware
+  when: ansible_distribution == "Slackware"
+  become: yes
   block:
   - name: Increase crond's log level (Slackware)
     replace:
@@ -147,8 +149,6 @@
     tags:
     - permissions
     - services
-  when: ansible_distribution == "Slackware"
-  become: yes
 # </Cron>
 
 # SSH
@@ -226,6 +226,8 @@
   - slackware
 - name: Slackware rc.d
   tags: slackware
+  when: ansible_distribution == "Slackware"
+  become: yes
   block:
   - name: Create /etc/rc.d/rc.local (Slackware)
     copy:
@@ -282,5 +284,3 @@
   #        /sbin/mount -v -t nfs4
   #      fi
   #  tags: services
-  when: ansible_distribution == "Slackware"
-  become: yes

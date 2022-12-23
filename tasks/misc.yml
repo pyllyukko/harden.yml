@@ -12,6 +12,7 @@
   - slackware
 - name: Configure certbot to use 4096 bit keys
   tags: pki
+  become: yes
   block:
     - name: Check for /etc/letsencrypt
       stat:
@@ -27,7 +28,6 @@
         mode: '0600'
       when: stat_result.stat.exists == True
       tags: configuration
-  become: yes
 - name: Configure /etc/krb5.conf
   tags:
     - configuration
@@ -66,6 +66,9 @@
 #   * httpd & php
 #   * mariadb
 - name: Remove stuff
+  become: yes
+  tags: slackware
+  when: ansible_distribution == "Slackware"
   block:
     - name: Remove unneeded/unwanted packages (Slackware)
       slackpkg:
@@ -92,9 +95,6 @@
         - /etc/rc.d/rc.atalk
         - /etc/rc.d/rc.inetd
         - /etc/inetd.conf
-  become: yes
-  tags: slackware
-  when: ansible_distribution == "Slackware"
 #- name: Download checksec into /usr/local/bin
 #  become: yes
 #  get_url:
@@ -117,6 +117,7 @@
   - configuration
   - debian
 - name: Docker
+  tags: docker
   block:
   - name: Stat /etc/docker
     stat:
@@ -138,9 +139,12 @@
           "no-new-privileges": true
         }
     when: docker.stat.exists
-  tags: docker
 
 - name: GNOME tracker
+  tags:
+  - configuration
+  - gnome
+  - services
   block:
   - name: Stat /etc/xdg/autostart/tracker-miner-fs.desktop
     stat:
@@ -172,10 +176,6 @@
       enabled: no
       state: stopped
       scope: user
-  tags:
-  - configuration
-  - gnome
-  - services
 
 - name: php.ini
   tags:

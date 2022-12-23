@@ -81,6 +81,8 @@
 # http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html
 # https://tldp.org/HOWTO/User-Authentication-HOWTO/x263.html#AEN266
 - name: /etc/pam.d/other
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
+  become: yes
   block:
     - name: Create secure default /etc/pam.d/other
       copy:
@@ -100,8 +102,6 @@
       tags:
       - pam
       - slackware
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
-  become: yes
 - name: Check some Slackware's PAM files
   become: yes
   when: ansible_distribution == "Slackware"
@@ -160,6 +160,9 @@
       line: "auth\trequired\t\t\tpam_faillock.so\tpreauth"
       insertbefore: '^# here are the per-package modules \(the "Primary" block\)$'
 - name: Configure pam_faillock & pam_faildelay (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: yes
+  tags: slackware
   block:
     - name: Add pam_faillock and pam_faildelay to /etc/pam.d/system-auth
       replace:
@@ -174,9 +177,6 @@
       - configuration
       - pam
       - authorization
-  when: ansible_distribution == "Slackware"
-  become: yes
-  tags: slackware
 # postlogin doesn't include any auth lines
 - name: Remove auth include postlogin (Slackware)
   when: ansible_distribution == "Slackware"
@@ -196,6 +196,11 @@
   - slackware
 # https://github.com/pyllyukko/harden.sh/issues/64
 - name: nullok
+  become: yes
+  tags:
+  - configuration
+  - pam
+  - passwords
   block:
     - name: Disallow blank passwords (Debian)
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
@@ -213,11 +218,6 @@
         path: /etc/pam.d/system-auth
         regexp: '\s+nullok'
         replace: ''
-  become: yes
-  tags:
-  - configuration
-  - pam
-  - passwords
 # https://wiki.debian.org/WHEEL/PAM
 # This is not enabled in Slackware because it has a separate "Deny use of su" task
 - name: Enable pam_wheel.so in /etc/pam.d/su
@@ -279,6 +279,12 @@
   - pam
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.19
 - name: Debian pam-configs
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  become: yes
+  tags:
+  - configuration
+  - pam
+  - debian
   block:
     - name: Copying new pam-configs
       copy:
@@ -319,13 +325,13 @@
       with_items:
         - faildelay
       notify: "Run pam-auth-update"
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+- name: authconfig
+  when: ansible_os_family == "RedHat"
   become: yes
   tags:
   - configuration
   - pam
-  - debian
-- name: authconfig
+  - centos
   block:
     - name: Enable additional PAM modules with authconfig (RH)
       command: /sbin/authconfig --enable{{ item }}
@@ -336,14 +342,13 @@
     - name: Configure password policy via authconfig
       command: /sbin/authconfig --passalgo=sha512 --passminlen=14 --enablereqlower --enablerequpper --enablereqdigit --enablereqother --update
       tags: passwords
-  when: ansible_os_family == "RedHat"
+
+- name: Password related
   become: yes
   tags:
   - configuration
   - pam
-  - centos
-
-- name: Password related
+  - passwords
   block:
     - name: Install passwdqc (Debian)
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
@@ -400,11 +405,6 @@
         validate: '/bin/grep "^password.\+minlen=14.*$" %s'
       when: ansible_distribution == "Slackware"
       tags: slackware
-  become: yes
-  tags:
-  - configuration
-  - pam
-  - passwords
 
 # CIS Debian Linux 10 Benchmark v1.0.0 - 1.6.4 Ensure core dumps are restricted
 # https://en.wikipedia.org/wiki/Fork_bomb#Prevention

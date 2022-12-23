@@ -1,6 +1,8 @@
 ---
 # Some documentation available at https://github.com/pyllyukko/harden.sh/wiki/audit
 - name: Install auditing
+  become: yes
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_distribution == "Slackware" or ansible_os_family == "RedHat"
   block:
   - name: Install necessary software (Debian)
     apt:
@@ -160,5 +162,3 @@
   #  with_dict:
   #    log_format: ENRICHED
   #    name_format: HOSTNAME
-  become: yes
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_distribution == "Slackware" or ansible_os_family == "RedHat"

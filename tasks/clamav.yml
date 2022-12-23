@@ -1,5 +1,7 @@
 ---
 - name: ClamAV
+  become: yes
+  tags: clamav
   block:
   - name: Install ClamAV (Debian)
     apt:
@@ -144,5 +146,3 @@
       content: |
         ZipPasswordInfected;Engine:81-255;0;infected
     tags: configuration
-  become: yes
-  tags: clamav

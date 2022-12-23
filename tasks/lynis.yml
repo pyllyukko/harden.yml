@@ -1,5 +1,11 @@
 # https://packages.cisofy.com/community/#debian-ubuntu
 - name: Install Lynis into Debian
+  become: yes
+  tags:
+  - packages
+  - lynis
+  - debian
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   block:
   - name: Install apt-transport-https & gnupg2
     apt:
@@ -18,13 +24,13 @@
     apt:
       name: lynis
       update_cache: yes
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+- name: Install Lynis into CentOS
+  when: ansible_distribution == "CentOS"
   become: yes
   tags:
   - packages
   - lynis
-  - debian
-- name: Install Lynis into CentOS
+  - centos
   block:
   - name: Add Lynis repository
     yum_repository:
@@ -39,16 +45,11 @@
     yum:
       name: lynis
       update_cache: yes
-  when: ansible_distribution == "CentOS"
-  become: yes
-  tags:
-  - packages
-  - lynis
-  - centos
 - name: Configure Lynis
   tags:
   - configuration
   - lynis
+  become: yes
   block:
   - name: Configure Lynis to skip certain tests
     blockinfile:
@@ -123,4 +124,3 @@
         hardening_index="$(sed -n 's/^.\+\(Hardening index : .\+\)$/\1/p' /var/log/lynis.log)"
         lynis_version="$(gawk '$3=="Lynis" && $4 ~ /^[0-9.]+$/{print$4}' /var/log/lynis.log)"
         /usr/bin/logger -t lynis "Lynis ${lynis_version} Tests performed: ${tests_performed} ${hardening_index}"
-  become: yes

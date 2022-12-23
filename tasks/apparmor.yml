@@ -19,20 +19,6 @@
   tags: configuration
 # https://github.com/pyllyukko/harden.sh/wiki/AppArmor
 - name: Enable extra profiles
-  block:
-  - name: Copy extra profiles
-    copy:
-      src: /usr/share/apparmor/extra-profiles/{{ item }}
-      dest: /etc/apparmor.d/{{ item }}
-      owner: root
-      group: root
-      mode: '0600'
-      remote_src: yes
-    with_items: '{{ apparmor_profiles }}'
-  - name: Enable extra profiles
-    command: /usr/sbin/aa-enforce /etc/apparmor.d/{{ item }}
-    with_items: '{{ apparmor_profiles }}'
-    tags: configuration
   vars:
     apparmor_profiles:
       - usr.lib.firefox.firefox
@@ -51,3 +37,17 @@
       - usr.sbin.userdel
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  block:
+  - name: Copy extra profiles
+    copy:
+      src: /usr/share/apparmor/extra-profiles/{{ item }}
+      dest: /etc/apparmor.d/{{ item }}
+      owner: root
+      group: root
+      mode: '0600'
+      remote_src: yes
+    with_items: '{{ apparmor_profiles }}'
+  - name: Enable extra profiles
+    command: /usr/sbin/aa-enforce /etc/apparmor.d/{{ item }}
+    with_items: '{{ apparmor_profiles }}'
+    tags: configuration
