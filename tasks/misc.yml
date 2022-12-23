@@ -176,6 +176,9 @@
         enabled: no
         state: stopped
         scope: user
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+      tags:
+        - configuration
 
 - name: php.ini
   tags:
