@@ -9,7 +9,7 @@
         name: aide
         update_cache: yes
       tags:
-      - packages
+        - packages
     - name: Configure AIDE
       replace:
         path: /etc/aide/aide.conf

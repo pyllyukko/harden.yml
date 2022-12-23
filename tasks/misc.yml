@@ -8,8 +8,8 @@
     replace: '\g<1>=1'
     validate: '/bin/grep "^MD5SUM=1$" %s'
   tags:
-  - configuration
-  - slackware
+    - configuration
+    - slackware
 - name: Configure certbot to use 4096 bit keys
   tags: pki
   become: yes
@@ -114,88 +114,88 @@
       /bin/bash -c 'shopt -s nullglob; for host in /sys/bus/usb/devices/usb*; do echo 0 1>"${host}/authorized_default"; done'
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   tags:
-  - configuration
-  - debian
+    - configuration
+    - debian
 - name: Docker
   tags: docker
   block:
-  - name: Stat /etc/docker
-    stat:
-      path: /etc/docker
-    register: docker
-  - name: Create /etc/docker/daemon.json
-    become: yes
-    copy:
-      dest: /etc/docker/daemon.json
-      force: no
-      owner: root
-      group: root
-      mode: '0600'
-      content: |
-        {
-          "experimental": false,
-          "icc": false,
-          "insecure-registries": [],
-          "no-new-privileges": true
-        }
-    when: docker.stat.exists
+    - name: Stat /etc/docker
+      stat:
+        path: /etc/docker
+      register: docker
+    - name: Create /etc/docker/daemon.json
+      become: yes
+      copy:
+        dest: /etc/docker/daemon.json
+        force: no
+        owner: root
+        group: root
+        mode: '0600'
+        content: |
+          {
+            "experimental": false,
+            "icc": false,
+            "insecure-registries": [],
+            "no-new-privileges": true
+          }
+      when: docker.stat.exists
 
 - name: GNOME tracker
   tags:
-  - configuration
-  - gnome
-  - services
+    - configuration
+    - gnome
+    - services
   block:
-  - name: Stat /etc/xdg/autostart/tracker-miner-fs.desktop
-    stat:
-      path: '/etc/xdg/autostart/tracker-miner-fs.desktop'
-    register: stat
-  - name: Disable tracker-miner-fs XDG autostart
-    become: yes
-    lineinfile:
-      path: '/etc/xdg/autostart/tracker-miner-fs.desktop'
-      regexp: '^Hidden=true$'
-      line: Hidden=true
-      create: no
-    when: stat.stat.exists == True
-  - name: Stat /etc/xdg/autostart/tracker-extract.desktop
-    stat:
-      path: '/etc/xdg/autostart/tracker-extract.desktop'
-    register: stat
-  - name: Disable tracker-miner-fs XDG autostart
-    become: yes
-    lineinfile:
-      path: '/etc/xdg/autostart/tracker-extract.desktop'
-      regexp: '^Hidden=true$'
-      line: Hidden=true
-      create: no
-    when: stat.stat.exists == True
-  - name: Disable tracker-miner-fs systemd unit
-    systemd:
-      name: tracker-miner-fs
-      enabled: no
-      state: stopped
-      scope: user
+    - name: Stat /etc/xdg/autostart/tracker-miner-fs.desktop
+      stat:
+        path: '/etc/xdg/autostart/tracker-miner-fs.desktop'
+      register: stat
+    - name: Disable tracker-miner-fs XDG autostart
+      become: yes
+      lineinfile:
+        path: '/etc/xdg/autostart/tracker-miner-fs.desktop'
+        regexp: '^Hidden=true$'
+        line: Hidden=true
+        create: no
+      when: stat.stat.exists == True
+    - name: Stat /etc/xdg/autostart/tracker-extract.desktop
+      stat:
+        path: '/etc/xdg/autostart/tracker-extract.desktop'
+      register: stat
+    - name: Disable tracker-miner-fs XDG autostart
+      become: yes
+      lineinfile:
+        path: '/etc/xdg/autostart/tracker-extract.desktop'
+        regexp: '^Hidden=true$'
+        line: Hidden=true
+        create: no
+      when: stat.stat.exists == True
+    - name: Disable tracker-miner-fs systemd unit
+      systemd:
+        name: tracker-miner-fs
+        enabled: no
+        state: stopped
+        scope: user
 
 - name: php.ini
   tags:
-  - php
-  - configuration
+    - php
+    - configuration
   block:
-  - name: Stat /etc/php.ini
-    stat:
-      path: /etc/php.ini
-    register: stat_result
-  # https://cheatsheetseries.owasp.org/cheatsheets/PHP_Configuration_Cheat_Sheet.html
-  # TODO: Moar content!
-  - name: Configure php.ini
-    become: yes
-    when: stat_result.stat.exists == True
-    ini_file:
-      path: /etc/php.ini
-      section: PHP
-      option: expose_php
-      value: 'Off'
-      owner: root
-      group: root
-      mode: '0644'
+    - name: Stat /etc/php.ini
+      stat:
+        path: /etc/php.ini
+      register: stat_result
+    # https://cheatsheetseries.owasp.org/cheatsheets/PHP_Configuration_Cheat_Sheet.html
+    # TODO: Moar content!
+    - name: Configure php.ini
+      become: yes
+      when: stat_result.stat.exists == True
+      ini_file:
+        path: /etc/php.ini
+        section: PHP
+        option: expose_php
+        value: 'Off'
+        owner: root
+        group: root
+        mode: '0644'

@@ -10,21 +10,21 @@
         update_cache: yes
       vars:
         packages:
-        - bootlogd
-        - tiger
-        - autolog
-        - chkrootkit
-        - needrestart
-        - arpwatch
-        - usbguard
-        - unattended-upgrades
-        - checksecurity
-        - checksec
-        - hardening-runtime
-        - apt-show-versions
+          - bootlogd
+          - tiger
+          - autolog
+          - chkrootkit
+          - needrestart
+          - arpwatch
+          - usbguard
+          - unattended-upgrades
+          - checksecurity
+          - checksec
+          - hardening-runtime
+          - apt-show-versions
       tags:
-      - packages
-      - services
+        - packages
+        - services
     - import_tasks: aide.yml
     - name: Symlink /usr/lib/tiger/systems/Linux/5 -> 4
       file:
@@ -35,9 +35,9 @@
 
 - name: Comment out user.max_user_namespaces=0 in /usr/lib/sysctl.d/10-hardening.conf
   tags:
-  - debian
-  - configuration
-  - kernel
+    - debian
+    - configuration
+    - kernel
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   become: yes
   #notify: "Load sysctl settings"
@@ -50,71 +50,70 @@
 - name: debsecan
   when: ansible_distribution == "Debian"
   tags:
-  - debsecan
-  - debian
+    - debsecan
+    - debian
   become: yes
   block:
-  - name: Install debsecan
-    apt:
-      name: debsecan
-    tags: packages
-  - name: Configure debsecan
-    debconf:
-      name: debsecan
-      question: debsecan/suite
-      vtype: select
-      value: "{{ ansible_distribution_release }}"
-    tags: configuration
+    - name: Install debsecan
+      apt:
+        name: debsecan
+      tags: packages
+    - name: Configure debsecan
+      debconf:
+        name: debsecan
+        question: debsecan/suite
+        vtype: select
+        value: "{{ ansible_distribution_release }}"
+      tags: configuration
 
 # debsums
 - name: debsums
   when: ansible_distribution == "Debian"
   become: yes
   tags:
-  - debsums
-  - debian
+    - debsums
+    - debian
   block:
-  - name: Install debsums
-    apt:
-      name: debsums
-    tags: packages
-  - name: Enable weekly debsums run
-    replace:
-      path: /etc/default/debsums
-      regexp: '^(CRON_CHECK=).*'
-      replace: '\g<1>weekly'
-    tags:
-    - configuration
+    - name: Install debsums
+      apt:
+        name: debsums
+      tags: packages
+    - name: Enable weekly debsums run
+      replace:
+        path: /etc/default/debsums
+        regexp: '^(CRON_CHECK=).*'
+        replace: '\g<1>weekly'
+      tags: configuration
 
 - name: Configure chkrootkit
   become: yes
   when: ansible_distribution == "Debian"
   tags:
-  - configuration
-  - chkrootkit
-  - debian
+    - configuration
+    - chkrootkit
+    - debian
   block:
-  - name: Create /etc/chkrootkit.ignore
-    copy:
-      dest: /etc/chkrootkit.ignore
-      owner: root
-      group: root
-      mode: '0400'
-      content: |
-        ^-e The following suspicious files and directories were found:$
-        ^$
-        ^ ?/usr/lib/debug/\.build-id$
-        ^ ?/usr/lib/libreoffice/share/\.registry$
-        ^ ?/usr/lib/ruby/vendor_ruby/rubygems/ssl_certs/\.document$
-        ^ ?/usr/lib/pypy/lib_pypy/ctypes_config_cache/\.empty$
-        ^eth[0-9]+: PACKET SNIFFER\(/usr/sbin/dhcpcd\[[0-9]+\](, /usr/sbin/collectd\[[0-9]+\])?\)$
-  - name: Configure /etc/cron.daily/chkrootkit to use chkrootkit.ignore
-    replace:
-      path: /etc/cron.daily/chkrootkit
-      regexp: '^(IGNORE_FILE=).*'
-      replace: '\g<1>/etc/chkrootkit.ignore'
-  - name: Enable daily chkrootkit run
-    replace:
-      path: /etc/chkrootkit.conf
-      regexp: '^(RUN_DAILY=).*'
-      replace: '\g<1>"true"'
+    - name: Create /etc/chkrootkit.ignore
+      copy:
+        dest: /etc/chkrootkit.ignore
+        owner: root
+        group: root
+        mode: '0400'
+        content: |
+          ^-e The following suspicious files and directories were found:$
+          ^$
+          ^ ?/usr/lib/debug/\.build-id$
+          ^ ?/usr/lib/libreoffice/share/\.registry$
+          ^ ?/usr/lib/ruby/vendor_ruby/rubygems/ssl_certs/\.document$
+          ^ ?/usr/lib/pypy/lib_pypy/ctypes_config_cache/\.empty$
+          ^eth[0-9]+: PACKET SNIFFER\(/usr/sbin/dhcpcd\[[0-9]+\](, /usr/sbin/collectd\[[0-9]+\])?\)$
+    - name: Configure /etc/cron.daily/chkrootkit to use chkrootkit.ignore
+      replace:
+        path: /etc/cron.daily/chkrootkit
+        regexp: '^(IGNORE_FILE=).*'
+        replace: '\g<1>/etc/chkrootkit.ignore'
+    - name: Enable daily chkrootkit run
+      replace:
+        path: /etc/chkrootkit.conf
+        regexp: '^(RUN_DAILY=).*'
+        replace: '\g<1>"true"'

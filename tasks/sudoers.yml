@@ -6,8 +6,8 @@
     name: glibc
     state: present
   tags:
-  - packages
-  - slackware
+    - packages
+    - slackware
 - name: Install sudo (Debian)
   become: yes
   apt:
@@ -15,8 +15,8 @@
     update_cache: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   tags:
-  - packages
-  - debian
+    - packages
+    - debian
 - name: 'Check that some user(s) exist in "sudo" group'
   getent:
     database: group
@@ -35,38 +35,38 @@
   when: ansible_distribution == "Slackware" or ansible_distribution == "Debian"
   become: yes
   block:
-  - name: 'Create /etc/sudoers.new'
-    template:
-      src: "{{ playbook_dir }}/templates/sudoers.j2"
-      dest: /etc/sudoers.new
-      mode: '0440'
-      owner: root
-      group: root
-  - name: Create /etc/sudo_env
-    copy:
-      content: "LESSSECURE=1\nPAGER=/usr/bin/less\nMANPAGER=/usr/bin/less\nSYSTEMD_PAGER=/usr/bin/less\nTMOUT={{ session_timeout * 60 }}\n"
-      dest: /etc/sudo_env
-      owner: root
-      group: root
-      mode: '0400'
-      force: no
-    tags: configuration
-  # https://jpmens.net/2013/02/06/don-t-try-this-at-the-office-etc-sudoers/
-  - name: 'Validate /etc/sudoers.new'
-    command: visudo -cs -f /etc/sudoers.new
-  - name: 'Copy /etc/sudoers.new to /etc/sudoers'
-    copy:
-      remote_src: yes
-      src: /etc/sudoers.new
-      dest: /etc/sudoers
-      owner: root
-      group: root
-      mode: '0440'
-    tags: configuration
-  - name: 'Remove /etc/sudoers.new'
-    file:
-      path: /etc/sudoers.new
-      state: absent
+    - name: 'Create /etc/sudoers.new'
+      template:
+        src: "{{ playbook_dir }}/templates/sudoers.j2"
+        dest: /etc/sudoers.new
+        mode: '0440'
+        owner: root
+        group: root
+    - name: Create /etc/sudo_env
+      copy:
+        content: "LESSSECURE=1\nPAGER=/usr/bin/less\nMANPAGER=/usr/bin/less\nSYSTEMD_PAGER=/usr/bin/less\nTMOUT={{ session_timeout * 60 }}\n"
+        dest: /etc/sudo_env
+        owner: root
+        group: root
+        mode: '0400'
+        force: no
+      tags: configuration
+    # https://jpmens.net/2013/02/06/don-t-try-this-at-the-office-etc-sudoers/
+    - name: 'Validate /etc/sudoers.new'
+      command: visudo -cs -f /etc/sudoers.new
+    - name: 'Copy /etc/sudoers.new to /etc/sudoers'
+      copy:
+        remote_src: yes
+        src: /etc/sudoers.new
+        dest: /etc/sudoers
+        owner: root
+        group: root
+        mode: '0440'
+      tags: configuration
+    - name: 'Remove /etc/sudoers.new'
+      file:
+        path: /etc/sudoers.new
+        state: absent
 # https://www.raspberrypi.org/documentation/configuration/security.md
 - name: 'Remove /etc/sudoers.d/010_pi-nopasswd'
   become: yes
@@ -75,6 +75,6 @@
     state: absent
   when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
   tags:
-  - configuration
-  - debian
+    - configuration
+    - debian
 - import_tasks: filesystem-sudoers.yml

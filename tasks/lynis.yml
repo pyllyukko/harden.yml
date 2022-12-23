@@ -2,125 +2,125 @@
 - name: Install Lynis into Debian
   become: yes
   tags:
-  - packages
-  - lynis
-  - debian
+    - packages
+    - lynis
+    - debian
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   block:
-  - name: Install apt-transport-https & gnupg2
-    apt:
-      name: ['apt-transport-https', 'gnupg2']
-      update_cache: yes
-  - name: Add Lynis signing key
-    apt_key:
-      id: 84FAA9983B24AEF24D6C87F1FEBB7D1812576482
-      url: https://packages.cisofy.com/keys/cisofy-software-public.key
-      state: present
-  - name: Add Lynis repository
-    apt_repository:
-      repo: deb https://packages.cisofy.com/community/lynis/deb/ stable main
-      state: present
-  - name: Install Lynis
-    apt:
-      name: lynis
-      update_cache: yes
+    - name: Install apt-transport-https & gnupg2
+      apt:
+        name: ['apt-transport-https', 'gnupg2']
+        update_cache: yes
+    - name: Add Lynis signing key
+      apt_key:
+        id: 84FAA9983B24AEF24D6C87F1FEBB7D1812576482
+        url: https://packages.cisofy.com/keys/cisofy-software-public.key
+        state: present
+    - name: Add Lynis repository
+      apt_repository:
+        repo: deb https://packages.cisofy.com/community/lynis/deb/ stable main
+        state: present
+    - name: Install Lynis
+      apt:
+        name: lynis
+        update_cache: yes
 - name: Install Lynis into CentOS
   when: ansible_distribution == "CentOS"
   become: yes
   tags:
-  - packages
-  - lynis
-  - centos
+    - packages
+    - lynis
+    - centos
   block:
-  - name: Add Lynis repository
-    yum_repository:
-      name: lynis
-      description: CISOfy Software - Lynis package
-      baseurl: https://packages.cisofy.com/community/lynis/rpm/
-      gpgkey: https://packages.cisofy.com/keys/cisofy-software-rpms-public.key
-      gpgcheck: yes
-      priority: 2
-      enabled: yes
-  - name: Install Lynis
-    yum:
-      name: lynis
-      update_cache: yes
+    - name: Add Lynis repository
+      yum_repository:
+        name: lynis
+        description: CISOfy Software - Lynis package
+        baseurl: https://packages.cisofy.com/community/lynis/rpm/
+        gpgkey: https://packages.cisofy.com/keys/cisofy-software-rpms-public.key
+        gpgcheck: yes
+        priority: 2
+        enabled: yes
+    - name: Install Lynis
+      yum:
+        name: lynis
+        update_cache: yes
 - name: Configure Lynis
   tags:
-  - configuration
-  - lynis
+    - configuration
+    - lynis
   become: yes
   block:
-  - name: Configure Lynis to skip certain tests
-    blockinfile:
-      path: /etc/lynis/custom.prf
-      create: yes
-      owner: root
-      group: root
-      mode: '0644'
-      block: |
-        # Changing port number is just security through obscurity
-        skip-test=SSH-7408:port
-        # Even though this is true, partitioning is usually done during install and not necessarily that easy afterwards
-        skip-test=FILE-6310
-        # Attackers can get their tools into hosts in any case
-        skip-test=HRDN-7220
-        skip-test=HRDN-7222
-        # We have tooling and it's called Ansible :)
-        skip-test=TOOL-5002
-        # Allow SAK
-        config-data=sysctl;kernel.sysrq;4;1;Disable magic SysRQ;sysctl -a;url:https;//kernel.org/doc/Documentation/sysctl/kernel.txt;category:security;
-        # 2 should be enough as the kernel documentation doesn't even have >= 3 documented
-        config-data=sysctl;kernel.perf_event_paranoid;2;1;Restrict unprivileged access to the perf_event_open() system call.;sysctl -a;url:https;//kernel.org/doc/Documentation/sysctl/kernel.txt;category:security;
-  # https://github.com/CISOfy/lynis/issues/967
-  - name: Configure /etc/{at,cron}.{allow,deny} permissions in /etc/lynis/default.prf
-    when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-    tags: debian
-    replace:
-      path: /etc/lynis/default.prf
-      regexp: '^(permfile=/etc/{{ item.key }}):rw-------:root:-:WARN:'
-      replace: '\g<1>:{{ item.value }}:WARN:'
-      validate: '/bin/grep "^permfile=/etc/{{ item.key }}:{{ item.value }}:WARN:$" %s'
-    with_dict:
-      at.allow: rw-r-----:root:daemon
-      at.deny: rw-r-----:root:daemon
-      cron.allow: rw-r-----:root:crontab
-      cron.deny: rw-r-----:root:crontab
-  - name: Configure Lynis to skip RPM related tests
-    blockinfile:
-      path: /etc/lynis/custom.prf
-      marker: "# {mark} ANSIBLE MANAGED BLOCK - Skip RPM related tests"
-      block: |
-        skip-test=PKGS-7308
-        skip-test=PKGS-7383
-        skip-test=PKGS-7384
-        skip-test=PKGS-7386
-        skip-test=PKGS-7387
-    when: ansible_os_family != "RedHat"
-  - name: Configure Slackware specific tests to skip
-    blockinfile:
-      path: /etc/lynis/custom.prf
-      marker: "# {mark} ANSIBLE MANAGED BLOCK - Slackware"
-      block: |
-        skip-test=PKGS-7398
-    when: ansible_distribution == "Slackware"
-    tags: slackware
-  - name: Create daily cron job to run Lynis
-    copy:
-      dest: /etc/cron.daily/run_lynis
-      owner: root
-      group: root
-      mode: '0700'
-      content: |
-        #!/bin/bash
+    - name: Configure Lynis to skip certain tests
+      blockinfile:
+        path: /etc/lynis/custom.prf
+        create: yes
+        owner: root
+        group: root
+        mode: '0644'
+        block: |
+          # Changing port number is just security through obscurity
+          skip-test=SSH-7408:port
+          # Even though this is true, partitioning is usually done during install and not necessarily that easy afterwards
+          skip-test=FILE-6310
+          # Attackers can get their tools into hosts in any case
+          skip-test=HRDN-7220
+          skip-test=HRDN-7222
+          # We have tooling and it's called Ansible :)
+          skip-test=TOOL-5002
+          # Allow SAK
+          config-data=sysctl;kernel.sysrq;4;1;Disable magic SysRQ;sysctl -a;url:https;//kernel.org/doc/Documentation/sysctl/kernel.txt;category:security;
+          # 2 should be enough as the kernel documentation doesn't even have >= 3 documented
+          config-data=sysctl;kernel.perf_event_paranoid;2;1;Restrict unprivileged access to the perf_event_open() system call.;sysctl -a;url:https;//kernel.org/doc/Documentation/sysctl/kernel.txt;category:security;
+    # https://github.com/CISOfy/lynis/issues/967
+    - name: Configure /etc/{at,cron}.{allow,deny} permissions in /etc/lynis/default.prf
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+      tags: debian
+      replace:
+        path: /etc/lynis/default.prf
+        regexp: '^(permfile=/etc/{{ item.key }}):rw-------:root:-:WARN:'
+        replace: '\g<1>:{{ item.value }}:WARN:'
+        validate: '/bin/grep "^permfile=/etc/{{ item.key }}:{{ item.value }}:WARN:$" %s'
+      with_dict:
+        at.allow: rw-r-----:root:daemon
+        at.deny: rw-r-----:root:daemon
+        cron.allow: rw-r-----:root:crontab
+        cron.deny: rw-r-----:root:crontab
+    - name: Configure Lynis to skip RPM related tests
+      blockinfile:
+        path: /etc/lynis/custom.prf
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - Skip RPM related tests"
+        block: |
+          skip-test=PKGS-7308
+          skip-test=PKGS-7383
+          skip-test=PKGS-7384
+          skip-test=PKGS-7386
+          skip-test=PKGS-7387
+      when: ansible_os_family != "RedHat"
+    - name: Configure Slackware specific tests to skip
+      blockinfile:
+        path: /etc/lynis/custom.prf
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - Slackware"
+        block: |
+          skip-test=PKGS-7398
+      when: ansible_distribution == "Slackware"
+      tags: slackware
+    - name: Create daily cron job to run Lynis
+      copy:
+        dest: /etc/cron.daily/run_lynis
+        owner: root
+        group: root
+        mode: '0700'
+        content: |
+          #!/bin/bash
 
-        set -e
-        if ! hash lynis 2>/dev/null
-        then
-          exit 1
-        fi
-        lynis audit system -Q -q --slow-warning 200
-        tests_performed="$(gawk '/Tests performed:/{print$5}' /var/log/lynis.log)"
-        hardening_index="$(sed -n 's/^.\+\(Hardening index : .\+\)$/\1/p' /var/log/lynis.log)"
-        lynis_version="$(gawk '$3=="Lynis" && $4 ~ /^[0-9.]+$/{print$4}' /var/log/lynis.log)"
-        /usr/bin/logger -t lynis "Lynis ${lynis_version} Tests performed: ${tests_performed} ${hardening_index}"
+          set -e
+          if ! hash lynis 2>/dev/null
+          then
+            exit 1
+          fi
+          lynis audit system -Q -q --slow-warning 200
+          tests_performed="$(gawk '/Tests performed:/{print$5}' /var/log/lynis.log)"
+          hardening_index="$(sed -n 's/^.\+\(Hardening index : .\+\)$/\1/p' /var/log/lynis.log)"
+          lynis_version="$(gawk '$3=="Lynis" && $4 ~ /^[0-9.]+$/{print$4}' /var/log/lynis.log)"
+          /usr/bin/logger -t lynis "Lynis ${lynis_version} Tests performed: ${tests_performed} ${hardening_index}"

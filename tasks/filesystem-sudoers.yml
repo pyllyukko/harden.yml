@@ -7,8 +7,8 @@
     group: root
   become: yes
   tags:
-  - permissions
-  - sudo
+    - permissions
+    - sudo
   with_items:
     - sudoers.d
     - sudoers

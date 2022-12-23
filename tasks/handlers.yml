@@ -44,8 +44,8 @@
     - result.failed == true
     - '"WARNING: There does not appear to be a parent instance of sshd running." not in result.stdout'
   tags:
-  - services
-  - slackware
+    - services
+    - slackware
 - name: Restart sshd (Debian)
   become: yes
   service:

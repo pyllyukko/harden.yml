@@ -12,23 +12,23 @@
     failed_when: getent_group.{{ allowed_group }}[2] == ""
   - name: /etc/shutdown.allow
     tags:
-    - configuration
-    - authorization
+      - configuration
+      - authorization
     block:
-    - name: Create /etc/shutdown.allow
-      copy:
-        content: ""
-        dest: /etc/shutdown.allow
-        force: no
-        owner: root
-        group: root
-        mode: '0600'
-    - name: Use shutdown -a in /etc/inittab
-      replace:
-        path: /etc/inittab
-        regexp: '^(ca::ctrlaltdel:/sbin/shutdown -t5 -r now)$'
-        replace: '\g<1> -a'
-        validate: '/bin/grep "^ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a$" %s'
+      - name: Create /etc/shutdown.allow
+        copy:
+          content: ""
+          dest: /etc/shutdown.allow
+          force: no
+          owner: root
+          group: root
+          mode: '0600'
+      - name: Use shutdown -a in /etc/inittab
+        replace:
+          path: /etc/inittab
+          regexp: '^(ca::ctrlaltdel:/sbin/shutdown -t5 -r now)$'
+          replace: '\g<1> -a'
+          validate: '/bin/grep "^ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a$" %s'
 - name: Set umask to 077 in /etc/profile (Slackware)
   tags: configuration
   become: yes
@@ -57,29 +57,29 @@
 # https://cisofy.com/lynis/controls/AUTH-9308/
 - name: Single user mode authentication
   tags:
-  - configuration
-  - authentication
+    - configuration
+    - authentication
   become: yes
   when: ansible_distribution == "Slackware"
   block:
-  - name: Remove S from System initialization (Slackware)
-    replace:
-      path: /etc/inittab
-      regexp: '^si:S:sysinit:/etc/rc\.d/rc\.S$'
-      replace: 'si::sysinit:/etc/rc.d/rc.S'
-      validate: '/bin/grep "^si::sysinit:/etc/rc.d/rc.S$" %s'
-  - name: Create separate entry for single user mode which requires authentication (Slackware)
-    blockinfile:
-      path: /etc/inittab
-      insertafter: "^x1:4:respawn:/etc/rc.d/rc.4$"
-      block: |
-        # single user mode
-        ~~:S:wait:/sbin/sulogin
-  - name: Fix rc.K
-    lineinfile:
-      path: /etc/rc.d/rc.K
-      regexp: '^/sbin/telinit'
-      line: /sbin/telinit -t 1 S
+    - name: Remove S from System initialization (Slackware)
+      replace:
+        path: /etc/inittab
+        regexp: '^si:S:sysinit:/etc/rc\.d/rc\.S$'
+        replace: 'si::sysinit:/etc/rc.d/rc.S'
+        validate: '/bin/grep "^si::sysinit:/etc/rc.d/rc.S$" %s'
+    - name: Create separate entry for single user mode which requires authentication (Slackware)
+      blockinfile:
+        path: /etc/inittab
+        insertafter: "^x1:4:respawn:/etc/rc.d/rc.4$"
+        block: |
+          # single user mode
+          ~~:S:wait:/sbin/sulogin
+    - name: Fix rc.K
+      lineinfile:
+        path: /etc/rc.d/rc.K
+        regexp: '^/sbin/telinit'
+        line: /sbin/telinit -t 1 S
 - name: Add LESS variables and disable core dumps
   tags: configuration
   blockinfile:
@@ -97,38 +97,38 @@
   when: ansible_distribution == "Slackware"
   become: yes
   block:
-  - name: Remove all members from certain groups (Slackware)
-    command: gpasswd -M "" {{ item }}
-    register: result
-    failed_when:
-      - result.failed == true
-      - '"is not a member of" not in result.stderr'
-    tags: accounts
-    with_items:
-      - root
-      - bin
-      - daemon
-      - sys
-      - adm
-      - disk
-  - name: Remove uucp from dialout group (Slackware)
-    command: gpasswd -d uucp dialout
-    register: result
-    failed_when:
-      - result.failed == true
-      - '"is not a member of" not in result.stderr'
-    tags: accounts
-  # root is root and that's enough :)
-  - name: Remove root from all supplemental groups
-    command: gpasswd -d root {{ item }}
-    register: result
-    failed_when:
-      - result.failed == true
-      - '"is not a member of" not in result.stderr'
-    tags: accounts
-    with_items:
-      - wheel
-      - audio
+    - name: Remove all members from certain groups (Slackware)
+      command: gpasswd -M "" {{ item }}
+      register: result
+      failed_when:
+        - result.failed == true
+        - '"is not a member of" not in result.stderr'
+      tags: accounts
+      with_items:
+        - root
+        - bin
+        - daemon
+        - sys
+        - adm
+        - disk
+    - name: Remove uucp from dialout group (Slackware)
+      command: gpasswd -d uucp dialout
+      register: result
+      failed_when:
+        - result.failed == true
+        - '"is not a member of" not in result.stderr'
+      tags: accounts
+    # root is root and that's enough :)
+    - name: Remove root from all supplemental groups
+      command: gpasswd -d root {{ item }}
+      register: result
+      failed_when:
+        - result.failed == true
+        - '"is not a member of" not in result.stderr'
+      tags: accounts
+      with_items:
+        - wheel
+        - audio
 
 - name: Fix gshadow (Slackware)
   when: ansible_distribution == "Slackware"
@@ -145,5 +145,5 @@
   when: ansible_distribution == "Slackware"
   become: yes
   tags:
-  - configuration
-  - pam
+    - configuration
+    - pam

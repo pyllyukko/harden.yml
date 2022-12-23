@@ -13,32 +13,32 @@
     - '"Could not find the requested service" not in result.msg'
   register: result
   tags:
-  - services
-  - debian
+    - services
+    - debian
 
 - name: Slackware services
   become: yes
   when: ansible_distribution == "Slackware"
   tags:
-  - services
-  - slackware
+    - services
+    - slackware
   block:
-  - name: Stop unwanted services (Slackware)
-    ignore_errors: yes
-    command: /bin/sh /etc/rc.d/rc.{{ item }} stop
-    with_items: "{{ slackware_services }}"
-  - name: Disable unwanted services (Slackware)
-    file:
-      path: "/etc/rc.d/rc.{{ item }}"
-      owner: root
-      group: root
-      mode: ugo-x
-    with_items: "{{ slackware_services }}"
-    register: result
-    failed_when:
-      - result.failed == true
-      - result.state != "absent"
-    tags: permissions
+    - name: Stop unwanted services (Slackware)
+      ignore_errors: yes
+      command: /bin/sh /etc/rc.d/rc.{{ item }} stop
+      with_items: "{{ slackware_services }}"
+    - name: Disable unwanted services (Slackware)
+      file:
+        path: "/etc/rc.d/rc.{{ item }}"
+        owner: root
+        group: root
+        mode: ugo-x
+      with_items: "{{ slackware_services }}"
+      register: result
+      failed_when:
+        - result.failed == true
+        - result.state != "absent"
+      tags: permissions
 
 # Cron
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.1.8 Ensure at/cron is restricted to authorized users
@@ -46,37 +46,37 @@
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   tags:
-  - services
-  - configuration
-  - debian
-  - authorization
+    - services
+    - configuration
+    - debian
+    - authorization
   block:
-  - name: Restrict cron (cron.allow)
-    become: yes
-    file:
-      path: /etc/cron.allow
-      state: touch
-      owner: root
-      group: crontab
-      mode: '0640'
-    tags: permissions
-  - name: Restrict at (at.allow)
-    become: yes
-    file:
-      path: /etc/at.allow
-      state: touch
-      owner: root
-      group: daemon
-      mode: '0640'
-    tags: permissions
-  - name: Restrict cron & at ({at,cron}.deny)
-    become: yes
-    file:
-      path: /etc/{{ item }}
-      state: absent
-    with_items:
-      - cron.deny
-      - at.deny
+    - name: Restrict cron (cron.allow)
+      become: yes
+      file:
+        path: /etc/cron.allow
+        state: touch
+        owner: root
+        group: crontab
+        mode: '0640'
+      tags: permissions
+    - name: Restrict at (at.allow)
+      become: yes
+      file:
+        path: /etc/at.allow
+        state: touch
+        owner: root
+        group: daemon
+        mode: '0640'
+      tags: permissions
+    - name: Restrict cron & at ({at,cron}.deny)
+      become: yes
+      file:
+        path: /etc/{{ item }}
+        state: absent
+      with_items:
+        - cron.deny
+        - at.deny
 
 - name: Create a job that checks systemd's state
   become: yes
@@ -87,68 +87,68 @@
     minute: "*/5"
     state: present
   tags:
-  - debian
-  - centos
+    - debian
+    - centos
 - name: Slackware's cron
   tags: slackware
   when: ansible_distribution == "Slackware"
   become: yes
   block:
-  - name: Increase crond's log level (Slackware)
-    replace:
-      path: /etc/default/crond
-      regexp: '^(CROND_OPTS=".*)-l [a-z]+(.*")$'
-      replace: '\g<1>-l info\g<2>'
-      validate: '/bin/grep "^CROND_OPTS=\".*-l info.*\"$" %s'
-    tags:
-    - services
-    - logging
-  # From dcron's README
-  - name: Restrict cron (Slackware)
-    file:
-      path: /usr/bin/crontab
-      group: wheel
-      mode: '4710'
-    tags:
-    - permissions
-    - services
-    - authorization
-  - name: Set permissions for /var/spool/cron
-    file:
-      path: /var/spool/cron
-      owner: root
-      group: root
-      mode: '0700'
-    tags:
-    - permissions
-    - services
-  - name: Set permissions for /var/spool/cron/crontabs
-    file:
-      path: /var/spool/cron/crontabs
-      owner: root
-      group: root
-      mode: '0700'
-    tags:
-    - permissions
-    - services
-  # user needs to have x perms into the directory where the temp file is created
-  # Slackware 14.2 has /var/spool/cron as TMPDIR and 14.2+ has /run/cron
-  - name: Fix /etc/rc.d/rc.crond
-    blockinfile:
-      path: /etc/rc.d/rc.crond
-      insertafter: "^ {4}mkdir -p /run/cron$"
-      block: |
-        /bin/chgrp wheel /run/cron
-        /bin/chmod 0710 /run/cron
-    tags: services
-  # From dcron's README
-  - name: chmod crond (Slackware)
-    file:
-      path: /usr/sbin/crond
-      mode: '0700'
-    tags:
-    - permissions
-    - services
+    - name: Increase crond's log level (Slackware)
+      replace:
+        path: /etc/default/crond
+        regexp: '^(CROND_OPTS=".*)-l [a-z]+(.*")$'
+        replace: '\g<1>-l info\g<2>'
+        validate: '/bin/grep "^CROND_OPTS=\".*-l info.*\"$" %s'
+      tags:
+        - services
+        - logging
+    # From dcron's README
+    - name: Restrict cron (Slackware)
+      file:
+        path: /usr/bin/crontab
+        group: wheel
+        mode: '4710'
+      tags:
+        - permissions
+        - services
+        - authorization
+    - name: Set permissions for /var/spool/cron
+      file:
+        path: /var/spool/cron
+        owner: root
+        group: root
+        mode: '0700'
+      tags:
+        - permissions
+        - services
+    - name: Set permissions for /var/spool/cron/crontabs
+      file:
+        path: /var/spool/cron/crontabs
+        owner: root
+        group: root
+        mode: '0700'
+      tags:
+        - permissions
+        - services
+    # user needs to have x perms into the directory where the temp file is created
+    # Slackware 14.2 has /var/spool/cron as TMPDIR and 14.2+ has /run/cron
+    - name: Fix /etc/rc.d/rc.crond
+      blockinfile:
+        path: /etc/rc.d/rc.crond
+        insertafter: "^ {4}mkdir -p /run/cron$"
+        block: |
+          /bin/chgrp wheel /run/cron
+          /bin/chmod 0710 /run/cron
+      tags: services
+    # From dcron's README
+    - name: chmod crond (Slackware)
+      file:
+        path: /usr/sbin/crond
+        mode: '0700'
+      tags:
+        - permissions
+        - services
 # </Cron>
 
 # SSH
@@ -156,9 +156,9 @@
   service_facts:
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   tags:
-  - services
-  - ssh
-  - debian
+    - services
+    - ssh
+    - debian
 # This is used in sshd_config.j2 template(s)
 - name: Stat /etc/krb5.keytab
   stat:
@@ -179,9 +179,9 @@
     - result.failed == true
     - '"sshd: no hostkeys available -- exiting." not in result.stderr'
   tags:
-  - services
-  - configuration
-  - ssh
+    - services
+    - configuration
+    - ssh
   notify:
     - "Restart sshd (Slackware)"
     - "Restart sshd (Debian)"
@@ -192,9 +192,9 @@
     ansible_distribution == "Slackware"
 - name: Harden SSH client configuration
   tags:
-  - configuration
-  - slackware
-  - ssh
+    - configuration
+    - slackware
+    - ssh
   become: yes
   when: ansible_distribution == "Slackware"
   template:
@@ -221,66 +221,66 @@
     name: icmpinfo
     state: present
   tags:
-  - packages
-  - services
-  - slackware
+    - packages
+    - services
+    - slackware
 - name: Slackware rc.d
   tags: slackware
   when: ansible_distribution == "Slackware"
   become: yes
   block:
-  - name: Create /etc/rc.d/rc.local (Slackware)
-    copy:
-      src: "{{ playbook_dir }}/newconfs/rc.d/rc.local.new"
-      dest: /etc/rc.d/rc.local
-      owner: root
-      group: root
-      mode: '0700'
-    tags: services
-  - name: Create /etc/rc.d/rc.local_shutdown symlink (Slackware)
-    file:
-      src: /etc/rc.d/rc.local
-      dest: /etc/rc.d/rc.local_shutdown
-      owner: root
-      group: root
-      state: link
-    tags: services
-  - name: Enable smartd (Slackware)
-    file:
-      path: /etc/rc.d/rc.smartd
-      owner: root
-      group: root
-      mode: '0700'
-    register: result
-    failed_when:
-      - result.failed == true
-      - result.state != "absent"
-    tags: services
-  - name: Disable atd (Slackware)
-    replace:
-      path: /etc/rc.d/rc.M
-      after: '# Start atd \(manages jobs scheduled with ''at''\):'
-      before: '# Slackware-Mini-Quota-HOWTO:'
-      regexp: '^#?(.+)$'
-      replace: '#\g<1>'
-    tags: services
-  #- name: NFSv4 support in rc.inet2
-  #  blockinfile:
-  #    path: /etc/rc.d/rc.inet2
-  #    insertbefore: "^# If /etc/rc.d/rc.rpc is executable, run it to load rpc.portmap, rpc.lockd,$"
-  #    block: |
-  #      # Mount remote (NFSv4) filesystems:
-  #      if cat /etc/fstab | grep -v '^#' | grep -w nfs4 1> /dev/null 2> /dev/null ; then
-  #        # Check if we have Kerberos keytab
-  #        if [ -f /etc/krb5.keytab -a -x /usr/sbin/rpc.gssd ]
-  #        then
-  #          if ! ps axc | grep -q rpc.gssd ; then
-  #            echo "Starting RPCSEC_GSS daemon:  /usr/sbin/rpc.gssd"
-  #            /usr/sbin/rpc.gssd
-  #          fi
-  #        fi
-  #        echo "Mounting remote (NFSv4) file systems:  /sbin/mount -a -t nfs4"
-  #        /sbin/mount -a -t nfs4
-  #        /sbin/mount -v -t nfs4
-  #      fi
-  #  tags: services
+    - name: Create /etc/rc.d/rc.local (Slackware)
+      copy:
+        src: "{{ playbook_dir }}/newconfs/rc.d/rc.local.new"
+        dest: /etc/rc.d/rc.local
+        owner: root
+        group: root
+        mode: '0700'
+      tags: services
+    - name: Create /etc/rc.d/rc.local_shutdown symlink (Slackware)
+      file:
+        src: /etc/rc.d/rc.local
+        dest: /etc/rc.d/rc.local_shutdown
+        owner: root
+        group: root
+        state: link
+      tags: services
+    - name: Enable smartd (Slackware)
+      file:
+        path: /etc/rc.d/rc.smartd
+        owner: root
+        group: root
+        mode: '0700'
+      register: result
+      failed_when:
+        - result.failed == true
+        - result.state != "absent"
+      tags: services
+    - name: Disable atd (Slackware)
+      replace:
+        path: /etc/rc.d/rc.M
+        after: '# Start atd \(manages jobs scheduled with ''at''\):'
+        before: '# Slackware-Mini-Quota-HOWTO:'
+        regexp: '^#?(.+)$'
+        replace: '#\g<1>'
+      tags: services
+    #- name: NFSv4 support in rc.inet2
+    #  blockinfile:
+    #    path: /etc/rc.d/rc.inet2
+    #    insertbefore: "^# If /etc/rc.d/rc.rpc is executable, run it to load rpc.portmap, rpc.lockd,$"
+    #    block: |
+    #      # Mount remote (NFSv4) filesystems:
+    #      if cat /etc/fstab | grep -v '^#' | grep -w nfs4 1> /dev/null 2> /dev/null ; then
+    #        # Check if we have Kerberos keytab
+    #        if [ -f /etc/krb5.keytab -a -x /usr/sbin/rpc.gssd ]
+    #        then
+    #          if ! ps axc | grep -q rpc.gssd ; then
+    #            echo "Starting RPCSEC_GSS daemon:  /usr/sbin/rpc.gssd"
+    #            /usr/sbin/rpc.gssd
+    #          fi
+    #        fi
+    #        echo "Mounting remote (NFSv4) file systems:  /sbin/mount -a -t nfs4"
+    #        /sbin/mount -a -t nfs4
+    #        /sbin/mount -v -t nfs4
+    #      fi
+    #  tags: services

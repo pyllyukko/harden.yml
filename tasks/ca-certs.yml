@@ -7,8 +7,8 @@
       path: /etc/ssl/certs/ssl-cert-snakeoil.pem
       state: absent
     tags:
-    - pki
-    - configuration
+      - pki
+      - configuration
     notify: "Run update-ca-certificates"
   - name: Install ca-certificates package (Debian)
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
@@ -16,9 +16,9 @@
       name: ca-certificates
       update_cache: yes
     tags:
-    - packages
-    - pki
-    - debian
+      - packages
+      - pki
+      - debian
   - name: Copy ca-certificates.conf
     when: ansible_os_family != "RedHat"
     copy:
@@ -28,8 +28,8 @@
       group: root
       mode: '0644'
     tags:
-    - configuration
-    - pki
+      - configuration
+      - pki
     notify: "Run update-ca-certificates"
   - name: Install OpenSSL (Slackware)
     when: ansible_distribution == "Slackware"
@@ -37,5 +37,5 @@
       name: openssl
       state: present
     tags:
-    - packages
-    - slackware
+      - packages
+      - slackware

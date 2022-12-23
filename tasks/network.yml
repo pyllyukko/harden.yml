@@ -7,14 +7,14 @@
   apt:
     update_cache: yes
     pkg:
-    - libwrap0
-    - nftables
+      - libwrap0
+      - nftables
   tags:
-  - packages
-  - network
-  - firewall
-  - services
-  - debian
+    - packages
+    - network
+    - firewall
+    - services
+    - debian
 - name: 'TCP wrappers: create /etc/hosts.allow'
   become: yes
   template:
@@ -43,45 +43,45 @@
   become: yes
   when: ansible_distribution == "Slackware"
   tags:
-  - services
-  - permissions
-  - network
-  - firewall
-  - slackware
+    - services
+    - permissions
+    - network
+    - firewall
+    - slackware
 - name: Firewall for Slackware
   become: yes
   when: ansible_distribution == "Slackware" and stat_result.stat.exists == False
   tags:
-  - network
-  - firewall
-  - slackware
+    - network
+    - firewall
+    - slackware
   block:
-  - name: Install nftables (Slackware)
-    slackpkg:
-      name: '{{ item }}'
-      state: present
-    with_items:
-      - nftables
-      - jansson
-      - libnftnl
-    tags:
-    - packages
-    - slackware
-  # https://wiki.nftables.org/wiki-nftables/index.php/Simple_ruleset_for_a_workstation
-  # https://wiki.nftables.org/wiki-nftables/index.php/Simple_ruleset_for_a_server
-  - name: Create /etc/rc.d/rc.firewall (Slackware)
-    template:
-      src: "{{ playbook_dir }}/templates/rc.firewall-nft.j2"
-      dest: /etc/rc.d/rc.firewall
-      mode: '0700'
-    tags:
-    - services
-    - slackware
-  - name: Start Slackware firewall
-    command: /etc/rc.d/rc.firewall start
-    tags:
-    - services
-    - slackware
+    - name: Install nftables (Slackware)
+      slackpkg:
+        name: '{{ item }}'
+        state: present
+      with_items:
+        - nftables
+        - jansson
+        - libnftnl
+      tags:
+        - packages
+        - slackware
+    # https://wiki.nftables.org/wiki-nftables/index.php/Simple_ruleset_for_a_workstation
+    # https://wiki.nftables.org/wiki-nftables/index.php/Simple_ruleset_for_a_server
+    - name: Create /etc/rc.d/rc.firewall (Slackware)
+      template:
+        src: "{{ playbook_dir }}/templates/rc.firewall-nft.j2"
+        dest: /etc/rc.d/rc.firewall
+        mode: '0700'
+      tags:
+        - services
+        - slackware
+    - name: Start Slackware firewall
+      command: /etc/rc.d/rc.firewall start
+      tags:
+        - services
+        - slackware
 - name: Enable Slackware firewall
   when: ansible_distribution == "Slackware" and stat_result.stat.exists == True and stat_result.stat.xusr == False
   file:
@@ -90,36 +90,36 @@
     owner: root
     group: root
   tags:
-  - services
-  - permissions
-  - network
-  - firewall
-  - slackware
+    - services
+    - permissions
+    - network
+    - firewall
+    - slackware
 # </Slackware firewall>
 
 # Debian firewall
 - name: Firewall rules for Debian
   tags:
-  - firewall
-  - network
-  - debian
+    - firewall
+    - network
+    - debian
   become: yes
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   block:
-  - name: Copy nftables.conf
-    template:
-      src: nftables.conf.j2
-      dest: /etc/nftables.conf
-      mode: '0600'
-  - name: Activate firewall
-    command: /usr/sbin/nft -f /etc/nftables.conf
+    - name: Copy nftables.conf
+      template:
+        src: nftables.conf.j2
+        dest: /etc/nftables.conf
+        mode: '0600'
+    - name: Activate firewall
+      command: /usr/sbin/nft -f /etc/nftables.conf
 # https://wiki.debian.org/nftables#nftables_in_Debian_the_easy_way
 - name: Enable nftables
   tags:
-  - services
-  - network
-  - firewall
-  - debian
+    - services
+    - network
+    - firewall
+    - debian
   systemd:
     name: nftables
     state: started
@@ -129,28 +129,28 @@
 - name: IPv6
   become: yes
   tags:
-  - network
-  - configuration
-  - ipv6
-  - kernel
+    - network
+    - configuration
+    - ipv6
+    - kernel
   block:
-  - name: Blacklist IPv6 kernel module
-    copy:
-      src: "{{ playbook_dir }}/newconfs/modprobe.d/ipv6.conf.new"
-      dest: /etc/modprobe.d/ipv6.conf
-      owner: root
-      group: root
-      mode: 0600
-  - name: Set ipv6.disable=1 in /boot/cmdline.txt (Raspbian)
-    replace:
-      path: /boot/cmdline.txt
-      regexp: '^(.(?!.*\bipv6\.disable=1\b).*)$'
-      replace: '\1 ipv6.disable=1'
-    when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
-    tags: debian
-  - name: Set ipv6.disable=1 in /etc/default/grub
-    replace:
-      path: /etc/default/grub
-      regexp: '^(GRUB_CMDLINE_LINUX="(?!.*\bipv6\.disable=1\b).*)"$'
-      replace: '\1 ipv6.disable=1"'
-    when: (ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian") or ansible_distribution == "Kali" or ansible_os_family == "RedHat"
+    - name: Blacklist IPv6 kernel module
+      copy:
+        src: "{{ playbook_dir }}/newconfs/modprobe.d/ipv6.conf.new"
+        dest: /etc/modprobe.d/ipv6.conf
+        owner: root
+        group: root
+        mode: 0600
+    - name: Set ipv6.disable=1 in /boot/cmdline.txt (Raspbian)
+      replace:
+        path: /boot/cmdline.txt
+        regexp: '^(.(?!.*\bipv6\.disable=1\b).*)$'
+        replace: '\1 ipv6.disable=1'
+      when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
+      tags: debian
+    - name: Set ipv6.disable=1 in /etc/default/grub
+      replace:
+        path: /etc/default/grub
+        regexp: '^(GRUB_CMDLINE_LINUX="(?!.*\bipv6\.disable=1\b).*)"$'
+        replace: '\1 ipv6.disable=1"'
+      when: (ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian") or ansible_distribution == "Kali" or ansible_os_family == "RedHat"
