@@ -332,10 +332,11 @@
     - centos
   block:
     - name: Enable additional PAM modules with authconfig (RH)
-      command: /sbin/authconfig --enable{{ item }}
+      command: /sbin/authconfig --enable{{ item }} --update
       with_items:
         #- pamaccess
         - faillock
+      changed_when: true
       tags: authorization
     - name: Configure password policy via authconfig
       command: /sbin/authconfig --passalgo=sha512 --passminlen=14 --enablereqlower --enablerequpper --enablereqdigit --enablereqother --update
