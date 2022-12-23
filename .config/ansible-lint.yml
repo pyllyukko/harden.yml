@@ -1,0 +1,3 @@
+# .config/ansible-lint.yml
+skip_list:
+  - name[template]  # Rule for checking task and play names.
