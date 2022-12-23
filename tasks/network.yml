@@ -98,7 +98,7 @@
 # </Slackware firewall>
 
 # Debian firewall
-- name: Firewall rules for Debian
+- name: Firewall for Debian
   tags:
     - firewall
     - network
@@ -111,19 +111,16 @@
         src: nftables.conf.j2
         dest: /etc/nftables.conf
         mode: '0600'
+      tags: configuration
     - name: Activate firewall
       command: /usr/sbin/nft -f /etc/nftables.conf
-# https://wiki.debian.org/nftables#nftables_in_Debian_the_easy_way
-- name: Enable nftables
-  tags:
-    - services
-    - network
-    - firewall
-    - debian
-  systemd:
-    name: nftables
-    state: started
-    enabled: yes
+    # https://wiki.debian.org/nftables#nftables_in_Debian_the_easy_way
+    - name: Enable nftables
+      tags: services
+      systemd:
+        name: nftables
+        state: started
+        enabled: yes
 # </Debian firewall>
 
 - name: IPv6
