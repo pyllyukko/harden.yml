@@ -23,6 +23,11 @@ debian_services:
   #- alsa-restore
   #- alsa-state
   #- hciuart
+  # NFS stuff from nfs-common & nfs-kernel-server packages
+  - nfs-blkmap
+  - nfs-idmapd
+  - nfs-mountd
+  - nfs-server
 allowed_services:
   - sshd
 allowed_tcp_ports:
