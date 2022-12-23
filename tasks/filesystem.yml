@@ -36,6 +36,7 @@
 # fstab
 - name: Create /etc/fstab.new
   tags: fstab
+  become: yes
   block:
     - name: Create temp file for fstab.awk
       tempfile:
@@ -43,7 +44,6 @@
         suffix: temp
       register: tempfile_1
     - name: Copy fstab.awk
-      become: yes
       copy:
         src: "{{ playbook_dir }}/legacy/libexec/fstab.awk"
         dest: "{{ tempfile_1.path }}"
@@ -51,7 +51,6 @@
         group: root
         mode: '0600'
     - name: Install Gawk
-      become: yes
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
       apt:
         name: gawk
@@ -60,7 +59,6 @@
         - packages
         - debian
     - name: Create /etc/fstab.new
-      become: yes
       shell: gawk -f {{ tempfile_1.path }} /etc/fstab 1>/etc/fstab.new
     - name: Remove temp file
       file:
