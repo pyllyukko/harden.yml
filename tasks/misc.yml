@@ -26,7 +26,7 @@
         option: rsa-key-size
         value: 4096
         mode: '0600'
-      when: stat_result.stat.exists == True
+      when: stat_result.stat.exists
       tags: configuration
 - name: Configure /etc/krb5.conf
   tags:
@@ -157,7 +157,7 @@
         regexp: '^Hidden=true$'
         line: Hidden=true
         create: no
-      when: stat.stat.exists == True
+      when: stat.stat.exists
     - name: Stat /etc/xdg/autostart/tracker-extract.desktop
       stat:
         path: '/etc/xdg/autostart/tracker-extract.desktop'
@@ -169,7 +169,7 @@
         regexp: '^Hidden=true$'
         line: Hidden=true
         create: no
-      when: stat.stat.exists == True
+      when: stat.stat.exists
     - name: Disable tracker-miner-fs systemd unit
       systemd:
         name: tracker-miner-fs
@@ -193,7 +193,7 @@
     # TODO: Moar content!
     - name: Configure php.ini
       become: yes
-      when: stat_result.stat.exists == True
+      when: stat_result.stat.exists
       ini_file:
         path: /etc/php.ini
         section: PHP

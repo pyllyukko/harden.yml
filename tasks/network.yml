@@ -50,7 +50,7 @@
     - slackware
 - name: Firewall for Slackware
   become: yes
-  when: ansible_distribution == "Slackware" and stat_result.stat.exists == False
+  when: ansible_distribution == "Slackware" and not stat_result.stat.exists
   tags:
     - network
     - firewall
@@ -83,7 +83,7 @@
         - services
         - slackware
 - name: Enable Slackware firewall
-  when: ansible_distribution == "Slackware" and stat_result.stat.exists == True and stat_result.stat.xusr == False
+  when: ansible_distribution == "Slackware" and stat_result.stat.exists and not stat_result.stat.xusr
   file:
     path: /etc/rc.d/rc.firewall
     mode: '0700'

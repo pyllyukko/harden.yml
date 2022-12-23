@@ -9,7 +9,7 @@
     - configuration
 - name: Configure LightDM
   tags: configuration
-  when: stat_result.stat.exists == True
+  when: stat_result.stat.exists
   become: yes
   block:
     - name: Disable VNC in LightDM
