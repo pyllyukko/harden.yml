@@ -18,6 +18,9 @@
         content: ""
         dest: /etc/shutdown.allow
         force: no
+        owner: root
+        group: root
+        mode: '0600'
     - name: Use shutdown -a in /etc/inittab
       replace:
         path: /etc/inittab

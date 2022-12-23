@@ -47,6 +47,9 @@
     copy:
       src: "{{ playbook_dir }}/legacy/libexec/fstab.awk"
       dest: "{{ tempfile_1.path }}"
+      owner: root
+      group: root
+      mode: '0600'
   - name: Install Gawk
     become: yes
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"

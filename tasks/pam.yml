@@ -134,6 +134,7 @@
       dest: /etc/security/faillock.conf
       owner: root
       group: root
+      mode: '0644'
     tags: configuration
   - name: Create faillock directory
     file:
@@ -279,6 +280,9 @@
       copy:
         src: "{{ playbook_dir }}/newconfs/pam-configs/{{ item }}.new"
         dest: /usr/share/pam-configs/{{ item }}
+        owner: root
+        group: root
+        mode: '0644'
       with_items:
         - lastlog
         - polyinstation
@@ -291,6 +295,9 @@
       copy:
         src: "{{ playbook_dir }}/newconfs/pam-configs/{{ item }}.new"
         dest: /usr/share/pam-configs/{{ item }}
+        owner: root
+        group: root
+        mode: '0644'
       with_items:
         - access
         - uid_ge_1000
@@ -304,6 +311,7 @@
         dest: /usr/share/pam-configs/{{ item }}
         owner: root
         group: root
+        mode: '0644'
       with_items:
         - faildelay
       notify: "Run pam-auth-update"

@@ -23,6 +23,9 @@
     copy:
       src: "{{ playbook_dir }}/newconfs/ca-certificates.conf.new"
       dest: /etc/ca-certificates.conf
+      owner: root
+      group: root
+      mode: '0644'
     tags:
     - configuration
     - pki

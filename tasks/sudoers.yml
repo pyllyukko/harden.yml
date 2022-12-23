@@ -57,6 +57,9 @@
       remote_src: yes
       src: /etc/sudoers.new
       dest: /etc/sudoers
+      owner: root
+      group: root
+      mode: '0440'
     tags: configuration
   - name: 'Remove /etc/sudoers.new'
     file:

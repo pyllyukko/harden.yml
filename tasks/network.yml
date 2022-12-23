@@ -20,12 +20,18 @@
   template:
     src: "{{ playbook_dir }}/templates/hosts.allow.j2"
     dest: /etc/hosts.allow
+    owner: root
+    group: root
+    mode: '0644'
   tags: network
 - name: 'TCP wrappers: create /etc/hosts.deny'
   become: yes
   copy:
     src: "{{ playbook_dir }}/newconfs/hosts.deny.new"
     dest: /etc/hosts.deny
+    owner: root
+    group: root
+    mode: '0644'
   tags: network
 # </TCP wrappers>
 

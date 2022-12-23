@@ -196,3 +196,6 @@
       section: PHP
       option: expose_php
       value: 'Off'
+      owner: root
+      group: root
+      mode: '0644'

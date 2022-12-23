@@ -20,6 +20,9 @@
   file:
     path: /etc/modprobe.d
     state: directory
+    owner: root
+    group: root
+    mode: '0700'
   tags: kernel
 - name: Blacklist certain kernel modules
   become: yes

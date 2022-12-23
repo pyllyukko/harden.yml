@@ -8,6 +8,9 @@
   copy:
     content: "Authorized uses only. All activity may be monitored and reported.\n"
     dest: "{{ item }}"
+    owner: root
+    group: root
+    mode: '0644'
   with_items:
     - /etc/issue
     - /etc/issue.net
@@ -19,6 +22,9 @@
   copy:
     src: "{{ playbook_dir }}/newconfs/motd.new"
     dest: /etc/motd
+    owner: root
+    group: root
+    mode: '0644'
   tags:
   - configuration
   - banners

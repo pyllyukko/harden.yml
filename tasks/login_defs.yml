@@ -62,6 +62,9 @@
   copy:
     src: "{{ playbook_dir }}/newconfs/securetty.new"
     dest: /etc/securetty
+    owner: root
+    group: root
+    mode: '0400'
   tags:
   - configuration
   - authorization
@@ -327,6 +330,9 @@
     section: defaults
     option: "{{ item.key }}"
     value: "{{ item.value }}"
+    owner: root
+    group: root
+    mode: '0644'
   with_dict:
     hash_rounds_min: "{{ crypt_rounds }}"
     crypt_style: sha512

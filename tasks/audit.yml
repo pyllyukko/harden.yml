@@ -21,6 +21,9 @@
     get_url:
       url: https://raw.githubusercontent.com/linux-audit/audit-userspace/master/rules/{{ item }}
       dest: /etc/audit/rules.d/{{ item }}
+      owner: root
+      group: root
+      mode: '0600'
     with_items:
       - 10-base-config.rules
       - 11-loginuid.rules
@@ -99,6 +102,9 @@
       remote_src: no
       src: "{{ playbook_dir }}/newconfs/rules.d"
       dest: /etc/audit/rules.d/40-local.rules
+      owner: root
+      group: root
+      mode: '0600'
   - name: Make the configuration immutable
     replace:
       path: /etc/audit/rules.d/99-finalize.rules

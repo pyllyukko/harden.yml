@@ -170,6 +170,9 @@
     src: "{{ playbook_dir }}/templates/sshd_config-{{ ansible_distribution }}.j2"
     dest: /etc/ssh/sshd_config
     validate: /usr/sbin/sshd -t -f %s
+    owner: root
+    group: root
+    mode: '0600'
   register: result
   # sshd validation fails when the hostkeys do not exist
   failed_when:

@@ -17,6 +17,9 @@
       section: VNCServer
       option: enabled
       value: "false"
+      owner: root
+      group: root
+      mode: '0644'
     tags: network
   - name: Hide user list and disallow guest login in LightDM
     ini_file:
@@ -24,6 +27,9 @@
       section: Seat:*
       option: '{{ item.key }}'
       value: '{{ item.value }}'
+      owner: root
+      group: root
+      mode: '0644'
     with_dict:
       greeter-hide-users: "true"
       allow-guest: "false"

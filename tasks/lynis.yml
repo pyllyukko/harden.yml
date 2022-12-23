@@ -54,6 +54,9 @@
     blockinfile:
       path: /etc/lynis/custom.prf
       create: yes
+      owner: root
+      group: root
+      mode: '0644'
       block: |
         # Changing port number is just security through obscurity
         skip-test=SSH-7408:port

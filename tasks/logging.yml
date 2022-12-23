@@ -105,6 +105,9 @@
     copy:
       src: "{{ playbook_dir }}/newconfs/logrotate.d/syslog.new"
       dest: /etc/logrotate.d/syslog
+      owner: root
+      group: root
+      mode: '0600'
   become: yes
   when: ansible_distribution == "Slackware"
 

@@ -163,6 +163,9 @@
   copy:
     src: "{{ playbook_dir }}/newconfs/logrotate.d/pacct.new"
     dest: /etc/logrotate.d/pacct
+    owner: root
+    group: root
+    mode: '0600'
   tags:
   - services
   - accounting
