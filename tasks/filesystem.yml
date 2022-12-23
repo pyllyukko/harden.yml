@@ -101,6 +101,10 @@
     mode: '0755'
     owner: root
     group: root
+  register: result
+  failed_when:
+    - result.failed == true
+    - result.state != "absent"
 
 - name: Chmod sensitive files
   become: yes
