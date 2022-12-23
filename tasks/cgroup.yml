@@ -1,6 +1,6 @@
 ---
 - name: cgroups for Slackware
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
   tags:
     - slackware

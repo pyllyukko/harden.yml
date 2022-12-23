@@ -3,9 +3,9 @@
 # TCP wrappers
 - name: Install TCP wrappers library and nftables (Debian)
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
-  become: yes
+  become: true
   apt:
-    update_cache: yes
+    update_cache: true
     pkg:
       - libwrap0
       - nftables
@@ -16,7 +16,7 @@
     - services
     - debian
 - name: 'TCP wrappers: create /etc/hosts.allow'
-  become: yes
+  become: true
   template:
     src: "{{ playbook_dir }}/templates/hosts.allow.j2"
     dest: /etc/hosts.allow
@@ -25,7 +25,7 @@
     mode: '0644'
   tags: network
 - name: 'TCP wrappers: create /etc/hosts.deny'
-  become: yes
+  become: true
   copy:
     src: "{{ playbook_dir }}/newconfs/hosts.deny.new"
     dest: /etc/hosts.deny
@@ -40,7 +40,7 @@
   stat:
     path: /etc/rc.d/rc.firewall
   register: stat_result
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
   tags:
     - services
@@ -49,7 +49,7 @@
     - firewall
     - slackware
 - name: Firewall for Slackware
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware" and not stat_result.stat.exists
   tags:
     - network
@@ -103,7 +103,7 @@
     - firewall
     - network
     - debian
-  become: yes
+  become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   block:
     - name: Copy nftables.conf
@@ -120,11 +120,11 @@
       systemd:
         name: nftables
         state: started
-        enabled: yes
+        enabled: true
 # </Debian firewall>
 
 - name: IPv6
-  become: yes
+  become: true
   tags:
     - network
     - configuration

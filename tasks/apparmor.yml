@@ -1,10 +1,10 @@
 ---
 - name: Install AppArmor
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-  become: yes
+  become: true
   apt:
     name: ['apparmor', 'apparmor-profiles', 'apparmor-utils']
-    update_cache: yes
+    update_cache: true
   tags:
     - packages
 # https://github.com/raspberrypi/linux/pull/1698
@@ -14,7 +14,7 @@
     # https://stackoverflow.com/a/61974725
     regexp: '^(.(?!.*\blsm=apparmor\b).*)$'
     replace: '\1 lsm=apparmor'
-  become: yes
+  become: true
   when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
   tags: configuration
 # https://github.com/pyllyukko/harden.sh/wiki/AppArmor
@@ -35,7 +35,7 @@
       #- usr.sbin.sshd
       - usr.sbin.useradd
       - usr.sbin.userdel
-  become: yes
+  become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   block:
     - name: Copy extra profiles
@@ -45,7 +45,7 @@
         owner: root
         group: root
         mode: '0600'
-        remote_src: yes
+        remote_src: true
       with_items: '{{ apparmor_profiles }}'
     - name: Enable extra profiles
       command: /usr/sbin/aa-enforce /etc/apparmor.d/{{ item }}

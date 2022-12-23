@@ -1,6 +1,6 @@
 ---
 - name: CA certs
-  become: yes
+  become: true
   block:
   - name: Remove /etc/ssl/certs/ssl-cert-snakeoil.pem
     file:
@@ -14,7 +14,7 @@
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
     apt:
       name: ca-certificates
-      update_cache: yes
+      update_cache: true
     tags:
       - packages
       - pki

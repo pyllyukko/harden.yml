@@ -1,12 +1,12 @@
 ---
 # Unwanted services
 - name: Stop & disable unwanted services (Debian)
-  become: yes
+  become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   service:
     name: "{{ item }}"
     state: stopped
-    enabled: no
+    enabled: false
   with_items: "{{ debian_services }}"
   failed_when:
     - result.failed == true
@@ -17,14 +17,14 @@
     - debian
 
 - name: Slackware services
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
   tags:
     - services
     - slackware
   block:
     - name: Stop unwanted services (Slackware)
-      ignore_errors: yes
+      ignore_errors: true
       command: /bin/sh /etc/rc.d/rc.{{ item }} stop
       with_items: "{{ slackware_services }}"
     - name: Disable unwanted services (Slackware)
@@ -43,7 +43,7 @@
 # Cron
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.1.8 Ensure at/cron is restricted to authorized users
 - name: Debian cron & at
-  become: yes
+  become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   tags:
     - services
@@ -52,7 +52,7 @@
     - authorization
   block:
     - name: Restrict cron (cron.allow)
-      become: yes
+      become: true
       file:
         path: /etc/cron.allow
         state: touch
@@ -61,7 +61,7 @@
         mode: '0640'
       tags: permissions
     - name: Restrict at (at.allow)
-      become: yes
+      become: true
       file:
         path: /etc/at.allow
         state: touch
@@ -70,7 +70,7 @@
         mode: '0640'
       tags: permissions
     - name: Restrict cron & at ({at,cron}.deny)
-      become: yes
+      become: true
       file:
         path: /etc/{{ item }}
         state: absent
@@ -79,7 +79,7 @@
         - at.deny
 
 - name: Create a job that checks systemd's state
-  become: yes
+  become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
   cron:
     name: "Check SystemState"
@@ -92,7 +92,7 @@
 - name: Slackware's cron
   tags: slackware
   when: ansible_distribution == "Slackware"
-  become: yes
+  become: true
   block:
     - name: Increase crond's log level (Slackware)
       replace:
@@ -185,7 +185,7 @@
   notify:
     - "Restart sshd (Slackware)"
     - "Restart sshd (Debian)"
-  become: yes
+  become: true
   # Skip the task in Debian if ssh.service does not exist
   when: >
     ((ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux") and ansible_facts.services.ssh is defined) or
@@ -195,7 +195,7 @@
     - configuration
     - slackware
     - ssh
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
   template:
     src: "{{ playbook_dir }}/templates/ssh_config-{{ ansible_distribution }}.j2"
@@ -207,15 +207,15 @@
 
 # Misc
 #- name: Install icmpinfo
-#  become: yes
+#  become: true
 #  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
 #  apt:
 #    name: icmpinfo
-#    update_cache: yes
+#    update_cache: true
 #  tags:
 #  - packages
 - name: Install icmpinfo (Slackware)
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
   slackpkg:
     name: icmpinfo
@@ -227,7 +227,7 @@
 - name: Slackware rc.d
   tags: slackware
   when: ansible_distribution == "Slackware"
-  become: yes
+  become: true
   block:
     - name: Create /etc/rc.d/rc.local (Slackware)
       copy:

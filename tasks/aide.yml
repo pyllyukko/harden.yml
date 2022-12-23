@@ -2,12 +2,12 @@
 - name: Setup AIDE
   tags: aide
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-  become: yes
+  become: true
   block:
     - name: Install AIDE package
       apt:
         name: aide
-        update_cache: yes
+        update_cache: true
       tags:
         - packages
     - name: Configure AIDE
@@ -35,7 +35,7 @@
         owner: root
         group: root
         mode: '0644'
-        force: no
+        force: false
       tags: configuration
       notify: "Create aide.db"
     - name: Exclude /media
@@ -45,7 +45,7 @@
         owner: root
         group: root
         mode: '0644'
-        force: no
+        force: false
       tags: configuration
       notify: "Create aide.db"
     - name: Create /etc/aide/aide.conf.d/70_hardensh_misc

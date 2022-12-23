@@ -1,6 +1,6 @@
 # https://packages.cisofy.com/community/#debian-ubuntu
 - name: Install Lynis into Debian
-  become: yes
+  become: true
   tags:
     - packages
     - lynis
@@ -10,7 +10,7 @@
     - name: Install apt-transport-https & gnupg2
       apt:
         name: ['apt-transport-https', 'gnupg2']
-        update_cache: yes
+        update_cache: true
     - name: Add Lynis signing key
       apt_key:
         id: 84FAA9983B24AEF24D6C87F1FEBB7D1812576482
@@ -23,10 +23,10 @@
     - name: Install Lynis
       apt:
         name: lynis
-        update_cache: yes
+        update_cache: true
 - name: Install Lynis into CentOS
   when: ansible_distribution == "CentOS"
-  become: yes
+  become: true
   tags:
     - packages
     - lynis
@@ -38,23 +38,23 @@
         description: CISOfy Software - Lynis package
         baseurl: https://packages.cisofy.com/community/lynis/rpm/
         gpgkey: https://packages.cisofy.com/keys/cisofy-software-rpms-public.key
-        gpgcheck: yes
+        gpgcheck: true
         priority: 2
-        enabled: yes
+        enabled: true
     - name: Install Lynis
       yum:
         name: lynis
-        update_cache: yes
+        update_cache: true
 - name: Configure Lynis
   tags:
     - configuration
     - lynis
-  become: yes
+  become: true
   block:
     - name: Configure Lynis to skip certain tests
       blockinfile:
         path: /etc/lynis/custom.prf
-        create: yes
+        create: true
         owner: root
         group: root
         mode: '0644'

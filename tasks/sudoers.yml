@@ -1,7 +1,7 @@
 ---
 - name: Install glibc package (Slackware)
   when: ansible_distribution == "Slackware"
-  become: yes
+  become: true
   slackpkg:
     name: glibc
     state: present
@@ -9,10 +9,10 @@
     - packages
     - slackware
 - name: Install sudo (Debian)
-  become: yes
+  become: true
   apt:
     name: sudo
-    update_cache: yes
+    update_cache: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   tags:
     - packages
@@ -33,7 +33,7 @@
   tags: slackware
 - name: 'Configure /etc/sudoers'
   when: ansible_distribution == "Slackware" or ansible_distribution == "Debian"
-  become: yes
+  become: true
   block:
     - name: 'Create /etc/sudoers.new'
       template:
@@ -49,14 +49,14 @@
         owner: root
         group: root
         mode: '0400'
-        force: no
+        force: false
       tags: configuration
     # https://jpmens.net/2013/02/06/don-t-try-this-at-the-office-etc-sudoers/
     - name: 'Validate /etc/sudoers.new'
       command: visudo -cs -f /etc/sudoers.new
     - name: 'Copy /etc/sudoers.new to /etc/sudoers'
       copy:
-        remote_src: yes
+        remote_src: true
         src: /etc/sudoers.new
         dest: /etc/sudoers
         owner: root
@@ -69,7 +69,7 @@
         state: absent
 # https://www.raspberrypi.org/documentation/configuration/security.md
 - name: 'Remove /etc/sudoers.d/010_pi-nopasswd'
-  become: yes
+  become: true
   file:
     path: /etc/sudoers.d/010_pi-nopasswd
     state: absent

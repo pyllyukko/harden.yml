@@ -1,13 +1,13 @@
 ---
 # Some documentation available at https://github.com/pyllyukko/harden.sh/wiki/audit
 - name: Install auditing
-  become: yes
+  become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_distribution == "Slackware" or ansible_os_family == "RedHat"
   block:
   - name: Install necessary software (Debian)
     apt:
       name: ['auditd', 'libcap-ng-utils']
-      update_cache: yes
+      update_cache: true
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
     tags:
       - packages
@@ -101,7 +101,7 @@
       path: /etc/audit/rules.d/audit.rules
   - name: Create few custom rules
     assemble:
-      remote_src: no
+      remote_src: false
       src: "{{ playbook_dir }}/newconfs/rules.d"
       dest: /etc/audit/rules.d/40-local.rules
       owner: root
@@ -129,7 +129,7 @@
     service:
       name: auditd
       state: started
-      enabled: yes
+      enabled: true
     when: ansible_distribution != "Slackware"
     tags:
       - services

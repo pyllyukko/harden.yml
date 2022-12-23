@@ -1,6 +1,6 @@
 ---
 - name: Make installpkg store md5sums (Slackware)
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
   replace:
     path: /sbin/installpkg
@@ -12,7 +12,7 @@
     - slackware
 - name: Configure certbot to use 4096 bit keys
   tags: pki
-  become: yes
+  become: true
   block:
     - name: Check for /etc/letsencrypt
       stat:
@@ -41,7 +41,7 @@
     owner: root
     group: root
     mode: '0644'
-  become: yes
+  become: true
   with_dict:
     verify_ap_req_nofail: "true"
     allow_weak_crypto: "false"
@@ -66,7 +66,7 @@
 #   * httpd & php
 #   * mariadb
 - name: Remove stuff
-  become: yes
+  become: true
   tags: slackware
   when: ansible_distribution == "Slackware"
   block:
@@ -96,7 +96,7 @@
         - /etc/rc.d/rc.inetd
         - /etc/inetd.conf
 #- name: Download checksec into /usr/local/bin
-#  become: yes
+#  become: true
 #  get_url:
 #    url: https://www.trapkit.de/tools/checksec/checksec.sh
 #    dest: /usr/local/bin/checksec.sh
@@ -105,7 +105,7 @@
 #    mode: '0755'
 #    checksum: sha256:77b8a7fd9393d10def665658a41176ee745d5c7969a4a0f43cefcc8a4cd90947
 - name: Set USB authorized_default -> 0 in /etc/rc.local (Debian)
-  become: yes
+  become: true
   blockinfile:
     path: /etc/rc.local
     marker: "# {mark} ANSIBLE MANAGED BLOCK - USB authorized_default"
@@ -124,10 +124,10 @@
         path: /etc/docker
       register: docker
     - name: Create /etc/docker/daemon.json
-      become: yes
+      become: true
       copy:
         dest: /etc/docker/daemon.json
-        force: no
+        force: false
         owner: root
         group: root
         mode: '0600'
@@ -151,29 +151,29 @@
         path: '/etc/xdg/autostart/tracker-miner-fs.desktop'
       register: stat
     - name: Disable tracker-miner-fs XDG autostart
-      become: yes
+      become: true
       lineinfile:
         path: '/etc/xdg/autostart/tracker-miner-fs.desktop'
         regexp: '^Hidden=true$'
         line: Hidden=true
-        create: no
+        create: false
       when: stat.stat.exists
     - name: Stat /etc/xdg/autostart/tracker-extract.desktop
       stat:
         path: '/etc/xdg/autostart/tracker-extract.desktop'
       register: stat
     - name: Disable tracker-miner-fs XDG autostart
-      become: yes
+      become: true
       lineinfile:
         path: '/etc/xdg/autostart/tracker-extract.desktop'
         regexp: '^Hidden=true$'
         line: Hidden=true
-        create: no
+        create: false
       when: stat.stat.exists
     - name: Disable tracker-miner-fs systemd unit
       systemd:
         name: tracker-miner-fs
-        enabled: no
+        enabled: false
         state: stopped
         scope: user
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
@@ -192,7 +192,7 @@
     # https://cheatsheetseries.owasp.org/cheatsheets/PHP_Configuration_Cheat_Sheet.html
     # TODO: Moar content!
     - name: Configure php.ini
-      become: yes
+      become: true
       when: stat_result.stat.exists
       ini_file:
         path: /etc/php.ini

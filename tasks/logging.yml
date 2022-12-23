@@ -1,6 +1,6 @@
 ---
 - name: Configure generic log retention period to {{ log_retention_time_in_months }} months
-  become: yes
+  become: true
   replace:
     path: /etc/logrotate.conf
     regexp: '^(rotate\s+)[0-9]+$'
@@ -11,7 +11,7 @@
     - logging
 # this applies to Slackware & CentOS. Debian has these in /etc/logrotate.d/[bw]tmp
 - name: Configure [bw]tmp retention period to {{ log_retention_time_in_months }} months
-  become: yes
+  become: true
   replace:
     path: /etc/logrotate.conf
     regexp: '^(\s+rotate\s+)1$'
@@ -26,7 +26,7 @@
     - configuration
     - logging
     - debian
-  become: yes
+  become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   block:
     - name: Configure [bw]tmp retention period to {{ log_retention_time_in_months }} months (Debian)
@@ -70,7 +70,7 @@
     - configuration
     - permissions
     - slackware
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
   block:
     - name: Make new log file default permissions group adm readable (Slackware)
@@ -116,7 +116,7 @@
     - logging
     - configuration
     - slackware
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
   block:
     - name: Make existing log files group adm readable (Slackware)
@@ -166,7 +166,7 @@
         line: '/bin/killall bootlogd'
 
 - name: Configure log file shredding
-  become: yes
+  become: true
   tags:
     - logging
     - configuration

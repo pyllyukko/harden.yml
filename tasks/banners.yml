@@ -4,7 +4,7 @@
 #   * 1.8.1.2 Ensure local login warning banner is configured properly
 #   * 1.8.1.3 Ensure remote login warning banner is configured properly
 - name: Create /etc/issue{,.net}
-  become: yes
+  become: true
   copy:
     content: "Authorized uses only. All activity may be monitored and reported.\n"
     dest: "{{ item }}"
@@ -18,7 +18,7 @@
     - configuration
     - banners
 - name: Create /etc/motd
-  become: yes
+  become: true
   copy:
     src: "{{ playbook_dir }}/newconfs/motd.new"
     dest: /etc/motd
@@ -30,7 +30,7 @@
     - banners
 
 - name: Print Lynis score for banners
-  become: yes
+  become: true
   tags: banners
   when: run_lynis_after_hardening
   block:

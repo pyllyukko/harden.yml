@@ -6,17 +6,17 @@
     - accounting
   block:
     - name: Install sysstat
-      become: yes
+      become: true
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
       apt:
         name: sysstat
-        update_cache: yes
+        update_cache: true
       tags:
         - packages
         - services
         - debian
     - name: Enable system accounting in /etc/default/sysstat
-      become: yes
+      become: true
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
       replace:
         path: /etc/default/sysstat
@@ -28,18 +28,18 @@
         - configuration
         - debian
     - name: Enable system accounting systemd service
-      become: yes
+      become: true
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
       service:
         name: sysstat
         state: started
-        enabled: yes
+        enabled: true
       tags:
         - services
         - configuration
         - debian
     - name: Install sysstat (Slackware)
-      become: yes
+      become: true
       when: ansible_distribution == "Slackware"
       slackpkg:
         name: sysstat
@@ -49,7 +49,7 @@
         - services
         - slackware
     - name: Enable rc.sysstat (Slackware)
-      become: yes
+      become: true
       when: ansible_distribution == "Slackware"
       file:
         path: /etc/rc.d/rc.sysstat
@@ -66,7 +66,7 @@
     # dcron states that "Our crontab format is roughly similar to that used by vixiecron."
     - name: Create sysstat cron jobs
       when: ansible_distribution == "Slackware"
-      become: yes
+      become: true
       tags:
         - services
         - configuration
@@ -84,7 +84,7 @@
             hour: "0"
             job: "if [ -x /usr/lib64/sa/sa2 ]; then /usr/lib64/sa/sa2 -A; elif [ -x /usr/lib/sa/sa2 ]; then /usr/lib/sa/sa2 -A; fi"
     - name: Configure sysstat
-      become: yes
+      become: true
       replace:
         path: /etc/sysstat/sysstat
         regexp: '^HISTORY=[0-9]+$'
@@ -95,7 +95,7 @@
         - services
         - configuration
     - name: Configure sysstat (RH)
-      become: yes
+      become: true
       when: ansible_os_family == "RedHat"
       replace:
         path: /etc/sysconfig/sysstat
@@ -110,30 +110,30 @@
 
 # Process accounting
 - name: Install acct
-  become: yes
+  become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   apt:
     name: acct
-    update_cache: yes
+    update_cache: true
   tags:
     - packages
     - services
     - accounting
     - debian
 - name: Enable acct
-  become: yes
+  become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   systemd:
     name: acct
     state: started
-    enabled: yes
+    enabled: true
   tags:
     - services
     - accounting
     - configuration
     - debian
 - name: Install acct (Slackware)
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
   slackpkg:
     name: acct
@@ -144,12 +144,12 @@
     - accounting
     - slackware
 - name: Create /var/log/pacct (Slackware)
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
   copy:
     content: ""
     dest: /var/log/pacct
-    force: no
+    force: false
     owner: root
     group: adm
     mode: '0640'
@@ -158,7 +158,7 @@
     - accounting
     - slackware
 - name: Create /etc/logrotate.d/pacct (Slackware)
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
   copy:
     src: "{{ playbook_dir }}/newconfs/logrotate.d/pacct.new"
@@ -171,7 +171,7 @@
     - accounting
     - slackware
 - name: Start process accounting (Slackware)
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
   command: /sbin/accton /var/log/pacct
   tags:
@@ -182,7 +182,7 @@
 # systemd IP accounting
 # https://0pointer.net/blog/ip-accounting-and-access-lists-with-systemd.html
 - name: Enable systemd IP accounting in certain services
-  become: yes
+  become: true
   tags:
     - accounting
     - configuration
@@ -194,8 +194,8 @@
     section: Service
     option: IPAccounting
     value: "yes"
-    create: no
-    no_extra_spaces: yes
+    create: false
+    no_extra_spaces: true
   with_items:
     - ssh
     - mpd
@@ -212,7 +212,7 @@
     - result.failed == true
     - result.msg != "Destination /lib/systemd/system/{{ item }}.service does not exist!"
 - name: Print Lynis score for accounting
-  become: yes
+  become: true
   tags: accounting
   when: run_lynis_after_hardening
   block:

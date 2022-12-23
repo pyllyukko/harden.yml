@@ -1,7 +1,7 @@
 ---
 - name: Configure Apache
   when: ansible_distribution == "Slackware"
-  become: yes
+  become: true
   tags:
     - configuration
     - apache

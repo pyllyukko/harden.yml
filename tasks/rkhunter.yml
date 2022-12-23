@@ -1,12 +1,12 @@
 ---
 - name: rkhunter
   tags: rkhunter
-  become: yes
+  become: true
   block:
   - name: Install rkhunter (Debian)
     apt:
       name: rkhunter
-      update_cache: yes
+      update_cache: true
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
     tags:
       - packages

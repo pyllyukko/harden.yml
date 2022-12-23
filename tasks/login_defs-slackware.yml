@@ -1,6 +1,6 @@
 ---
 - name: Slackware authorization
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
   block:
   # The login ACL following this task will actually start blocking access, so
@@ -19,7 +19,7 @@
         copy:
           content: ""
           dest: /etc/shutdown.allow
-          force: no
+          force: false
           owner: root
           group: root
           mode: '0600'
@@ -31,7 +31,7 @@
           validate: '/bin/grep "^ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a$" %s'
 - name: Set umask to 077 in /etc/profile (Slackware)
   tags: configuration
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
   replace:
     path: /etc/profile
@@ -42,7 +42,7 @@
 # Default AGID is "audio cdrom floppy input lp netdev plugdev power scanner video"
 - name: Configure defchmod and AGID in /usr/sbin/adduser (Slackware)
   tags: configuration
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
   replace:
     path: /usr/sbin/adduser
@@ -59,7 +59,7 @@
   tags:
     - configuration
     - authentication
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
   block:
     - name: Remove S from System initialization (Slackware)
@@ -88,14 +88,14 @@
       export LESSSECURE=1
       export LESSHISTFILE="/dev/null"
       ulimit -Hc 0
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
 
 # https://github.com/ansible/ansible/issues/11024
 # Cleanup Slackware's groups
 - name: Slackware groups
   when: ansible_distribution == "Slackware"
-  become: yes
+  become: true
   block:
     - name: Remove all members from certain groups (Slackware)
       command: gpasswd -M "" {{ item }}
@@ -132,8 +132,8 @@
 
 - name: Fix gshadow (Slackware)
   when: ansible_distribution == "Slackware"
-  ignore_errors: yes
-  become: yes
+  ignore_errors: true
+  become: true
   shell: yes | grpck
 - name: Deny use of su
   copy:
@@ -143,7 +143,7 @@
     group: root
     mode: '0644'
   when: ansible_distribution == "Slackware"
-  become: yes
+  become: true
   tags:
     - configuration
     - pam

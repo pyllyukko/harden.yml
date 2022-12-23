@@ -5,7 +5,7 @@
     mode: g-w,o-rwx
     owner: root
     group: root
-  become: yes
+  become: true
   tags:
     - permissions
     - sudo

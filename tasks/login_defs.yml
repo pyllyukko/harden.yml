@@ -2,7 +2,7 @@
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.10
 # Regarding SHA_CRYPT_MIN_ROUNDS: https://github.com/linux-pam/linux-pam/issues/352
 - name: Configure shadow password suite (generic)
-  become: yes
+  become: true
   replace:
     path: /etc/login.defs
     regexp: '^(# ?)?({{ item.key }}\s+)[^\s]+$'
@@ -28,7 +28,7 @@
 #   * Maximum password lifetime
 #   * Failed login delay
 - name: Configure shadow password suite (password related)
-  become: yes
+  become: true
   replace:
     path: /etc/login.defs
     regexp: '^(# ?)?({{ item.key }}\s+)[^\s]+$'
@@ -46,7 +46,7 @@
     - passwords
 - name: Install glibc package (Slackware)
   when: ansible_distribution == "Slackware"
-  become: yes
+  become: true
   slackpkg:
     name: glibc
     state: present
@@ -58,7 +58,7 @@
 # https://www.debian.org/doc/manuals/securing-debian-manual/restrict-console-login.en.html
 # https://github.com/pyllyukko/harden.sh/issues/47
 - name: Limit the list of terminals from which root can log in (securetty)
-  become: yes
+  become: true
   copy:
     src: "{{ playbook_dir }}/newconfs/securetty.new"
     dest: /etc/securetty
@@ -71,7 +71,7 @@
 
 # profile.d
 - name: Create /etc/profile.d/expiry.sh
-  become: yes
+  become: true
   copy:
     src: "{{ playbook_dir }}/newconfs/profile.d/{{ item }}.sh.new"
     dest: /etc/profile.d/{{ item }}.sh
@@ -86,7 +86,7 @@
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.5 Ensure default user shell timeout is 900 seconds or less
 # Guide to the Secure Configuration of Red Hat Enterprise Linux 5 Revision 4.1 - 2.3.5.5 Implement Inactivity Time-out for Login Shells
 - name: Create /etc/profile.d/{tmout.sh,autologout.csh}
-  become: yes
+  become: true
   tags: configuration
   template:
     src: "{{ playbook_dir }}/templates/{{ item }}.j2"
@@ -100,7 +100,7 @@
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.4 Ensure default user umask is 027 or more restrictive
 # Slackware and CentOS have umask in /etc/profile
 - name: Create /etc/profile.d/umask.sh (Debian)
-  become: yes
+  become: true
   copy:
     src: "{{ playbook_dir }}/newconfs/profile.d/umask.sh.new"
     dest: /etc/profile.d/umask.sh
@@ -125,7 +125,7 @@
       getent:
         database: passwd
     - name: Create /etc/ftpusers
-      become: yes
+      become: true
       template:
         src: "{{ playbook_dir }}/templates/ftpusers.j2"
         dest: /etc/ftpusers
@@ -138,11 +138,11 @@
   tags: slackware
 # CIS Debian Linux 10 Benchmark v1.0.0 - 6.2.17 Ensure no duplicate GIDs exist
 - name: Verify integrity of group files
-  become: yes
+  become: true
   command: grpck -r
 - name: Remove pi from adm group (Raspbian)
   when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
-  become: yes
+  become: true
   command: gpasswd -d pi adm
   register: result
   failed_when:
@@ -162,7 +162,7 @@
   tags: accounts
   block:
     - name: slurp /etc/login.defs
-      become: yes
+      become: true
       slurp:
         src: /etc/login.defs
       register: login_defs
@@ -180,7 +180,7 @@
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.1.4 Ensure inactive password lock is 30 days or less
 - name: Inactive password lock
   tags: passwords
-  become: yes
+  become: true
   block:
     # Debian's "useradd -D -f 30" fails with "cannot create new defaults file"
     - name: Set the number of days after a password expires until the account is permanently disabled (inactive)
@@ -204,7 +204,7 @@
     shell: /sbin/nologin
     # pam_unix(account) will deny access if account is expired
     expires: '{{ 60 * 60 * 24 }}'
-    password_lock: yes
+    password_lock: true
   # CIS Debian Benchmark also has accounts sync, shutdown & halt
   when:
     - item.value[1] | int < uid_min | int
@@ -215,9 +215,9 @@
     - item.key != "logcheck"
   with_dict: "{{ getent_passwd }}"
   tags: accounts
-  become: yes
+  become: true
 - name: Configure /etc/adduser.conf (Debian)
-  become: yes
+  become: true
   replace:
     path: /etc/adduser.conf
     regexp: '^({{ item.key }}=).*$'
@@ -240,7 +240,7 @@
         database: group
         service: files
     - name: Legacy groups
-      become: yes
+      become: true
       block:
         # Common groups
         - name: Remove almost all users from group "lp"
@@ -276,7 +276,7 @@
             - item != "saned"
     # Debian specific groups
     - name: Debian specific groups
-      become: yes
+      become: true
       tags: debian
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
       block:
@@ -295,7 +295,7 @@
     # Raspbian gpio, i2c & spi groups
     # https://www.raspberrypi.com/documentation/computers/os.html#permissions
     - name: Raspbian specific groups
-      become: yes
+      become: true
       when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
       tags: debian
       block:
@@ -320,7 +320,7 @@
 
 # Unfortunately the hash_rounds_min doesn't seem to work
 - name: Configure libuser.conf
-  become: yes
+  become: true
   when: ansible_os_family == "RedHat"
   tags:
     - centos

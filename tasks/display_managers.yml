@@ -10,7 +10,7 @@
 - name: Configure LightDM
   tags: configuration
   when: stat_result.stat.exists
-  become: yes
+  become: true
   block:
     - name: Disable VNC in LightDM
       ini_file:
@@ -48,7 +48,7 @@
     disable-user-list: "true"
     banner-message-enable: "true"
     banner-message-text: "'Authorized uses only'"
-  become: yes
+  become: true
   register: result
   failed_when:
     - result.failed == true

@@ -1,12 +1,12 @@
 ---
 - name: ClamAV
-  become: yes
+  become: true
   tags: clamav
   block:
   - name: Install ClamAV (Debian)
     apt:
       name: ['clamav', 'clamav-daemon']
-      update_cache: yes
+      update_cache: true
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
     tags:
       - packages

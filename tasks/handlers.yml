@@ -1,35 +1,35 @@
 ---
 - name: Run update-ca-certificates
-  become: yes
+  become: true
   when: ansible_os_family != "RedHat"
   command: /usr/sbin/update-ca-certificates --verbose --fresh
   tags:
   - configuration
   - pki
 - name: Load sysctl settings
-  become: yes
+  become: true
   command: /sbin/sysctl -p /etc/sysctl.d/sysctl.conf /etc/sysctl.d/network.conf
   tags: kernel
-  ignore_errors: yes
+  ignore_errors: true
   #register: result
   #failed_when:
   #  - result.failed
   #  - "result.stderr != 'sysctl: cannot stat /proc/sys/sys/kernel/modify_ldt: No such file or directory'"
 - name: Create rkhunter.dat
   command: /usr/bin/rkhunter --propupd
-  become: yes
+  become: true
   tags: rkhunter
 # This takes a long time so we do it async
 - name: Create aide.db
   command: /usr/sbin/aideinit --yes --force
   tags: aide
-  become: yes
+  become: true
   async: 3600
   poll: 0
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
 - name: Run pam-auth-update
   command: /usr/sbin/pam-auth-update --package
-  become: yes
+  become: true
   tags:
   - pam
   - configuration
@@ -37,7 +37,7 @@
 # rc.sshd exits if /var/run/sshd.pid doesn't exist
 - name: Restart sshd (Slackware)
   when: ansible_distribution == "Slackware"
-  become: yes
+  become: true
   command: /bin/sh /etc/rc.d/rc.sshd restart
   register: result
   failed_when:
@@ -47,7 +47,7 @@
     - services
     - slackware
 - name: Restart sshd (Debian)
-  become: yes
+  become: true
   service:
     name: ssh
     state: restarted
@@ -56,5 +56,5 @@
     ansible_facts.services.ssh.state == "running"
   tags: services
 - name: Run systemctl daemon-reload
-  become: yes
+  become: true
   command: systemctl daemon-reload
