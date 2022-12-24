@@ -87,7 +87,7 @@
           dest: "{{ tempdir_1.path }}/"
           mode: 0600
       - name: Generate 31-privileged.rules
-        make:
+        community.general.make:
           chdir: "{{ tempdir_1.path }}"
           target: /etc/audit/rules.d/31-privileged.rules
       - name: Remove temp dir

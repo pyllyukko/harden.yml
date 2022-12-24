@@ -362,7 +362,7 @@
     # TODO: Verify that pwquality is used by pam configs
     - name: Install libpwquality (Slackware)
       when: ansible_distribution == "Slackware"
-      slackpkg:
+      community.general.slackpkg:
         name: libpwquality
         state: present
       tags:
@@ -411,7 +411,7 @@
 - name: Configure /etc/security/limits.conf
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
   become: true
-  pam_limits:
+  community.general.pam_limits:
     domain: '*'
     limit_type: hard
     limit_item: '{{ item.key }}' # noqa args[module]

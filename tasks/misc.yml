@@ -20,7 +20,7 @@
       register: stat_result
     # https://certbot.eff.org/docs/using.html
     - name: Configure /etc/letsencrypt/cli.ini
-      ini_file:
+      community.general.ini_file:
         path: /etc/letsencrypt/cli.ini
         section: null
         option: rsa-key-size
@@ -33,7 +33,7 @@
     - configuration
     - kerberos
     - permissions
-  ini_file:
+  community.general.ini_file:
     path: /etc/krb5.conf
     section: libdefaults
     option: '{{ item.key }}'
@@ -71,7 +71,7 @@
   when: ansible_distribution == "Slackware"
   block:
     - name: Remove unneeded/unwanted packages (Slackware)
-      slackpkg:
+      community.general.slackpkg:
         name: '{{ item }}'
         state: absent
       with_items:
@@ -194,7 +194,7 @@
     - name: Configure php.ini
       become: true
       when: stat_result.stat.exists
-      ini_file:
+      community.general.ini_file:
         path: /etc/php.ini
         section: PHP
         option: expose_php

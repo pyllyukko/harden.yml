@@ -2,7 +2,7 @@
 - name: Install glibc package (Slackware)
   when: ansible_distribution == "Slackware"
   become: true
-  slackpkg:
+  community.general.slackpkg:
     name: glibc
     state: present
   tags:

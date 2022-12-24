@@ -57,7 +57,7 @@
     - slackware
   block:
     - name: Install nftables (Slackware)
-      slackpkg:
+      community.general.slackpkg:
         name: '{{ item }}'
         state: present
       with_items:

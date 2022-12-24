@@ -217,7 +217,7 @@
 - name: Install icmpinfo (Slackware)
   become: true
   when: ansible_distribution == "Slackware"
-  slackpkg:
+  community.general.slackpkg:
     name: icmpinfo
     state: present
   tags:

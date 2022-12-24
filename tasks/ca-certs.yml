@@ -33,7 +33,7 @@
     notify: "Run update-ca-certificates"
   - name: Install OpenSSL (Slackware)
     when: ansible_distribution == "Slackware"
-    slackpkg:
+    community.general.slackpkg:
       name: openssl
       state: present
     tags:

@@ -41,7 +41,7 @@
     - name: Install sysstat (Slackware)
       become: true
       when: ansible_distribution == "Slackware"
-      slackpkg:
+      community.general.slackpkg:
         name: sysstat
         state: present
       tags:
@@ -135,7 +135,7 @@
 - name: Install acct (Slackware)
   become: true
   when: ansible_distribution == "Slackware"
-  slackpkg:
+  community.general.slackpkg:
     name: acct
     state: present
   tags:
@@ -189,7 +189,7 @@
     - debian
   when: ansible_distribution == "Debian"
   notify: Run systemctl daemon-reload
-  ini_file:
+  community.general.ini_file:
     path: /lib/systemd/system/{{ item }}.service
     section: Service
     option: IPAccounting

@@ -47,7 +47,7 @@
 - name: Install glibc package (Slackware)
   when: ansible_distribution == "Slackware"
   become: true
-  slackpkg:
+  community.general.slackpkg:
     name: glibc
     state: present
   tags:
@@ -325,7 +325,7 @@
   tags:
     - centos
     - configuration
-  ini_file:
+  community.general.ini_file:
     path: /etc/libuser.conf
     section: defaults
     option: "{{ item.key }}"

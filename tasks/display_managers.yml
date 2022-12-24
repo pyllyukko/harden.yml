@@ -13,7 +13,7 @@
   become: true
   block:
     - name: Disable VNC in LightDM
-      ini_file:
+      community.general.ini_file:
         path: /etc/lightdm/lightdm.conf
         section: VNCServer
         option: enabled
@@ -23,7 +23,7 @@
         mode: '0644'
       tags: network
     - name: Hide user list and disallow guest login in LightDM
-      ini_file:
+      community.general.ini_file:
         path: /etc/lightdm/lightdm.conf
         section: Seat:*
         option: '{{ item.key }}'

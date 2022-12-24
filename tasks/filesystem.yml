@@ -154,7 +154,7 @@
         - kerberos
     - name: Install acl package (Slackware)
       when: ansible_distribution == "Slackware"
-      slackpkg:
+      community.general.slackpkg:
         name: acl
         state: present
       tags:
