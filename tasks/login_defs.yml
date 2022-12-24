@@ -157,7 +157,7 @@
   tags: accounts
   ansible.builtin.getent:
     database: passwd
-    ansible.builtin.service: files
+    service: files
 - name: Get login.defs values
   tags: accounts
   block:
@@ -238,7 +238,7 @@
     - name: getent group
       ansible.builtin.getent:
         database: group
-        ansible.builtin.service: files
+        service: files
     - name: Legacy groups
       become: true
       block:
