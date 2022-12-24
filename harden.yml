@@ -8,33 +8,56 @@
         that:
           - (ansible_distribution == "Slackware" and ansible_distribution_major_version | int >= 15) or (ansible_distribution == "Debian" and ansible_distribution_major_version | int >= 11) or (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7") # noqa yaml[line-length]
         msg: "Unsupported operating system"
-    - ansible.builtin.import_tasks: tasks/sudoers.yml
+    - name: sudoers
+      ansible.builtin.import_tasks: tasks/sudoers.yml
       tags: sudo
-    - ansible.builtin.import_tasks: tasks/lynis.yml
-    - ansible.builtin.import_tasks: tasks/filesystem.yml
-    - ansible.builtin.import_tasks: tasks/ca-certs.yml
-    - ansible.builtin.import_tasks: tasks/debian_packages.yml
-    - ansible.builtin.import_tasks: tasks/audit.yml
+    - name: Lynis
+      ansible.builtin.import_tasks: tasks/lynis.yml
+    - name: Filesystem related
+      ansible.builtin.import_tasks: tasks/filesystem.yml
+    - name: CA certificates
+      ansible.builtin.import_tasks: tasks/ca-certs.yml
+    - name: Debian packages
+      ansible.builtin.import_tasks: tasks/debian_packages.yml
+    - name: Audit
+      ansible.builtin.import_tasks: tasks/audit.yml
       tags: audit
-    - ansible.builtin.import_tasks: tasks/login_defs.yml
-    - ansible.builtin.import_tasks: tasks/pam.yml
-    - ansible.builtin.import_tasks: tasks/services.yml
-    - ansible.builtin.import_tasks: tasks/kernel.yml
-    - ansible.builtin.import_tasks: tasks/services-accounting.yml
-    - ansible.builtin.import_tasks: tasks/apparmor.yml
+    - name: login_defs
+      ansible.builtin.import_tasks: tasks/login_defs.yml
+    - name: PAM
+      ansible.builtin.import_tasks: tasks/pam.yml
+    - name: Services
+      ansible.builtin.import_tasks: tasks/services.yml
+    - name: Kernel
+      ansible.builtin.import_tasks: tasks/kernel.yml
+    - name: Accounting services
+      ansible.builtin.import_tasks: tasks/services-accounting.yml
+    - name: AppArmor
+      ansible.builtin.import_tasks: tasks/apparmor.yml
       tags:
         - apparmor
         - debian
-    - ansible.builtin.import_tasks: tasks/logging.yml
-    - ansible.builtin.import_tasks: tasks/misc.yml
-    - ansible.builtin.import_tasks: tasks/banners.yml
-    - ansible.builtin.import_tasks: tasks/network.yml
-    - ansible.builtin.import_tasks: tasks/entropy.yml
-    - ansible.builtin.import_tasks: tasks/rkhunter.yml
-    - ansible.builtin.import_tasks: tasks/clamav.yml
-    - ansible.builtin.import_tasks: tasks/display_managers.yml
-    - ansible.builtin.import_tasks: tasks/apache.yml
-    - ansible.builtin.import_tasks: tasks/cgroup.yml
+    - name: Logging
+      ansible.builtin.import_tasks: tasks/logging.yml
+    - name: Miscellaneous
+      ansible.builtin.import_tasks: tasks/misc.yml
+    - name: Banners
+      ansible.builtin.import_tasks: tasks/banners.yml
+    - name: Network
+      ansible.builtin.import_tasks: tasks/network.yml
+    - name: Entropy
+      ansible.builtin.import_tasks: tasks/entropy.yml
+    - name: rkhunter
+      ansible.builtin.import_tasks: tasks/rkhunter.yml
+    - name: ClamAV
+      ansible.builtin.import_tasks: tasks/clamav.yml
+    - name: Display managers
+      ansible.builtin.import_tasks: tasks/display_managers.yml
+    - name: Apache httpd
+      ansible.builtin.import_tasks: tasks/apache.yml
+    - name: Slackware cgroups
+      ansible.builtin.import_tasks: tasks/cgroup.yml
 
   handlers:
-    - ansible.builtin.import_tasks: tasks/handlers.yml
+    - name: Handlers
+      ansible.builtin.import_tasks: tasks/handlers.yml
