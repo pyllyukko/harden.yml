@@ -155,7 +155,7 @@
       lineinfile:
         path: /etc/pam.d/common-auth
         regexp: '^auth\s+required\s+pam_faillock\.so\s+preauth$'
-        line: "auth\trequired\t\t\tpam_faillock.so\tpreauth"
+        line: "auth\trequired\t\t\tpam_faillock.so\tpreauth" # noqa no-tabs
         insertbefore: '^# here are the per-package modules \(the "Primary" block\)$'
 - name: Configure pam_faillock & pam_faildelay (Slackware)
   when: ansible_distribution == "Slackware"
