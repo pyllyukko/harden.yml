@@ -414,7 +414,7 @@
   pam_limits:
     domain: '*'
     limit_type: hard
-    limit_item: '{{ item.key }}'
+    limit_item: '{{ item.key }}' # noqa args[module]
     value: '{{ item.value }}'
   tags:
     - configuration
