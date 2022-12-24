@@ -133,7 +133,8 @@
         group: root
         mode: '0600'
 
-- ansible.builtin.import_tasks: login_defs-slackware.yml
+- name: login_defs Slackware
+  ansible.builtin.import_tasks: login_defs-slackware.yml
   when: ansible_distribution == "Slackware"
   tags: slackware
 # CIS Debian Linux 10 Benchmark v1.0.0 - 6.2.17 Ensure no duplicate GIDs exist

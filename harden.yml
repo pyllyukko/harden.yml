@@ -1,5 +1,6 @@
 ---
-- hosts: localhost
+- name: Harden
+  hosts: localhost
   vars_files:
     - vars.yml
   tasks:
