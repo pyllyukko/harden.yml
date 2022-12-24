@@ -57,4 +57,5 @@
   tags: services
 - name: Run systemctl daemon-reload
   become: true
-  command: systemctl daemon-reload
+  systemd:
+    daemon_reload: true
