@@ -42,7 +42,9 @@
         - LoadModule socache_shmcb_module
         - Include /etc/httpd/extra/httpd-ssl\.conf
     # https://httpd.apache.org/docs/current/mod/mod_ssl.html
-    # https://httpd.apache.org/docs/current/mod/mod_ssl.html#sslciphersuite: "Beginning with version 2.4.7, null and export-grade ciphers are always disabled, as mod_ssl unconditionally adds !aNULL:!eNULL:!EXP to any cipher string at initialization."
+    # https://httpd.apache.org/docs/current/mod/mod_ssl.html#sslciphersuite:
+    #   "Beginning with version 2.4.7, null and export-grade ciphers are always disabled,
+    #   as mod_ssl unconditionally adds !aNULL:!eNULL:!EXP to any cipher string at initialization."
     - name: Configure Apache TLS
       ansible.builtin.replace:
         path: /etc/httpd/extra/httpd-ssl.conf

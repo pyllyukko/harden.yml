@@ -23,7 +23,7 @@
       # Only modify access.conf when it's unmodified. Otherwise expect it to have
       # custom modifications and our hardening might break existing configuration.
       # https://github.com/linux-pam/linux-pam/blob/master/modules/pam_access/access.conf
-      when: stat_result.stat.exists and stat_result.stat.checksum == "b27e5ad84e17b7a63611e5cfa88f72556f240d6d0ae1d4437f173808d65091b65d3316dcd3fa133d358c5f14508dc0314a8b3f44abf1c42ccb369586b97f5422"
+      when: stat_result.stat.exists and stat_result.stat.checksum == "b27e5ad84e17b7a63611e5cfa88f72556f240d6d0ae1d4437f173808d65091b65d3316dcd3fa133d358c5f14508dc0314a8b3f44abf1c42ccb369586b97f5422" # noqa yaml[line-length]
       become: true
       ansible.builtin.blockinfile:
         path: /etc/security/access.conf
@@ -105,7 +105,7 @@
 - name: Check some Slackware's PAM files
   become: true
   when: ansible_distribution == "Slackware"
-  ansible.builtin.shell: 'set -o pipefail; echo "79e37b98714471de80ed60ac8aad337b547259ce27d669a58f8b9d94d77e676e336409f1da9a0f4e412c11398791ff3123a996899410729cda23b771e6111393  /etc/pam.d/{{ item }}" | sha512sum -c'
+  ansible.builtin.shell: 'set -o pipefail; echo "79e37b98714471de80ed60ac8aad337b547259ce27d669a58f8b9d94d77e676e336409f1da9a0f4e412c11398791ff3123a996899410729cda23b771e6111393  /etc/pam.d/{{ item }}" | sha512sum -c' # noqa yaml[line-length]
   args:
     executable: /bin/bash
   with_items:

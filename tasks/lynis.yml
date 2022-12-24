@@ -52,7 +52,7 @@
   become: true
   block:
     - name: Configure Lynis to skip certain tests
-      ansible.builtin.blockinfile:
+      ansible.builtin.blockinfile: # noqa yaml[line-length]
         path: /etc/lynis/custom.prf
         create: true
         owner: root
