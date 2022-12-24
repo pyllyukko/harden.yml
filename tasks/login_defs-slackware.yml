@@ -135,9 +135,8 @@
 
 - name: Fix gshadow (Slackware)
   when: ansible_distribution == "Slackware"
-  ignore_errors: true
   become: true
-  ansible.builtin.shell: yes | grpck
+  ansible.builtin.shell: set -o pipefail; yes | grpck
 - name: Deny use of su
   ansible.builtin.copy:
     src: "{{ playbook_dir }}/newconfs/pam.d/su.new"

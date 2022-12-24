@@ -6,15 +6,16 @@
   tags:
   - configuration
   - pki
+# This will usually return 255 with "sysctl: cannot stat /proc/.+: No such file or directory"
 - name: Load sysctl settings
   become: true
   ansible.builtin.command: /sbin/sysctl -p /etc/sysctl.d/sysctl.conf /etc/sysctl.d/network.conf
   tags: kernel
-  ignore_errors: true
-  #register: result
-  #failed_when:
-  #  - result.failed
-  #  - "result.stderr != 'sysctl: cannot stat /proc/sys/sys/kernel/modify_ldt: No such file or directory'"
+  register: result
+  failed_when:
+    - result.failed
+    - result.rc != 255
+    - "'sysctl: cannot stat' not in result.stderr"
 - name: Create rkhunter.dat
   ansible.builtin.command: /usr/bin/rkhunter --propupd
   become: true

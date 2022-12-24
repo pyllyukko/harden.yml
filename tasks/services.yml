@@ -24,9 +24,16 @@
     - slackware
   block:
     - name: Stop unwanted services (Slackware)
-      ignore_errors: true
-      ansible.builtin.command: /bin/sh /etc/rc.d/rc.{{ item }} stop # noqa no-changed-when
+      ansible.builtin.command: /bin/sh /etc/rc.d/rc.{{ item }} stop
       with_items: "{{ slackware_services }}"
+      register: result
+      failed_when:
+        - result.failed
+        - result.rc != 127
+        - "'No such file or directory' not in result.stderr"
+      changed_when:
+        - result.rc == 0
+        - "'No such file or directory' not in result.stderr"
     - name: Disable unwanted services (Slackware)
       ansible.builtin.file:
         path: "/etc/rc.d/rc.{{ item }}"
