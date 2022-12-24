@@ -6,8 +6,10 @@
   tasks:
     - name: Check OS version
       ansible.builtin.assert:
-        that:
-          - (ansible_distribution == "Slackware" and ansible_distribution_major_version | int >= 15) or (ansible_distribution == "Debian" and ansible_distribution_major_version | int >= 11) or (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7") # noqa yaml[line-length]
+        that: >
+          (ansible_distribution == "Slackware" and ansible_distribution_major_version | int >= 15) or
+          (ansible_distribution == "Debian" and ansible_distribution_major_version | int >= 11) or
+          (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7")
         msg: "Unsupported operating system"
     - name: sudoers
       ansible.builtin.import_tasks: tasks/sudoers.yml
