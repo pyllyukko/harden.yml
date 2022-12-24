@@ -4,7 +4,7 @@
   become: true
   block:
   - name: Install rkhunter (Debian)
-    apt:
+    ansible.builtin.apt:
       name: rkhunter
       update_cache: true
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
@@ -12,7 +12,7 @@
       - packages
       - debian
   - name: 'Create /etc/rkhunter.conf'
-    template:
+    ansible.builtin.template:
       src: "{{ playbook_dir }}/templates/rkhunter.conf.j2"
       dest: /etc/rkhunter.conf
       mode: '0400'
@@ -23,7 +23,7 @@
   # https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/FAQ: "3.3) How can I automatically run Rootkit Hunter every day?"
   # We don't use --update as rkhunter.sourceforge.net doesn't have HTTPS
   - name: Add rkhunter cronjob
-    cron:
+    ansible.builtin.cron:
       name: "Run rkhunter"
       minute: "30"
       hour: "5"
@@ -31,7 +31,7 @@
     when: ansible_distribution != "Debian"
     tags: configuration
   - name: Enable daily rkhunter check in Debian
-    replace:
+    ansible.builtin.replace:
       path: /etc/default/rkhunter
       regexp: '^(CRON_DAILY_RUN=).*'
       replace: '\g<1>"yes"'

@@ -1,7 +1,7 @@
 ---
 - name: Configure generic log retention period to {{ log_retention_time_in_months }} months
   become: true
-  replace:
+  ansible.builtin.replace:
     path: /etc/logrotate.conf
     regexp: '^(rotate\s+)[0-9]+$'
     replace: '\g<1>{{ log_retention_time_in_months * 4 }}'
@@ -12,7 +12,7 @@
 # this applies to Slackware & CentOS. Debian has these in /etc/logrotate.d/[bw]tmp
 - name: Configure [bw]tmp retention period to {{ log_retention_time_in_months }} months
   become: true
-  replace:
+  ansible.builtin.replace:
     path: /etc/logrotate.conf
     regexp: '^(\s+rotate\s+)1$'
     replace: '\g<1>{{ log_retention_time_in_months }}'
@@ -30,7 +30,7 @@
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   block:
     - name: Configure [bw]tmp retention period to {{ log_retention_time_in_months }} months (Debian)
-      replace:
+      ansible.builtin.replace:
         path: /etc/logrotate.d/{{ item }}
         regexp: '^(\s+rotate\s+)1$'
         replace: '\g<1>{{ log_retention_time_in_months }}'
@@ -39,7 +39,7 @@
         - btmp
         - wtmp
     - name: Make new wtmp file permissions non world-readable (Debian)
-      replace:
+      ansible.builtin.replace:
         after: '/var/log/wtmp {'
         path: /etc/logrotate.d/wtmp
         regexp: '^(\s+create\s+)0664 root utmp$'
@@ -47,7 +47,7 @@
         validate: '/bin/grep "^\s\+create\s\+0660 root utmp$" %s'
       tags: permissions
     - name: Restrict permissions of newly created log files
-      replace:
+      ansible.builtin.replace:
         path: '{{ item }}'
         regexp: '^(\s*create)\b.*'
         replace: '\g<1> 0640 root adm'
@@ -74,20 +74,20 @@
   when: ansible_distribution == "Slackware"
   block:
     - name: Make new log file default permissions group adm readable (Slackware)
-      replace:
+      ansible.builtin.replace:
         path: /etc/logrotate.conf
         regexp: '^(create)$'
         replace: '\g<1> 0640 root adm'
         validate: '/bin/grep "^create 0640 root adm$" %s'
     - name: Make new wtmp file permissions non world-readable (Slackware)
-      replace:
+      ansible.builtin.replace:
         after: '/var/log/wtmp {'
         path: /etc/logrotate.conf
         regexp: '^(\s+create\s+)0664 root utmp$'
         replace: '\g<1>0660 root utmp'
         validate: '/bin/grep "^\s\+create\s\+0660 root utmp$" %s'
     - name: Make new wtmp file permissions group adm readable (Slackware)
-      blockinfile:
+      ansible.builtin.blockinfile:
         insertafter: '/var/log/wtmp {'
         path: /etc/logrotate.conf
         marker: "# {mark} ANSIBLE MANAGED BLOCK setfacl"
@@ -96,7 +96,7 @@
           /usr/bin/setfacl -m g:adm:r /var/log/wtmp
           endscript
     - name: Make new btmp group adm readable (Slackware)
-      replace:
+      ansible.builtin.replace:
         after: '/var/log/btmp {'
         path: /etc/logrotate.conf
         regexp: '^(\s+create\s+)0600 root root$'
@@ -104,7 +104,7 @@
         validate: '/bin/grep "^\s\+create\s\+0640 root adm$" %s'
     # https://seifried.org/lasg/logging/ - "General log security"
     - name: Make some log files append only (Slackware)
-      copy:
+      ansible.builtin.copy:
         src: "{{ playbook_dir }}/newconfs/logrotate.d/syslog.new"
         dest: /etc/logrotate.d/syslog
         owner: root
@@ -120,7 +120,7 @@
   when: ansible_distribution == "Slackware"
   block:
     - name: Make existing log files group adm readable (Slackware)
-      file:
+      ansible.builtin.file:
         path: "/var/log/{{ item }}"
         mode: '0640'
         owner: root
@@ -139,7 +139,7 @@
         - result.state != "absent"
       tags: permissions
     - name: Make /var/log/dmesg group adm readable
-      lineinfile:
+      ansible.builtin.lineinfile:
         insertafter: 'chmod 640 /var/log/dmesg$'
         state: present
         path: /etc/rc.d/rc.M
@@ -147,7 +147,7 @@
         line: '    chgrp adm /var/log/dmesg'
       tags: permissions
     - name: Enable bootlogd in rc.S
-      blockinfile:
+      ansible.builtin.blockinfile:
         insertafter: '^PATH='
         path: /etc/rc.d/rc.S
         block: |
@@ -158,7 +158,7 @@
             echo 'Bootlogd started (this is the first boot message that appears in /var/log/boot).'
           fi
     - name: Kill bootlogd in rc.M
-      lineinfile:
+      ansible.builtin.lineinfile:
         insertbefore: '^# All done\.$'
         state: present
         path: /etc/rc.d/rc.M
@@ -170,7 +170,7 @@
   tags:
     - logging
     - configuration
-  lineinfile:
+  ansible.builtin.lineinfile:
     state: present
     path: /etc/logrotate.conf
     regexp: '^shred$'

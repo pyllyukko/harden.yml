@@ -1,7 +1,7 @@
 ---
 # https://github.com/canonical/lightdm#configuration
 - name: Stat /etc/lightdm/lightdm.conf
-  stat:
+  ansible.builtin.stat:
     path: /etc/lightdm/lightdm.conf
   register: stat_result
   tags:
@@ -40,7 +40,7 @@
   tags:
     - configuration
     - banners
-  replace:
+  ansible.builtin.replace:
     regexp: '^(# ?)?({{ item.key }})=.+$'
     replace: '\g<2>={{ item.value }}'
     path: /etc/gdm3/greeter.dconf-defaults

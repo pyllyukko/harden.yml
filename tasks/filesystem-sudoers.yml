@@ -1,6 +1,6 @@
 ---
 - name: Set file permissions/ownership for sudoers
-  file:
+  ansible.builtin.file:
     path: /etc/{{ item }}
     mode: g-w,o-rwx
     owner: root

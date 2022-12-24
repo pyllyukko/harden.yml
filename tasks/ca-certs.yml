@@ -3,7 +3,7 @@
   become: true
   block:
   - name: Remove /etc/ssl/certs/ssl-cert-snakeoil.pem
-    file:
+    ansible.builtin.file:
       path: /etc/ssl/certs/ssl-cert-snakeoil.pem
       state: absent
     tags:
@@ -12,7 +12,7 @@
     notify: "Run update-ca-certificates"
   - name: Install ca-certificates package (Debian)
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-    apt:
+    ansible.builtin.apt:
       name: ca-certificates
       update_cache: true
     tags:
@@ -21,7 +21,7 @@
       - debian
   - name: Copy ca-certificates.conf
     when: ansible_os_family != "RedHat"
-    copy:
+    ansible.builtin.copy:
       src: "{{ playbook_dir }}/newconfs/ca-certificates.conf.new"
       dest: /etc/ca-certificates.conf
       owner: root

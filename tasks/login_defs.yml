@@ -3,7 +3,7 @@
 # Regarding SHA_CRYPT_MIN_ROUNDS: https://github.com/linux-pam/linux-pam/issues/352
 - name: Configure shadow password suite (generic)
   become: true
-  replace:
+  ansible.builtin.replace:
     path: /etc/login.defs
     regexp: '^(# ?)?({{ item.key }}\s+)[^\s]+$'
     replace: '\g<2>{{ item.value }}'
@@ -29,7 +29,7 @@
 #   * Failed login delay
 - name: Configure shadow password suite (password related)
   become: true
-  replace:
+  ansible.builtin.replace:
     path: /etc/login.defs
     regexp: '^(# ?)?({{ item.key }}\s+)[^\s]+$'
     replace: '\g<2>{{ item.value }}'
@@ -59,7 +59,7 @@
 # https://github.com/pyllyukko/harden.sh/issues/47
 - name: Limit the list of terminals from which root can log in (securetty)
   become: true
-  copy:
+  ansible.builtin.copy:
     src: "{{ playbook_dir }}/newconfs/securetty.new"
     dest: /etc/securetty
     owner: root
@@ -72,7 +72,7 @@
 # profile.d
 - name: Create /etc/profile.d/expiry.sh
   become: true
-  copy:
+  ansible.builtin.copy:
     src: "{{ playbook_dir }}/newconfs/profile.d/{{ item }}.sh.new"
     dest: /etc/profile.d/{{ item }}.sh
     owner: root
@@ -88,7 +88,7 @@
 - name: Create /etc/profile.d/{tmout.sh,autologout.csh}
   become: true
   tags: configuration
-  template:
+  ansible.builtin.template:
     src: "{{ playbook_dir }}/templates/{{ item }}.j2"
     dest: /etc/profile.d/{{ item }}
     owner: root
@@ -101,7 +101,7 @@
 # Slackware and CentOS have umask in /etc/profile
 - name: Create /etc/profile.d/umask.sh (Debian)
   become: true
-  copy:
+  ansible.builtin.copy:
     src: "{{ playbook_dir }}/newconfs/profile.d/umask.sh.new"
     dest: /etc/profile.d/umask.sh
     owner: root
@@ -122,28 +122,28 @@
     - network
   block:
     - name: getent passwd
-      getent:
+      ansible.builtin.getent:
         database: passwd
     - name: Create /etc/ftpusers
       become: true
-      template:
+      ansible.builtin.template:
         src: "{{ playbook_dir }}/templates/ftpusers.j2"
         dest: /etc/ftpusers
         owner: root
         group: root
         mode: '0600'
 
-- import_tasks: login_defs-slackware.yml
+- ansible.builtin.import_tasks: login_defs-slackware.yml
   when: ansible_distribution == "Slackware"
   tags: slackware
 # CIS Debian Linux 10 Benchmark v1.0.0 - 6.2.17 Ensure no duplicate GIDs exist
 - name: Verify integrity of group files
   become: true
-  command: grpck -r # noqa no-changed-when
+  ansible.builtin.command: grpck -r # noqa no-changed-when
 - name: Remove pi from adm group (Raspbian)
   when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
   become: true
-  command: gpasswd -d pi adm
+  ansible.builtin.command: gpasswd -d pi adm
   register: result
   failed_when:
     - result.failed == true
@@ -155,23 +155,23 @@
 # The tasks below require *local* user accounts
 - name: getent passwd
   tags: accounts
-  getent:
+  ansible.builtin.getent:
     database: passwd
-    service: files
+    ansible.builtin.service: files
 - name: Get login.defs values
   tags: accounts
   block:
     - name: slurp /etc/login.defs
       become: true
-      slurp:
+      ansible.builtin.slurp:
         src: /etc/login.defs
       register: login_defs
     - name: Set uid_min & uid_max variables
-      set_fact:
+      ansible.builtin.set_fact:
         uid_min: "{{ login_defs['content'] | b64decode | regex_search('^UID_MIN\\s+([0-9]+)$', '\\1', multiline=True) | first }}"
         uid_max: "{{ login_defs['content'] | b64decode | regex_search('^UID_MAX\\s+([0-9]+)$', '\\1', multiline=True) | first }}"
     - name: Verify uid_min & uid_max values
-      assert:
+      ansible.builtin.assert:
         that:
           - uid_min is regex('^[0-9]+$')
           - uid_max is regex('^[0-9]+$')
@@ -184,24 +184,24 @@
   block:
     # Debian's "useradd -D -f 30" fails with "cannot create new defaults file"
     - name: Set the number of days after a password expires until the account is permanently disabled (inactive)
-      replace:
+      ansible.builtin.replace:
         path: /etc/default/useradd
         regexp: '^(# ?)?(INACTIVE=).*$'
         replace: '\g<2>30'
         validate: '/bin/grep "^INACTIVE=30$" %s'
       tags: configuration
     - name: Set password expiry inactive days locking for existing users
-      command: chage --inactive 30 {{ item.key }}
+      ansible.builtin.command: chage --inactive 30 {{ item.key }}
       when: item.value[1] | int >= uid_min | int and item.value[1] | int <= uid_max | int
       with_dict: "{{ getent_passwd }}"
       tags: accounts
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.2 Ensure system accounts are secured
 # Slackware Linux Benchmark v1.1 - 8.1 Block System Accounts
 - name: Lock system accounts
-  user:
+  ansible.builtin.user:
     name: '{{ item.key }}'
     # Nowadays Debian has a symlink /bin -> /usr/bin, so this should be fine
-    shell: /sbin/nologin
+    ansible.builtin.shell: /sbin/nologin
     # pam_unix(account) will deny access if account is expired
     expires: '{{ 60 * 60 * 24 }}'
     password_lock: true
@@ -218,7 +218,7 @@
   become: true
 - name: Configure /etc/adduser.conf (Debian)
   become: true
-  replace:
+  ansible.builtin.replace:
     path: /etc/adduser.conf
     regexp: '^({{ item.key }}=).*$'
     replace: '\g<1>{{ item.value }}'
@@ -236,39 +236,39 @@
   tags: accounts
   block:
     - name: getent group
-      getent:
+      ansible.builtin.getent:
         database: group
-        service: files
+        ansible.builtin.service: files
     - name: Legacy groups
       become: true
       block:
         # Common groups
         - name: Remove almost all users from group "lp"
-          command: gpasswd -d {{ item }} lp
+          ansible.builtin.command: gpasswd -d {{ item }} lp
           with_items: '{{ getent_group["lp"][2] | split(",") }}'
           when:
             - '"lp" in getent_group'
             - getent_group["lp"][2] | length > 0
         - name: Remove all users from group "floppy"
-          command: gpasswd -d {{ item }} floppy
+          ansible.builtin.command: gpasswd -d {{ item }} floppy
           with_items: '{{ getent_group["floppy"][2] | split(",") }}'
           when:
             - '"floppy" in getent_group'
             - getent_group["floppy"][2] | length > 0
         - name: Remove all users from group "cdrom"
-          command: gpasswd -d {{ item }} cdrom
+          ansible.builtin.command: gpasswd -d {{ item }} cdrom
           with_items: '{{ getent_group["cdrom"][2] | split(",") }}'
           when:
             - '"cdrom" in getent_group'
             - getent_group["cdrom"][2] | length > 0
         - name: Remove all users from group "games"
-          command: gpasswd -d {{ item }} games
+          ansible.builtin.command: gpasswd -d {{ item }} games
           with_items: '{{ getent_group["games"][2] | split(",") }}'
           when:
             - '"games" in getent_group'
             - getent_group["games"][2] | length > 0
         - name: Remove almost all users from group "scanner"
-          command: gpasswd -d {{ item }} scanner
+          ansible.builtin.command: gpasswd -d {{ item }} scanner
           with_items: '{{ getent_group["scanner"][2] | split(",") }}'
           when:
             - '"scanner" in getent_group'
@@ -281,13 +281,13 @@
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
       block:
         - name: Remove all users from group "lpadmin"
-          command: gpasswd -d {{ item }} lpadmin
+          ansible.builtin.command: gpasswd -d {{ item }} lpadmin
           with_items: '{{ getent_group["lpadmin"][2] | split(",") }}'
           when:
             - '"lpadmin" in getent_group'
             - getent_group["lpadmin"][2] | length > 0
         - name: Remove all users from group "dip"
-          command: gpasswd -d {{ item }} dip
+          ansible.builtin.command: gpasswd -d {{ item }} dip
           with_items: '{{ getent_group["dip"][2] | split(",") }}'
           when:
             - '"dip" in getent_group'
@@ -300,19 +300,19 @@
       tags: debian
       block:
         - name: Remove all users from group "gpio"
-          command: gpasswd -d {{ item }} gpio
+          ansible.builtin.command: gpasswd -d {{ item }} gpio
           with_items: '{{ getent_group["gpio"][2] | split(",") }}'
           when:
             - '"gpio" in getent_group'
             - getent_group["gpio"][2] | length > 0
         - name: Remove all users from group "i2c"
-          command: gpasswd -d {{ item }} i2c
+          ansible.builtin.command: gpasswd -d {{ item }} i2c
           with_items: '{{ getent_group["i2c"][2] | split(",") }}'
           when:
             - '"i2c" in getent_group'
             - getent_group["i2c"][2] | length > 0
         - name: Remove all users from group "spi"
-          command: gpasswd -d {{ item }} spi
+          ansible.builtin.command: gpasswd -d {{ item }} spi
           with_items: '{{ getent_group["spi"][2] | split(",") }}'
           when:
             - '"spi" in getent_group'

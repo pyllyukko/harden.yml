@@ -1,7 +1,7 @@
 ---
 - name: Create harden.conf sysctl settings file
   become: true
-  copy:
+  ansible.builtin.copy:
     src: "{{ playbook_dir }}/newconfs/sysctl.d/{{ item }}.conf.new"
     dest: /etc/sysctl.d/{{ item }}.conf
     owner: root
@@ -17,7 +17,7 @@
   notify: "Load sysctl settings"
 - name: Create /etc/modprobe.d/
   become: true
-  file:
+  ansible.builtin.file:
     path: /etc/modprobe.d
     state: directory
     owner: root
@@ -26,7 +26,7 @@
   tags: kernel
 - name: Blacklist certain kernel modules
   become: true
-  copy:
+  ansible.builtin.copy:
     src: "{{ playbook_dir }}/newconfs/modprobe.d/{{ item }}.conf.new"
     dest: /etc/modprobe.d/{{ item }}.conf
     owner: root
@@ -44,7 +44,7 @@
 - name: Disable ptrace() with SELinux
   become: true
   when: ansible_os_family == "RedHat"
-  seboolean:
+  ansible.posix.seboolean:
     name: deny_ptrace
     state: true
     persistent: true
@@ -59,11 +59,11 @@
   when: run_lynis_after_hardening
   block:
     - name: Run Lynis test group kernel hardening
-      command: lynis audit system -q --skip-plugins --tests-from-group kernel_hardening # noqa no-changed-when
+      ansible.builtin.command: lynis audit system -q --skip-plugins --tests-from-group kernel_hardening # noqa no-changed-when
     - name: slurp /var/log/lynis.log
-      slurp:
+      ansible.builtin.slurp:
         src: /var/log/lynis.log
       register: lynis_log
     - name: Print Lynis score for kernel hardening
-      debug:
+      ansible.builtin.debug:
         msg: "{{ lynis_log['content'] | b64decode | regex_search('Hardening index : \\[([0-9]+)\\]', '\\1', multiline=True) }}"

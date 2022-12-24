@@ -8,20 +8,20 @@
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   block:
     - name: Install apt-transport-https & gnupg2
-      apt:
+      ansible.builtin.apt:
         name: ['apt-transport-https', 'gnupg2']
         update_cache: true
     - name: Add Lynis signing key
-      apt_key:
+      ansible.builtin.apt_key:
         id: 84FAA9983B24AEF24D6C87F1FEBB7D1812576482
         url: https://packages.cisofy.com/keys/cisofy-software-public.key
         state: present
     - name: Add Lynis repository
-      apt_repository:
+      ansible.builtin.apt_repository:
         repo: deb https://packages.cisofy.com/community/lynis/deb/ stable main
         state: present
     - name: Install Lynis
-      apt:
+      ansible.builtin.apt:
         name: lynis
         update_cache: true
 - name: Install Lynis into CentOS
@@ -33,7 +33,7 @@
     - centos
   block:
     - name: Add Lynis repository
-      yum_repository:
+      ansible.builtin.yum_repository:
         name: lynis
         description: CISOfy Software - Lynis package
         baseurl: https://packages.cisofy.com/community/lynis/rpm/
@@ -42,7 +42,7 @@
         priority: 2
         enabled: true
     - name: Install Lynis
-      yum:
+      ansible.builtin.yum:
         name: lynis
         update_cache: true
 - name: Configure Lynis
@@ -52,7 +52,7 @@
   become: true
   block:
     - name: Configure Lynis to skip certain tests
-      blockinfile:
+      ansible.builtin.blockinfile:
         path: /etc/lynis/custom.prf
         create: true
         owner: root
@@ -76,7 +76,7 @@
     - name: Configure /etc/{at,cron}.{allow,deny} permissions in /etc/lynis/default.prf
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
       tags: debian
-      replace:
+      ansible.builtin.replace:
         path: /etc/lynis/default.prf
         regexp: '^(permfile=/etc/{{ item.key }}):rw-------:root:-:WARN:'
         replace: '\g<1>:{{ item.value }}:WARN:'
@@ -87,7 +87,7 @@
         cron.allow: rw-r-----:root:crontab
         cron.deny: rw-r-----:root:crontab
     - name: Configure Lynis to skip RPM related tests
-      blockinfile:
+      ansible.builtin.blockinfile:
         path: /etc/lynis/custom.prf
         marker: "# {mark} ANSIBLE MANAGED BLOCK - Skip RPM related tests"
         block: |
@@ -98,7 +98,7 @@
           skip-test=PKGS-7387
       when: ansible_os_family != "RedHat"
     - name: Configure Slackware specific tests to skip
-      blockinfile:
+      ansible.builtin.blockinfile:
         path: /etc/lynis/custom.prf
         marker: "# {mark} ANSIBLE MANAGED BLOCK - Slackware"
         block: |
@@ -106,7 +106,7 @@
       when: ansible_distribution == "Slackware"
       tags: slackware
     - name: Create daily cron job to run Lynis
-      copy:
+      ansible.builtin.copy:
         dest: /etc/cron.daily/run_lynis
         owner: root
         group: root

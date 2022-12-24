@@ -7,18 +7,18 @@
     - hidepid
   block:
     - name: getent group polkitd
-      getent:
+      ansible.builtin.getent:
         database: group
         key: polkitd
     - name: Fix /etc/rc.d/rc.S to mount /proc with hidepid=2 (Slackware)
-      replace:
+      ansible.builtin.replace:
         path: /etc/rc.d/rc.S
         regexp: '^(\s*/sbin/mount -v proc /proc -n -t proc).*$'
         replace: '\g<1> -o hidepid=2,gid={{ getent_group.polkitd[1] }} 2> /dev/null'
         validate: '/bin/grep "^\s*/sbin/mount -v proc /proc -n -t proc -o hidepid=2,gid={{ getent_group.polkitd[1] }} 2> /dev/null$" %s'
       tags: configuration
     - name: Fix mkinitrd so initrd image mounts with hidepid
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /sbin/mkinitrd
         insertbefore: '# Wrap the initrd as an initramfs image and move it into place:$'
         regexp: '^sed -i ''s:^\(mount -n proc /proc -t proc\)$:\\1 -o hidepid=2,gid={{ getent_group.polkitd[1] }}'' "${SOURCE_TREE}/init"$'
@@ -39,12 +39,12 @@
   become: true
   block:
     - name: Create temp file for fstab.awk
-      tempfile:
+      ansible.builtin.tempfile:
         state: file
         suffix: temp
       register: tempfile_1
     - name: Copy fstab.awk
-      copy:
+      ansible.builtin.copy:
         src: "{{ playbook_dir }}/legacy/libexec/fstab.awk"
         dest: "{{ tempfile_1.path }}"
         owner: root
@@ -52,17 +52,17 @@
         mode: '0600'
     - name: Install Gawk
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-      apt:
+      ansible.builtin.apt:
         name: gawk
         update_cache: true
       tags:
         - packages
         - debian
     - name: Create /etc/fstab.new
-      shell: gawk -f {{ tempfile_1.path }} /etc/fstab 1>/etc/fstab.new
+      ansible.builtin.shell: gawk -f {{ tempfile_1.path }} /etc/fstab 1>/etc/fstab.new
       changed_when: true
     - name: Remove temp file
-      file:
+      ansible.builtin.file:
         path: "{{ tempfile_1.path }}"
         state: absent
 # </fstab>
@@ -73,7 +73,7 @@
   tags:
     - configuration
     - slackware
-  replace:
+  ansible.builtin.replace:
     path: /etc/rc.d/rc.S
     regexp: '^(rm -rf) /tmp/\{.+\}$'
     replace: 'shopt -s dotglob; \g<1> /tmp/*; shopt -u dotglob'
@@ -84,7 +84,7 @@
   tags:
     - configuration
     - debian
-  copy:
+  ansible.builtin.copy:
     src: "{{ playbook_dir }}/newconfs/tmp.conf.new"
     dest: /etc/tmpfiles.d/tmp.conf
     mode: '0644'
@@ -97,7 +97,7 @@
   tags:
     - permissions
     - slackware
-  file:
+  ansible.builtin.file:
     path: /usr/libexec/Xorg
     mode: '0755'
     owner: root
@@ -110,9 +110,9 @@
 - name: Chmod sensitive files
   become: true
   block:
-    - import_tasks: filesystem-sudoers.yml
+    - ansible.builtin.import_tasks: filesystem-sudoers.yml
     - name: chmod wireless configurations
-      file:
+      ansible.builtin.file:
         path: /etc/{{ item }}
         mode: '0600'
         owner: root
@@ -127,7 +127,7 @@
         - result.state != "absent"
       tags: permissions
     - name: chmod Kerberos keytab
-      file:
+      ansible.builtin.file:
         path: /etc/krb5.keytab
         mode: '0600'
         owner: root
@@ -140,7 +140,7 @@
         - permissions
         - kerberos
     - name: chmod Kerberos KDC dir
-      file:
+      ansible.builtin.file:
         path: /var/kerberos/krb5kdc
         mode: '0700'
         owner: root
@@ -162,7 +162,7 @@
         - slackware
     - name: Install acl package (Debian)
       when: ansible_distribution == "Debian"
-      apt:
+      ansible.builtin.apt:
         name: acl
         state: present
       tags:
@@ -170,7 +170,7 @@
         - debian
     # we don't want to mess with the group ownerships because these might be needed to be writable by utmp group
     - name: Grant group adm read rights on login records
-      acl:
+      ansible.posix.acl:
         path: "{{ item }}"
         entity: adm
         etype: group
@@ -182,19 +182,19 @@
         - /var/log/wtmp
       tags: permissions
     - name: chmod o-rwx /var/log/lastlog
-      file:
+      ansible.builtin.file:
         path: /var/log/lastlog
         mode: o-rwx
       tags: permissions
     - name: chmod & chown /var/log/wtmp
-      file:
+      ansible.builtin.file:
         path: /var/log/wtmp
         mode: '0660'
         owner: root
         group: utmp
       tags: permissions
     - name: chmod LDAP secrets
-      file:
+      ansible.builtin.file:
         path: "{{ item }}"
         mode: '0600'
         owner: root
@@ -212,13 +212,13 @@
         - result.state != "absent"
       tags: permissions
     - name: chmod /etc/ssl/private
-      file:
+      ansible.builtin.file:
         path: /etc/ssl/private
         mode: o-rwx
         owner: root
       tags: permissions
     - name: chmod audit files
-      file:
+      ansible.builtin.file:
         path: "{{ item }}"
         mode: o-rwx
         owner: root
@@ -233,7 +233,7 @@
       tags: permissions
     # Home directories
     - name: chmod /root
-      file:
+      ansible.builtin.file:
         path: /root
         mode: '0700'
         owner: root
@@ -243,11 +243,11 @@
       tags: permissions
       block:
         - name: getent passwd
-          getent:
+          ansible.builtin.getent:
             database: passwd
         # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#limit-user-perm
         - name: chmod home directories
-          file:
+          ansible.builtin.file:
             path: "{{ item.value[4] }}"
             mode: '0700'
           with_dict: "{{ getent_passwd }}"
@@ -259,7 +259,7 @@
             - result.state != "absent"
     # Stuff that is usually readable, but have no reason why they should be
     - name: chmod /etc/ssh/sshd_config
-      file:
+      ansible.builtin.file:
         path: /etc/ssh/sshd_config
         mode: '0600'
         owner: root
@@ -270,7 +270,7 @@
         - result.state != "absent"
       tags: permissions
     - name: chmod boot loader configurations
-      file:
+      ansible.builtin.file:
         path: "{{ item }}"
         mode: og-rwx
         owner: root
@@ -286,7 +286,7 @@
         - result.state != "absent"
       tags: permissions
     - name: chmod /etc/modprobe.d
-      file:
+      ansible.builtin.file:
         path: /etc/modprobe.d
         mode: '0700'
         owner: root
@@ -294,7 +294,7 @@
       tags: permissions
     # Slackware Linux Benchmark v1.1 - 4.1 Network Parameter Modifications, 4.2 Additional Network Parameter Modifications & SN.8 Additional Kernel Tunings
     - name: chmod sysctl configurations
-      file:
+      ansible.builtin.file:
         path: "{{ item }}"
         mode: o-rwx
       with_items:
@@ -306,7 +306,7 @@
         - result.state != "absent"
       tags: permissions
     - name: chmod /etc/rc.d
-      file:
+      ansible.builtin.file:
         path: /etc/rc.d
         mode: '0700'
         owner: root
@@ -323,7 +323,7 @@
     #   5.1.6 Ensure permissions on /etc/cron.monthly are configured
     #   5.1.7 Ensure permissions on /etc/cron.d are configured
     - name: Restrict visibility to /etc/cron{tab,.{d,hourly,daily,weekly,monthly}/}
-      file:
+      ansible.builtin.file:
         path: /etc/{{ item }}
         mode: g-rwx,o-rwx
       with_items:
@@ -339,7 +339,7 @@
         - result.state != "absent"
       tags: permissions
     - name: chmod o-r /var/log
-      file:
+      ansible.builtin.file:
         path: /var/log
         # apps that have own accounts & directories under /var/log need the x-bit (like freerad in Debian)
         mode: '0751'
@@ -349,7 +349,7 @@
     # CIS Slackware Linux Benchmark v1.1 - 3.3 Disable GUI Login If Possible
     - name: chmod inittab
       when: ansible_distribution == "Slackware"
-      file:
+      ansible.builtin.file:
         path: /etc/inittab
         mode: '0600'
         owner: root
@@ -359,7 +359,7 @@
         - slackware
     # CIS Slackware Linux Benchmark v1.1 - 7.8 Restrict Root Logins To System Console
     - name: chmod /etc/securetty
-      file:
+      ansible.builtin.file:
         path: /etc/securetty
         mode: '0400'
         owner: root
@@ -372,7 +372,7 @@
       tags: permissions
     - name: Slackware pkgtools & sbopkg
       when: ansible_distribution == "Slackware"
-      file:
+      ansible.builtin.file:
         path: "{{ item }}"
         mode: '0750'
         owner: root
@@ -394,7 +394,7 @@
       tags:
         - permissions
         - slackware
-      file:
+      ansible.builtin.file:
         path: /var/log/{{ item }}
         mode: '0750'
         owner: root
@@ -412,7 +412,7 @@
         - result.state != "absent"
     - name: Slackware log dirs not owned by root
       when: ansible_distribution == "Slackware"
-      file:
+      ansible.builtin.file:
         path: /var/log/{{ item }}
         mode: o-rwx
       with_items:
@@ -427,7 +427,7 @@
         - slackware
     - name: /etc/httpd o-rx
       when: ansible_distribution == "Slackware"
-      file:
+      ansible.builtin.file:
         path: /etc/httpd
         mode: '0750'
         owner: root

@@ -5,13 +5,13 @@
   become: true
   block:
     - name: Install AIDE package
-      apt:
+      ansible.builtin.apt:
         name: aide
         update_cache: true
       tags:
         - packages
     - name: Configure AIDE
-      replace:
+      ansible.builtin.replace:
         path: /etc/aide/aide.conf
         regexp: '^({{ item.key }}\s+=\s+).*$'
         replace: '\g<1>{{ item.value }}'
@@ -20,7 +20,7 @@
       tags: configuration
       notify: "Create aide.db"
     - name: Configure AIDE (/etc/default/aide)
-      replace:
+      ansible.builtin.replace:
         path: /etc/default/aide
         regexp: '^({{ item.key }}=).*$'
         replace: '\g<1>{{ item.value }}'
@@ -29,7 +29,7 @@
       tags: configuration
       notify: "Create aide.db"
     - name: Exclude /net
-      copy:
+      ansible.builtin.copy:
         content: "!/net$\n"
         dest: /etc/aide/aide.conf.d/70_hardensh_net
         owner: root
@@ -39,7 +39,7 @@
       tags: configuration
       notify: "Create aide.db"
     - name: Exclude /media
-      copy:
+      ansible.builtin.copy:
         content: "!/media$\n"
         dest: /etc/aide/aide.conf.d/70_hardensh_media
         owner: root
@@ -49,7 +49,7 @@
       tags: configuration
       notify: "Create aide.db"
     - name: Create /etc/aide/aide.conf.d/70_hardensh_misc
-      copy:
+      ansible.builtin.copy:
         src: "{{ playbook_dir }}/newconfs/aide-debian.conf.new"
         dest: /etc/aide/aide.conf.d/70_hardensh_misc
         owner: root
@@ -58,18 +58,18 @@
       tags: configuration
       notify: "Create aide.db"
     - name: Fix /var/log/exim4/(main|reject)log rule
-      replace:
+      ansible.builtin.replace:
         path: /etc/aide/aide.conf.d/31_aide_exim4_logs
         regexp: '^(/var/log/exim4/@@{EXIM4_LOGS}log\$ f )Log$'
         replace: '\g<1>FreqRotLog'
       tags: configuration
       notify: "Create aide.db"
     - name: Fix /var/tmp rule
-      replace:
+      ansible.builtin.replace:
         path: /etc/aide/aide.conf.d/70_aide_var
         regexp: '^(/var/tmp\$ d )VarDir-n$'
         replace: '\g<1>VarDirInode-n'
       tags: configuration
       notify: "Create aide.db"
     - name: Check aide.conf
-      command: /usr/bin/aide --config-check --config=/etc/aide/aide.conf # noqa no-changed-when
+      ansible.builtin.command: /usr/bin/aide --config-check --config=/etc/aide/aide.conf # noqa no-changed-when

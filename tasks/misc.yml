@@ -2,7 +2,7 @@
 - name: Make installpkg store md5sums (Slackware)
   become: true
   when: ansible_distribution == "Slackware"
-  replace:
+  ansible.builtin.replace:
     path: /sbin/installpkg
     regexp: '^(MD5SUM)=[0-9]+$'
     replace: '\g<1>=1'
@@ -15,7 +15,7 @@
   become: true
   block:
     - name: Check for /etc/letsencrypt
-      stat:
+      ansible.builtin.stat:
         path: /etc/letsencrypt
       register: stat_result
     # https://certbot.eff.org/docs/using.html
@@ -87,7 +87,7 @@
         - inetd
       tags: packages
     - name: Remove leftover files from removed packages
-      file:
+      ansible.builtin.file:
         path: '{{ item }}'
         state: absent
       with_items:
@@ -97,7 +97,7 @@
         - /etc/inetd.conf
 #- name: Download checksec into /usr/local/bin
 #  become: true
-#  get_url:
+#  ansible.builtin.get_url:
 #    url: https://www.trapkit.de/tools/checksec/checksec.sh
 #    dest: /usr/local/bin/checksec.sh
 #    owner: root
@@ -106,7 +106,7 @@
 #    checksum: sha256:77b8a7fd9393d10def665658a41176ee745d5c7969a4a0f43cefcc8a4cd90947
 - name: Set USB authorized_default -> 0 in /etc/rc.local (Debian)
   become: true
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: /etc/rc.local
     marker: "# {mark} ANSIBLE MANAGED BLOCK - USB authorized_default"
     insertbefore: '^exit 0$'
@@ -120,12 +120,12 @@
   tags: docker
   block:
     - name: Stat /etc/docker
-      stat:
+      ansible.builtin.stat:
         path: /etc/docker
       register: docker
     - name: Create /etc/docker/daemon.json
       become: true
-      copy:
+      ansible.builtin.copy:
         dest: /etc/docker/daemon.json
         force: false
         owner: root
@@ -147,31 +147,31 @@
     - services
   block:
     - name: Stat /etc/xdg/autostart/tracker-miner-fs.desktop
-      stat:
+      ansible.builtin.stat:
         path: '/etc/xdg/autostart/tracker-miner-fs.desktop'
       register: stat
     - name: Disable tracker-miner-fs XDG autostart
       become: true
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: '/etc/xdg/autostart/tracker-miner-fs.desktop'
         regexp: '^Hidden=true$'
         line: Hidden=true
         create: false
       when: stat.stat.exists
     - name: Stat /etc/xdg/autostart/tracker-extract.desktop
-      stat:
+      ansible.builtin.stat:
         path: '/etc/xdg/autostart/tracker-extract.desktop'
       register: stat
     - name: Disable tracker-miner-fs XDG autostart
       become: true
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: '/etc/xdg/autostart/tracker-extract.desktop'
         regexp: '^Hidden=true$'
         line: Hidden=true
         create: false
       when: stat.stat.exists
     - name: Disable tracker-miner-fs systemd unit
-      systemd:
+      ansible.builtin.systemd:
         name: tracker-miner-fs
         enabled: false
         state: stopped
@@ -186,7 +186,7 @@
     - configuration
   block:
     - name: Stat /etc/php.ini
-      stat:
+      ansible.builtin.stat:
         path: /etc/php.ini
       register: stat_result
     # https://cheatsheetseries.owasp.org/cheatsheets/PHP_Configuration_Cheat_Sheet.html

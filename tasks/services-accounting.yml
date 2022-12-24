@@ -8,7 +8,7 @@
     - name: Install sysstat
       become: true
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-      apt:
+      ansible.builtin.apt:
         name: sysstat
         update_cache: true
       tags:
@@ -18,7 +18,7 @@
     - name: Enable system accounting in /etc/default/sysstat
       become: true
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-      replace:
+      ansible.builtin.replace:
         path: /etc/default/sysstat
         regexp: '^ENABLED=.*$'
         replace: 'ENABLED="true"'
@@ -30,7 +30,7 @@
     - name: Enable system accounting systemd service
       become: true
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-      service:
+      ansible.builtin.service:
         name: sysstat
         state: started
         enabled: true
@@ -51,7 +51,7 @@
     - name: Enable rc.sysstat (Slackware)
       become: true
       when: ansible_distribution == "Slackware"
-      file:
+      ansible.builtin.file:
         path: /etc/rc.d/rc.sysstat
         owner: root
         group: root
@@ -73,19 +73,19 @@
         - slackware
       block:
         - name: Create cron job for sysstat activity accounting
-          cron:
+          ansible.builtin.cron:
             name: "Run system activity accounting tool every 10 minutes"
             minute: "*/10"
             job: "if [ -x /usr/lib64/sa/sa1 ]; then /usr/lib64/sa/sa1 1 1; elif [ -x /usr/lib/sa/sa1 ]; then /usr/lib/sa/sa1 1 1; fi"
         - name: Create cron job for sysstat summary
-          cron:
+          ansible.builtin.cron:
             name: "Generate a text summary of previous day process accounting at 00:07"
             minute: "7"
             hour: "0"
             job: "if [ -x /usr/lib64/sa/sa2 ]; then /usr/lib64/sa/sa2 -A; elif [ -x /usr/lib/sa/sa2 ]; then /usr/lib/sa/sa2 -A; fi"
     - name: Configure sysstat
       become: true
-      replace:
+      ansible.builtin.replace:
         path: /etc/sysstat/sysstat
         regexp: '^HISTORY=[0-9]+$'
         replace: 'HISTORY=99999'
@@ -97,7 +97,7 @@
     - name: Configure sysstat (RH)
       become: true
       when: ansible_os_family == "RedHat"
-      replace:
+      ansible.builtin.replace:
         path: /etc/sysconfig/sysstat
         regexp: '^HISTORY=[0-9]+$'
         replace: 'HISTORY=99999'
@@ -112,7 +112,7 @@
 - name: Install acct
   become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-  apt:
+  ansible.builtin.apt:
     name: acct
     update_cache: true
   tags:
@@ -123,7 +123,7 @@
 - name: Enable acct
   become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-  systemd:
+  ansible.builtin.systemd:
     name: acct
     state: started
     enabled: true
@@ -146,7 +146,7 @@
 - name: Create /var/log/pacct (Slackware)
   become: true
   when: ansible_distribution == "Slackware"
-  copy:
+  ansible.builtin.copy:
     content: ""
     dest: /var/log/pacct
     force: false
@@ -160,7 +160,7 @@
 - name: Create /etc/logrotate.d/pacct (Slackware)
   become: true
   when: ansible_distribution == "Slackware"
-  copy:
+  ansible.builtin.copy:
     src: "{{ playbook_dir }}/newconfs/logrotate.d/pacct.new"
     dest: /etc/logrotate.d/pacct
     owner: root
@@ -173,7 +173,7 @@
 - name: Start process accounting (Slackware)
   become: true
   when: ansible_distribution == "Slackware"
-  command: /sbin/accton /var/log/pacct
+  ansible.builtin.command: /sbin/accton /var/log/pacct
   tags:
     - services
     - accounting
@@ -217,11 +217,11 @@
   when: run_lynis_after_hardening
   block:
     - name: Run Lynis test group accounting
-      command: lynis audit system -q --skip-plugins --tests-from-group accounting # noqa no-changed-when
+      ansible.builtin.command: lynis audit system -q --skip-plugins --tests-from-group accounting # noqa no-changed-when
     - name: slurp /var/log/lynis.log
-      slurp:
+      ansible.builtin.slurp:
         src: /var/log/lynis.log
       register: lynis_log
     - name: Print Lynis score for accounting
-      debug:
+      ansible.builtin.debug:
         msg: "{{ lynis_log['content'] | b64decode | regex_search('Hardening index : \\[([0-9]+)\\]', '\\1', multiline=True) }}"

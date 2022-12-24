@@ -16,7 +16,7 @@
     #   * 2.8 Ensure the Info Module Is Disabled
     #   * 2.9 Ensure the Basic and Digest Authentication Modules are Disabled
     - name: Disable Apache modules
-      replace:
+      ansible.builtin.replace:
         path: /etc/httpd/httpd.conf
         regexp: '^(LoadModule\s+{{ item }}\b.+)$'
         replace: '#\g<1>'
@@ -32,7 +32,7 @@
         - auth_basic_module
         - auth_digest_module
     - name: Enable TLS module
-      replace:
+      ansible.builtin.replace:
         path: /etc/httpd/httpd.conf
         regexp: '^#({{ item }}.*)$'
         replace: '\g<1>'
@@ -44,7 +44,7 @@
     # https://httpd.apache.org/docs/current/mod/mod_ssl.html
     # https://httpd.apache.org/docs/current/mod/mod_ssl.html#sslciphersuite: "Beginning with version 2.4.7, null and export-grade ciphers are always disabled, as mod_ssl unconditionally adds !aNULL:!eNULL:!EXP to any cipher string at initialization."
     - name: Configure Apache TLS
-      replace:
+      ansible.builtin.replace:
         path: /etc/httpd/extra/httpd-ssl.conf
         regexp: '^({{ item.key }}\s+).*$'
         replace: '\g<1>{{ item.value }}'

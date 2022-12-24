@@ -19,46 +19,46 @@
           security.bsd.unprivileged_read_msgbuf: 0
           #kern.racct.enable: 1
       - name: Enable firewall
-        blockinfile:
+        ansible.builtin.blockinfile:
           path: /etc/rc.conf
           block: |
             firewall_enable="YES"
             firewall_type="open"
       # https://www.freebsd.org/doc/handbook/audit-config.html
       - name: Enable & start auditing
-        service:
+        ansible.builtin.service:
           name: auditd
           enabled: true
           state: started
       - name: Create audit log rotation
-        cron:
+        ansible.builtin.cron:
           name: "audit log rotation"
           hour: "*/12"
           minute: "0"
           job: /usr/sbin/audit -n 1>/dev/null
       # https://www.freebsd.org/doc/handbook/consoles.html#consoles-singleuser
       - name: Ask for password in single User Mode
-        replace:
+        ansible.builtin.replace:
           path: /etc/ttys
           regexp: '^(console\s+.+\s+)secure$'
           replace: '\g<1>insecure'
           validate: '/usr/bin/grep "^console.\+insecure$" %s'
       - name: Set uucp user's shell to nologin
-        user:
+        ansible.builtin.user:
           name: uucp
-          shell: /usr/sbin/nologin
+          ansible.builtin.shell: /usr/sbin/nologin
       - name: Remove the user 'toor'
-        user:
+        ansible.builtin.user:
           name: toor
           state: absent
           remove: yes
       # https://www.freebsd.org/doc/handbook/security-pkg.html
       - name: Stat /etc/periodic.conf
-        stat:
+        ansible.builtin.stat:
           path: /etc/periodic.conf
         register: stat_result
       - name: Run pkg audit daily
-        replace:
+        ansible.builtin.replace:
           path: /etc/periodic.conf
           regexp: '^(daily_status_security_pkgaudit_enable)="[A-Z]+"$'
           replace: '\g<1>="YES"'
@@ -67,7 +67,7 @@
       - name: Enable process accounting
         block:
         - name: Create process accounting file
-          copy:
+          ansible.builtin.copy:
             content: ""
             dest: /var/account/acct
             force: false
@@ -75,32 +75,32 @@
             owner: root
             mode: 0600
         - name: Start process accounting
-          command: accton /var/account/acct
+          ansible.builtin.command: accton /var/account/acct
         - name: Enable accounting
-          service:
+          ansible.builtin.service:
             name: accounting
             enabled: true
       - name: Get kern.ident sysctl value
-        command: sysctl -n kern.ident
+        ansible.builtin.command: sysctl -n kern.ident
         register: kern_ident
       - name: Add rrdcached to allowed_services
-        set_fact:
+        ansible.builtin.set_fact:
           allowed_services: "{{ allowed_services + [ \"rrdcached\" ] }}"
         when: kern_ident.stdout == "FREENAS64"
       - name: 'TCP wrappers: create /etc/hosts.allow'
-        template:
+        ansible.builtin.template:
           src: "{{ playbook_dir }}/templates/hosts.allow-{{ ansible_system }}.j2"
           dest: /etc/hosts.allow
       - name: chmod /root
-        file:
+        ansible.builtin.file:
           path: /root
           mode: '0700'
       - name: Set default umask to 077
-        replace:
+        ansible.builtin.replace:
           path: /etc/login.conf
           regexp: '^(\s+:umask=)022:\\$'
           replace: '\g<1>077:\\'
       - name: Update the login.conf database
-        command: cap_mkdb
+        ansible.builtin.command: cap_mkdb
       become: true
       when: ansible_distribution == "FreeBSD"

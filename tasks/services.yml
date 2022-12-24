@@ -3,7 +3,7 @@
 - name: Stop & disable unwanted services (Debian)
   become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-  service:
+  ansible.builtin.service:
     name: "{{ item }}"
     state: stopped
     enabled: false
@@ -25,10 +25,10 @@
   block:
     - name: Stop unwanted services (Slackware)
       ignore_errors: true
-      command: /bin/sh /etc/rc.d/rc.{{ item }} stop # noqa no-changed-when
+      ansible.builtin.command: /bin/sh /etc/rc.d/rc.{{ item }} stop # noqa no-changed-when
       with_items: "{{ slackware_services }}"
     - name: Disable unwanted services (Slackware)
-      file:
+      ansible.builtin.file:
         path: "/etc/rc.d/rc.{{ item }}"
         owner: root
         group: root
@@ -53,7 +53,7 @@
   block:
     - name: Restrict cron (cron.allow)
       become: true
-      file:
+      ansible.builtin.file:
         path: /etc/cron.allow
         state: touch
         owner: root
@@ -62,7 +62,7 @@
       tags: permissions
     - name: Restrict at (at.allow)
       become: true
-      file:
+      ansible.builtin.file:
         path: /etc/at.allow
         state: touch
         owner: root
@@ -71,7 +71,7 @@
       tags: permissions
     - name: Restrict cron & at ({at,cron}.deny)
       become: true
-      file:
+      ansible.builtin.file:
         path: /etc/{{ item }}
         state: absent
       with_items:
@@ -81,7 +81,7 @@
 - name: Create a job that checks systemd's state
   become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
-  cron:
+  ansible.builtin.cron:
     name: "Check SystemState"
     job: "/bin/systemctl show --property=SystemState | /bin/grep -v '^SystemState=running$'"
     minute: "*/5"
@@ -95,7 +95,7 @@
   become: true
   block:
     - name: Increase crond's log level (Slackware)
-      replace:
+      ansible.builtin.replace:
         path: /etc/default/crond
         regexp: '^(CROND_OPTS=".*)-l [a-z]+(.*")$'
         replace: '\g<1>-l info\g<2>'
@@ -105,7 +105,7 @@
         - logging
     # From dcron's README
     - name: Restrict cron (Slackware)
-      file:
+      ansible.builtin.file:
         path: /usr/bin/crontab
         group: wheel
         mode: '4710'
@@ -114,7 +114,7 @@
         - services
         - authorization
     - name: Set permissions for /var/spool/cron
-      file:
+      ansible.builtin.file:
         path: /var/spool/cron
         owner: root
         group: root
@@ -123,7 +123,7 @@
         - permissions
         - services
     - name: Set permissions for /var/spool/cron/crontabs
-      file:
+      ansible.builtin.file:
         path: /var/spool/cron/crontabs
         owner: root
         group: root
@@ -134,7 +134,7 @@
     # user needs to have x perms into the directory where the temp file is created
     # Slackware 14.2 has /var/spool/cron as TMPDIR and 14.2+ has /run/cron
     - name: Fix /etc/rc.d/rc.crond
-      blockinfile:
+      ansible.builtin.blockinfile:
         path: /etc/rc.d/rc.crond
         insertafter: "^ {4}mkdir -p /run/cron$"
         block: |
@@ -143,7 +143,7 @@
       tags: services
     # From dcron's README
     - name: chmod crond (Slackware)
-      file:
+      ansible.builtin.file:
         path: /usr/sbin/crond
         mode: '0700'
       tags:
@@ -153,7 +153,7 @@
 
 # SSH
 - name: Check SSH daemon service state
-  service_facts:
+  ansible.builtin.service_facts:
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   tags:
     - services
@@ -161,12 +161,12 @@
     - debian
 # This is used in sshd_config.j2 template(s)
 - name: Stat /etc/krb5.keytab
-  stat:
+  ansible.builtin.stat:
     path: /etc/krb5.keytab
   register: stat_keytab
   tags: ssh
 - name: Harden SSH daemon configuration
-  template:
+  ansible.builtin.template:
     src: "{{ playbook_dir }}/templates/sshd_config-{{ ansible_distribution }}.j2"
     dest: /etc/ssh/sshd_config
     validate: /usr/sbin/sshd -t -f %s
@@ -197,7 +197,7 @@
     - ssh
   become: true
   when: ansible_distribution == "Slackware"
-  template:
+  ansible.builtin.template:
     src: "{{ playbook_dir }}/templates/ssh_config-{{ ansible_distribution }}.j2"
     dest: /etc/ssh/ssh_config
     owner: root
@@ -209,7 +209,7 @@
 #- name: Install icmpinfo
 #  become: true
 #  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-#  apt:
+#  ansible.builtin.apt:
 #    name: icmpinfo
 #    update_cache: true
 #  tags:
@@ -230,7 +230,7 @@
   become: true
   block:
     - name: Create /etc/rc.d/rc.local (Slackware)
-      copy:
+      ansible.builtin.copy:
         src: "{{ playbook_dir }}/newconfs/rc.d/rc.local.new"
         dest: /etc/rc.d/rc.local
         owner: root
@@ -238,7 +238,7 @@
         mode: '0700'
       tags: services
     - name: Create /etc/rc.d/rc.local_shutdown symlink (Slackware)
-      file:
+      ansible.builtin.file:
         src: /etc/rc.d/rc.local
         dest: /etc/rc.d/rc.local_shutdown
         owner: root
@@ -246,7 +246,7 @@
         state: link
       tags: services
     - name: Enable smartd (Slackware)
-      file:
+      ansible.builtin.file:
         path: /etc/rc.d/rc.smartd
         owner: root
         group: root
@@ -257,7 +257,7 @@
         - result.state != "absent"
       tags: services
     - name: Disable atd (Slackware)
-      replace:
+      ansible.builtin.replace:
         path: /etc/rc.d/rc.M
         after: '# Start atd \(manages jobs scheduled with ''at''\):'
         before: '# Slackware-Mini-Quota-HOWTO:'
@@ -265,7 +265,7 @@
         replace: '#\g<1>'
       tags: services
     #- name: NFSv4 support in rc.inet2
-    #  blockinfile:
+    #  ansible.builtin.blockinfile:
     #    path: /etc/rc.d/rc.inet2
     #    insertbefore: "^# If /etc/rc.d/rc.rpc is executable, run it to load rpc.portmap, rpc.lockd,$"
     #    block: |
