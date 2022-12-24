@@ -31,8 +31,8 @@
   ansible.builtin.command: /usr/sbin/pam-auth-update --package
   become: true
   tags:
-  - pam
-  - configuration
+    - pam
+    - configuration
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
 # rc.sshd exits if /var/run/sshd.pid doesn't exist
 - name: Restart sshd (Slackware)
