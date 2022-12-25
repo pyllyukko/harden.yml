@@ -26,6 +26,7 @@
     owner: root
     group: root
     mode: '0600'
+    backup: true
   register: result
   # sshd validation fails when the hostkeys do not exist
   failed_when:
