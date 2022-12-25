@@ -23,6 +23,7 @@
     owner: root
     group: root
     mode: '0644'
+    backup: true
   tags: network
 - name: 'TCP wrappers: create /etc/hosts.deny'
   become: true
@@ -32,6 +33,7 @@
     owner: root
     group: root
     mode: '0644'
+    backup: true
   tags: network
 # </TCP wrappers>
 
