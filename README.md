@@ -10,6 +10,8 @@ Supported distros
     * Kali
     * Raspbian
 * Slackware (>= 15.0)
+* Limited hardening for CentOS 7
+* Limited hardening for FreeBSD (see [freebsd.yml](tasks/freebsd.yml))
 
 Why I made this
 ---------------
