@@ -62,6 +62,7 @@
         owner: root
         group: root
         mode: '0440'
+        backup: true
       tags: configuration
     - name: 'Remove /etc/sudoers.new'
       ansible.builtin.file:
