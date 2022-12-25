@@ -1,0 +1,52 @@
+---
+- name: Check SSH daemon service state
+  ansible.builtin.service_facts:
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  tags:
+    - services
+    - ssh
+    - debian
+# This is used in sshd_config.j2 template(s)
+- name: Stat /etc/krb5.keytab
+  ansible.builtin.stat:
+    path: /etc/krb5.keytab
+  register: stat_keytab
+  tags: ssh
+- name: Harden SSH daemon configuration
+  ansible.builtin.template:
+    src: "{{ playbook_dir }}/templates/sshd_config-{{ ansible_distribution }}.j2"
+    dest: /etc/ssh/sshd_config
+    validate: /usr/sbin/sshd -t -f %s
+    owner: root
+    group: root
+    mode: '0600'
+  register: result
+  # sshd validation fails when the hostkeys do not exist
+  failed_when:
+    - result.failed == true
+    - '"sshd: no hostkeys available -- exiting." not in result.stderr'
+  tags:
+    - services
+    - configuration
+    - ssh
+  notify:
+    - "Restart sshd (Slackware)"
+    - "Restart sshd (Debian)"
+  become: true
+  # Skip the task in Debian if ssh.service does not exist
+  when: >
+    ((ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux") and ansible_facts.services.ssh is defined) or
+    ansible_distribution == "Slackware"
+- name: Harden SSH client configuration
+  tags:
+    - configuration
+    - slackware
+    - ssh
+  become: true
+  when: ansible_distribution == "Slackware"
+  ansible.builtin.template:
+    src: "{{ playbook_dir }}/templates/ssh_config-{{ ansible_distribution }}.j2"
+    dest: /etc/ssh/ssh_config
+    owner: root
+    group: root
+    mode: '0644'
