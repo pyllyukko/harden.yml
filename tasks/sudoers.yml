@@ -53,7 +53,10 @@
       tags: configuration
     # https://jpmens.net/2013/02/06/don-t-try-this-at-the-office-etc-sudoers/
     - name: 'Validate /etc/sudoers.new'
-      ansible.builtin.command: visudo -cs -f /etc/sudoers.new # noqa no-changed-when
+      ansible.builtin.command: visudo -cs -f /etc/sudoers.new
+      register: result
+      changed_when:
+        - '"parsed OK" not in result.stdout'
     - name: 'Copy /etc/sudoers.new to /etc/sudoers'
       ansible.builtin.copy:
         remote_src: true
