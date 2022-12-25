@@ -166,7 +166,9 @@ Tags that you can use with `ansible-playbook --tags`:
     * `firewall`
     * `ipv6`
 * `logging`
-* `permissions`
+* Filesystem related:
+    * `permissions`
+    * `fstab`
 * Specific software:
     * `sysstat`
     * `ssh`
@@ -187,7 +189,6 @@ Tags that you can use with `ansible-playbook --tags`:
     * `authorization`
     * `passwords`
     * `pam`
-* `fstab`
 * `cgroup` (Slackware)
 * `hidepid` (Slackware)
 
