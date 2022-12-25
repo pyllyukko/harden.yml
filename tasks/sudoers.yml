@@ -1,77 +1,81 @@
 ---
 - name: Install glibc package (Slackware)
   when: ansible_distribution == "Slackware"
-  become: yes
-  slackpkg:
+  become: true
+  community.general.slackpkg:
     name: glibc
     state: present
   tags:
-  - packages
-  - slackware
+    - packages
+    - slackware
 - name: Install sudo (Debian)
-  become: yes
-  apt:
+  become: true
+  ansible.builtin.apt:
     name: sudo
-    update_cache: yes
+    update_cache: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   tags:
-  - packages
-  - debian
+    - packages
+    - debian
 - name: 'Check that some user(s) exist in "sudo" group'
-  getent:
+  ansible.builtin.getent:
     database: group
     key: sudo
   failed_when: getent_group.sudo[2] == ""
   when: ansible_distribution == "Debian"
   tags: debian
 - name: 'Check that some user(s) exist in "wheel" group'
-  getent:
+  ansible.builtin.getent:
     database: group
     key: wheel
   failed_when: getent_group.wheel[2] == "" or getent_group.wheel[2] == "root"
   when: ansible_distribution == "Slackware"
   tags: slackware
 - name: 'Configure /etc/sudoers'
-  block:
-  - name: 'Create /etc/sudoers.new'
-    template:
-      src: "{{ playbook_dir }}/templates/sudoers.j2"
-      dest: /etc/sudoers.new
-      mode: '0440'
-      owner: root
-      group: root
-  - name: Create /etc/sudo_env
-    copy:
-      content: "LESSSECURE=1\nPAGER=/usr/bin/less\nMANPAGER=/usr/bin/less\nSYSTEMD_PAGER=/usr/bin/less\nTMOUT={{ session_timeout * 60 }}\n"
-      dest: /etc/sudo_env
-      owner: root
-      group: root
-      mode: '0400'
-      force: no
-    tags: configuration
-  # https://jpmens.net/2013/02/06/don-t-try-this-at-the-office-etc-sudoers/
-  - name: 'Validate /etc/sudoers.new'
-    command: visudo -cs -f /etc/sudoers.new
-  - name: 'Copy /etc/sudoers.new to /etc/sudoers'
-    copy:
-      remote_src: yes
-      src: /etc/sudoers.new
-      dest: /etc/sudoers
-    tags: configuration
-  - name: 'Remove /etc/sudoers.new'
-    file:
-      path: /etc/sudoers.new
-      state: absent
   when: ansible_distribution == "Slackware" or ansible_distribution == "Debian"
-  become: yes
+  become: true
+  block:
+    - name: 'Create /etc/sudoers.new'
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/templates/sudoers.j2"
+        dest: /etc/sudoers.new
+        mode: '0440'
+        owner: root
+        group: root
+    - name: Create /etc/sudo_env
+      ansible.builtin.copy:
+        content: "LESSSECURE=1\nPAGER=/usr/bin/less\nMANPAGER=/usr/bin/less\nSYSTEMD_PAGER=/usr/bin/less\nTMOUT={{ session_timeout * 60 }}\n"
+        dest: /etc/sudo_env
+        owner: root
+        group: root
+        mode: '0400'
+        force: false
+      tags: configuration
+    # https://jpmens.net/2013/02/06/don-t-try-this-at-the-office-etc-sudoers/
+    - name: 'Validate /etc/sudoers.new'
+      ansible.builtin.command: visudo -cs -f /etc/sudoers.new # noqa no-changed-when
+    - name: 'Copy /etc/sudoers.new to /etc/sudoers'
+      ansible.builtin.copy:
+        remote_src: true
+        src: /etc/sudoers.new
+        dest: /etc/sudoers
+        owner: root
+        group: root
+        mode: '0440'
+      tags: configuration
+    - name: 'Remove /etc/sudoers.new'
+      ansible.builtin.file:
+        path: /etc/sudoers.new
+        state: absent
 # https://www.raspberrypi.org/documentation/configuration/security.md
 - name: 'Remove /etc/sudoers.d/010_pi-nopasswd'
-  become: yes
-  file:
+  become: true
+  ansible.builtin.file:
     path: /etc/sudoers.d/010_pi-nopasswd
     state: absent
   when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
   tags:
-  - configuration
-  - debian
-- import_tasks: filesystem-sudoers.yml
+    - configuration
+    - debian
+- name: sudoers files
+  ansible.builtin.import_tasks: filesystem-sudoers.yml

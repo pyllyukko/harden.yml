@@ -1,40 +1,46 @@
 ---
 # https://github.com/canonical/lightdm#configuration
 - name: Stat /etc/lightdm/lightdm.conf
-  stat:
+  ansible.builtin.stat:
     path: /etc/lightdm/lightdm.conf
   register: stat_result
   tags:
-  - network
-  - configuration
+    - network
+    - configuration
 - name: Configure LightDM
   tags: configuration
-  when: stat_result.stat.exists == True
+  when: stat_result.stat.exists
+  become: true
   block:
-  - name: Disable VNC in LightDM
-    ini_file:
-      path: /etc/lightdm/lightdm.conf
-      section: VNCServer
-      option: enabled
-      value: "false"
-    tags: network
-  - name: Hide user list and disallow guest login in LightDM
-    ini_file:
-      path: /etc/lightdm/lightdm.conf
-      section: Seat:*
-      option: '{{ item.key }}'
-      value: '{{ item.value }}'
-    with_dict:
-      greeter-hide-users: "true"
-      allow-guest: "false"
-  become: yes
+    - name: Disable VNC in LightDM
+      community.general.ini_file:
+        path: /etc/lightdm/lightdm.conf
+        section: VNCServer
+        option: enabled
+        value: "false"
+        owner: root
+        group: root
+        mode: '0644'
+      tags: network
+    - name: Hide user list and disallow guest login in LightDM
+      community.general.ini_file:
+        path: /etc/lightdm/lightdm.conf
+        section: Seat:*
+        option: '{{ item.key }}'
+        value: '{{ item.value }}'
+        owner: root
+        group: root
+        mode: '0644'
+      with_dict:
+        greeter-hide-users: "true"
+        allow-guest: "false"
 # CIS Debian Linux 10 Benchmark v1.0.0 - 02-13-2020
 # 1.8.2 Ensure GDM login banner is configured
 - name: Configure GDM3
   tags:
-  - configuration
-  - banners
-  replace:
+    - configuration
+    - banners
+  ansible.builtin.replace:
     regexp: '^(# ?)?({{ item.key }})=.+$'
     replace: '\g<2>={{ item.value }}'
     path: /etc/gdm3/greeter.dconf-defaults
@@ -42,7 +48,7 @@
     disable-user-list: "true"
     banner-message-enable: "true"
     banner-message-text: "'Authorized uses only'"
-  become: yes
+  become: true
   register: result
   failed_when:
     - result.failed == true

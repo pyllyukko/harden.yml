@@ -1,39 +1,39 @@
 ---
 - name: Make installpkg store md5sums (Slackware)
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
-  replace:
+  ansible.builtin.replace:
     path: /sbin/installpkg
     regexp: '^(MD5SUM)=[0-9]+$'
     replace: '\g<1>=1'
     validate: '/bin/grep "^MD5SUM=1$" %s'
   tags:
-  - configuration
-  - slackware
+    - configuration
+    - slackware
 - name: Configure certbot to use 4096 bit keys
   tags: pki
+  become: true
   block:
     - name: Check for /etc/letsencrypt
-      stat:
+      ansible.builtin.stat:
         path: /etc/letsencrypt
       register: stat_result
     # https://certbot.eff.org/docs/using.html
     - name: Configure /etc/letsencrypt/cli.ini
-      ini_file:
+      community.general.ini_file:
         path: /etc/letsencrypt/cli.ini
         section: null
         option: rsa-key-size
         value: 4096
         mode: '0600'
-      when: stat_result.stat.exists == True
+      when: stat_result.stat.exists
       tags: configuration
-  become: yes
 - name: Configure /etc/krb5.conf
   tags:
     - configuration
     - kerberos
     - permissions
-  ini_file:
+  community.general.ini_file:
     path: /etc/krb5.conf
     section: libdefaults
     option: '{{ item.key }}'
@@ -41,7 +41,7 @@
     owner: root
     group: root
     mode: '0644'
-  become: yes
+  become: true
   with_dict:
     verify_ap_req_nofail: "true"
     allow_weak_crypto: "false"
@@ -66,9 +66,12 @@
 #   * httpd & php
 #   * mariadb
 - name: Remove stuff
+  become: true
+  tags: slackware
+  when: ansible_distribution == "Slackware"
   block:
     - name: Remove unneeded/unwanted packages (Slackware)
-      slackpkg:
+      community.general.slackpkg:
         name: '{{ item }}'
         state: absent
       with_items:
@@ -84,7 +87,7 @@
         - inetd
       tags: packages
     - name: Remove leftover files from removed packages
-      file:
+      ansible.builtin.file:
         path: '{{ item }}'
         state: absent
       with_items:
@@ -92,12 +95,9 @@
         - /etc/rc.d/rc.atalk
         - /etc/rc.d/rc.inetd
         - /etc/inetd.conf
-  become: yes
-  tags: slackware
-  when: ansible_distribution == "Slackware"
 #- name: Download checksec into /usr/local/bin
-#  become: yes
-#  get_url:
+#  become: true
+#  ansible.builtin.get_url:
 #    url: https://www.trapkit.de/tools/checksec/checksec.sh
 #    dest: /usr/local/bin/checksec.sh
 #    owner: root
@@ -105,8 +105,8 @@
 #    mode: '0755'
 #    checksum: sha256:77b8a7fd9393d10def665658a41176ee745d5c7969a4a0f43cefcc8a4cd90947
 - name: Set USB authorized_default -> 0 in /etc/rc.local (Debian)
-  become: yes
-  blockinfile:
+  become: true
+  ansible.builtin.blockinfile:
     path: /etc/rc.local
     marker: "# {mark} ANSIBLE MANAGED BLOCK - USB authorized_default"
     insertbefore: '^exit 0$'
@@ -114,85 +114,91 @@
       /bin/bash -c 'shopt -s nullglob; for host in /sys/bus/usb/devices/usb*; do echo 0 1>"${host}/authorized_default"; done'
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
   tags:
-  - configuration
-  - debian
+    - configuration
+    - debian
 - name: Docker
-  block:
-  - name: Stat /etc/docker
-    stat:
-      path: /etc/docker
-    register: docker
-  - name: Create /etc/docker/daemon.json
-    become: yes
-    copy:
-      dest: /etc/docker/daemon.json
-      force: no
-      owner: root
-      group: root
-      mode: '0600'
-      content: |
-        {
-          "experimental": false,
-          "icc": false,
-          "insecure-registries": [],
-          "no-new-privileges": true
-        }
-    when: docker.stat.exists
   tags: docker
+  block:
+    - name: Stat /etc/docker
+      ansible.builtin.stat:
+        path: /etc/docker
+      register: docker
+    - name: Create /etc/docker/daemon.json
+      become: true
+      ansible.builtin.copy:
+        dest: /etc/docker/daemon.json
+        force: false
+        owner: root
+        group: root
+        mode: '0600'
+        content: |
+          {
+            "experimental": false,
+            "icc": false,
+            "insecure-registries": [],
+            "no-new-privileges": true
+          }
+      when: docker.stat.exists
 
 - name: GNOME tracker
-  block:
-  - name: Stat /etc/xdg/autostart/tracker-miner-fs.desktop
-    stat:
-      path: '/etc/xdg/autostart/tracker-miner-fs.desktop'
-    register: stat
-  - name: Disable tracker-miner-fs XDG autostart
-    become: yes
-    lineinfile:
-      path: '/etc/xdg/autostart/tracker-miner-fs.desktop'
-      regexp: '^Hidden=true$'
-      line: Hidden=true
-      create: no
-    when: stat.stat.exists == True
-  - name: Stat /etc/xdg/autostart/tracker-extract.desktop
-    stat:
-      path: '/etc/xdg/autostart/tracker-extract.desktop'
-    register: stat
-  - name: Disable tracker-miner-fs XDG autostart
-    become: yes
-    lineinfile:
-      path: '/etc/xdg/autostart/tracker-extract.desktop'
-      regexp: '^Hidden=true$'
-      line: Hidden=true
-      create: no
-    when: stat.stat.exists == True
-  - name: Disable tracker-miner-fs systemd unit
-    systemd:
-      name: tracker-miner-fs
-      enabled: no
-      state: stopped
-      scope: user
   tags:
-  - configuration
-  - gnome
-  - services
+    - configuration
+    - gnome
+    - services
+  block:
+    - name: Stat /etc/xdg/autostart/tracker-miner-fs.desktop
+      ansible.builtin.stat:
+        path: '/etc/xdg/autostart/tracker-miner-fs.desktop'
+      register: stat
+    - name: Disable tracker-miner-fs XDG autostart
+      become: true
+      ansible.builtin.lineinfile:
+        path: '/etc/xdg/autostart/tracker-miner-fs.desktop'
+        regexp: '^Hidden=true$'
+        line: Hidden=true
+        create: false
+      when: stat.stat.exists
+    - name: Stat /etc/xdg/autostart/tracker-extract.desktop
+      ansible.builtin.stat:
+        path: '/etc/xdg/autostart/tracker-extract.desktop'
+      register: stat
+    - name: Disable tracker-miner-fs XDG autostart
+      become: true
+      ansible.builtin.lineinfile:
+        path: '/etc/xdg/autostart/tracker-extract.desktop'
+        regexp: '^Hidden=true$'
+        line: Hidden=true
+        create: false
+      when: stat.stat.exists
+    - name: Disable tracker-miner-fs systemd unit
+      ansible.builtin.systemd:
+        name: tracker-miner-fs
+        enabled: false
+        state: stopped
+        scope: user
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+      tags:
+        - debian
 
 - name: php.ini
   tags:
-  - php
-  - configuration
+    - php
+    - configuration
   block:
-  - name: Stat /etc/php.ini
-    stat:
-      path: /etc/php.ini
-    register: stat_result
-  # https://cheatsheetseries.owasp.org/cheatsheets/PHP_Configuration_Cheat_Sheet.html
-  # TODO: Moar content!
-  - name: Configure php.ini
-    become: yes
-    when: stat_result.stat.exists == True
-    ini_file:
-      path: /etc/php.ini
-      section: PHP
-      option: expose_php
-      value: 'Off'
+    - name: Stat /etc/php.ini
+      ansible.builtin.stat:
+        path: /etc/php.ini
+      register: stat_result
+    # https://cheatsheetseries.owasp.org/cheatsheets/PHP_Configuration_Cheat_Sheet.html
+    # TODO: Moar content!
+    - name: Configure php.ini
+      become: true
+      when: stat_result.stat.exists
+      community.general.ini_file:
+        path: /etc/php.ini
+        section: PHP
+        option: expose_php
+        value: 'Off'
+        owner: root
+        group: root
+        mode: '0644'

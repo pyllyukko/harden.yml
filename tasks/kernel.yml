@@ -1,7 +1,7 @@
 ---
 - name: Create harden.conf sysctl settings file
-  become: yes
-  copy:
+  become: true
+  ansible.builtin.copy:
     src: "{{ playbook_dir }}/newconfs/sysctl.d/{{ item }}.conf.new"
     dest: /etc/sysctl.d/{{ item }}.conf
     owner: root
@@ -11,27 +11,30 @@
     - sysctl
     - network
   tags:
-  - configuration
-  - kernel
-  - network
+    - configuration
+    - kernel
+    - network
   notify: "Load sysctl settings"
 - name: Create /etc/modprobe.d/
-  become: yes
-  file:
+  become: true
+  ansible.builtin.file:
     path: /etc/modprobe.d
     state: directory
+    owner: root
+    group: root
+    mode: '0700'
   tags: kernel
 - name: Blacklist certain kernel modules
-  become: yes
-  copy:
+  become: true
+  ansible.builtin.copy:
     src: "{{ playbook_dir }}/newconfs/modprobe.d/{{ item }}.conf.new"
     dest: /etc/modprobe.d/{{ item }}.conf
     owner: root
     group: root
     mode: 0600
   tags:
-  - configuration
-  - kernel
+    - configuration
+    - kernel
   with_items:
     - CIS
     - bashbunny
@@ -39,28 +42,28 @@
     - usb-storage
 # https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/sect-security-enhanced_linux-working_with_selinux-disable_ptrace
 - name: Disable ptrace() with SELinux
-  become: yes
+  become: true
   when: ansible_os_family == "RedHat"
-  seboolean:
+  ansible.posix.seboolean:
     name: deny_ptrace
-    state: yes
-    persistent: yes
+    state: true
+    persistent: true
   tags:
-  - configuration
-  - kernel
-  - centos
+    - configuration
+    - kernel
+    - centos
 
 - name: Print Lynis score for kernel hardening
-  become: yes
+  become: true
   tags: kernel
   when: run_lynis_after_hardening
   block:
-  - name: Run Lynis test group kernel hardening
-    command: lynis audit system -q --skip-plugins --tests-from-group kernel_hardening
-  - name: slurp /var/log/lynis.log
-    slurp:
-      src: /var/log/lynis.log
-    register: lynis_log
-  - name: Print Lynis score for kernel hardening
-    debug:
-      msg: "{{ lynis_log['content'] | b64decode | regex_search('Hardening index : \\[([0-9]+)\\]', '\\1', multiline=True) }}"
+    - name: Run Lynis test group kernel hardening
+      ansible.builtin.command: lynis audit system -q --skip-plugins --tests-from-group kernel_hardening # noqa no-changed-when
+    - name: slurp /var/log/lynis.log
+      ansible.builtin.slurp:
+        src: /var/log/lynis.log
+      register: lynis_log
+    - name: Print Lynis score for kernel hardening
+      ansible.builtin.debug:
+        msg: "{{ lynis_log['content'] | b64decode | regex_search('Hardening index : \\[([0-9]+)\\]', '\\1', multiline=True) }}"

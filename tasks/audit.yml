@@ -1,26 +1,31 @@
 ---
 # Some documentation available at https://github.com/pyllyukko/harden.sh/wiki/audit
 - name: Install auditing
+  become: true
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_distribution == "Slackware" or ansible_os_family == "RedHat"
   block:
   - name: Install necessary software (Debian)
-    apt:
+    ansible.builtin.apt:
       name: ['auditd', 'libcap-ng-utils']
-      update_cache: yes
+      update_cache: true
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
     tags:
-    - packages
-    - debian
+      - packages
+      - debian
   - name: mkdir /etc/audit/rules.d
-    file:
+    ansible.builtin.file:
       path: /etc/audit/rules.d
       state: directory
       owner: root
       group: root
       mode: '0700'
   - name: Copy rules
-    get_url:
+    ansible.builtin.get_url:
       url: https://raw.githubusercontent.com/linux-audit/audit-userspace/master/rules/{{ item }}
       dest: /etc/audit/rules.d/{{ item }}
+      owner: root
+      group: root
+      mode: '0600'
     with_items:
       - 10-base-config.rules
       - 11-loginuid.rules
@@ -31,38 +36,38 @@
       - 43-module-load.rules
       - 99-finalize.rules
   - name: Fix 10-base-config.rules for CentOS 7
-    replace:
+    ansible.builtin.replace:
       path: /etc/audit/rules.d/10-base-config.rules
       regexp: "^(--backlog_wait_time [0-9]+)$"
       replace: '#\1'
-    when: (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7") or (ansible_distribution == "Slackware" and ansible_distribution_version == "14.2")
+    when: (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7") or (ansible_distribution == "Slackware" and ansible_distribution_version == "14.2") # noqa yaml[line-length]
     tags: centos
   - name: Remove 11-loginuid.rules for Slackware 14.2
-    file:
+    ansible.builtin.file:
       path: /etc/audit/rules.d/11-loginuid.rules
       state: absent
     when: ansible_distribution == "Slackware" and ansible_distribution_version == "14.2"
     tags:
-    - slackware
+      - slackware
   - name: Modify 20-dont-audit.rules
     block:
-    - name: Uncomment few exclusions in 20-dont-audit.rules
-      replace:
-        path: /etc/audit/rules.d/20-dont-audit.rules
-        regexp: "^#?({{ item }})$"
-        replace: '\1'
-      with_items:
-        - -a always,exclude -F msgtype=CRYPTO_KEY_USER
-        # https://listman.redhat.com/archives/linux-audit/2009-November/006296.html
-        - -a never,user -F subj_type=crond_t
-    - name: Exclude some noisy and irrelevant events
-      blockinfile:
-        path: /etc/audit/rules.d/20-dont-audit.rules
-        block: |
-          -a always,exclude -F msgtype=CRYPTO_SESSION
-          -a never,exit -F arch=b64 -S adjtimex -F auid=unset -F uid=ntp -F subj_type=ntpd_t
+      - name: Uncomment few exclusions in 20-dont-audit.rules
+        ansible.builtin.replace:
+          path: /etc/audit/rules.d/20-dont-audit.rules
+          regexp: "^#?({{ item }})$"
+          replace: '\1'
+        with_items:
+          - -a always,exclude -F msgtype=CRYPTO_KEY_USER
+          # https://listman.redhat.com/archives/linux-audit/2009-November/006296.html
+          - -a never,user -F subj_type=crond_t
+      - name: Exclude some noisy and irrelevant events
+        ansible.builtin.blockinfile:
+          path: /etc/audit/rules.d/20-dont-audit.rules
+          block: |
+            -a always,exclude -F msgtype=CRYPTO_SESSION
+            -a never,exit -F arch=b64 -S adjtimex -F auid=unset -F uid=ntp -F subj_type=ntpd_t
   - name: Disable noisy STIG rules
-    replace:
+    ansible.builtin.replace:
       path: /etc/audit/rules.d/30-stig.rules
       regexp: "^(-.+-F key={{ item }})$"
       replace: '#\1'
@@ -71,44 +76,49 @@
       - delete
   - name: Create 31-privileged.rules
     block:
-    - name: Create temp dir
-      tempfile:
-        state: directory
-        suffix: temp
-      register: tempdir_1
-    - name: Copy Makefile
-      copy:
-        src: "{{ playbook_dir }}/Makefile"
-        dest: "{{ tempdir_1.path }}/"
-        mode: 0600
-    - name: Generate 31-privileged.rules
-      make:
-        chdir: "{{ tempdir_1.path }}"
-        target: /etc/audit/rules.d/31-privileged.rules
-    - name: Remove temp dir
-      file:
-        path: "{{ tempdir_1.path }}"
-        state: absent
-      when: tempdir_1.path is defined
+      - name: Create temp dir
+        ansible.builtin.tempfile:
+          state: directory
+          suffix: temp
+        register: tempdir_1
+      - name: Copy Makefile
+        ansible.builtin.copy:
+          src: "{{ playbook_dir }}/Makefile"
+          dest: "{{ tempdir_1.path }}/"
+          mode: 0600
+      - name: Generate 31-privileged.rules
+        community.general.make:
+          chdir: "{{ tempdir_1.path }}"
+          target: /etc/audit/rules.d/31-privileged.rules
+      - name: Remove temp dir
+        ansible.builtin.file:
+          path: "{{ tempdir_1.path }}"
+          state: absent
+        when: tempdir_1.path is defined
   - name: Remove unnecessary file
-    file:
+    ansible.builtin.file:
       state: absent
       path: /etc/audit/rules.d/audit.rules
   - name: Create few custom rules
-    assemble:
-      remote_src: no
+    ansible.builtin.assemble:
+      remote_src: false
       src: "{{ playbook_dir }}/newconfs/rules.d"
       dest: /etc/audit/rules.d/40-local.rules
+      owner: root
+      group: root
+      mode: '0600'
   - name: Make the configuration immutable
-    replace:
+    ansible.builtin.replace:
       path: /etc/audit/rules.d/99-finalize.rules
       regexp: "^#?(-e 2)$"
       replace: '\1'
   - name: Load the rules
-    command: augenrules --load
+    ansible.builtin.command: augenrules --load
+    register: result
+    changed_when: '"/sbin/augenrules: No change" not in result.stdout'
     tags: configuration
   - name: Configure auditd.conf
-    replace:
+    ansible.builtin.replace:
       path: /etc/audit/auditd.conf
       regexp: '^({{ item.key }}) = .*$'
       replace: '\1 = {{ item.value }}'
@@ -118,16 +128,16 @@
       max_log_file_action: keep_logs
     tags: configuration
   - name: Start & enable auditing
-    service:
+    ansible.builtin.service:
       name: auditd
       state: started
-      enabled: yes
+      enabled: true
     when: ansible_distribution != "Slackware"
     tags:
-    - services
-    - configuration
+      - services
+      - configuration
   - name: Configure GRUB
-    replace:
+    ansible.builtin.replace:
       path: /etc/default/grub
       regexp: '^(GRUB_CMDLINE_LINUX="(?!.*\b{{ item }}\b).*)"$'
       replace: '\1 {{ item }}"'
@@ -137,22 +147,20 @@
     when: (ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian") or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
     tags: configuration
   - name: Add audit=1 to /boot/cmdline.txt (Raspbian)
-    replace:
+    ansible.builtin.replace:
       path: /boot/cmdline.txt
       regexp: '^(.(?!.*\baudit=1\b).*)$'
       replace: '\1 audit=1'
     when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
     tags:
-    - debian
-    - configuration
+      - debian
+      - configuration
   # AUDISP-REMOTE(8): "you should edit auditd.conf to set the name_format to something meaningful and the log_format to enriched
   #- name: Configure auditd.conf for audisp
-  #  replace:
+  #  ansible.builtin.replace:
   #    path: /etc/audit/auditd.conf
   #    regexp: '^({{ item.key }}) = .*$'
   #    replace: '\1 = {{ item.value }}'
   #  with_dict:
   #    log_format: ENRICHED
   #    name_format: HOSTNAME
-  become: yes
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_distribution == "Slackware" or ansible_os_family == "RedHat"

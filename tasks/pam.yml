@@ -2,19 +2,19 @@
 # The login ACL following this task will actually start blocking access, so
 # check that we are not locking ourselves out of the system being hardened.
 - name: 'Check that some user(s) exist in "{{ allowed_group }}" group'
-  getent:
+  ansible.builtin.getent:
     database: group
     key: "{{ allowed_group }}"
   failed_when: getent_group.{{ allowed_group }}[2] == ""
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.15
 - name: Configure access.conf
   tags:
-  - configuration
-  - pam
-  - authorization
+    - configuration
+    - pam
+    - authorization
   block:
     - name: Stat /etc/security/access.conf
-      stat:
+      ansible.builtin.stat:
         path: /etc/security/access.conf
         checksum_algorithm: sha512
       register: stat_result
@@ -23,9 +23,9 @@
       # Only modify access.conf when it's unmodified. Otherwise expect it to have
       # custom modifications and our hardening might break existing configuration.
       # https://github.com/linux-pam/linux-pam/blob/master/modules/pam_access/access.conf
-      when: stat_result.stat.exists == True and stat_result.stat.checksum == "b27e5ad84e17b7a63611e5cfa88f72556f240d6d0ae1d4437f173808d65091b65d3316dcd3fa133d358c5f14508dc0314a8b3f44abf1c42ccb369586b97f5422"
-      become: yes
-      blockinfile:
+      when: stat_result.stat.exists and stat_result.stat.checksum == "b27e5ad84e17b7a63611e5cfa88f72556f240d6d0ae1d4437f173808d65091b65d3316dcd3fa133d358c5f14508dc0314a8b3f44abf1c42ccb369586b97f5422" # noqa yaml[line-length]
+      become: true
+      ansible.builtin.blockinfile:
         path: /etc/security/access.conf
         block: |
           + : root : LOCAL
@@ -37,8 +37,8 @@
           - : ALL : ALL
     - name: Add pam_access to system-auth (Slackware)
       when: ansible_distribution == "Slackware"
-      become: yes
-      lineinfile:
+      become: true
+      ansible.builtin.lineinfile:
         path: /etc/pam.d/system-auth
         regexp: '^account\s+required\s+pam_access\.so\b.*$'
         line: 'account     required      pam_access.so nodefgroup'
@@ -47,8 +47,8 @@
 # This needs to happen before populating /etc/pam.d/other with pam_deny or otherwise sudo will stop working
 - name: Create /etc/pam.d/sudo (Slackware)
   when: ansible_distribution == "Slackware"
-  become: yes
-  copy:
+  become: true
+  ansible.builtin.copy:
     dest: /etc/pam.d/sudo
     owner: root
     group: root
@@ -61,13 +61,13 @@
       password   include      system-auth
       session    include      system-auth
   tags:
-  - configuration
-  - pam
-  - slackware
+    - configuration
+    - pam
+    - slackware
 - name: Add pam_umask & pam_cgroup to /etc/pam.d/postlogin (Slackware)
   when: ansible_distribution == "Slackware"
-  become: yes
-  lineinfile:
+  become: true
+  ansible.builtin.lineinfile:
     path: /etc/pam.d/postlogin
     regexp: '^session\s+optional\s+pam_{{ item }}\.so\b.*$'
     line: 'session     optional      pam_{{ item }}.so'
@@ -75,37 +75,39 @@
     - umask
     - cgroup
   tags:
-  - configuration
-  - pam
-  - slackware
+    - configuration
+    - pam
+    - slackware
 # http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html
 # https://tldp.org/HOWTO/User-Authentication-HOWTO/x263.html#AEN266
 - name: /etc/pam.d/other
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
+  become: true
   block:
     - name: Create secure default /etc/pam.d/other
-      copy:
+      ansible.builtin.copy:
         src: "{{ playbook_dir }}/newconfs/pam.d/other.new"
         dest: /etc/pam.d/other
         owner: root
         group: root
         mode: '0644'
       tags:
-      - configuration
-      - pam
+        - configuration
+        - pam
     - name: Remove /etc/pam.d/other.new
-      file:
+      ansible.builtin.file:
         path: /etc/pam.d/other.new
         state: absent
       when: ansible_distribution == "Slackware"
       tags:
-      - pam
-      - slackware
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
-  become: yes
+        - pam
+        - slackware
 - name: Check some Slackware's PAM files
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
-  shell: 'echo "79e37b98714471de80ed60ac8aad337b547259ce27d669a58f8b9d94d77e676e336409f1da9a0f4e412c11398791ff3123a996899410729cda23b771e6111393  /etc/pam.d/{{ item }}" | sha512sum -c'
+  ansible.builtin.shell: 'set -o pipefail; echo "79e37b98714471de80ed60ac8aad337b547259ce27d669a58f8b9d94d77e676e336409f1da9a0f4e412c11398791ff3123a996899410729cda23b771e6111393  /etc/pam.d/{{ item }}" | sha512sum -c' # noqa yaml[line-length]
+  args:
+    executable: /bin/bash
   with_items:
     - chage
     - chgpasswd
@@ -119,45 +121,49 @@
     - userdel
     - usermod
   tags:
-  - pam
-  - slackware
+    - pam
+    - slackware
 - name: faillock
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware" or ansible_distribution == "Debian"
   tags:
-  - pam
-  - authorization
-  block:
-  - name: Configure /etc/security/faillock.conf
-    template:
-      src: "{{ playbook_dir }}/newconfs/faillock.conf.new"
-      dest: /etc/security/faillock.conf
-      owner: root
-      group: root
-    tags: configuration
-  - name: Create faillock directory
-    file:
-      path: /var/run/faillock
-      state: directory
-      mode: '0751'
-  # NOTE: This doesn't hurt even though we wouldn't enable pam_faillock via
-  # pam-auth-update as long as there are no failed logins recorded in
-  # /var/run/faillock/
-  - name: Insert "auth required pam_faillock.so preauth" into /etc/pam.d/common-auth
-    when: ansible_distribution == "Debian"
-    tags:
-    - configuration
-    - debian
+    - pam
     - authorization
-    lineinfile:
-      path: /etc/pam.d/common-auth
-      regexp: '^auth\s+required\s+pam_faillock\.so\s+preauth$'
-      line: "auth\trequired\t\t\tpam_faillock.so\tpreauth"
-      insertbefore: '^# here are the per-package modules \(the "Primary" block\)$'
+  block:
+    - name: Configure /etc/security/faillock.conf
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/newconfs/faillock.conf.new"
+        dest: /etc/security/faillock.conf
+        owner: root
+        group: root
+        mode: '0644'
+      tags: configuration
+    - name: Create faillock directory
+      ansible.builtin.file:
+        path: /var/run/faillock
+        state: directory
+        mode: '0751'
+    # NOTE: This doesn't hurt even though we wouldn't enable pam_faillock via
+    # pam-auth-update as long as there are no failed logins recorded in
+    # /var/run/faillock/
+    - name: Insert "auth required pam_faillock.so preauth" into /etc/pam.d/common-auth
+      when: ansible_distribution == "Debian"
+      tags:
+        - configuration
+        - debian
+        - authorization
+      ansible.builtin.lineinfile:
+        path: /etc/pam.d/common-auth
+        regexp: '^auth\s+required\s+pam_faillock\.so\s+preauth$'
+        line: "auth\trequired\t\t\tpam_faillock.so\tpreauth" # noqa no-tabs
+        insertbefore: '^# here are the per-package modules \(the "Primary" block\)$'
 - name: Configure pam_faillock & pam_faildelay (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: true
+  tags: slackware
   block:
     - name: Add pam_faillock and pam_faildelay to /etc/pam.d/system-auth
-      replace:
+      ansible.builtin.replace:
         path: /etc/pam.d/system-auth
         regexp: '^auth\s+required\s+pam_unix\.so.*$\n'
         replace: |
@@ -166,17 +172,14 @@
           auth        [default=die] pam_faillock.so authfail
           auth        required      pam_faillock.so authsucc
       tags:
-      - configuration
-      - pam
-      - authorization
-  when: ansible_distribution == "Slackware"
-  become: yes
-  tags: slackware
+        - configuration
+        - pam
+        - authorization
 # postlogin doesn't include any auth lines
 - name: Remove auth include postlogin (Slackware)
   when: ansible_distribution == "Slackware"
-  become: yes
-  lineinfile:
+  become: true
+  ansible.builtin.lineinfile:
     path: /etc/pam.d/{{ item }}
     regexp: '^auth\s+include\s+postlogin$'
     state: absent
@@ -186,15 +189,20 @@
     - sddm
     - sshd
   tags:
-  - configuration
-  - pam
-  - slackware
+    - configuration
+    - pam
+    - slackware
 # https://github.com/pyllyukko/harden.sh/issues/64
 - name: nullok
+  become: true
+  tags:
+    - configuration
+    - pam
+    - passwords
   block:
     - name: Disallow blank passwords (Debian)
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-      replace:
+      ansible.builtin.replace:
         path: /etc/pam.d/common-auth
         regexp: '\s+nullok(_secure)?'
         replace: ''
@@ -204,34 +212,29 @@
     - name: Disallow blank passwords (Slackware)
       when: ansible_distribution == "Slackware"
       tags: slackware
-      replace:
+      ansible.builtin.replace:
         path: /etc/pam.d/system-auth
         regexp: '\s+nullok'
         replace: ''
-  become: yes
-  tags:
-  - configuration
-  - pam
-  - passwords
 # https://wiki.debian.org/WHEEL/PAM
 # This is not enabled in Slackware because it has a separate "Deny use of su" task
 - name: Enable pam_wheel.so in /etc/pam.d/su
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
-  become: yes
-  replace:
+  become: true
+  ansible.builtin.replace:
     path: /etc/pam.d/su
     regexp: '^#\s*(auth\s+required\s+pam_wheel\.so(\s+use_uid)?)$'
     replace: '\1'
     validate: '/bin/grep "^auth\s\+required\s\+pam_wheel\.so.*$" %s'
   tags:
-  - configuration
-  - pam
-  - debian
-  - centos
+    - configuration
+    - pam
+    - debian
+    - centos
 - name: Enable polyinstantiated temp directories
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
-  become: yes
-  replace:
+  become: true
+  ansible.builtin.replace:
     path: /etc/security/namespace.conf
     regexp: '^#({{ item }}\b.+)$'
     replace: '\1'
@@ -240,24 +243,24 @@
     - '/tmp'
     - '/var/tmp'
   tags:
-  - configuration
-  - pam
+    - configuration
+    - pam
 - name: Remove adm user from /etc/security/namespace.conf
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-  become: yes
-  replace:
+  become: true
+  ansible.builtin.replace:
     path: /etc/security/namespace.conf
     regexp: '^(.+),adm$'
     replace: '\1'
     validate: '/bin/grep "^\(/var\)\?/tmp\s\+\(/var/tmp\)\?/tmp-inst/\s\+level\s\+root$" %s'
   tags:
-  - configuration
-  - pam
-  - debian
+    - configuration
+    - pam
+    - debian
 # For some reason some Debian systems have had random group ownership on these (e.g. audio or systemd-journal)
 - name: Make sure polyinstantiated directories are owned by root:root
-  become: yes
-  file:
+  become: true
+  ansible.builtin.file:
     path: '{{ item }}'
     owner: root
     group: root
@@ -270,15 +273,24 @@
     - /tmp-inst
     - /var/tmp/tmp-inst
   tags:
-  - permissions
-  - pam
+    - permissions
+    - pam
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.19
 - name: Debian pam-configs
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  become: true
+  tags:
+    - configuration
+    - pam
+    - debian
   block:
     - name: Copying new pam-configs
-      copy:
+      ansible.builtin.copy:
         src: "{{ playbook_dir }}/newconfs/pam-configs/{{ item }}.new"
         dest: /usr/share/pam-configs/{{ item }}
+        owner: root
+        group: root
+        mode: '0644'
       with_items:
         - lastlog
         - polyinstation
@@ -288,9 +300,12 @@
       notify: "Run pam-auth-update"
     - name: Copying new pam-configs related to authorization
       tags: authorization
-      copy:
+      ansible.builtin.copy:
         src: "{{ playbook_dir }}/newconfs/pam-configs/{{ item }}.new"
         dest: /usr/share/pam-configs/{{ item }}
+        owner: root
+        group: root
+        mode: '0644'
       with_items:
         - access
         - uid_ge_1000
@@ -299,71 +314,73 @@
         - inactive
       notify: "Run pam-auth-update"
     - name: Copying new pam-configs (templates)
-      template:
+      ansible.builtin.template:
         src: "{{ playbook_dir }}/templates/pam-configs/{{ item }}.j2"
         dest: /usr/share/pam-configs/{{ item }}
         owner: root
         group: root
+        mode: '0644'
       with_items:
         - faildelay
       notify: "Run pam-auth-update"
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-  become: yes
-  tags:
-  - configuration
-  - pam
-  - debian
 - name: authconfig
+  when: ansible_os_family == "RedHat"
+  become: true
+  tags:
+    - configuration
+    - pam
+    - centos
   block:
     - name: Enable additional PAM modules with authconfig (RH)
-      command: /sbin/authconfig --enable{{ item }}
+      ansible.builtin.command: /sbin/authconfig --enable{{ item }} --update
       with_items:
         #- pamaccess
         - faillock
+      changed_when: true
       tags: authorization
     - name: Configure password policy via authconfig
-      command: /sbin/authconfig --passalgo=sha512 --passminlen=14 --enablereqlower --enablerequpper --enablereqdigit --enablereqother --update
+      ansible.builtin.command: /sbin/authconfig --passalgo=sha512 --passminlen=14 --enablereqlower --enablerequpper --enablereqdigit --enablereqother --update
+      changed_when: true
       tags: passwords
-  when: ansible_os_family == "RedHat"
-  become: yes
-  tags:
-  - configuration
-  - pam
-  - centos
 
 - name: Password related
+  become: true
+  tags:
+    - configuration
+    - pam
+    - passwords
   block:
     - name: Install passwdqc (Debian)
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-      apt:
+      ansible.builtin.apt:
         name: libpam-passwdqc
-        update_cache: yes
+        update_cache: true
       tags:
-      - debian
-      - passwords
-      - packages
+        - debian
+        - passwords
+        - packages
     # TODO: Verify that pwquality is used by pam configs
     - name: Install libpwquality (Slackware)
       when: ansible_distribution == "Slackware"
-      slackpkg:
+      community.general.slackpkg:
         name: libpwquality
         state: present
       tags:
-      - slackware
-      - passwords
-      - packages
+        - slackware
+        - passwords
+        - packages
     # https://github.com/linux-pam/linux-pam/issues/352
     - name: Add rounds={{ crypt_rounds }} to pam_unix in /etc/pam.d/common-password
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
       tags: debian
-      replace:
+      ansible.builtin.replace:
         path: /etc/pam.d/common-password
         regexp: '^(password\s+.+\s+pam_unix\.so(?!.*\brounds=[0-9]+\b).*)$'
         replace: '\1 rounds={{ crypt_rounds }}'
     # CIS CentOS Linux 7 Benchmark v3.0.0 - 5.3.1 Ensure password creation requirements are configured
     # https://www.redhat.com/sysadmin/more-lockdown-controls
     - name: Configure pwquality
-      replace:
+      ansible.builtin.replace:
         path: /etc/security/pwquality.conf
         regexp: '^(# ?)?({{ item.key }}\s+)=.*$'
         replace: '\g<2>= {{ item.value }}'
@@ -378,35 +395,30 @@
         ocredit: -1
         lcredit: -1
       tags:
-      - slackware
-      - centos
+        - slackware
+        - centos
     - name: Configure minlen -> 14 in /etc/pam.d/system-auth (Slackware)
-      replace:
+      ansible.builtin.replace:
         path: /etc/pam.d/system-auth
         regexp: '^(password.+\sminlen=)[0-9]+(.*)$'
         replace: '\g<1>14\g<2>'
         validate: '/bin/grep "^password.\+minlen=14.*$" %s'
       when: ansible_distribution == "Slackware"
       tags: slackware
-  become: yes
-  tags:
-  - configuration
-  - pam
-  - passwords
 
 # CIS Debian Linux 10 Benchmark v1.0.0 - 1.6.4 Ensure core dumps are restricted
 # https://en.wikipedia.org/wiki/Fork_bomb#Prevention
 - name: Configure /etc/security/limits.conf
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
-  become: yes
-  pam_limits:
+  become: true
+  community.general.pam_limits:
     domain: '*'
     limit_type: hard
-    limit_item: '{{ item.key }}'
+    limit_item: '{{ item.key }}' # noqa args[module]
     value: '{{ item.value }}'
   tags:
-  - configuration
-  - pam
+    - configuration
+    - pam
   with_dict:
     core: 0
     nproc: '{{ nproc_limit }}'

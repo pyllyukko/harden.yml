@@ -1,38 +1,41 @@
 ---
 - name: CA certs
+  become: true
   block:
   - name: Remove /etc/ssl/certs/ssl-cert-snakeoil.pem
-    file:
+    ansible.builtin.file:
       path: /etc/ssl/certs/ssl-cert-snakeoil.pem
       state: absent
     tags:
-    - pki
-    - configuration
+      - pki
+      - configuration
     notify: "Run update-ca-certificates"
   - name: Install ca-certificates package (Debian)
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
-    apt:
+    ansible.builtin.apt:
       name: ca-certificates
-      update_cache: yes
+      update_cache: true
     tags:
-    - packages
-    - pki
-    - debian
+      - packages
+      - pki
+      - debian
   - name: Copy ca-certificates.conf
     when: ansible_os_family != "RedHat"
-    copy:
+    ansible.builtin.copy:
       src: "{{ playbook_dir }}/newconfs/ca-certificates.conf.new"
       dest: /etc/ca-certificates.conf
+      owner: root
+      group: root
+      mode: '0644'
     tags:
-    - configuration
-    - pki
+      - configuration
+      - pki
     notify: "Run update-ca-certificates"
   - name: Install OpenSSL (Slackware)
     when: ansible_distribution == "Slackware"
-    slackpkg:
+    community.general.slackpkg:
       name: openssl
       state: present
     tags:
-    - packages
-    - slackware
-  become: yes
+      - packages
+      - slackware

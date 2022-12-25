@@ -4,36 +4,42 @@
 #   * 1.8.1.2 Ensure local login warning banner is configured properly
 #   * 1.8.1.3 Ensure remote login warning banner is configured properly
 - name: Create /etc/issue{,.net}
-  become: yes
-  copy:
+  become: true
+  ansible.builtin.copy:
     content: "Authorized uses only. All activity may be monitored and reported.\n"
     dest: "{{ item }}"
+    owner: root
+    group: root
+    mode: '0644'
   with_items:
     - /etc/issue
     - /etc/issue.net
   tags:
-  - configuration
-  - banners
+    - configuration
+    - banners
 - name: Create /etc/motd
-  become: yes
-  copy:
+  become: true
+  ansible.builtin.copy:
     src: "{{ playbook_dir }}/newconfs/motd.new"
     dest: /etc/motd
+    owner: root
+    group: root
+    mode: '0644'
   tags:
-  - configuration
-  - banners
+    - configuration
+    - banners
 
 - name: Print Lynis score for banners
-  become: yes
+  become: true
   tags: banners
   when: run_lynis_after_hardening
   block:
-  - name: Run Lynis test group banners
-    command: lynis audit system -q --skip-plugins --tests-from-group banners
-  - name: slurp /var/log/lynis.log
-    slurp:
-      src: /var/log/lynis.log
-    register: lynis_log
-  - name: Print Lynis score for banners
-    debug:
-      msg: "{{ lynis_log['content'] | b64decode | regex_search('Hardening index : \\[([0-9]+)\\]', '\\1', multiline=True) }}"
+    - name: Run Lynis test group banners
+      ansible.builtin.command: lynis audit system -q --skip-plugins --tests-from-group banners # noqa no-changed-when
+    - name: slurp /var/log/lynis.log
+      ansible.builtin.slurp:
+        src: /var/log/lynis.log
+      register: lynis_log
+    - name: Print Lynis score for banners
+      ansible.builtin.debug:
+        msg: "{{ lynis_log['content'] | b64decode | regex_search('Hardening index : \\[([0-9]+)\\]', '\\1', multiline=True) }}"

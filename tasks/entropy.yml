@@ -1,25 +1,25 @@
 ---
 # Install rng-tools when TRNG is available and in use
 - name: Read /sys/class/misc/hw_random/rng_current
-  slurp:
+  ansible.builtin.slurp:
     src: /sys/class/misc/hw_random/rng_current
   register: rng_current
   tags: rng
 - name: Use rng-tools
   tags:
-  - rng
-  - debian
-  block:
-  - name: Install rng-tools
-    apt:
-      name: rng-tools
-      update_cache: yes
-    tags: packages
-  - name: Start & enable rng-tools service
-    service:
-      name: rng-tools-debian
-      state: started
-      enabled: yes
-    tags: services
+    - rng
+    - debian
   when: rng_current['content'] | b64decode != "none\n" and ansible_distribution == "Debian"
-  become: yes
+  become: true
+  block:
+    - name: Install rng-tools
+      ansible.builtin.apt:
+        name: rng-tools
+        update_cache: true
+      tags: packages
+    - name: Start & enable rng-tools service
+      ansible.builtin.service:
+        name: rng-tools-debian
+        state: started
+        enabled: true
+      tags: services

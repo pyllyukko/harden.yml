@@ -1,31 +1,34 @@
 ---
 - name: ClamAV
+  become: true
+  tags: clamav
   block:
   - name: Install ClamAV (Debian)
-    apt:
+    ansible.builtin.apt:
       name: ['clamav', 'clamav-daemon']
-      update_cache: yes
+      update_cache: true
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
     tags:
-    - packages
-    - services
-    - debian
+      - packages
+      - services
+      - debian
   - name: Determine ClamAV sysconfdir
-    shell: clamconf | awk '/^Checking configuration files in/{print$5}'
+    ansible.builtin.shell: clamconf | awk '/^Checking configuration files in/{print$5}' # noqa no-changed-when
     register: clamav_sysconfdir
   - name: Verify ClamAV sysconfdir
-    assert:
+    ansible.builtin.assert:
       that:
         - clamav_sysconfdir.stdout | length > 0
         - clamav_sysconfdir.stdout | regex_search('^/etc')
   - name: Generate fresh configs
-    shell: /usr/bin/clamconf -g {{ item }}.conf 1>{{ clamav_sysconfdir.stdout }}/{{ item }}.conf
+    ansible.builtin.shell: /usr/bin/clamconf -g {{ item }}.conf 1>{{ clamav_sysconfdir.stdout }}/{{ item }}.conf
     with_items:
       - freshclam
       - clamd
     tags: configuration
+    changed_when: true
   - name: Comment out Example lines
-    replace:
+    ansible.builtin.replace:
       path: '{{ clamav_sysconfdir.stdout }}/{{ item }}.conf'
       regexp: '^(Example)$'
       replace: '#\g<1>'
@@ -34,7 +37,7 @@
       - clamd
     tags: configuration
   - name: mkdir /var/run/clamav/
-    file:
+    ansible.builtin.file:
       path: /var/run/clamav
       state: directory
       owner: clamav
@@ -42,7 +45,7 @@
       mode: '0771'
   # https://docs.clamav.net/manual/Usage/Configuration.html#clamdconf
   - name: Configure ClamAV
-    replace:
+    ansible.builtin.replace:
       path: '{{ clamav_sysconfdir.stdout }}/clamd.conf'
       regexp: '^#?({{ item.key }} ).*$'
       replace: '\g<1>{{ item.value }}'
@@ -83,7 +86,7 @@
     tags: configuration
   # https://docs.clamav.net/manual/Usage/Configuration.html#freshclamconf
   - name: Configure freshclam
-    replace:
+    ansible.builtin.replace:
       path: '{{ clamav_sysconfdir.stdout }}/freshclam.conf'
       regexp: '^#?({{ item.key }} ).*$'
       replace: '\g<1>{{ item.value }}'
@@ -105,7 +108,7 @@
   - name: Remove .new configs
     when: ansible_distribution == "Slackware"
     tags: slackware
-    file:
+    ansible.builtin.file:
       path: '{{ clamav_sysconfdir.stdout }}/{{ item }}.conf.new'
       state: absent
     with_items:
@@ -114,13 +117,13 @@
       - freshclam
   # Make the dir and the necessary files readable by other users so they can run clamscan
   - name: Make /var/lib/clamav/ +rx
-    file:
+    ansible.builtin.file:
       path: /var/lib/clamav/
       mode: '0755'
     tags: permissions
   # "CLD files are uncompressed and unsigned versions of the CVD that have had CDIFFs applied"
   - name: Make /var/lib/clamav/*.c[lv]d +r
-    file:
+    ansible.builtin.file:
       path: /var/lib/clamav/{{ item }}
       mode: '0644'
     with_items:
@@ -136,7 +139,7 @@
     tags: permissions
   # https://blog.didierstevens.com/2017/02/15/quickpost-clamav-and-zip-file-decryption/
   - name: Create a password signature file
-    copy:
+    ansible.builtin.copy:
       dest: /var/lib/clamav/passwords.pwdb
       owner: root
       group: root
@@ -144,5 +147,3 @@
       content: |
         ZipPasswordInfected;Engine:81-255;0;infected
     tags: configuration
-  become: yes
-  tags: clamav

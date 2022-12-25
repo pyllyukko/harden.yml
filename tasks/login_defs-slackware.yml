@@ -1,36 +1,39 @@
 ---
 - name: Slackware authorization
+  become: true
+  when: ansible_distribution == "Slackware"
   block:
   # The login ACL following this task will actually start blocking access, so
   # check that we are not locking ourselves out of the system being hardened.
   - name: 'Check that some user(s) exist in "{{ allowed_group }}" group'
-    getent:
+    ansible.builtin.getent:
       database: group
       key: "{{ allowed_group }}"
     failed_when: getent_group.{{ allowed_group }}[2] == ""
   - name: /etc/shutdown.allow
     tags:
-    - configuration
-    - authorization
+      - configuration
+      - authorization
     block:
-    - name: Create /etc/shutdown.allow
-      copy:
-        content: ""
-        dest: /etc/shutdown.allow
-        force: no
-    - name: Use shutdown -a in /etc/inittab
-      replace:
-        path: /etc/inittab
-        regexp: '^(ca::ctrlaltdel:/sbin/shutdown -t5 -r now)$'
-        replace: '\g<1> -a'
-        validate: '/bin/grep "^ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a$" %s'
-  become: yes
-  when: ansible_distribution == "Slackware"
+      - name: Create /etc/shutdown.allow
+        ansible.builtin.copy:
+          content: ""
+          dest: /etc/shutdown.allow
+          force: false
+          owner: root
+          group: root
+          mode: '0600'
+      - name: Use shutdown -a in /etc/inittab
+        ansible.builtin.replace:
+          path: /etc/inittab
+          regexp: '^(ca::ctrlaltdel:/sbin/shutdown -t5 -r now)$'
+          replace: '\g<1> -a'
+          validate: '/bin/grep "^ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a$" %s'
 - name: Set umask to 077 in /etc/profile (Slackware)
   tags: configuration
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
-  replace:
+  ansible.builtin.replace:
     path: /etc/profile
     regexp: '^(umask) [0-9]+$'
     replace: '\g<1> 077'
@@ -39,9 +42,9 @@
 # Default AGID is "audio cdrom floppy input lp netdev plugdev power scanner video"
 - name: Configure defchmod and AGID in /usr/sbin/adduser (Slackware)
   tags: configuration
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
-  replace:
+  ansible.builtin.replace:
     path: /usr/sbin/adduser
     regexp: '^({{ item.key }}=).+'
     replace: '\g<1>{{ item.value }}'
@@ -54,93 +57,95 @@
 # https://cisofy.com/lynis/controls/AUTH-9308/
 - name: Single user mode authentication
   tags:
-  - configuration
-  - authentication
-  block:
-  - name: Remove S from System initialization (Slackware)
-    replace:
-      path: /etc/inittab
-      regexp: '^si:S:sysinit:/etc/rc\.d/rc\.S$'
-      replace: 'si::sysinit:/etc/rc.d/rc.S'
-      validate: '/bin/grep "^si::sysinit:/etc/rc.d/rc.S$" %s'
-  - name: Create separate entry for single user mode which requires authentication (Slackware)
-    blockinfile:
-      path: /etc/inittab
-      insertafter: "^x1:4:respawn:/etc/rc.d/rc.4$"
-      block: |
-        # single user mode
-        ~~:S:wait:/sbin/sulogin
-  - name: Fix rc.K
-    lineinfile:
-      path: /etc/rc.d/rc.K
-      regexp: '^/sbin/telinit'
-      line: /sbin/telinit -t 1 S
-  become: yes
+    - configuration
+    - authentication
+  become: true
   when: ansible_distribution == "Slackware"
+  block:
+    - name: Remove S from System initialization (Slackware)
+      ansible.builtin.replace:
+        path: /etc/inittab
+        regexp: '^si:S:sysinit:/etc/rc\.d/rc\.S$'
+        replace: 'si::sysinit:/etc/rc.d/rc.S'
+        validate: '/bin/grep "^si::sysinit:/etc/rc.d/rc.S$" %s'
+    - name: Create separate entry for single user mode which requires authentication (Slackware)
+      ansible.builtin.blockinfile:
+        path: /etc/inittab
+        insertafter: "^x1:4:respawn:/etc/rc.d/rc.4$"
+        block: |
+          # single user mode
+          ~~:S:wait:/sbin/sulogin
+    - name: Fix rc.K
+      ansible.builtin.lineinfile:
+        path: /etc/rc.d/rc.K
+        regexp: '^/sbin/telinit'
+        line: /sbin/telinit -t 1 S
 - name: Add LESS variables and disable core dumps
   tags: configuration
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: /etc/profile
     block: |
       export LESSSECURE=1
       export LESSHISTFILE="/dev/null"
       ulimit -Hc 0
-  become: yes
+  become: true
   when: ansible_distribution == "Slackware"
 
 # https://github.com/ansible/ansible/issues/11024
 # Cleanup Slackware's groups
 - name: Slackware groups
   when: ansible_distribution == "Slackware"
-  become: yes
+  become: true
   block:
-  - name: Remove all members from certain groups (Slackware)
-    command: gpasswd -M "" {{ item }}
-    register: result
-    failed_when:
-      - result.failed == true
-      - '"is not a member of" not in result.stderr'
-    tags: accounts
-    with_items:
-      - root
-      - bin
-      - daemon
-      - sys
-      - adm
-      - disk
-  - name: Remove uucp from dialout group (Slackware)
-    command: gpasswd -d uucp dialout
-    register: result
-    failed_when:
-      - result.failed == true
-      - '"is not a member of" not in result.stderr'
-    tags: accounts
-  # root is root and that's enough :)
-  - name: Remove root from all supplemental groups
-    command: gpasswd -d root {{ item }}
-    register: result
-    failed_when:
-      - result.failed == true
-      - '"is not a member of" not in result.stderr'
-    tags: accounts
-    with_items:
-      - wheel
-      - audio
+    - name: Remove all members from certain groups (Slackware)
+      ansible.builtin.command: gpasswd -M "" {{ item }}
+      register: result
+      changed_when: true
+      failed_when:
+        - result.failed == true
+        - '"is not a member of" not in result.stderr'
+      tags: accounts
+      with_items:
+        - root
+        - bin
+        - daemon
+        - sys
+        - adm
+        - disk
+    - name: Remove uucp from dialout group (Slackware)
+      ansible.builtin.command: gpasswd -d uucp dialout
+      register: result
+      changed_when: '"is not a member of" not in result.stderr'
+      failed_when:
+        - result.failed == true
+        - '"is not a member of" not in result.stderr'
+      tags: accounts
+    # root is root and that's enough :)
+    - name: Remove root from all supplemental groups
+      ansible.builtin.command: gpasswd -d root {{ item }}
+      register: result
+      failed_when:
+        - result.failed == true
+        - '"is not a member of" not in result.stderr'
+      changed_when: '"is not a member of" not in result.stderr'
+      tags: accounts
+      with_items:
+        - wheel
+        - audio
 
 - name: Fix gshadow (Slackware)
   when: ansible_distribution == "Slackware"
-  ignore_errors: yes
-  become: yes
-  shell: yes | grpck
+  become: true
+  ansible.builtin.shell: set -o pipefail; yes | grpck
 - name: Deny use of su
-  copy:
+  ansible.builtin.copy:
     src: "{{ playbook_dir }}/newconfs/pam.d/su.new"
     dest: /etc/pam.d/su
     owner: root
     group: root
     mode: '0644'
   when: ansible_distribution == "Slackware"
-  become: yes
+  become: true
   tags:
-  - configuration
-  - pam
+    - configuration
+    - pam

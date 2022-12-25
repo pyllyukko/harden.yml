@@ -1,54 +1,55 @@
 ---
 - name: Run update-ca-certificates
-  become: yes
+  become: true
   when: ansible_os_family != "RedHat"
-  command: /usr/sbin/update-ca-certificates --verbose --fresh
+  ansible.builtin.command: /usr/sbin/update-ca-certificates --verbose --fresh
   tags:
   - configuration
   - pki
+# This will usually return 255 with "sysctl: cannot stat /proc/.+: No such file or directory"
 - name: Load sysctl settings
-  become: yes
-  command: /sbin/sysctl -p /etc/sysctl.d/sysctl.conf /etc/sysctl.d/network.conf
+  become: true
+  ansible.builtin.command: /sbin/sysctl -p /etc/sysctl.d/sysctl.conf /etc/sysctl.d/network.conf
   tags: kernel
-  ignore_errors: yes
-  #register: result
-  #failed_when:
-  #  - result.failed
-  #  - "result.stderr != 'sysctl: cannot stat /proc/sys/sys/kernel/modify_ldt: No such file or directory'"
+  register: result
+  failed_when:
+    - result.failed
+    - result.rc != 255
+    - "'sysctl: cannot stat' not in result.stderr"
 - name: Create rkhunter.dat
-  command: /usr/bin/rkhunter --propupd
-  become: yes
+  ansible.builtin.command: /usr/bin/rkhunter --propupd
+  become: true
   tags: rkhunter
 # This takes a long time so we do it async
 - name: Create aide.db
-  command: /usr/sbin/aideinit --yes --force
+  ansible.builtin.command: /usr/sbin/aideinit --yes --force
   tags: aide
-  become: yes
+  become: true
   async: 3600
   poll: 0
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
 - name: Run pam-auth-update
-  command: /usr/sbin/pam-auth-update --package
-  become: yes
+  ansible.builtin.command: /usr/sbin/pam-auth-update --package
+  become: true
   tags:
-  - pam
-  - configuration
+    - pam
+    - configuration
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
 # rc.sshd exits if /var/run/sshd.pid doesn't exist
 - name: Restart sshd (Slackware)
   when: ansible_distribution == "Slackware"
-  become: yes
-  command: /bin/sh /etc/rc.d/rc.sshd restart
+  become: true
+  ansible.builtin.command: /bin/sh /etc/rc.d/rc.sshd restart
   register: result
   failed_when:
     - result.failed == true
     - '"WARNING: There does not appear to be a parent instance of sshd running." not in result.stdout'
   tags:
-  - services
-  - slackware
+    - services
+    - slackware
 - name: Restart sshd (Debian)
-  become: yes
-  service:
+  become: true
+  ansible.builtin.service:
     name: ssh
     state: restarted
   when: >
@@ -56,5 +57,6 @@
     ansible_facts.services.ssh.state == "running"
   tags: services
 - name: Run systemctl daemon-reload
-  become: yes
-  command: systemctl daemon-reload
+  become: true
+  ansible.builtin.systemd:
+    daemon_reload: true
