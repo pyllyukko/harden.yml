@@ -108,6 +108,9 @@
   ansible.builtin.shell: 'set -o pipefail; echo "79e37b98714471de80ed60ac8aad337b547259ce27d669a58f8b9d94d77e676e336409f1da9a0f4e412c11398791ff3123a996899410729cda23b771e6111393  /etc/pam.d/{{ item }}" | sha512sum -c' # noqa yaml[line-length]
   args:
     executable: /bin/bash
+  register: result
+  changed_when:
+    - '"OK" not in result.stdout'
   with_items:
     - chage
     - chgpasswd
