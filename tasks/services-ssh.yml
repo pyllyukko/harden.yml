@@ -6,6 +6,12 @@
     - services
     - ssh
     - debian
+- name: Check SSH daemon service state (Slackware)
+  become: true
+  ansible.builtin.stat:
+    path: /etc/rc.d/rc.sshd
+  register: rc_sshd
+  tags: ssh
 # This is used in sshd_config.j2 template(s)
 - name: Stat /etc/krb5.keytab
   ansible.builtin.stat:
@@ -36,7 +42,7 @@
   # Skip the task in Debian if ssh.service does not exist
   when: >
     ((ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux") and ansible_facts.services.ssh is defined) or
-    ansible_distribution == "Slackware"
+    (ansible_distribution == "Slackware" and rc_sshd.stat.exists and rc_sshd.stat.xusr)
 - name: Harden SSH client configuration
   tags:
     - configuration
