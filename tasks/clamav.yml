@@ -15,11 +15,13 @@
   - name: Determine ClamAV sysconfdir
     ansible.builtin.shell: clamconf | awk '/^Checking configuration files in/{print$5}' # noqa no-changed-when
     register: clamav_sysconfdir
+    tags: check
   - name: Verify ClamAV sysconfdir
     ansible.builtin.assert:
       that:
         - clamav_sysconfdir.stdout | length > 0
         - clamav_sysconfdir.stdout | regex_search('^/etc')
+    tags: check
   - name: Generate fresh configs
     ansible.builtin.shell: /usr/bin/clamconf -g {{ item }}.conf 1>{{ clamav_sysconfdir.stdout }}/{{ item }}.conf
     with_items:

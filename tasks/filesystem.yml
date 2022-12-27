@@ -10,6 +10,7 @@
       ansible.builtin.getent:
         database: group
         key: polkitd
+      tags: check
     - name: Fix /etc/rc.d/rc.S to mount /proc with hidepid=2 (Slackware)
       ansible.builtin.replace:
         path: /etc/rc.d/rc.S
@@ -246,6 +247,7 @@
         - name: getent passwd
           ansible.builtin.getent:
             database: passwd
+          tags: check
         # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#limit-user-perm
         - name: chmod home directories
           ansible.builtin.file:

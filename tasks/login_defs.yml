@@ -124,6 +124,7 @@
     - name: getent passwd
       ansible.builtin.getent:
         database: passwd
+      tags: check
     - name: Create /etc/ftpusers
       become: true
       ansible.builtin.template:
@@ -141,6 +142,7 @@
 - name: Verify integrity of group files
   become: true
   ansible.builtin.command: grpck -r # noqa no-changed-when
+  tags: check
 - name: Remove pi from adm group (Raspbian)
   when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
   become: true
@@ -155,7 +157,9 @@
 
 # The tasks below require *local* user accounts
 - name: getent passwd
-  tags: accounts
+  tags:
+    - accounts
+    - check
   ansible.builtin.getent:
     database: passwd
     service: files
@@ -240,6 +244,7 @@
       ansible.builtin.getent:
         database: group
         service: files
+      tags: check
     - name: Legacy groups
       become: true
       block:

@@ -10,6 +10,7 @@
       database: group
       key: "{{ allowed_group }}"
     failed_when: getent_group.{{ allowed_group }}[2] == ""
+    tags: check
   - name: /etc/shutdown.allow
     tags:
       - configuration

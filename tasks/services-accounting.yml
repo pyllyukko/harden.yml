@@ -218,6 +218,7 @@
   block:
     - name: Run Lynis test group accounting
       ansible.builtin.command: lynis audit system -q --skip-plugins --tests-from-group accounting # noqa no-changed-when
+      tags: check
     - name: slurp /var/log/lynis.log
       ansible.builtin.slurp:
         src: /var/log/lynis.log

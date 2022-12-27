@@ -6,18 +6,24 @@
     - services
     - ssh
     - debian
+    - check
 - name: Check SSH daemon service state (Slackware)
   become: true
   ansible.builtin.stat:
     path: /etc/rc.d/rc.sshd
   register: rc_sshd
-  tags: ssh
+  tags:
+    - ssh
+    - slackware
+    - check
 # This is used in sshd_config.j2 template(s)
 - name: Stat /etc/krb5.keytab
   ansible.builtin.stat:
     path: /etc/krb5.keytab
   register: stat_keytab
-  tags: ssh
+  tags:
+    - ssh
+    - check
 - name: Harden SSH daemon configuration
   ansible.builtin.template:
     src: "{{ playbook_dir }}/templates/sshd_config-{{ ansible_distribution }}.j2"

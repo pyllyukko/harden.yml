@@ -6,6 +6,7 @@
     database: group
     key: "{{ allowed_group }}"
   failed_when: getent_group.{{ allowed_group }}[2] == ""
+  tags: check
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.15
 - name: Configure access.conf
   tags:
@@ -18,7 +19,9 @@
         path: /etc/security/access.conf
         checksum_algorithm: sha512
       register: stat_result
-      tags: pam
+      tags:
+        - pam
+        - check
     - name: Configure login access control table (/etc/security/access.conf) (PAM)
       # Only modify access.conf when it's unmodified. Otherwise expect it to have
       # custom modifications and our hardening might break existing configuration.
@@ -126,6 +129,7 @@
   tags:
     - pam
     - slackware
+    - check
 - name: faillock
   become: true
   when: ansible_distribution == "Slackware" or ansible_distribution == "Debian"

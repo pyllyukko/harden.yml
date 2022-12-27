@@ -18,6 +18,7 @@
       ansible.builtin.stat:
         path: /etc/letsencrypt
       register: stat_result
+      tags: check
     # https://certbot.eff.org/docs/using.html
     - name: Configure /etc/letsencrypt/cli.ini
       community.general.ini_file:
@@ -123,6 +124,7 @@
       ansible.builtin.stat:
         path: /etc/docker
       register: docker
+      tags: check
     - name: Create /etc/docker/daemon.json
       become: true
       ansible.builtin.copy:
@@ -150,6 +152,7 @@
       ansible.builtin.stat:
         path: '/etc/xdg/autostart/tracker-miner-fs.desktop'
       register: stat
+      tags: check
     - name: Disable tracker-miner-fs XDG autostart
       become: true
       ansible.builtin.lineinfile:
@@ -162,6 +165,7 @@
       ansible.builtin.stat:
         path: '/etc/xdg/autostart/tracker-extract.desktop'
       register: stat
+      tags: check
     - name: Disable tracker-miner-fs XDG autostart
       become: true
       ansible.builtin.lineinfile:
@@ -189,6 +193,7 @@
       ansible.builtin.stat:
         path: /etc/php.ini
       register: stat_result
+      tags: check
     # https://cheatsheetseries.owasp.org/cheatsheets/PHP_Configuration_Cheat_Sheet.html
     # TODO: Moar content!
     - name: Configure php.ini

@@ -48,6 +48,7 @@
     - network
     - firewall
     - slackware
+    - check
 - name: Firewall for Slackware
   become: true
   when: ansible_distribution == "Slackware" and not stat_result.stat.exists

@@ -7,6 +7,7 @@
   tags:
     - network
     - configuration
+    - check
 - name: Configure LightDM
   tags: configuration
   when: stat_result.stat.exists

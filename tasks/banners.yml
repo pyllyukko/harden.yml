@@ -36,6 +36,7 @@
   block:
     - name: Run Lynis test group banners
       ansible.builtin.command: lynis audit system -q --skip-plugins --tests-from-group banners # noqa no-changed-when
+      tags: check
     - name: slurp /var/log/lynis.log
       ansible.builtin.slurp:
         src: /var/log/lynis.log

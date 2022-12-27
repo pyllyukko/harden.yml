@@ -4,7 +4,9 @@
   ansible.builtin.slurp:
     src: /sys/class/misc/hw_random/rng_current
   register: rng_current
-  tags: rng
+  tags:
+    - rng
+    - check
 - name: Use rng-tools
   tags:
     - rng
