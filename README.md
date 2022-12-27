@@ -10,8 +10,7 @@ Supported distros
     * Kali
     * Raspbian
 * Slackware (>= 15.0)
-* Limited hardening for CentOS 7
-* Limited hardening for FreeBSD (see [freebsd.yml](tasks/freebsd.yml))
+* Limited hardening for CentOS 7 (see CentOS specific tasks with `ansible-playbook --list-tasks --tags centos harden.yml`)
 
 Why I made this
 ---------------
@@ -201,7 +200,8 @@ Other tags are just metadata for now. You can list all the tags with
 
 ### Other features
 
-There is a `lock_account.yml` playbook that you can use to lock user accounts. Just modify the `hosts` & `user`.
+* There is a `lock_account.yml` playbook that you can use to lock user accounts. Just modify the `hosts` & `user`.
+* Limited hardening for FreeBSD (see [freebsd.yml](tasks/freebsd.yml))
 
 References
 ----------
