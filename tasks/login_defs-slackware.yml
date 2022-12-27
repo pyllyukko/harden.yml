@@ -76,7 +76,7 @@
         block: |
           # single user mode
           ~~:S:wait:/sbin/sulogin
-    - name: Fix rc.K
+    - name: Fix single user mode in rc.K
       ansible.builtin.lineinfile:
         path: /etc/rc.d/rc.K
         regexp: '^/sbin/telinit'

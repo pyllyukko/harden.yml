@@ -4,7 +4,7 @@
   become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_distribution == "Slackware" or ansible_os_family == "RedHat"
   block:
-  - name: Install necessary software (Debian)
+  - name: Install necessary software for auditing (Debian)
     ansible.builtin.apt:
       name: ['auditd', 'libcap-ng-utils']
       update_cache: true
@@ -19,7 +19,7 @@
       owner: root
       group: root
       mode: '0700'
-  - name: Copy rules
+  - name: Copy audit rules
     ansible.builtin.get_url:
       url: https://raw.githubusercontent.com/linux-audit/audit-userspace/master/rules/{{ item }}
       dest: /etc/audit/rules.d/{{ item }}
@@ -99,7 +99,7 @@
     ansible.builtin.file:
       state: absent
       path: /etc/audit/rules.d/audit.rules
-  - name: Create few custom rules
+  - name: Create few custom audit rules
     ansible.builtin.assemble:
       remote_src: false
       src: "{{ playbook_dir }}/newconfs/rules.d"
@@ -107,12 +107,12 @@
       owner: root
       group: root
       mode: '0600'
-  - name: Make the configuration immutable
+  - name: Make the audit configuration immutable
     ansible.builtin.replace:
       path: /etc/audit/rules.d/99-finalize.rules
       regexp: "^#?(-e 2)$"
       replace: '\1'
-  - name: Load the rules
+  - name: Load the audit rules
     ansible.builtin.command: augenrules --load
     register: result
     changed_when: '"/sbin/augenrules: No change" not in result.stdout'
@@ -136,7 +136,7 @@
     tags:
       - services
       - configuration
-  - name: Configure GRUB
+  - name: Configure GRUB for auditing
     ansible.builtin.replace:
       path: /etc/default/grub
       regexp: '^(GRUB_CMDLINE_LINUX="(?!.*\b{{ item }}\b).*)"$'
