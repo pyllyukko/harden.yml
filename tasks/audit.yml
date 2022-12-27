@@ -42,13 +42,13 @@
       replace: '#\1'
     when: (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7") or (ansible_distribution == "Slackware" and ansible_distribution_version == "14.2") # noqa yaml[line-length]
     tags: centos
-  - name: Remove 11-loginuid.rules for Slackware 14.2
-    ansible.builtin.file:
-      path: /etc/audit/rules.d/11-loginuid.rules
-      state: absent
-    when: ansible_distribution == "Slackware" and ansible_distribution_version == "14.2"
-    tags:
-      - slackware
+  #- name: Remove 11-loginuid.rules for Slackware 14.2
+  #  ansible.builtin.file:
+  #    path: /etc/audit/rules.d/11-loginuid.rules
+  #    state: absent
+  #  when: ansible_distribution == "Slackware" and ansible_distribution_version == "14.2"
+  #  tags:
+  #    - slackware
   - name: Modify 20-dont-audit.rules
     block:
       - name: Uncomment few exclusions in 20-dont-audit.rules
