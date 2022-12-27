@@ -1,0 +1,51 @@
+---
+# https://github.com/mwlucas/books/tree/master/sudo_mastery
+- name: sudo IDS
+  become: true
+  block:
+    - name: Create /etc/sudoers.d.tmp
+      ansible.builtin.file:
+        path: /etc/sudoers.d.tmp
+        state: directory
+        mode: '0700'
+        owner: root
+        group: root
+    - name: Download tools
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/mwlucas/books/master/sudo_mastery/{{ item }}
+        dest: /etc/sudoers.d.tmp/{{ item }}
+        owner: root
+        group: root
+        mode: '0700'
+      with_items:
+        - sudodigest.pl
+        - digest-everything.pl
+        - backup-alias.pl
+    - name: Run sudodigest.pl
+      ansible.builtin.shell: /usr/bin/perl /etc/sudoers.d.tmp/sudodigest.pl 1>/etc/sudoers.d.tmp/00-digests
+      args:
+        creates: /etc/sudoers.d.tmp/00-digests
+    - name: Run digest-everything.pl
+      ansible.builtin.shell: /usr/bin/perl /etc/sudoers.d.tmp/digest-everything.pl /etc/sudoers.d.tmp/00-digests 1>/etc/sudoers.d.tmp/10-everything
+      args:
+        creates: /etc/sudoers.d.tmp/10-everything
+    - name: Run backup-alias.pl
+      ansible.builtin.shell: /usr/bin/perl /etc/sudoers.d.tmp/backup-alias.pl /etc/sudoers.d.tmp/00-digests 1>/etc/sudoers.d.tmp/10-backup
+      args:
+        creates: /etc/sudoers.d.tmp/10-backup
+    #- name: Copy generated files to /etc/sudoers.d/
+    #  ansible.builtin.copy:
+    #    src: /etc/sudoers.d.tmp/{{ item }}
+    #    dest: /etc/sudoers.d/{{ item }}
+    #    owner: root
+    #    group: root
+    #    mode: '0400'
+    #    remote_src: true
+    #  with_items:
+    #    - 00-digests
+    #    - 10-everything
+    #    - 10-backup
+    #- name: Remove /etc/sudoers.d.tmp/
+    #  ansible.builtin.file:
+    #    path: /etc/sudoers.d.tmp
+    #    state: absent
