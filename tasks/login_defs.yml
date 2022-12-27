@@ -184,7 +184,9 @@
           - uid_max | int != 0
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.1.4 Ensure inactive password lock is 30 days or less
 - name: Inactive password lock
-  tags: passwords
+  tags:
+    - passwords
+    - authorization
   become: true
   block:
     # Debian's "useradd -D -f 30" fails with "cannot create new defaults file"
