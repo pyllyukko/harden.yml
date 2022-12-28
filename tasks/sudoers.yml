@@ -96,3 +96,10 @@
 - name: sudoers IDS
   ansible.builtin.import_tasks: sudoers-ids.yml
   when: sudo_ids
+- name: Remove /etc/sudoers.dist (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: true
+  tags: slackware
+  ansible.builtin.file:
+    path: /etc/sudoers.dist
+    state: absent
