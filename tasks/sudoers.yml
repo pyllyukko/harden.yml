@@ -60,6 +60,9 @@
         path: /etc/sudoers.d/10-shells
         state: absent
       when: not sudo_ids
+    - name: sudoers IDS
+      ansible.builtin.import_tasks: sudoers-ids.yml
+      when: sudo_ids
     # https://jpmens.net/2013/02/06/don-t-try-this-at-the-office-etc-sudoers/
     - name: 'Validate /etc/sudoers.new'
       ansible.builtin.command: visudo -cs -f /etc/sudoers.new
@@ -93,9 +96,6 @@
     - debian
 - name: sudoers files
   ansible.builtin.import_tasks: filesystem-sudoers.yml
-- name: sudoers IDS
-  ansible.builtin.import_tasks: sudoers-ids.yml
-  when: sudo_ids
 - name: Remove /etc/sudoers.dist (Slackware)
   when: ansible_distribution == "Slackware"
   become: true
