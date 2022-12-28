@@ -46,7 +46,7 @@
       register: tempfile_1
     - name: Copy fstab.awk
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/legacy/libexec/fstab.awk"
+        src: fstab.awk
         dest: "{{ tempfile_1.path }}"
         owner: root
         group: root
