@@ -1,21 +1,8 @@
-tests = bash_syntax debian_pam
 CWD = $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 slackware = slackware64
-slackware_version = 14.2
+slackware_version = 15.0
 manifest_files = $(CWD)/manifests/$(slackware)-$(slackware_version)/CHECKSUMS.md5 $(CWD)/manifests/$(slackware)-$(slackware_version)/CHECKSUMS.md5.asc $(CWD)/manifests/$(slackware)-$(slackware_version)/MANIFEST.bz2
 SHELL=/bin/bash
-
-.PHONY: tests
-tests: $(tests)
-
-.PHONY: debian_pam
-debian_pam:
-	bash $(CWD)/tests/test_debian_pam.sh
-
-.PHONY: bash_syntax
-bash_syntax:
-	bash -O extglob -n $(CWD)/harden.sh
-	$(foreach i,$(wildcard $(CWD)/libexec/*.sh),bash -n $(i);)
 
 /etc/ssl/certs/ca-certificates.crt: /etc/ca-certificates.conf
 	/usr/sbin/update-ca-certificates --verbose --fresh

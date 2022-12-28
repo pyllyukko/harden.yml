@@ -1,6 +1,8 @@
 harden.sh
 =========
 
+**DISCLAIMER**: This part is deprecated and most of this functionality is removed from `harden.sh` and "ported" into the Ansible playbook. This README is left as-is for historical purposes.
+
 This is a script to harden your Linux installation.
 
 [![asciicast](https://asciinema.org/a/lBaPJhg3KAsp470y9eyLQ2bbA.png)](https://asciinema.org/a/lBaPJhg3KAsp470y9eyLQ2bbA)
