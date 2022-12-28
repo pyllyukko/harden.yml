@@ -11,7 +11,9 @@
 ## Cmnd alias specification
 ##
 Cmnd_Alias	PAGERS = /usr/bin/more, /usr/bin/pg, /usr/bin/less, /usr/bin/pager
+{% if not sudo_ids %}
 Cmnd_Alias	SHELLS = /bin/sh "", /bin/bash "", /bin/dash "", /bin/zsh "", /bin/csh "", /bin/tcsh ""
+{% endif %}
 Cmnd_Alias	APT_GET = /usr/bin/apt-get update, /usr/bin/apt-get upgrade, /usr/bin/apt-get dist-upgrade, /usr/bin/apt-get autoremove, /usr/bin/apt-get clean, /usr/bin/apt-get autoclean, /usr/bin/apt-file update
 ## These should be enough. You can do "sudo cat | grep" etc. tail is for following.
 Cmnd_Alias	READ_FILES = /bin/ls, /bin/tail, /bin/cat
@@ -61,7 +63,9 @@ root {{ ansible_hostname }}=(ALL:ALL) EXEC: ALL
 
 ## wheel group
 {% if ansible_distribution == "Slackware" or ansible_os_family == "RedHat" %}
+{% if not sudo_ids %}
 %wheel {{ ansible_hostname }}=(root) TIMEOUT={{ session_timeout }}m PASSWD:EXEC: SHELLS
+{% endif %}
 %wheel {{ ansible_hostname }}=(root) TIMEOUT={{ session_timeout }}m PASSWD:NOEXEC: sudoedit
 %wheel {{ ansible_hostname }}=(root) TIMEOUT=1m PASSWD:NOEXEC: /bin/dmesg
 %wheel {{ ansible_hostname }}=(:adm) PASSWD:NOEXEC: READ_FILES
@@ -73,7 +77,9 @@ root {{ ansible_hostname }}=(ALL:ALL) EXEC: ALL
 
 ## sudo group (Debian)
 {% if ansible_distribution == "Debian" %}
+{% if not sudo_ids %}
 %sudo	{{ ansible_hostname }}=(root) TIMEOUT={{ session_timeout }}m PASSWD:EXEC: SHELLS
+{% endif %}
 %sudo	{{ ansible_hostname }}=(:systemd-journal) PASSWD:EXEC: /bin/journalctl
 %sudo	{{ ansible_hostname }}=(root) TIMEOUT=1m PASSWD:NOEXEC: /bin/dmesg
 %sudo	{{ ansible_hostname }}=(:adm) PASSWD:NOEXEC: READ_FILES

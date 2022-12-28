@@ -19,33 +19,62 @@
         mode: '0700'
       with_items:
         - sudodigest.pl
-        - digest-everything.pl
-        - backup-alias.pl
+        #- digest-everything.pl
+        #- backup-alias.pl
     - name: Run sudodigest.pl
-      ansible.builtin.shell: /usr/bin/perl /etc/sudoers.d.tmp/sudodigest.pl 1>/etc/sudoers.d.tmp/00-digests
+      ansible.builtin.shell: /usr/bin/perl /etc/sudoers.d.tmp/sudodigest.pl | gawk 'NF<=5{print}' 1>/etc/sudoers.d.tmp/00-digests
       args:
         creates: /etc/sudoers.d.tmp/00-digests
-    - name: Run digest-everything.pl
-      ansible.builtin.shell: /usr/bin/perl /etc/sudoers.d.tmp/digest-everything.pl /etc/sudoers.d.tmp/00-digests 1>/etc/sudoers.d.tmp/10-everything
+    # "sudoedit should not be specified with a path"
+    - name: Remove sudoedit from 00-digests
+      ansible.builtin.lineinfile:
+        path: /etc/sudoers.d.tmp/00-digests
+        state: absent
+        regexp: '\s+/usr/bin/sudoedit$'
+    - name: Copy shells-alias.pl
+      ansible.builtin.copy:
+        src: shells-alias.pl
+        dest: /etc/sudoers.d.tmp/shells-alias.pl
+        owner: root
+        group: root
+        mode: '0400'
+    - name: Run shells-alias.pl
+      ansible.builtin.shell: /usr/bin/perl /etc/sudoers.d.tmp/shells-alias.pl /etc/sudoers.d.tmp/00-digests 1>/etc/sudoers.d.tmp/10-shells
       args:
-        creates: /etc/sudoers.d.tmp/10-everything
-    - name: Run backup-alias.pl
-      ansible.builtin.shell: /usr/bin/perl /etc/sudoers.d.tmp/backup-alias.pl /etc/sudoers.d.tmp/00-digests 1>/etc/sudoers.d.tmp/10-backup
-      args:
-        creates: /etc/sudoers.d.tmp/10-backup
-    #- name: Copy generated files to /etc/sudoers.d/
-    #  ansible.builtin.copy:
-    #    src: /etc/sudoers.d.tmp/{{ item }}
-    #    dest: /etc/sudoers.d/{{ item }}
-    #    owner: root
-    #    group: root
-    #    mode: '0400'
-    #    remote_src: true
-    #  with_items:
-    #    - 00-digests
-    #    - 10-everything
-    #    - 10-backup
-    #- name: Remove /etc/sudoers.d.tmp/
-    #  ansible.builtin.file:
-    #    path: /etc/sudoers.d.tmp
-    #    state: absent
+        creates: /etc/sudoers.d.tmp/10-shells
+    - name: Check 00-digests
+      ansible.builtin.command: visudo -cs -f /etc/sudoers.d.tmp/00-digests
+      register: result
+      changed_when:
+        - '"parsed OK" not in result.stdout'
+    # This should be verified together with 00-digests
+    #- name: Check 10-shells
+    #  ansible.builtin.command: visudo -cs -f /etc/sudoers.d.tmp/10-shells
+    #  register: result
+    #  changed_when:
+    #    - '"parsed OK" not in result.stdout'
+    #- name: Run digest-everything.pl
+    #  ansible.builtin.shell: /usr/bin/perl /etc/sudoers.d.tmp/digest-everything.pl /etc/sudoers.d.tmp/00-digests 1>/etc/sudoers.d.tmp/10-everything
+    #  args:
+    #    creates: /etc/sudoers.d.tmp/10-everything
+    #- name: Run backup-alias.pl
+    #  ansible.builtin.shell: /usr/bin/perl /etc/sudoers.d.tmp/backup-alias.pl /etc/sudoers.d.tmp/00-digests 1>/etc/sudoers.d.tmp/10-backup
+    #  args:
+    #    creates: /etc/sudoers.d.tmp/10-backup
+    - name: Copy generated files to /etc/sudoers.d/
+      ansible.builtin.copy:
+        src: /etc/sudoers.d.tmp/{{ item }}
+        dest: /etc/sudoers.d/{{ item }}
+        owner: root
+        group: root
+        mode: '0400'
+        remote_src: true
+      with_items:
+        - 00-digests
+        #- 10-everything
+        #- 10-backup
+        - 10-shells
+    - name: Remove /etc/sudoers.d.tmp/
+      ansible.builtin.file:
+        path: /etc/sudoers.d.tmp
+        state: absent

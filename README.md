@@ -202,6 +202,8 @@ Other tags are just metadata for now. You can list all the tags with
 
 * There is a `lock_account.yml` playbook that you can use to lock user accounts. Just modify the `hosts` & `user`.
 * Limited hardening for FreeBSD (see [freebsd.yml](tasks/freebsd.yml))
+* Experimental feature: If you enable `sudo_ids` in `vars.yml`, it enables "Sudo Intrusion Detection" as seen in chapter 9 of [Sudo Mastery](https://mwl.io/nonfiction/tools#sudo2)
+    * Only for `SHELLS` `Cmnd_Alias` for now
 
 References
 ----------
