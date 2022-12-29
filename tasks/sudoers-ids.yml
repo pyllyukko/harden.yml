@@ -45,12 +45,14 @@
     - name: Check 00-digests
       ansible.builtin.command: visudo -cs -f /etc/sudoers.d.tmp/00-digests
       register: result
+      tags: check
       changed_when:
         - '"parsed OK" not in result.stdout'
     # This should be verified together with 00-digests
     #- name: Check 10-shells
     #  ansible.builtin.command: visudo -cs -f /etc/sudoers.d.tmp/10-shells
     #  register: result
+    #  tags: check
     #  changed_when:
     #    - '"parsed OK" not in result.stdout'
     #- name: Run digest-everything.pl
