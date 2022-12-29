@@ -174,7 +174,7 @@ DBDIR=/var/lib/rkhunter/db
 # The installer program will set the default directory. If this default is
 # subsequently commented out or removed, then the program will not run.
 #
-{% if ansible_distribution == "Debian" or ansible_os_family == "RedHat" %}
+{% if ansible_distribution == "Debian" or ansible_os_family == "RedHat" or ansible_distribution == "Kali" %}
 SCRIPTDIR=/usr/share/rkhunter/scripts
 {% endif %}
 {% if ansible_distribution == "Slackware" %}
