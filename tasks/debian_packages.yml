@@ -69,7 +69,7 @@
 
 # debsums
 - name: debsums
-  when: ansible_distribution == "Debian"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   become: true
   tags:
     - debsums
@@ -88,7 +88,7 @@
 
 - name: Configure chkrootkit
   become: true
-  when: ansible_distribution == "Debian"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   tags:
     - configuration
     - chkrootkit

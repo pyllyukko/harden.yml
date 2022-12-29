@@ -187,7 +187,7 @@
     - accounting
     - configuration
     - debian
-  when: ansible_distribution == "Debian"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   notify: Run systemctl daemon-reload
   community.general.ini_file:
     path: /lib/systemd/system/{{ item }}.service
