@@ -86,9 +86,10 @@
         replace: '\g<1>weekly'
       tags: configuration
 
+# TODO: Kali has chkrootkit conf in /etc/chkrootkit/
 - name: Configure chkrootkit
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  when: ansible_distribution == "Debian"
   tags:
     - configuration
     - chkrootkit
