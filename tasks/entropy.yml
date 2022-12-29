@@ -7,6 +7,9 @@
   tags:
     - rng
     - check
+  failed_when:
+    - rng_current.failed
+    - '"file not found" not in rng_current.msg'
 - name: Use rng-tools
   tags:
     - rng
