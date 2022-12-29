@@ -181,6 +181,10 @@
         enabled: false
         state: stopped
         scope: user
+      register: result
+      failed_when:
+        - result.failed
+        - '"Could not find the requested service tracker-miner-fs" not in result.msg'
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
       tags:
         - debian
