@@ -22,7 +22,7 @@
     database: group
     key: sudo
   failed_when: getent_group.sudo[2] == ""
-  when: ansible_distribution == "Debian"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   tags:
     - debian
     - check
@@ -36,7 +36,10 @@
     - slackware
     - check
 - name: 'Configure /etc/sudoers'
-  when: ansible_distribution == "Slackware" or ansible_distribution == "Debian"
+  when: >
+    ansible_distribution == "Slackware" or
+    ansible_distribution == "Debian" or
+    ansible_distribution == "Kali"
   become: true
   block:
     - name: 'Create /etc/sudoers.new'
