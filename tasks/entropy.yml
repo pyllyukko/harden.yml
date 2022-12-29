@@ -1,30 +1,32 @@
 ---
 # Install rng-tools when TRNG is available and in use
-- name: Read /sys/class/misc/hw_random/rng_current
-  ansible.builtin.slurp:
-    src: /sys/class/misc/hw_random/rng_current
-  register: rng_current
-  tags:
-    - rng
-    - check
-  failed_when:
-    - rng_current.failed
-    - '"file not found" not in rng_current.msg'
-- name: Use rng-tools
+- name: RNG
+  when: ansible_distribution == "Debian"
   tags:
     - rng
     - debian
-  when: rng_current['content'] | b64decode != "none\n" and ansible_distribution == "Debian"
-  become: true
   block:
-    - name: Install rng-tools
-      ansible.builtin.apt:
-        name: rng-tools
-        update_cache: true
-      tags: packages
-    - name: Start & enable rng-tools service
-      ansible.builtin.service:
-        name: rng-tools-debian
-        state: started
-        enabled: true
-      tags: services
+    - name: Read /sys/class/misc/hw_random/rng_current
+      ansible.builtin.slurp:
+        src: /sys/class/misc/hw_random/rng_current
+      register: rng_current
+      tags: check
+      failed_when:
+        - rng_current.failed
+        - '"file not found" not in rng_current.msg'
+    # TODO: This will fail if the above task failed, as there's no rng_current['content']
+    - name: Use rng-tools
+      when: rng_current['content'] | b64decode != "none\n"
+      become: true
+      block:
+        - name: Install rng-tools
+          ansible.builtin.apt:
+            name: rng-tools
+            update_cache: true
+          tags: packages
+        - name: Start & enable rng-tools service
+          ansible.builtin.service:
+            name: rng-tools-debian
+            state: started
+            enabled: true
+          tags: services
