@@ -46,7 +46,7 @@
       - name: Set uucp user's shell to nologin
         ansible.builtin.user:
           name: uucp
-          ansible.builtin.shell: /usr/sbin/nologin
+          shell: /usr/sbin/nologin
       - name: Remove the user 'toor'
         ansible.builtin.user:
           name: toor
