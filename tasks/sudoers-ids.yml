@@ -21,16 +21,11 @@
         - sudodigest.pl
         #- digest-everything.pl
         #- backup-alias.pl
+    # "sudoedit should not be specified with a path"
     - name: Run sudodigest.pl
-      ansible.builtin.shell: /usr/bin/perl /etc/sudoers.d.tmp/sudodigest.pl | gawk 'NF<=5 && $0!~/!/{print}' 1>/etc/sudoers.d.tmp/00-digests
+      ansible.builtin.shell: /usr/bin/perl /etc/sudoers.d.tmp/sudodigest.pl | gawk 'NF<=5 && $0!~/!/ && $0!~/sudoedit$/{print}' 1>/etc/sudoers.d.tmp/00-digests
       args:
         creates: /etc/sudoers.d.tmp/00-digests
-    # "sudoedit should not be specified with a path"
-    - name: Remove sudoedit from 00-digests
-      ansible.builtin.lineinfile:
-        path: /etc/sudoers.d.tmp/00-digests
-        state: absent
-        regexp: '\s+/usr/bin/sudoedit$'
     - name: Copy shells-alias.pl
       ansible.builtin.copy:
         src: shells-alias.pl
