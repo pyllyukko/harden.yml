@@ -3,6 +3,8 @@ harden.yml
 
 Ansible playbook to harden your Linux system.
 
+[![asciicast of harden.yml 1294b6f](https://asciinema.org/a/spPzbjtEal2LiOKNQKFORQ1Ay.svg)](https://asciinema.org/a/spPzbjtEal2LiOKNQKFORQ1Ay)
+
 Supported distros
 -----------------
 
