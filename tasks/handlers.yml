@@ -27,14 +27,14 @@
   become: true
   async: 3600
   poll: 0
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
 - name: Run pam-auth-update
   ansible.builtin.command: /usr/sbin/pam-auth-update --package
   become: true
   tags:
     - pam
     - configuration
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
 # rc.sshd exits if /var/run/sshd.pid doesn't exist
 - name: Restart sshd (Slackware)
   when: ansible_distribution == "Slackware"
@@ -53,7 +53,7 @@
     name: ssh
     state: restarted
   when: >
-    (ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux") and
+    (ansible_distribution == "Debian" or ansible_distribution == "Kali") and
     ansible_facts.services.ssh.state == "running"
   tags: services
 - name: Run systemctl daemon-reload

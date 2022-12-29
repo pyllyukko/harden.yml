@@ -2,13 +2,13 @@
 # Some documentation available at https://github.com/pyllyukko/harden.sh/wiki/audit
 - name: Install auditing
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_distribution == "Slackware" or ansible_os_family == "RedHat"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Slackware" or ansible_os_family == "RedHat"
   block:
   - name: Install necessary software for auditing (Debian)
     ansible.builtin.apt:
       name: ['auditd', 'libcap-ng-utils']
       update_cache: true
-    when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+    when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
     tags:
       - packages
       - debian
@@ -144,7 +144,7 @@
     with_items:
       - audit=1
       - audit_backlog_limit=8192
-    when: (ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian") or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
+    when: (ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian") or ansible_distribution == "Kali" or ansible_os_family == "RedHat"
     tags: configuration
   - name: Add audit=1 to /boot/cmdline.txt (Raspbian)
     ansible.builtin.replace:

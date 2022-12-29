@@ -84,7 +84,7 @@
 # http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html
 # https://tldp.org/HOWTO/User-Authentication-HOWTO/x263.html#AEN266
 - name: /etc/pam.d/other
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
   become: true
   block:
     - name: Create secure default /etc/pam.d/other
@@ -208,7 +208,7 @@
     - passwords
   block:
     - name: Disallow blank passwords (Debian)
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
       ansible.builtin.replace:
         path: /etc/pam.d/common-auth
         regexp: '\s+nullok(_secure)?'
@@ -226,7 +226,7 @@
 # https://wiki.debian.org/WHEEL/PAM
 # This is not enabled in Slackware because it has a separate "Deny use of su" task
 - name: Enable pam_wheel.so in /etc/pam.d/su
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat"
   become: true
   ansible.builtin.replace:
     path: /etc/pam.d/su
@@ -239,7 +239,7 @@
     - debian
     - centos
 - name: Enable polyinstantiated temp directories
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
   become: true
   ansible.builtin.replace:
     path: /etc/security/namespace.conf
@@ -253,7 +253,7 @@
     - configuration
     - pam
 - name: Remove adm user from /etc/security/namespace.conf
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   become: true
   ansible.builtin.replace:
     path: /etc/security/namespace.conf
@@ -284,7 +284,7 @@
     - pam
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.19
 - name: Debian pam-configs
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   become: true
   tags:
     - configuration
@@ -358,7 +358,7 @@
     - passwords
   block:
     - name: Install passwdqc (Debian)
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
       ansible.builtin.apt:
         name: libpam-passwdqc
         update_cache: true
@@ -378,7 +378,7 @@
         - packages
     # https://github.com/linux-pam/linux-pam/issues/352
     - name: Add rounds={{ crypt_rounds }} to pam_unix in /etc/pam.d/common-password
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
       tags: debian
       ansible.builtin.replace:
         path: /etc/pam.d/common-password
@@ -416,7 +416,7 @@
 # CIS Debian Linux 10 Benchmark v1.0.0 - 1.6.4 Ensure core dumps are restricted
 # https://en.wikipedia.org/wiki/Fork_bomb#Prevention
 - name: Configure /etc/security/limits.conf
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
   become: true
   community.general.pam_limits:
     domain: '*'

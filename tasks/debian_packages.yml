@@ -1,7 +1,7 @@
 ---
 - name: Install security software
   tags: debian
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   become: true
   block:
     - name: Install security software
@@ -39,7 +39,7 @@
     - debian
     - configuration
     - kernel
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   become: true
   #notify: "Load sysctl settings"
   ansible.builtin.replace:

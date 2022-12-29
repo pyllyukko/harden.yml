@@ -1,6 +1,6 @@
 ---
 - name: Install AppArmor
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   become: true
   ansible.builtin.apt:
     name: ['apparmor', 'apparmor-profiles', 'apparmor-utils']
@@ -36,7 +36,7 @@
       - usr.sbin.useradd
       - usr.sbin.userdel
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   block:
     - name: Copy extra profiles
       ansible.builtin.copy:

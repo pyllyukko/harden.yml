@@ -2,7 +2,7 @@
 # Unwanted services
 - name: Stop & disable unwanted services (Debian)
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   ansible.builtin.service:
     name: "{{ item }}"
     state: stopped
@@ -51,7 +51,7 @@
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.1.8 Ensure at/cron is restricted to authorized users
 - name: Debian cron & at
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   tags:
     - services
     - configuration
@@ -87,7 +87,7 @@
 
 - name: Create a job that checks systemd's state
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux" or ansible_os_family == "RedHat"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat"
   ansible.builtin.cron:
     name: "Check SystemState"
     job: "/bin/systemctl show --property=SystemState | /bin/grep -v '^SystemState=running$'"
@@ -164,7 +164,7 @@
 # Misc
 #- name: Install icmpinfo
 #  become: true
-#  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+#  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
 #  ansible.builtin.apt:
 #    name: icmpinfo
 #    update_cache: true

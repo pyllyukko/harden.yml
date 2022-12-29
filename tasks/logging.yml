@@ -27,7 +27,7 @@
     - logging
     - debian
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   block:
     - name: Configure [bw]tmp retention period to {{ log_retention_time_in_months }} months (Debian)
       ansible.builtin.replace:

@@ -11,7 +11,7 @@
       - configuration
     notify: "Run update-ca-certificates"
   - name: Install ca-certificates package (Debian)
-    when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+    when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
     ansible.builtin.apt:
       name: ca-certificates
       update_cache: true

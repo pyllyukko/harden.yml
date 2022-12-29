@@ -110,7 +110,7 @@
   tags:
     - configuration
     - debian
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
 # </profile.d>
 
 # Slackware Linux Benchmark v1.1 - 7.3 Create ftpusers Files
@@ -230,7 +230,7 @@
     regexp: '^({{ item.key }}=).*$'
     replace: '\g<1>{{ item.value }}'
     validate: '/bin/grep "^{{ item.key }}={{ item.value }}$" %s'
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   tags:
     - configuration
     - permissions
@@ -286,7 +286,7 @@
     - name: Debian specific groups
       become: true
       tags: debian
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
       block:
         - name: Remove all users from group "lpadmin"
           ansible.builtin.command: gpasswd -d {{ item }} lpadmin

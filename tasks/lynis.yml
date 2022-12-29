@@ -5,7 +5,7 @@
     - packages
     - lynis
     - debian
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   block:
     - name: Install apt-transport-https & gnupg2
       ansible.builtin.apt:
@@ -74,7 +74,7 @@
           config-data=sysctl;kernel.perf_event_paranoid;2;1;Restrict unprivileged access to the perf_event_open() system call.;sysctl -a;url:https;//kernel.org/doc/Documentation/sysctl/kernel.txt;category:security;
     # https://github.com/CISOfy/lynis/issues/967
     - name: Configure /etc/{at,cron}.{allow,deny} permissions in /etc/lynis/default.prf
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
       tags: debian
       ansible.builtin.replace:
         path: /etc/lynis/default.prf

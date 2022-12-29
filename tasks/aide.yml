@@ -1,7 +1,7 @@
 ---
 - name: Setup AIDE
   tags: aide
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   become: true
   block:
     - name: Install AIDE package

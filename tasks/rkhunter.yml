@@ -7,7 +7,7 @@
     ansible.builtin.apt:
       name: rkhunter
       update_cache: true
-    when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+    when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
     tags:
       - packages
       - debian

@@ -9,7 +9,8 @@
         that: >
           (ansible_distribution == "Slackware" and ansible_distribution_major_version | int >= 15) or
           (ansible_distribution == "Debian" and ansible_distribution_major_version | int >= 11) or
-          (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7")
+          (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7") or
+          ansible_distribution == "Kali"
         msg: "Unsupported operating system"
       tags: check
     - name: sudoers

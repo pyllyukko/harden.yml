@@ -1,7 +1,7 @@
 ---
 - name: Check SSH daemon service state
   ansible.builtin.service_facts:
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   tags:
     - services
     - ssh
@@ -48,7 +48,7 @@
   become: true
   # Skip the task in Debian if ssh.service does not exist
   when: >
-    ((ansible_distribution == "Debian" or ansible_distribution == "Kali GNU/Linux") and ansible_facts.services.ssh is defined) or
+    ((ansible_distribution == "Debian" or ansible_distribution == "Kali") and ansible_facts.services.ssh is defined) or
     (ansible_distribution == "Slackware" and rc_sshd.stat.exists and rc_sshd.stat.xusr)
 - name: Harden SSH client configuration
   tags:
