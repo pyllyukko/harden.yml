@@ -18,6 +18,7 @@
       mode: '0400'
       owner: root
       group: root
+      backup: true
     tags: configuration
     notify: "Create rkhunter.dat"
   # https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/FAQ: "3.3) How can I automatically run Rootkit Hunter every day?"
