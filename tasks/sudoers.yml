@@ -73,6 +73,18 @@
       changed_when:
         - '"parsed OK" not in result.stdout'
       tags: check
+    - name: Stat /etc/sudoers.d/vagrant
+      ansible.builtin.stat:
+        path: /etc/sudoers.d/vagrant
+      register: result
+      tags: check
+    - name: Fix /etc/sudoers.d/vagrant
+      when: result.stat.exists
+      ansible.builtin.replace:
+        path: /etc/sudoers.d/vagrant
+        regexp: '^(vagrant\s+ALL=\(ALL\)\s+NOPASSWD:)(\s+ALL)$'
+        replace: '\g<1>EXEC:\g<2>'
+        validate: 'visudo -cs -f %s'
     - name: 'Copy /etc/sudoers.new to /etc/sudoers'
       ansible.builtin.copy:
         remote_src: true

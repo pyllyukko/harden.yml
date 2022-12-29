@@ -76,7 +76,7 @@ root {{ ansible_hostname }}=(ALL:ALL) EXEC: ALL
 {% endif %}
 
 ## sudo group (Debian)
-{% if ansible_distribution == "Debian" %}
+{% if ansible_distribution == "Debian" or ansible_distribution == "Kali" %}
 {% if not sudo_ids %}
 %sudo	{{ ansible_hostname }}=(root) TIMEOUT={{ session_timeout }}m PASSWD:EXEC: SHELLS
 {% endif %}
