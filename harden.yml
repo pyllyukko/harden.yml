@@ -13,6 +13,25 @@
           ansible_distribution == "Kali"
         msg: "Unsupported operating system"
       tags: check
+    - name: Sudo checks
+      tags:
+        - check
+        - sudo
+      block:
+        - name: 'Check that some user(s) exist in "sudo" group'
+          ansible.builtin.getent:
+            database: group
+            key: sudo
+          failed_when: getent_group.sudo[2] == ""
+          when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+          tags: debian
+        - name: 'Check that some user(s) exist in "wheel" group'
+          ansible.builtin.getent:
+            database: group
+            key: wheel
+          failed_when: getent_group.wheel[2] == "" or getent_group.wheel[2] == "root"
+          when: ansible_distribution == "Slackware"
+          tags: slackware
     - name: sudoers
       ansible.builtin.import_tasks: tasks/sudoers.yml
       tags: sudo
