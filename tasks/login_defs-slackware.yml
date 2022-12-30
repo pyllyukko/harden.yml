@@ -1,35 +1,25 @@
 ---
-- name: Slackware authorization
+- name: /etc/shutdown.allow
+  tags:
+    - configuration
+    - authorization
   become: true
   when: ansible_distribution == "Slackware"
   block:
-  # The login ACL following this task will actually start blocking access, so
-  # check that we are not locking ourselves out of the system being hardened.
-  - name: 'Check that some user(s) exist in "{{ allowed_group }}" group'
-    ansible.builtin.getent:
-      database: group
-      key: "{{ allowed_group }}"
-    failed_when: getent_group.{{ allowed_group }}[2] == ""
-    tags: check
-  - name: /etc/shutdown.allow
-    tags:
-      - configuration
-      - authorization
-    block:
-      - name: Create /etc/shutdown.allow
-        ansible.builtin.copy:
-          content: ""
-          dest: /etc/shutdown.allow
-          force: false
-          owner: root
-          group: root
-          mode: '0600'
-      - name: Use shutdown -a in /etc/inittab
-        ansible.builtin.replace:
-          path: /etc/inittab
-          regexp: '^(ca::ctrlaltdel:/sbin/shutdown -t5 -r now)$'
-          replace: '\g<1> -a'
-          validate: '/bin/grep "^ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a$" %s'
+    - name: Create /etc/shutdown.allow
+      ansible.builtin.copy:
+        content: ""
+        dest: /etc/shutdown.allow
+        force: false
+        owner: root
+        group: root
+        mode: '0600'
+    - name: Use shutdown -a in /etc/inittab
+      ansible.builtin.replace:
+        path: /etc/inittab
+        regexp: '^(ca::ctrlaltdel:/sbin/shutdown -t5 -r now)$'
+        replace: '\g<1> -a'
+        validate: '/bin/grep "^ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a$" %s'
 - name: Set umask to 077 in /etc/profile (Slackware)
   tags: configuration
   become: true

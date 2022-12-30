@@ -32,6 +32,18 @@
           failed_when: getent_group.wheel[2] == "" or getent_group.wheel[2] == "root"
           when: ansible_distribution == "Slackware"
           tags: slackware
+    # PAM's access.conf and sshd_config will actually start blocking access, so
+    # check that we are not locking ourselves out of the system being hardened.
+    - name: 'Check that some user(s) exist in "{{ allowed_group }}" group'
+      ansible.builtin.getent:
+        database: group
+        key: "{{ allowed_group }}"
+      failed_when: getent_group.{{ allowed_group }}[2] == ""
+      tags:
+        - check
+        - pam
+        - ssh
+        - authorization
     - name: sudoers
       ansible.builtin.import_tasks: tasks/sudoers.yml
       tags: sudo

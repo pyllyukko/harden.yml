@@ -1,12 +1,4 @@
 ---
-# The login ACL following this task will actually start blocking access, so
-# check that we are not locking ourselves out of the system being hardened.
-- name: 'Check that some user(s) exist in "{{ allowed_group }}" group'
-  ansible.builtin.getent:
-    database: group
-    key: "{{ allowed_group }}"
-  failed_when: getent_group.{{ allowed_group }}[2] == ""
-  tags: check
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.15
 - name: Configure access.conf
   tags:
