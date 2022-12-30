@@ -152,9 +152,18 @@ Usage
 
 * Edit the `harden.yml` and modify `hosts` or create a completely new playbook by making a copy of the `harden.yml` file
     * You can comment out the "task sets" that you don't need
+* Check `vars.yml` in case you want to tweak some of the settings
 * You can check all the tasks before running the playbook by running `ansible-playbook --list-tasks harden.yml`
 * Harden your system by running `ansible-playbook harden.yml`
-    * You might need to provide credentials with [-K](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html) or via [inventory](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html)
+    * You might need to provide credentials with [-K](https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html#common-options) or via [inventory](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html)
+
+### Notes
+
+* Make sure regular users that should be able to login are members of the `allowed_group` group
+* Sudo hardening:
+    * `noexec` is on by default, so you need to take this into account in your custom rules
+    * Interactive shells to `root` have timeout, so use `screen` for those longer administrative tasks
+* Rebooting the system after running this is highly recommended
 
 ### Tags
 
