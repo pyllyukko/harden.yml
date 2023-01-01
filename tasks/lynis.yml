@@ -105,7 +105,32 @@
           skip-test=PKGS-7398
       when: ansible_distribution == "Slackware"
       tags: slackware
+    - name: Lynis systemd service
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+      tags: debian
+      block:
+        - name: Download lynis.{service,timer}
+          ansible.builtin.get_url:
+            url: https://raw.githubusercontent.com/CISOfy/lynis/master/extras/systemd/{{ item }}
+            dest: /etc/systemd/system/
+            owner: root
+            group: root
+          with_items:
+            - lynis.service
+            - lynis.timer
+        - name: Fix Lynis path into lynis.service
+          ansible.builtin.replace:
+            path: /etc/systemd/system/lynis.service
+            regexp: '^(ExecStart=)/path/to/(lynis audit system --cronjob)$'
+            replace: '\g<1>/usr/sbin/\g<2>'
+        - name: Enable Lynis systemd unit
+          ansible.builtin.systemd:
+            name: lynis.timer
+            daemon_reload: true
+            enabled: true
     - name: Create daily cron job to run Lynis
+      when: ansible_distribution == "Slackware"
+      tags: slackware
       ansible.builtin.copy:
         dest: /etc/cron.daily/run_lynis
         owner: root
