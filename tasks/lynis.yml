@@ -128,6 +128,7 @@
             name: lynis.timer
             daemon_reload: true
             enabled: true
+            state: started
     - name: Create daily cron job to run Lynis
       when: ansible_distribution == "Slackware"
       tags: slackware
