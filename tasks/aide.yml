@@ -1,6 +1,8 @@
 ---
 - name: Setup AIDE
-  tags: aide
+  tags:
+    - aide
+    - debian
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   become: true
   block:
@@ -71,6 +73,33 @@
         replace: '\g<1>VarDirInode-n'
       tags: configuration
       notify: "Create aide.db"
-    - name: Check aide.conf
-      ansible.builtin.command: /usr/bin/aide --config-check --config=/etc/aide/aide.conf # noqa no-changed-when
-      tags: check
+
+# TODO
+- name: AIDE for Slackware
+  tags:
+    - aide
+    - slackware
+  when: ansible_distribution == "Slackware"
+  become: true
+  block:
+    - name: Copy aide.conf
+      tags: configuration
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/newconfs/aide.conf.new"
+        dest: /etc/aide.conf
+        owner: root
+        group: root
+        mode: '0600'
+      notify: "Create aide.db (Slackware)"
+    - name: mkdir /var/lib/aide
+      ansible.builtin.file:
+        path: /var/lib/aide
+        state: directory
+        owner: root
+        group: root
+        mode: '0700'
+
+- name: Check aide.conf
+  ansible.builtin.command: /usr/bin/aide --config-check --config=/etc/aide/aide.conf # noqa no-changed-when
+  tags: check
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"

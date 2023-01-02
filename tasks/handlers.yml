@@ -28,6 +28,15 @@
   async: 3600
   poll: 0
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+- name: Create aide.db (Slackware)
+  ansible.builtin.command: /usr/bin/aide -i
+  args:
+    creates: /var/lib/aide/aide.db.new
+  tags:
+    - aide
+    - slackware
+  become: true
+  when: ansible_distribution == "Slackware"
 - name: Run pam-auth-update
   ansible.builtin.command: /usr/sbin/pam-auth-update --package
   become: true

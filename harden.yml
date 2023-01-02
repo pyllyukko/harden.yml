@@ -93,6 +93,8 @@
       ansible.builtin.import_tasks: tasks/apache.yml
     - name: Slackware cgroups
       ansible.builtin.import_tasks: tasks/cgroup.yml
+    - name: AIDE
+      ansible.builtin.import_tasks: tasks/aide.yml
 
   handlers:
     - name: Handlers

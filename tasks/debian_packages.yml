@@ -25,8 +25,6 @@
       tags:
         - packages
         - services
-    - name: AIDE
-      ansible.builtin.import_tasks: aide.yml
     - name: Symlink /usr/lib/tiger/systems/Linux/5 -> 4
       ansible.builtin.file:
         src: /usr/lib/tiger/systems/Linux/4
