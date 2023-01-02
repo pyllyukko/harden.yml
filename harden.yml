@@ -44,6 +44,16 @@
         - pam
         - ssh
         - authorization
+    - name: Check that AIDE is installed (Slackware)
+      tags:
+        - slackware
+        - check
+        - aide
+      when: ansible_distribution == "Slackware"
+      ansible.builtin.stat:
+        path: /usr/bin/aide
+      register: result
+      failed_when: not result.stat.exists
     - name: sudoers
       ansible.builtin.import_tasks: tasks/sudoers.yml
       tags: sudo
