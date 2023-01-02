@@ -36,7 +36,18 @@
     - aide
     - slackware
   become: true
+  notify: "Copy aide.db.new to aide.db"
   when: ansible_distribution == "Slackware"
+- name: Copy aide.db.new to aide.db
+  when: ansible_distribution == "Slackware"
+  become: true
+  copy:
+    remote_src: yes
+    src: /var/lib/aide/aide.db.new
+    dest: /var/lib/aide/aide.db
+    owner: root
+    group: root
+    mode: '0600'
 - name: Run pam-auth-update
   ansible.builtin.command: /usr/sbin/pam-auth-update --package
   become: true
