@@ -90,6 +90,7 @@
         owner: root
         group: root
         mode: '0600'
+        backup: true
       notify: "Create aide.db (Slackware)"
     - name: mkdir /var/lib/aide
       ansible.builtin.file:
