@@ -1,0 +1,74 @@
+#%PAM-1.0
+#
+# Most of these PAM modules have man pages included, like 
+# pam_unix(8) for example.
+#
+
+##################
+# Authentication #
+##################
+#
+auth        required      pam_env.so
+auth        optional      pam_group.so
+auth        optional      pam_faildelay.so delay={{ fail_delay * 1000000 }}
+auth        [success=1 default=bad] pam_unix.so likeauth
+auth        [default=die] pam_faillock.so authfail
+auth        required      pam_faillock.so authsucc
+-auth       optional      pam_gnome_keyring.so
+
+##################
+# Account checks #
+##################
+#
+# Only root can login if file /etc/nologin exists.
+# This is equivalent to NOLOGINS_FILE on login.defs
+#
+account     required      pam_nologin.so
+#
+# Enable restrictions by time, specified in /etc/security/time.conf
+# This is equivalent to PORTTIME_CHECKS_ENAB on login.defs
+#
+account     required      pam_time.so           
+account     required      pam_access.so nodefgroup
+account     required      pam_unix.so
+account     sufficient    pam_succeed_if.so uid < 100 quiet
+account     required      pam_permit.so
+
+#############################
+# Password quality checking #
+#############################
+#
+# Please note that unless cracklib and libpwquality are installed, setting
+# passwords will not work unless the lines for the pam_pwquality module are
+# commented out and the line for the traditional no-quality-check password
+# changing is uncommented.
+#
+# The pam_pwquality module will check the quality of a user-supplied password
+# against the dictionary installed for cracklib. Other tests are (or may be)
+# done as well - see: man pam_pwquality
+#
+# Default password quality checking with pam_pwquality. If you don't want
+# password quality checking, comment out these two lines and uncomment the
+# traditional password handling line below.
+password    requisite     pam_pwquality.so minlen=14 retry=3
+#password    requisite     pam_passwdqc.so
+password    sufficient    pam_unix.so sha512 shadow minlen=14 try_first_pass use_authtok rounds={{ crypt_rounds }}
+
+# Traditional password handling without pam_pwquality password checking.
+# Commented out by default to use the two pam_pwquality lines above.
+#password    sufficient    pam_unix.so sha512 shadow minlen=14 rounds={{ crypt_rounds }}
+
+# ATTENTION: always keep this line for pam_deny.so:
+password    required      pam_deny.so
+
+#########################
+# Session Configuration #
+#########################
+#
+# This applies the limits specified in /etc/security/limits.conf
+#
+session     required      pam_limits.so
+session     required      pam_unix.so
+#session     required      pam_lastlog.so showfailed
+#session     optional      pam_mail.so standard
+-session     optional      pam_gnome_keyring.so auto_start

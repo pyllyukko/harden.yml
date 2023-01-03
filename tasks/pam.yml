@@ -30,15 +30,6 @@
           + : ({{ allowed_group }}) : ALL
           + : Debian-gdm lightdm : LOCAL
           - : ALL : ALL
-    - name: Add pam_access to system-auth (Slackware)
-      when: ansible_distribution == "Slackware"
-      become: true
-      ansible.builtin.lineinfile:
-        path: /etc/pam.d/system-auth
-        regexp: '^account\s+required\s+pam_access\.so\b.*$'
-        line: 'account     required      pam_access.so nodefgroup'
-        insertafter: '^account {5}required {6}pam_time\.so\b.*$'
-      tags: slackware
 
 # This needs to happen before populating /etc/pam.d/other with pam_deny or otherwise sudo will stop working
 - name: Create /etc/pam.d/sudo (Slackware)
@@ -61,16 +52,17 @@
     - pam
     - slackware
 
-- name: Add pam_umask & pam_cgroup to /etc/pam.d/postlogin (Slackware)
+- name: Add pam_umask, pam_cgroup & pam_namespace to /etc/pam.d/postlogin (Slackware)
   when: ansible_distribution == "Slackware"
   become: true
   ansible.builtin.lineinfile:
     path: /etc/pam.d/postlogin
-    regexp: '^session\s+optional\s+pam_{{ item }}\.so\b.*$'
-    line: 'session     optional      pam_{{ item }}.so'
-  with_items:
-    - umask
-    - cgroup
+    regexp: '^session\s+{{ item.value }}\s+pam_{{ item.key }}\.so\b.*$'
+    line: 'session     {{ item.value }}      pam_{{ item.key }}.so'
+  with_dict:
+    umask: optional
+    cgroup: optional
+    namespace: required
   tags:
     - configuration
     - pam
@@ -161,22 +153,21 @@
         line: "auth\trequired\t\t\tpam_faillock.so\tpreauth" # noqa no-tabs
         insertbefore: '^# here are the per-package modules \(the "Primary" block\)$'
 
-- name: Add pam_faillock and pam_faildelay to /etc/pam.d/system-auth (Slackware)
-  when: ansible_distribution == "Slackware"
+- name: Create custom /etc/pam.d/system-auth for Slackware
   become: true
+  when: ansible_distribution == "Slackware"
   tags:
-    - configuration
-    - pam
-    - authorization
     - slackware
-  ansible.builtin.replace:
-    path: /etc/pam.d/system-auth
-    regexp: '^auth\s+required\s+pam_unix\.so.*$\n'
-    replace: |
-      auth        optional      pam_faildelay.so delay={{ fail_delay * 1000000 }}
-      auth        [success=1 default=bad] pam_unix.so likeauth
-      auth        [default=die] pam_faillock.so authfail
-      auth        required      pam_faillock.so authsucc
+    - pam
+    - configuration
+    - authorization
+  ansible.builtin.template:
+    src: system-auth.j2
+    dest: /etc/pam.d/system-auth
+    owner: root
+    group: root
+    mode: '0644'
+    backup: true
 
 # postlogin doesn't include any auth lines
 - name: Remove auth include postlogin (Slackware)
@@ -197,29 +188,18 @@
     - slackware
 
 # https://github.com/pyllyukko/harden.sh/issues/64
-- name: nullok
+- name: Disallow blank passwords (Debian)
   become: true
   tags:
     - configuration
     - pam
     - passwords
-  block:
-    - name: Disallow blank passwords (Debian)
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
-      ansible.builtin.replace:
-        path: /etc/pam.d/common-auth
-        regexp: '\s+nullok(_secure)?'
-        replace: ''
-      tags: debian
-    # There are other lines also than auth pam_unix.so that is handled by the "Add
-    # pam_faillock and pam_faildelay to /etc/pam.d/system-auth" task
-    - name: Disallow blank passwords (Slackware)
-      when: ansible_distribution == "Slackware"
-      tags: slackware
-      ansible.builtin.replace:
-        path: /etc/pam.d/system-auth
-        regexp: '\s+nullok'
-        replace: ''
+    - debian
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  ansible.builtin.replace:
+    path: /etc/pam.d/common-auth
+    regexp: '\s+nullok(_secure)?'
+    replace: ''
 
 # https://wiki.debian.org/WHEEL/PAM
 # This is not enabled in Slackware because it has a separate "Deny use of su" task
@@ -405,14 +385,6 @@
       tags:
         - slackware
         - centos
-    - name: Configure minlen -> 14 in /etc/pam.d/system-auth (Slackware)
-      ansible.builtin.replace:
-        path: /etc/pam.d/system-auth
-        regexp: '^(password.+\sminlen=)[0-9]+(.*)$'
-        replace: '\g<1>14\g<2>'
-        validate: '/bin/grep "^password.\+minlen=14.*$" %s'
-      when: ansible_distribution == "Slackware"
-      tags: slackware
 
 # CIS Debian Linux 10 Benchmark v1.0.0 - 1.6.4 Ensure core dumps are restricted
 # https://en.wikipedia.org/wiki/Fork_bomb#Prevention
