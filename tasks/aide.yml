@@ -100,6 +100,14 @@
         mode: '0700'
 
 - name: Check aide.conf
-  ansible.builtin.command: /usr/bin/aide --config-check --config=/etc/aide/aide.conf # noqa no-changed-when
-  tags: check
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  become: true
+  ansible.builtin.command: /usr/bin/aide --config-check --config={{ aide_conf }}
+  register: result
+  changed_when: result.rc != 0
+  tags:
+    - check
+    - aide
+  when: >
+    ansible_distribution == "Debian" or
+    ansible_distribution == "Kali" or
+    ansible_distribution == "Slackware"
