@@ -113,7 +113,7 @@
       regexp: "^#?(-e 2)$"
       replace: '\1'
   - name: Load the audit rules
-    ansible.builtin.command: augenrules --load
+    ansible.builtin.command: /sbin/augenrules --load
     register: result
     changed_when: '"/sbin/augenrules: No change" not in result.stdout'
     tags: configuration
