@@ -39,6 +39,7 @@
         line: 'account     required      pam_access.so nodefgroup'
         insertafter: '^account {5}required {6}pam_time\.so\b.*$'
       tags: slackware
+
 # This needs to happen before populating /etc/pam.d/other with pam_deny or otherwise sudo will stop working
 - name: Create /etc/pam.d/sudo (Slackware)
   when: ansible_distribution == "Slackware"
@@ -59,6 +60,7 @@
     - configuration
     - pam
     - slackware
+
 - name: Add pam_umask & pam_cgroup to /etc/pam.d/postlogin (Slackware)
   when: ansible_distribution == "Slackware"
   become: true
@@ -73,6 +75,7 @@
     - configuration
     - pam
     - slackware
+
 # http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html
 # https://tldp.org/HOWTO/User-Authentication-HOWTO/x263.html#AEN266
 - name: /etc/pam.d/other
@@ -97,6 +100,7 @@
       tags:
         - pam
         - slackware
+
 - name: Check some Slackware's PAM files
   become: true
   when: ansible_distribution == "Slackware"
@@ -122,6 +126,7 @@
     - pam
     - slackware
     - check
+
 - name: faillock
   become: true
   when: ansible_distribution == "Slackware" or ansible_distribution == "Debian" or ansible_distribution == "Kali"
@@ -150,30 +155,29 @@
       tags:
         - configuration
         - debian
-        - authorization
       ansible.builtin.lineinfile:
         path: /etc/pam.d/common-auth
         regexp: '^auth\s+required\s+pam_faillock\.so\s+preauth$'
         line: "auth\trequired\t\t\tpam_faillock.so\tpreauth" # noqa no-tabs
         insertbefore: '^# here are the per-package modules \(the "Primary" block\)$'
-- name: Configure pam_faillock & pam_faildelay (Slackware)
+
+- name: Add pam_faillock and pam_faildelay to /etc/pam.d/system-auth (Slackware)
   when: ansible_distribution == "Slackware"
   become: true
-  tags: slackware
-  block:
-    - name: Add pam_faillock and pam_faildelay to /etc/pam.d/system-auth
-      ansible.builtin.replace:
-        path: /etc/pam.d/system-auth
-        regexp: '^auth\s+required\s+pam_unix\.so.*$\n'
-        replace: |
-          auth        optional      pam_faildelay.so delay={{ fail_delay * 1000000 }}
-          auth        [success=1 default=bad] pam_unix.so likeauth
-          auth        [default=die] pam_faillock.so authfail
-          auth        required      pam_faillock.so authsucc
-      tags:
-        - configuration
-        - pam
-        - authorization
+  tags:
+    - configuration
+    - pam
+    - authorization
+    - slackware
+  ansible.builtin.replace:
+    path: /etc/pam.d/system-auth
+    regexp: '^auth\s+required\s+pam_unix\.so.*$\n'
+    replace: |
+      auth        optional      pam_faildelay.so delay={{ fail_delay * 1000000 }}
+      auth        [success=1 default=bad] pam_unix.so likeauth
+      auth        [default=die] pam_faillock.so authfail
+      auth        required      pam_faillock.so authsucc
+
 # postlogin doesn't include any auth lines
 - name: Remove auth include postlogin (Slackware)
   when: ansible_distribution == "Slackware"
@@ -191,6 +195,7 @@
     - configuration
     - pam
     - slackware
+
 # https://github.com/pyllyukko/harden.sh/issues/64
 - name: nullok
   become: true
@@ -215,6 +220,7 @@
         path: /etc/pam.d/system-auth
         regexp: '\s+nullok'
         replace: ''
+
 # https://wiki.debian.org/WHEEL/PAM
 # This is not enabled in Slackware because it has a separate "Deny use of su" task
 - name: Enable pam_wheel.so in /etc/pam.d/su
@@ -230,6 +236,7 @@
     - pam
     - debian
     - centos
+
 - name: Enable polyinstantiated temp directories
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
   become: true
@@ -274,6 +281,7 @@
   tags:
     - permissions
     - pam
+
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.19
 - name: Debian pam-configs
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
@@ -322,6 +330,7 @@
       with_items:
         - faildelay
       notify: "Run pam-auth-update"
+
 - name: authconfig
   when: ansible_os_family == "RedHat"
   become: true
