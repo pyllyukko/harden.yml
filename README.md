@@ -11,7 +11,7 @@ Supported distros
 * Debian (Bullseye)
     * Kali
     * Raspbian
-* Slackware (>= 15.0)
+* Slackware (>= [15.0](http://www.slackware.com/announce/15.0.php))
 * Limited hardening for CentOS 7 (see CentOS specific tasks with `ansible-playbook --list-tasks --tags centos harden.yml`)
 
 Why I made this
@@ -60,19 +60,19 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 
 ### Filesystem
 
-* Hardens mount options (creates `/etc/fstab.new`)
+* Hardens mount options (creates `/etc/fstab.new`) (see [fstab.awk](files/fstab.awk))
 * Sets strict permissions to users home directories
 * Limits permissions to various configuration files and directories that might contain sensitive content (see `permissions` tag for a complete list)
 * Clean up `/tmp` during boot
 
 ### Application specific
 
-* Configures basic auditing based on [stig.rules](https://fedorahosted.org/audit/browser/trunk/contrib/stig.rules) if audit is installed
+* Configures basic auditing based on [stig.rules](https://fedorahosted.org/audit/browser/trunk/contrib/stig.rules) if audit is installed (see [audit.yml](tasks/audit.yml))
 * Configures `sshd_config` and `ssh_config`
 * Configures [sudo](https://www.sudo.ws/) (see [sudoers.j2](templates/sudoers.j2))
-* [ClamAV](https://www.clamav.net/) configuration
-* [rkhunter](https://sourceforge.net/projects/rkhunter/) configuration
-* [Lynis](https://cisofy.com/lynis/) configuration
+* [ClamAV](https://www.clamav.net/) configuration (see [clamav.yml](tasks/clamav.yml))
+* [rkhunter](https://sourceforge.net/projects/rkhunter/) configuration (see [rkhunter.yml](tasks/rkhunter.yml))
+* [Lynis](https://cisofy.com/lynis/) configuration (see [lynis.yml](tasks/lynis.yml))
 * Configures AIDE (see [aide.yml](tasks/aide.yml))
 * Display managers:
     * Disables user lists in GDM3 & LightDM
@@ -108,9 +108,9 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 
 ### Miscellaneous
 
-* Creates legal banners
+* Creates legal banners (see [banners.yml](tasks/banners.yml))
 * Disable [core dumps](https://en.wikipedia.org/wiki/Core_dump) in `/etc/security/limits.conf`
-* Reduce the amount of trusted [CAs](https://en.wikipedia.org/wiki/Certificate_authority)
+* Reduce the amount of trusted [CAs](https://en.wikipedia.org/wiki/Certificate_authority) (see [ca-certificates.conf.new](newconfs/ca-certificates.conf.new))
 
 ### Slackware specific
 
@@ -122,7 +122,7 @@ Run `ansible-playbook --list-tasks --tags slackware harden.yml` for a list.
 * Enables AppArmor
 * Configure `SUITE` in `debsecan`
 * Install `debsums` and enable weekly cron job
-* Installs a bunch of security related packages
+* Installs a bunch of security related packages (see [debian\_packages.yml](tasks/debian_packages.yml))
 * Configures `chkrootkit` and enables daily checks
 
 Creates bunch of `pam-config`s that are toggleable with `pam-auth-update`:
@@ -164,6 +164,7 @@ Usage
     * `noexec` is on by default, so you need to take this into account in your custom rules
     * Interactive shells to `root` have timeout, so use `screen` for those longer administrative tasks
 * Rebooting the system after running this is highly recommended
+* The AIDE DB creation is made [asynchronously](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_async.html) and without polling, so let that finish before rebooting
 
 ### Tags
 
