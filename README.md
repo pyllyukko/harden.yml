@@ -111,6 +111,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Creates legal banners (see [banners.yml](tasks/banners.yml))
 * Disable [core dumps](https://en.wikipedia.org/wiki/Core_dump) in `/etc/security/limits.conf`
 * Reduce the amount of trusted [CAs](https://en.wikipedia.org/wiki/Certificate_authority) (see [ca-certificates.conf.new](newconfs/ca-certificates.conf.new))
+* Restricts the number of available shells (`/etc/shells`)
 
 ### Slackware specific
 
@@ -202,6 +203,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `pam`
 * `cgroup` (Slackware)
 * `hidepid` (Slackware)
+* `shells`
 
 There are also operating system tags for tasks that only apply to specific OS.
 You can speed up the hardening by skipping OSs that don't apply. E.g. if you're

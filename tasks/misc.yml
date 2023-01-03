@@ -212,3 +212,22 @@
         owner: root
         group: root
         mode: '0644'
+
+- name: Remove extraneous shells from /etc/shells
+  become: true
+  tags:
+    - configuration
+    - shells
+  ansible.builtin.lineinfile:
+    path: /etc/shells
+    state: absent
+    regexp: '^{{ item }}$'
+  with_items:
+    - /bin/tcsh
+    - /bin/csh
+    - /bin/dash
+    - /bin/ash
+    - /bin/ksh
+    - /bin/mksh
+    - /bin/mksh-static
+    - /usr/lib/klibc/bin/mksh-static
