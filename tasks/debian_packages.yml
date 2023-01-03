@@ -46,6 +46,10 @@
     path: /usr/lib/sysctl.d/10-hardening.conf
     regexp: "^(user.max_user_namespaces = 0)$"
     replace: '#\1'
+  register: result
+  failed_when:
+    - result.failed
+    - result.msg != "Path /usr/lib/sysctl.d/10-hardening.conf does not exist !"
 
 # debsecan
 - name: debsecan
