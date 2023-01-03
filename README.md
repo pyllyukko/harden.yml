@@ -201,6 +201,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `authorization`
     * `passwords`
     * `pam`
+        * `limits`
 * `cgroup` (Slackware)
 * `hidepid` (Slackware)
 * `shells`

@@ -427,6 +427,7 @@
   tags:
     - configuration
     - pam
+    - limits
   with_dict:
     core: 0
     nproc: '{{ nproc_limit }}'
