@@ -41,7 +41,7 @@
 - name: Copy aide.db.new to aide.db
   when: ansible_distribution == "Slackware"
   become: true
-  copy:
+  ansible.builtin.copy:
     remote_src: true
     src: /var/lib/aide/aide.db.new
     dest: /var/lib/aide/aide.db
