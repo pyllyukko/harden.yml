@@ -73,6 +73,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * [ClamAV](https://www.clamav.net/) configuration
 * [rkhunter](https://sourceforge.net/projects/rkhunter/) configuration
 * [Lynis](https://cisofy.com/lynis/) configuration
+* Configures AIDE (see [aide.yml](tasks/aide.yml))
 * Display managers:
     * Disables user lists in GDM3 & LightDM
     * Disables guest sessions and VNC in LightDM
@@ -117,7 +118,6 @@ Run `ansible-playbook --list-tasks --tags slackware harden.yml` for a list.
 
 ### Debian specific
 
-* Configure AIDE
 * Disables unnecessary systemd services
 * Enables AppArmor
 * Configure `SUITE` in `debsecan`
