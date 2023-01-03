@@ -115,6 +115,7 @@
             dest: /etc/systemd/system/
             owner: root
             group: root
+            mode: '0644'
           with_items:
             - lynis.service
             - lynis.timer
