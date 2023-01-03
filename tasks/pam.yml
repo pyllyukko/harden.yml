@@ -385,13 +385,6 @@
         path: /etc/pam.d/common-password
         regexp: '^(password\s+.+\s+pam_unix\.so(?!.*\brounds=[0-9]+\b).*)$'
         replace: '\1 rounds={{ crypt_rounds }}'
-    - name: Add rounds={{ crypt_rounds }} to pam_unix in /etc/pam.d/system-auth (Slackware)
-      when: ansible_distribution == "Slackware"
-      tags: slackware
-      ansible.builtin.replace:
-        path: /etc/pam.d/system-auth
-        regexp: '^(password\s+.+\s+pam_unix\.so(?!.*\brounds=[0-9]+\b).*)$'
-        replace: '\1 rounds={{ crypt_rounds }}'
     # CIS CentOS Linux 7 Benchmark v3.0.0 - 5.3.1 Ensure password creation requirements are configured
     # https://www.redhat.com/sysadmin/more-lockdown-controls
     - name: Configure pwquality
