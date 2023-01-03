@@ -54,6 +54,26 @@
         path: /usr/bin/aide
       register: result
       failed_when: not result.stat.exists
+    - name: Check that rkhunter is installed (Slackware)
+      tags:
+        - slackware
+        - check
+        - rkhunter
+      when: ansible_distribution == "Slackware"
+      ansible.builtin.stat:
+        path: /usr/bin/rkhunter
+      register: result
+      failed_when: not result.stat.exists
+    - name: Check that audit is installed (Slackware)
+      tags:
+        - slackware
+        - check
+        - audit
+      when: ansible_distribution == "Slackware"
+      ansible.builtin.stat:
+        path: /sbin/auditd
+      register: result
+      failed_when: not result.stat.exists
     - name: sudoers
       ansible.builtin.import_tasks: tasks/sudoers.yml
       tags: sudo
