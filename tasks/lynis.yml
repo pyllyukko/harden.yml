@@ -11,16 +11,16 @@
       ansible.builtin.apt:
         name: ['apt-transport-https', 'gnupg2']
         update_cache: true
-    - name: Add Lynis signing key
+    - name: Add Lynis signing key (Debian)
       ansible.builtin.apt_key:
         id: 84FAA9983B24AEF24D6C87F1FEBB7D1812576482
         url: https://packages.cisofy.com/keys/cisofy-software-public.key
         state: present
-    - name: Add Lynis repository
+    - name: Add Lynis repository (Debian)
       ansible.builtin.apt_repository:
         repo: deb https://packages.cisofy.com/community/lynis/deb/ stable main
         state: present
-    - name: Install Lynis
+    - name: Install Lynis (Debian)
       ansible.builtin.apt:
         name: lynis
         update_cache: true
@@ -32,7 +32,7 @@
     - lynis
     - centos
   block:
-    - name: Add Lynis repository
+    - name: Add Lynis repository (RH)
       ansible.builtin.yum_repository:
         name: lynis
         description: CISOfy Software - Lynis package
@@ -41,7 +41,7 @@
         gpgcheck: true
         priority: 2
         enabled: true
-    - name: Install Lynis
+    - name: Install Lynis (RH)
       ansible.builtin.yum:
         name: lynis
         update_cache: true
