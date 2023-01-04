@@ -232,7 +232,6 @@
     - configuration
     - pam
 - name: Remove adm user from /etc/security/namespace.conf
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   become: true
   ansible.builtin.replace:
     path: /etc/security/namespace.conf
@@ -242,7 +241,6 @@
   tags:
     - configuration
     - pam
-    - debian
 # For some reason some Debian systems have had random group ownership on these (e.g. audio or systemd-journal)
 - name: Make sure polyinstantiated directories are owned by root:root
   become: true
