@@ -104,18 +104,36 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Configures `/etc/security/pwquality.conf` if available
 * Require [pam\_wheel](http://linux-pam.org/Linux-PAM-html/sag-pam_wheel.html) in `/etc/pam.d/su`
 * Creates a secure [/etc/pam.d/other](http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html)
+* Configures `/etc/security/limits.conf` as follows:
+    * Disable [core dumps](https://en.wikipedia.org/wiki/Core_dump)
+    * Sets maximum amount of processes (or threads, see `setrlimit(3)`)
+    * Sets `nproc` to 0 for system users that don't need to run any processes
 * Run `ansible-playbook --list-tasks --tags pam harden.yml` to list all PAM related tasks
 
 ### Miscellaneous
 
 * Creates legal banners (see [banners.yml](tasks/banners.yml))
-* Disable [core dumps](https://en.wikipedia.org/wiki/Core_dump) in `/etc/security/limits.conf`
 * Reduce the amount of trusted [CAs](https://en.wikipedia.org/wiki/Certificate_authority) (see [ca-certificates.conf.new](newconfs/ca-certificates.conf.new))
 * Restricts the number of available shells (`/etc/shells`)
 
 ### Slackware specific
 
 Run `ansible-playbook --list-tasks --tags slackware harden.yml` for a list.
+
+#### PAM
+
+* Creates a custom `/etc/pam.d/system-auth`, which has the following changes:
+    * Use `pam_faildelay`
+    * Use `pam_faillock`
+    * Use `pam_access`
+    * Removes `nullok` from `pam_unix`
+    * Change password `minlen` from 6 to 14
+* The following PAM modules are added to `/etc/pam.d/postlogin`:
+    * `pam_umask`
+    * `pam_cgroup`
+    * `pam_namespace`
+* Removes `auth include postlogin` from several files, as `postlogin` should (and has) only `session` module types
+* Creates `/etc/pam.d/sudo`, as that seemed to be missing
 
 ### Debian specific
 
