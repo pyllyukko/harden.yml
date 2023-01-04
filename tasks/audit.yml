@@ -146,6 +146,7 @@
       - audit_backlog_limit=8192
     when: (ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian") or ansible_distribution == "Kali" or ansible_os_family == "RedHat"
     tags: configuration
+    notify: "Run update-grub"
   - name: Add audit=1 to /boot/cmdline.txt (Raspbian)
     ansible.builtin.replace:
       path: /boot/cmdline.txt

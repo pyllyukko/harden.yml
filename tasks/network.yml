@@ -156,3 +156,4 @@
         regexp: '^(GRUB_CMDLINE_LINUX="(?!.*\bipv6\.disable=1\b).*)"$'
         replace: '\1 ipv6.disable=1"'
       when: (ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian") or ansible_distribution == "Kali" or ansible_os_family == "RedHat"
+      notify: "Run update-grub"

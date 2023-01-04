@@ -80,3 +80,7 @@
   become: true
   ansible.builtin.systemd:
     daemon_reload: true
+- name: Run update-grub
+  become: true
+  ansible.builtin.command: /usr/sbin/update-grub
+  changed_when: true
