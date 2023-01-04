@@ -6,7 +6,7 @@
   block:
   - name: Install necessary software for auditing (Debian)
     ansible.builtin.apt:
-      name: ['auditd', 'libcap-ng-utils']
+      name: ['auditd', 'libcap-ng-utils', 'make']
       update_cache: true
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
     tags:
