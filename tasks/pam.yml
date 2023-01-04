@@ -217,27 +217,15 @@
     - debian
     - centos
 
-- name: Enable polyinstantiated temp directories
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
+- name: Copy namespace.conf
   become: true
-  ansible.builtin.replace:
-    path: /etc/security/namespace.conf
-    regexp: '^#({{ item }}\b.+)$'
-    replace: '\1'
-    validate: '/bin/grep "^{{ item }}\s\+\({{ item }}\)\?/tmp-inst/\s\+level\s\+root,adm$" %s'
-  with_items:
-    - '/tmp'
-    - '/var/tmp'
-  tags:
-    - configuration
-    - pam
-- name: Remove adm user from /etc/security/namespace.conf
-  become: true
-  ansible.builtin.replace:
-    path: /etc/security/namespace.conf
-    regexp: '^(.+),adm$'
-    replace: '\1'
-    validate: '/bin/grep "^\(/var\)\?/tmp\s\+\(/var/tmp\)\?/tmp-inst/\s\+level\s\+root$" %s'
+  ansible.builtin.copy:
+    src: namespace.conf.new
+    dest: /etc/security/namespace.conf
+    owner: root
+    group: root
+    mode: '0644'
+    backup: true
   tags:
     - configuration
     - pam
