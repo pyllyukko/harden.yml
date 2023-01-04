@@ -77,7 +77,7 @@
   ansible.builtin.replace:
     path: /etc/rc.d/rc.S
     regexp: '^(rm -rf) /tmp/\{.+\}$'
-    replace: 'shopt -s dotglob; \g<1> /tmp/*; shopt -u dotglob'
+    replace: 'shopt -s dotglob; \g<1> /tmp{,-inst}/*; shopt -u dotglob'
     validate: '/bin/grep "^shopt -s dotglob; rm -rf /tmp/\*; shopt -u dotglob$" %s'
 - name: Clean up /tmp during boot (Debian)
   become: true
