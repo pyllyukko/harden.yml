@@ -599,7 +599,9 @@ SCRIPTWHITELIST=/usr/bin/ldd
 SCRIPTWHITELIST=/usr/bin/which
 SCRIPTWHITELIST=/bin/egrep
 SCRIPTWHITELIST=/bin/fgrep
+{% if 'libwww-perl' in ansible_facts.packages %}
 SCRIPTWHITELIST=/usr/bin/lwp-request
+{% endif %}
 {% endif %}
 {% if ansible_distribution == "Slackware" %}
 SCRIPTWHITELIST=/usr/sbin/adduser
