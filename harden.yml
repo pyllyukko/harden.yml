@@ -4,6 +4,7 @@
   vars_files:
     - vars.yml
   tasks:
+    # Bunch of checks first, so the playbook doesn't fail in the middle.
     - name: Check OS version
       ansible.builtin.assert:
         that: >
@@ -74,6 +75,8 @@
         path: /sbin/auditd
       register: result
       failed_when: not result.stat.exists
+
+    # End of checks. Start hardening.
     - name: sudoers
       ansible.builtin.import_tasks: tasks/sudoers.yml
       tags: sudo
