@@ -372,8 +372,8 @@
         - slackware
         - centos
 
+# https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#user-limits
 - name: pam_limits
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
   become: true
   tags:
     - configuration
@@ -392,18 +392,20 @@
         core: 0
         nproc: '{{ nproc_limit }}'
     - name: Set nproc to 0 in limits.conf for system users that don't need to run any processes
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
       community.general.pam_limits:
         domain: '{{ item }}'
         limit_type: hard
         limit_item: nproc
         value: 0
+      # sys, man, list, irc & gnats are from Debian
       with_items:
         - bin
         - adm
+        - sys
         - lp
         - sync
         - shutdown
+        - man
         - halt
         - mail
         - news
@@ -412,6 +414,9 @@
         - games
         - ftp
         - smmsp
+        - list
+        - irc
+        - gnats
         - gdm
         - oprofile
         - pop
