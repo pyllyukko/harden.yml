@@ -121,3 +121,19 @@
         path: /etc/chkrootkit.conf
         regexp: '^(RUN_DAILY=).*'
         replace: '\g<1>"true"'
+
+# Ansible's apt module doesn't install suggested packages,
+# but we don't want them later on either.
+- name: Configure APT not to install suggested packages
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  become: true
+  tags:
+    - debian
+    - configuration
+  ansible.builtin.copy:
+    content: "APT::Install-Suggests \"false\";\n"
+    dest: /etc/apt/apt.conf.d/99suggested
+    owner: root
+    group: root
+    mode: '0644'
+    force: false

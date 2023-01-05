@@ -155,6 +155,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Install `debsums` and enable weekly cron job
 * Installs a bunch of security related packages (see [debian\_packages.yml](tasks/debian_packages.yml))
 * Configures `chkrootkit` and enables daily checks
+* Configures APT not to install suggested packages
 
 Creates bunch of `pam-config`s that are toggleable with `pam-auth-update`:
 
