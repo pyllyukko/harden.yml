@@ -340,7 +340,9 @@
       failed_when:
         - result.failed == true
         - result.state != "absent"
-      tags: permissions
+      tags:
+        - permissions
+        - cron
     - name: chmod o-r /var/log
       ansible.builtin.file:
         path: /var/log

@@ -57,6 +57,7 @@
     - configuration
     - debian
     - authorization
+    - cron
   block:
     - name: Restrict cron (cron.allow)
       become: true
@@ -98,7 +99,9 @@
     - centos
 
 - name: Slackware's cron
-  tags: slackware
+  tags:
+    - slackware
+    - cron
   when: ansible_distribution == "Slackware"
   become: true
   block:
@@ -113,7 +116,7 @@
         - logging
         - configuration
     # From dcron's README
-    - name: Restrict cron (Slackware)
+    - name: Restrict cron from users not beloning to the wheel group (Slackware)
       ansible.builtin.file:
         path: /usr/bin/crontab
         group: wheel
@@ -142,7 +145,7 @@
         - services
     # user needs to have x perms into the directory where the temp file is created
     # Slackware 14.2 has /var/spool/cron as TMPDIR and 14.2+ has /run/cron
-    - name: Fix /etc/rc.d/rc.crond
+    - name: Fix /run/cron permissions in /etc/rc.d/rc.crond
       ansible.builtin.blockinfile:
         path: /etc/rc.d/rc.crond
         insertafter: "^ {4}mkdir -p /run/cron$"
@@ -151,7 +154,7 @@
           /bin/chmod 0710 /run/cron
       tags: services
     # From dcron's README
-    - name: chmod crond (Slackware)
+    - name: chmod /usr/sbin/crond (Slackware)
       ansible.builtin.file:
         path: /usr/sbin/crond
         mode: '0700'
