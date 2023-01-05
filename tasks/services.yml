@@ -111,6 +111,7 @@
       tags:
         - services
         - logging
+        - configuration
     # From dcron's README
     - name: Restrict cron (Slackware)
       ansible.builtin.file:
