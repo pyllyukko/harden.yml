@@ -20,6 +20,7 @@
         regexp: '^(ca::ctrlaltdel:/sbin/shutdown -t5 -r now)$'
         replace: '\g<1> -a'
         validate: '/bin/grep "^ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a$" %s'
+
 - name: Set umask to 077 in /etc/profile (Slackware)
   tags: configuration
   become: true
@@ -29,6 +30,7 @@
     regexp: '^(umask) [0-9]+$'
     replace: '\g<1> 077'
     validate: '/bin/grep "^umask 077$" %s'
+
 # ftp://ftp.slackware.com/pub/slackware/slackware64-current/source/a/shadow/adduser
 # Default AGID is "audio cdrom floppy input lp netdev plugdev power scanner video"
 - name: Configure defchmod and AGID in /usr/sbin/adduser (Slackware)
@@ -43,6 +45,7 @@
   with_dict:
     defchmod: 700
     AGID: '"audio input netdev plugdev power video"'
+
 # Slackware Linux Benchmark v1.1 - 7.10 Require Authentication For Single-User Mode
 # https://web.archive.org/web/20070702234716/http://www.bastille-linux.org:80/jay/anyone-with-a-screwdriver.html
 # https://cisofy.com/lynis/controls/AUTH-9308/
@@ -71,6 +74,7 @@
         path: /etc/rc.d/rc.K
         regexp: '^/sbin/telinit'
         line: /sbin/telinit -t 1 S
+
 - name: Add LESS variables and disable core dumps
   tags: configuration
   ansible.builtin.blockinfile:

@@ -96,6 +96,7 @@
   tags:
     - debian
     - centos
+
 - name: Slackware's cron
   tags: slackware
   when: ansible_distribution == "Slackware"
@@ -180,6 +181,7 @@
     - packages
     - services
     - slackware
+
 - name: Slackware rc.d
   tags: slackware
   when: ansible_distribution == "Slackware"
