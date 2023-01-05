@@ -23,6 +23,7 @@
     - permissions
     - logging
 # This is separated so you can run "ansible-playbook --tags passwords"
+# AUTH-9286
 # https://www.redhat.com/sysadmin/more-lockdown-controls:
 #   * Minimum password lifetime
 #   * Maximum password lifetime

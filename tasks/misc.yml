@@ -200,6 +200,7 @@
       register: stat_result
       tags: check
     # https://cheatsheetseries.owasp.org/cheatsheets/PHP_Configuration_Cheat_Sheet.html
+    # PHP-2372
     # TODO: Moar content!
     - name: Configure php.ini
       become: true
@@ -213,6 +214,7 @@
         group: root
         mode: '0644'
 
+# SHLL-6211
 - name: Remove extraneous shells from /etc/shells
   become: true
   tags:
