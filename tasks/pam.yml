@@ -415,3 +415,17 @@
         - gdm
         - oprofile
         - pop
+
+- name: Deny use of su (Slackware)
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/newconfs/pam.d/su.new"
+    dest: /etc/pam.d/su
+    owner: root
+    group: root
+    mode: '0644'
+  when: ansible_distribution == "Slackware"
+  become: true
+  tags:
+    - configuration
+    - pam
+    - slackware
