@@ -118,7 +118,17 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 
 ### Slackware specific
 
-Run `ansible-playbook --list-tasks --tags slackware harden.yml` for a list.
+* Run `ansible-playbook --list-tasks --tags slackware harden.yml` for a full list
+* Make Xorg rootless
+* Makes default log files group `adm` readable ([as in Debian](http://www.debian.org/doc/manuals/debian-reference/ch01.en.html#listofnotablesysupsforfileaccess))
+* Restricts the use of `cron` so that only users in the [wheel](https://en.wikipedia.org/wiki/Wheel_(computing)) group are able to create cronjobs (as described in [/usr/doc/dcron-4.5/README](http://www.jimpryor.net/linux/dcron-README))
+* Mount [/proc](https://www.kernel.org/doc/Documentation/filesystems/proc.txt) with `hidepid=2`
+* Make `installpkg` store the MD5 checksums
+* Enable [process accounting](https://tldp.org/HOWTO/Process-Accounting/) (`acct`)
+* Does some housekeeping regarding group memberships (see [login\_defs-slackware.yml](tasks/login_defs-slackware.yml))
+* Configures `inittab` to use `shutdown -a` (and `/etc/shutdown.allow`)
+* Reconfigured bunch of services (run `ansible-playbook --list-tasks --tags slackware harden.yml | grep '\bservices\b'` for a full list)
+* Configures cgroups ([v1](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v1/cgroups.html), because of too old `libcgroup`) into `/etc/cg{config,rules}.conf`
 
 #### PAM
 
@@ -127,6 +137,7 @@ Run `ansible-playbook --list-tasks --tags slackware harden.yml` for a list.
     * Use `pam_faillock`
     * Use `pam_access`
     * Removes `nullok` from `pam_unix`
+    * Sets crypt rounds for `pam_unix`
     * Change password `minlen` from 6 to 14
 * The following PAM modules are added to `/etc/pam.d/postlogin`:
     * `pam_umask`
@@ -134,6 +145,7 @@ Run `ansible-playbook --list-tasks --tags slackware harden.yml` for a list.
     * `pam_namespace`
 * Removes `auth include postlogin` from several files, as `postlogin` should (and has) only `session` module types
 * Creates `/etc/pam.d/sudo`, as that seemed to be missing
+* Disallows the use of `su` (see [su.new](newconfs/pam.d/su.new))
 
 ### Debian specific
 
