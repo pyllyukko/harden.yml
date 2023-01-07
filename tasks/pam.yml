@@ -232,6 +232,7 @@
     - configuration
     - pam
 # For some reason some Debian systems have had random group ownership on these (e.g. audio or systemd-journal)
+# "Instance parent directories by default are expected to have the restrictive mode of 000."
 - name: Make sure polyinstantiated directories are owned by root:root
   become: true
   ansible.builtin.file:
