@@ -28,6 +28,10 @@
 #   * Minimum password lifetime
 #   * Maximum password lifetime
 #   * Failed login delay
+# CIS Debian Linux 10 Benchmark v1.0.0:
+#   5.4.1.1 Ensure password expiration is 365 days or less
+#   5.4.1.2 Ensure minimum days between password changes is configured
+#   5.4.1.3 Ensure password expiration warning days is 7 or more
 - name: Configure shadow password suite (password related)
   become: true
   ansible.builtin.replace:
@@ -139,11 +143,13 @@
   ansible.builtin.import_tasks: login_defs-slackware.yml
   when: ansible_distribution == "Slackware"
   tags: slackware
+
 # CIS Debian Linux 10 Benchmark v1.0.0 - 6.2.17 Ensure no duplicate GIDs exist
 - name: Verify integrity of group files
   become: true
   ansible.builtin.command: grpck -r # noqa no-changed-when
   tags: check
+
 - name: Remove pi from adm group (Raspbian)
   when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
   become: true
@@ -193,7 +199,7 @@
 
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.1.4 Ensure inactive password lock is 30 days or less
 # Debian's "useradd -D -f 30" fails with "cannot create new defaults file"
-- name: Set the number of days after a password expires until the account is permanently disabled (inactive)
+- name: Set the number of days after a password expires until the account is permanently disabled (inactive password lock)
   become: true
   tags:
     - passwords
@@ -205,6 +211,11 @@
     replace: '\g<2>{{ inactive_password_lock }}'
     validate: '/bin/grep "^INACTIVE={{ inactive_password_lock }}$" %s'
 
+# CIS Debian Linux 10 Benchmark v1.0.0:
+#   5.4.1.1 Ensure password expiration is 365 days or less
+#   5.4.1.2 Ensure minimum days between password changes is configured
+#   5.4.1.3 Ensure password expiration warning days is 7 or more
+#   5.4.1.4 Ensure inactive password lock is 30 days or less
 # ansible.builtin.user doesn't seem to be able to set inactive & warndays,
 # so we'll use chage instead.
 - name: Set password policies for existing users
