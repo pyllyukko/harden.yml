@@ -36,9 +36,9 @@
     replace: '\g<2>{{ item.value }}'
     validate: '/bin/grep "^{{ item.key }}\s\+{{ item.value }}$" %s'
   with_dict:
-    PASS_MAX_DAYS: 365
-    PASS_MIN_DAYS: 7
-    PASS_WARN_AGE: 30
+    PASS_MAX_DAYS: "{{ pass_max_days }}"
+    PASS_MIN_DAYS: "{{ pass_min_days }}"
+    PASS_WARN_AGE: "{{ pass_warn_age }}"
     SHA_CRYPT_MIN_ROUNDS: "{{ crypt_rounds }}"
     ENCRYPT_METHOD: "SHA512"
     FAIL_DELAY: "{{ fail_delay }}"
@@ -160,18 +160,25 @@
 - name: getent passwd
   tags:
     - accounts
+    - passwords
+    - authorization
     - check
   ansible.builtin.getent:
     database: passwd
     service: files
 - name: Get login.defs values
-  tags: accounts
+  tags:
+    - accounts
+    - check
+    - passwords
+    - authorization
   block:
     - name: slurp /etc/login.defs
       become: true
       ansible.builtin.slurp:
         src: /etc/login.defs
       register: login_defs
+      no_log: true
     - name: Set uid_min & uid_max variables
       ansible.builtin.set_fact:
         uid_min: "{{ login_defs['content'] | b64decode | regex_search('^UID_MIN\\s+([0-9]+)$', '\\1', multiline=True) | first }}"
@@ -183,26 +190,33 @@
           - uid_max is regex('^[0-9]+$')
           - uid_min | int != 0
           - uid_max | int != 0
+
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.1.4 Ensure inactive password lock is 30 days or less
-- name: Inactive password lock
+# Debian's "useradd -D -f 30" fails with "cannot create new defaults file"
+- name: Set the number of days after a password expires until the account is permanently disabled (inactive)
+  become: true
   tags:
     - passwords
     - authorization
+    - configuration
+  ansible.builtin.replace:
+    path: /etc/default/useradd
+    regexp: '^(# ?)?(INACTIVE=).*$'
+    replace: '\g<2>{{ inactive_password_lock }}'
+    validate: '/bin/grep "^INACTIVE={{ inactive_password_lock }}$" %s'
+
+# ansible.builtin.user doesn't seem to be able to set inactive & warndays,
+# so we'll use chage instead.
+- name: Set password policies for existing users
   become: true
-  block:
-    # Debian's "useradd -D -f 30" fails with "cannot create new defaults file"
-    - name: Set the number of days after a password expires until the account is permanently disabled (inactive)
-      ansible.builtin.replace:
-        path: /etc/default/useradd
-        regexp: '^(# ?)?(INACTIVE=).*$'
-        replace: '\g<2>30'
-        validate: '/bin/grep "^INACTIVE=30$" %s'
-      tags: configuration
-    - name: Set password expiry inactive days locking for existing users
-      ansible.builtin.command: chage --inactive 30 {{ item.key }}
-      when: item.value[1] | int >= uid_min | int and item.value[1] | int <= uid_max | int
-      with_dict: "{{ getent_passwd }}"
-      tags: accounts
+  ansible.builtin.command: chage --inactive {{ inactive_password_lock }} --mindays {{ pass_min_days }} --maxdays {{ pass_max_days }} --warndays {{ pass_warn_age }} {{ item.key }}
+  when: item.value[1] | int >= uid_min | int and item.value[1] | int <= uid_max | int
+  with_dict: "{{ getent_passwd }}"
+  tags:
+    - accounts
+    - passwords
+    - authorization
+
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.2 Ensure system accounts are secured
 # Slackware Linux Benchmark v1.1 - 8.1 Block System Accounts
 - name: Lock system accounts

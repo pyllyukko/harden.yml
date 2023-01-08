@@ -233,6 +233,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `accounting` (includes `sysstat`)
     * `authorization`
     * `passwords`
+    * `accounts`
     * `pam`
         * `limits`
 * `cgroup` (Slackware)

@@ -76,6 +76,29 @@
       register: result
       failed_when: not result.stat.exists
 
+    # Once we change existing users max password age and set the inactive age,
+    # the user isn't able to authenticate anymore if the password is too old.
+    - name: Check that Ansible user's password is not too old
+      become: true
+      tags:
+        - accounts
+        - passwords
+        - authorization
+        - check
+      block:
+        - name: getent shadow for Ansible user
+          ansible.builtin.getent:
+            database: shadow
+            key: '{{ ansible_user_id }}'
+            split: ':'
+          no_log: true
+        # If password age is today-pass_max_days, you're still able to login with "Your password will expire today."
+        # So > comparison should be sufficient, but we'll put in the one day safe margin (>=) just in case.
+        - name: Check that Ansible user's password is not too old
+          ansible.builtin.assert:
+            that: ansible_facts.getent_shadow[ansible_user_id][1] | int >= ((ansible_date_time.epoch_int | int / 86400) | int) - pass_max_days
+            msg: "Ansible user's password too old"
+
     # End of checks. Start hardening.
     - name: sudoers
       ansible.builtin.import_tasks: tasks/sudoers.yml
