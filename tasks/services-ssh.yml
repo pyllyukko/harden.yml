@@ -63,3 +63,20 @@
     owner: root
     group: root
     mode: '0644'
+
+- name: Print Lynis score for SSH hardening
+  become: true
+  tags: ssh
+  when: run_lynis_after_hardening
+  block:
+    - name: Run Lynis test group SSH hardening
+      ansible.builtin.command: lynis audit system -q --skip-plugins --tests-from-group ssh # noqa no-changed-when
+      tags: check
+    - name: slurp /var/log/lynis.log
+      ansible.builtin.slurp:
+        src: /var/log/lynis.log
+      no_log: true
+      register: lynis_log
+    - name: Print Lynis score for SSH hardening
+      ansible.builtin.debug:
+        msg: "{{ lynis_log['content'] | b64decode | regex_search('Hardening index : \\[([0-9]+)\\]', '\\1', multiline=True) }}"
