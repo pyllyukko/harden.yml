@@ -162,6 +162,7 @@
     - pam
     - configuration
     - authorization
+    - passwords
   ansible.builtin.template:
     src: system-auth.j2
     dest: /etc/pam.d/system-auth
