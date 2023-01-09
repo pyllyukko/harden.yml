@@ -233,3 +233,24 @@
     - /bin/mksh
     - /bin/mksh-static
     - /usr/lib/klibc/bin/mksh-static
+
+# https://www.freedesktop.org/software/systemd/man/coredump.conf.html
+# https://cisofy.com/lynis/controls/KRNL-5820/
+# https://www.cyberciti.biz/faq/disable-core-dumps-in-linux-with-systemd-sysctl/
+- name: Configure coredump.ini
+  tags:
+    - configuration
+    - kernel
+  become: true
+  when: ansible_distribution != "Slackware"
+  community.general.ini_file:
+    path: /etc/systemd/coredump.conf
+    section: Coredump
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    owner: root
+    group: root
+    mode: '0644'
+  with_dict:
+    Storage: none
+    ProcessSizeMax: 0
