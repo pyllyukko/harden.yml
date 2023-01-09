@@ -61,6 +61,9 @@
         block: |
           # Changing port number is just security through obscurity
           skip-test=SSH-7408:port
+          # Pre-authentication compression was removed from OpenSSH 7.4 (https://www.openssh.com/txt/release-7.4)
+          # and Lynis accepts "delayed", which was an option to use compression only after authentication.
+          skip-test=SSH-7408:compression
           # Even though this is true, partitioning is usually done during install and not necessarily that easy afterwards
           skip-test=FILE-6310
           # Attackers can get their tools into hosts in any case
