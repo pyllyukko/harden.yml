@@ -112,3 +112,20 @@
     ansible_distribution == "Debian" or
     ansible_distribution == "Kali" or
     ansible_distribution == "Slackware"
+
+- name: Print Lynis score for file integrity
+  become: true
+  tags: aide
+  when: run_lynis_after_hardening
+  block:
+    - name: Run Lynis test group file integrity
+      ansible.builtin.command: lynis audit system -q --skip-plugins --tests-from-group file_integrity # noqa no-changed-when
+      tags: check
+    - name: slurp /var/log/lynis.log
+      ansible.builtin.slurp:
+        src: /var/log/lynis.log
+      no_log: true
+      register: lynis_log
+    - name: Print Lynis score for file integrity
+      ansible.builtin.debug:
+        msg: "{{ lynis_log['content'] | b64decode | regex_search('Hardening index : \\[([0-9]+)\\]', '\\1', multiline=True) }}"
