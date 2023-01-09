@@ -54,3 +54,30 @@
   failed_when:
     - result.failed == true
     - result.msg != "Path /etc/gdm3/greeter.dconf-defaults does not exist !"
+
+# CIS Debian Linux 11 Benchmark v1.0.0 - 09-22-2022
+#   1.8.6 Ensure GDM automatic mounting of removable media is disabled
+# https://access.redhat.com/solutions/20107
+- name: Disable GNOME automount
+  become: true
+  tags: configuration
+  block:
+    - name: mkdir /etc/dconf/db/local.d
+      ansible.builtin.file:
+        path: /etc/dconf/db/local.d
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+    - name: Disable GNOME automount
+      community.general.ini_file:
+        path: /etc/dconf/db/local.d/00-media-automount
+        section: org/gnome/desktop/media-handling
+        option: "{{ item.key }}"
+        value: "{{ item.value }}"
+        owner: root
+        group: root
+        mode: '0644'
+      with_dict:
+        automount: "false"
+        automount-open: "false"
