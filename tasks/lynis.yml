@@ -64,6 +64,11 @@
           # Pre-authentication compression was removed from OpenSSH 7.4 (https://www.openssh.com/txt/release-7.4)
           # and Lynis accepts "delayed", which was an option to use compression only after authentication.
           skip-test=SSH-7408:compression
+          # These aren't security issues
+          # Also SSHD_CONFIG(5): "Note that disabling agent forwarding does not improve security unless users are also denied shell access,
+          #                       as they can always install their own forwarders."
+          skip-test=SSH-7408:tcpkeepalive
+          skip-test=SSH-7408:allowagentforwarding
           # Even though this is true, partitioning is usually done during install and not necessarily that easy afterwards
           skip-test=FILE-6310
           # Attackers can get their tools into hosts in any case
