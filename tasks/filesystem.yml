@@ -34,6 +34,17 @@
 #    src: proc
 #    fstype: proc
 
+- name: Fix mkinitrd so initrd image mounts /dev with noexec & nosuid
+  become: true
+  when: ansible_distribution == "Slackware"
+  tags:
+    - slackware
+    - configuration
+  ansible.builtin.lineinfile:
+    path: /sbin/mkinitrd
+    insertbefore: '# Wrap the initrd as an initramfs image and move it into place:$'
+    line: sed -i 's:^\(\s\+mount -n devtmpfs /dev -t devtmpfs -o size=8M\)$:\1,noexec,nosuid:' "${SOURCE_TREE}/init"
+
 # fstab
 - name: Create /etc/fstab.new
   tags: fstab
