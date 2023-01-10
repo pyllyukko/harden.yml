@@ -444,3 +444,20 @@
       tags:
         - permissions
         - slackware
+
+- name: Print Lynis score for file permissions
+  become: true
+  tags: permissions
+  when: run_lynis_after_hardening
+  block:
+    - name: Run Lynis test group file permissions
+      ansible.builtin.command: lynis audit system -q --skip-plugins --tests-from-group file_permissions # noqa no-changed-when
+      tags: check
+    - name: slurp /var/log/lynis.log
+      ansible.builtin.slurp:
+        src: /var/log/lynis.log
+      no_log: true
+      register: lynis_log
+    - name: Print Lynis score for file permissions
+      ansible.builtin.debug:
+        msg: "{{ lynis_log['content'] | b64decode | regex_search('Hardening index : \\[([0-9]+)\\]', '\\1', multiline=True) }}"
