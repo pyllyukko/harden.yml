@@ -49,7 +49,7 @@
 
 # Cron
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.1.8 Ensure at/cron is restricted to authorized users
-- name: Debian cron & at
+- name: Debian cron
   become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   tags:
@@ -59,8 +59,7 @@
     - authorization
     - cron
   block:
-    - name: Restrict cron (cron.allow)
-      become: true
+    - name: Restrict cron 1/2 (create /etc/cron.allow)
       ansible.builtin.file:
         path: /etc/cron.allow
         state: touch
@@ -68,7 +67,21 @@
         group: crontab
         mode: '0640'
       tags: permissions
-    - name: Restrict at (at.allow)
+    - name: Restrict cron 2/2 (remove /etc/cron.deny)
+      ansible.builtin.file:
+        path: /etc/cron.deny
+        state: absent
+
+- name: Create empty /etc/at.allow (whitelist) and remove /etc/at.deny (blacklist)
+  become: true
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Slackware"
+  tags:
+    - services
+    - configuration
+    - authorization
+    - cron
+  block:
+    - name: Restrict at 1/2 (create /etc/at.allow)
       become: true
       ansible.builtin.file:
         path: /etc/at.allow
@@ -77,14 +90,10 @@
         group: daemon
         mode: '0640'
       tags: permissions
-    - name: Restrict cron & at ({at,cron}.deny)
-      become: true
+    - name: Restrict at 2/2 (remove /etc/at.deny)
       ansible.builtin.file:
-        path: /etc/{{ item }}
+        path: /etc/at.deny
         state: absent
-      with_items:
-        - cron.deny
-        - at.deny
 
 - name: Create a job that checks systemd's state
   become: true
