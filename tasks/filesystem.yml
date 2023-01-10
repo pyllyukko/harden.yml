@@ -22,7 +22,6 @@
       ansible.builtin.lineinfile:
         path: /sbin/mkinitrd
         insertbefore: '# Wrap the initrd as an initramfs image and move it into place:$'
-        regexp: '^sed -i ''s:^\(mount -n proc /proc -t proc\)$:\\1 -o hidepid=2,gid={{ getent_group.polkitd[1] }}'' "${SOURCE_TREE}/init"$'
         line: sed -i 's:^\(mount -n proc /proc -t proc\)$:\1 -o hidepid=2,gid={{ getent_group.polkitd[1] }}:' "${SOURCE_TREE}/init"
       tags: configuration
 #- name: Remount /proc with hidepid=2
