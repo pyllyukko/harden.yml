@@ -81,7 +81,7 @@
           # 2 should be enough as the kernel documentation doesn't even have >= 3 documented
           config-data=sysctl;kernel.perf_event_paranoid;2;1;Restrict unprivileged access to the perf_event_open() system call.;sysctl -a;url:https;//kernel.org/doc/Documentation/sysctl/kernel.txt;category:security;
     # https://github.com/CISOfy/lynis/issues/967
-    - name: Configure /etc/{at,cron}.{allow,deny} permissions in /etc/lynis/default.prf
+    - name: Configure /etc/cron.{allow,deny} permissions in /etc/lynis/default.prf
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
       tags: debian
       ansible.builtin.replace:
@@ -90,10 +90,18 @@
         replace: '\g<1>:{{ item.value }}:WARN:'
         validate: '/bin/grep "^permfile=/etc/{{ item.key }}:{{ item.value }}:WARN:$" %s'
       with_dict:
-        at.allow: rw-r-----:root:daemon
-        at.deny: rw-r-----:root:daemon
         cron.allow: rw-r-----:root:crontab
         cron.deny: rw-r-----:root:crontab
+    - name: Configure /etc/at.{allow,deny} permissions in /etc/lynis/default.prf
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Slackware"
+      ansible.builtin.replace:
+        path: /etc/lynis/default.prf
+        regexp: '^(permfile=/etc/{{ item.key }}):rw-------:root:-:WARN:'
+        replace: '\g<1>:{{ item.value }}:WARN:'
+        validate: '/bin/grep "^permfile=/etc/{{ item.key }}:{{ item.value }}:WARN:$" %s'
+      with_dict:
+        at.allow: rw-r-----:root:daemon
+        at.deny: rw-r-----:root:daemon
     - name: Configure Lynis to skip RPM related tests
       ansible.builtin.blockinfile:
         path: /etc/lynis/custom.prf
