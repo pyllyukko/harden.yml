@@ -18,11 +18,13 @@
         replace: '\g<1> -o hidepid=2,gid={{ getent_group.polkitd[1] }} 2> /dev/null'
         validate: '/bin/grep "^\s*/sbin/mount -v proc /proc -n -t proc -o hidepid=2,gid={{ getent_group.polkitd[1] }} 2> /dev/null$" %s'
       tags: configuration
-    - name: Fix mkinitrd so initrd image mounts with hidepid
-      ansible.builtin.lineinfile:
+    - name: Fix mkinitrd so initrd image uses hardened mount options for /proc and /dev
+      ansible.builtin.blockinfile:
         path: /sbin/mkinitrd
         insertbefore: '# Wrap the initrd as an initramfs image and move it into place:$'
-        line: sed -i 's:^\(mount -n proc /proc -t proc\)$:\1 -o hidepid=2,gid={{ getent_group.polkitd[1] }}:' "${SOURCE_TREE}/init"
+        block: |
+          sed -i 's:^\(mount -n proc /proc -t proc\)$:\1 -o hidepid=2,gid={{ getent_group.polkitd[1] }}:' "${SOURCE_TREE}/init"
+          sed -i 's:^\(\s\+mount -n devtmpfs /dev -t devtmpfs -o size=[0-9]\+M\)$:\1,noexec,nosuid:' "${SOURCE_TREE}/init"
       tags: configuration
 #- name: Remount /proc with hidepid=2
 #  become: true
@@ -32,17 +34,6 @@
 #    state: mounted
 #    src: proc
 #    fstype: proc
-
-- name: Fix mkinitrd so initrd image mounts /dev with noexec & nosuid
-  become: true
-  when: ansible_distribution == "Slackware"
-  tags:
-    - slackware
-    - configuration
-  ansible.builtin.lineinfile:
-    path: /sbin/mkinitrd
-    insertbefore: '# Wrap the initrd as an initramfs image and move it into place:$'
-    line: sed -i 's:^\(\s\+mount -n devtmpfs /dev -t devtmpfs -o size=8M\)$:\1,noexec,nosuid:' "${SOURCE_TREE}/init"
 
 # fstab
 - name: Create /etc/fstab.new
