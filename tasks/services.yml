@@ -218,14 +218,6 @@
         - result.failed == true
         - result.state != "absent"
       tags: services
-    - name: Disable atd (Slackware)
-      ansible.builtin.replace:
-        path: /etc/rc.d/rc.M
-        after: '# Start atd \(manages jobs scheduled with ''at''\):'
-        before: '# Slackware-Mini-Quota-HOWTO:'
-        regexp: '^#?(.+)$'
-        replace: '#\g<1>'
-      tags: services
     #- name: NFSv4 support in rc.inet2
     #  ansible.builtin.blockinfile:
     #    path: /etc/rc.d/rc.inet2

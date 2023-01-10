@@ -6,6 +6,7 @@ slackware_services:
   - yp
   - cups
   - cups-browsed
+  - atd
 debian_services:
   - avahi-daemon
   - bluetooth
