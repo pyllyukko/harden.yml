@@ -6,11 +6,12 @@ table inet filter {
 	chain input {
 		type filter hook input priority 0;
 		ct state invalid counter drop
-		ct state established,related counter accept
+		ip protocol {tcp, udp, icmp} ct state established counter accept
 {% for port in allowed_tcp_ports %}
 		tcp dport {{ port }} ct state new accept
 {% endfor %}
 		icmp type echo-request accept
+		icmp type {destination-unreachable, time-exceeded, parameter-problem} ct state related counter accept
 		iifname "lo" ip saddr 127.0.0.1 ip daddr 127.0.0.1 counter accept
 		iifname "lo" ip6 saddr ::1 ip6 daddr ::1 counter accept
 		counter reject with icmpx type admin-prohibited
