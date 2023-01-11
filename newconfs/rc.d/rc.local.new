@@ -3,7 +3,7 @@
 # /etc/rc.d/rc.local:  Local system initialization script.
 #
 # bzcat MANIFEST.bz2 | awk '$6 ~ /etc\/rc\.d\/rc\./ && $6 !~ /conf(\.new)?$/{sub(/\.new$/, "",$6);printf "/%s\n", $6}'
-# rc.sysstat, rc.lxc & rc.mcelog are not called from anywhere in 14.2
+# rc.sysstat, rc.lxc, rc.mcelog & rc.nss-pam-ldapd are not called from anywhere in 15.0
 
 # rc scripts handled by Slackware's init system
 slackware_rc_scripts=(
@@ -82,6 +82,7 @@ slackware_rc_scripts=(
   "/etc/rc.d/rc.smartd"
   "/etc/rc.d/rc.4.local"
   "/etc/rc.d/rc.openldap"
+  "/etc/rc.d/rc.elogind"
 )
 
 in_array() {
@@ -106,7 +107,7 @@ function handle_local_services() {
     then
       continue
     fi
-    if [[ ${rc} =~ (\.(conf|new|orig|bak)|~)$ ]]
+    if [[ ${rc} =~ (\.(conf|new|old|orig|bak)|~)$ ]]
     then
       continue
     fi
