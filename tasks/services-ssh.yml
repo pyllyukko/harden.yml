@@ -9,6 +9,7 @@
     - check
 - name: Check SSH daemon service state (Slackware)
   become: true
+  when: ansible_distribution == "Slackware"
   ansible.builtin.stat:
     path: /etc/rc.d/rc.sshd
   register: rc_sshd
