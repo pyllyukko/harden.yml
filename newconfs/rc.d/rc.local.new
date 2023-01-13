@@ -165,7 +165,7 @@ function stop_extra_services() {
   do
     if [ -f "/var/run/${service}.pid" ]
     then
-      read service_pid 0<"/var/run/service.pid"
+      read service_pid 0<"/var/run/${service}.pid"
       if [ -n "${service_pid}" ]
       then
         echo "${0}:  Stopping ${service#/etc/rc.d/rc.} service..."
