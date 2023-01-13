@@ -52,6 +52,7 @@
     clockskew: 300
     # https://web.mit.edu/kerberos/krb5-current/doc/admin/spake.html#spake
     spake_preauth_groups: edwards25519
+    default_ccache_name: FILE:/run/user/%{uid}/krb5cc_%{uid}
 # These are packages that ship SUID/SGID binaries, pam.d configurations, services or similar stuff that provides unnecessary attack surface
 # Slackware Linux Benchmark v1.1:
 #   * SN.5 Evaluate Packages Associated With Startup Scripts
