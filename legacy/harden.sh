@@ -167,10 +167,6 @@ if [ "${USER}" != "root" ]
 then
   echo -e "[-] warning: you should probably be root to run this script\n" 1>&2
 fi
-if [ ${#NAMES[*]} -eq 0 ]
-then
-  echo '[-] warning: NAMES array not populated' 1>&2
-fi
 
 while getopts "bghIL:" OPTION
 do

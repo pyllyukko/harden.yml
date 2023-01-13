@@ -10,7 +10,7 @@ case "${MACHTYPE%%-*}" in
 esac
 if [ -n "${SLACKWARE_VERSION}" ]
 then
-  MANIFEST_DIR="${CWD}/manifests/${SLACKWARE}-${SLACKWARE_VERSION}"
+  MANIFEST_DIR="${CWD}/../manifests/${SLACKWARE}-${SLACKWARE_VERSION}"
 fi
 
 # PATCHES
@@ -41,7 +41,7 @@ function check_integrity() {
   local    local_OWNER_GROUP
   local    local_size
 
-  make -f ${CWD}/Makefile slackware="${SLACKWARE}" slackware_version="${SLACKWARE_VERSION}" "${manifest}" || return 1
+  make -f ${CWD}/../Makefile slackware="${SLACKWARE}" slackware_version="${SLACKWARE_VERSION}" "${manifest}" || return 1
 
   pushd /
 
