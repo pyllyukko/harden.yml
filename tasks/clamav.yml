@@ -130,10 +130,12 @@
       mode: '0644'
     with_items:
       - daily.cld
+      - daily.cvd
       - bytecode.cld
       - bytecode.cvd
       - main.cvd
       - main.cld
+      - general_officemacros.yar
     register: result
     failed_when:
       - result.failed == true
