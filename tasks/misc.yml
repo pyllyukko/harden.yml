@@ -10,6 +10,7 @@
   tags:
     - configuration
     - slackware
+
 - name: Configure certbot to use 4096 bit keys
   tags: pki
   become: true
@@ -29,6 +30,7 @@
         mode: '0600'
       when: stat_result.stat.exists
       tags: configuration
+
 - name: Configure /etc/krb5.conf
   tags:
     - configuration
@@ -53,6 +55,7 @@
     # https://web.mit.edu/kerberos/krb5-current/doc/admin/spake.html#spake
     spake_preauth_groups: edwards25519
     default_ccache_name: FILE:/run/user/%{uid}/krb5cc_%{uid}
+
 # These are packages that ship SUID/SGID binaries, pam.d configurations, services or similar stuff that provides unnecessary attack surface
 # Slackware Linux Benchmark v1.1:
 #   * SN.5 Evaluate Packages Associated With Startup Scripts
@@ -97,6 +100,7 @@
         - /etc/rc.d/rc.atalk
         - /etc/rc.d/rc.inetd
         - /etc/inetd.conf
+
 #- name: Download checksec into /usr/local/bin
 #  become: true
 #  ansible.builtin.get_url:
@@ -106,6 +110,7 @@
 #    group: root
 #    mode: '0755'
 #    checksum: sha256:77b8a7fd9393d10def665658a41176ee745d5c7969a4a0f43cefcc8a4cd90947
+
 # TODO: Make a systemd unit or something. rc.local doesn't exist anymore in modern Debians.
 #- name: Set USB authorized_default -> 0 in /etc/rc.local (Debian)
 #  become: true
@@ -119,6 +124,7 @@
 #  tags:
 #    - configuration
 #    - debian
+
 - name: Docker
   tags: docker
   block:
