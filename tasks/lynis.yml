@@ -124,8 +124,8 @@
       when: ansible_distribution == "Slackware"
       tags: slackware
     - name: Lynis systemd service
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
-      tags: debian
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat"
+      tags: services
       block:
         - name: Download lynis.{service,timer}
           ansible.builtin.get_url:
