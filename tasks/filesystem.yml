@@ -25,6 +25,7 @@
         block: |
           sed -i 's:^\(mount -n proc /proc -t proc\)$:\1 -o hidepid=2,gid={{ getent_group.polkitd[1] }}:' "${SOURCE_TREE}/init"
           sed -i 's:^\(\s\+mount -n devtmpfs /dev -t devtmpfs -o size=[0-9]\+M\)$:\1,noexec,nosuid:' "${SOURCE_TREE}/init"
+          sed -i '/^mount -n tmpfs \/run -t tmpfs -o mode=0755,size=[0-9]\+M,nodev,nosuid,noexec$/amount --make-shared /run' "${SOURCE_TREE}/init"
       tags: configuration
 #- name: Remount /proc with hidepid=2
 #  become: true
