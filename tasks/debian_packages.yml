@@ -88,10 +88,9 @@
         replace: '\g<1>weekly'
       tags: configuration
 
-# TODO: Kali has chkrootkit conf in /etc/chkrootkit/
 - name: Configure chkrootkit
   become: true
-  when: ansible_distribution == "Debian"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   tags:
     - configuration
     - chkrootkit
@@ -99,7 +98,7 @@
   block:
     - name: Create /etc/chkrootkit.ignore
       ansible.builtin.copy:
-        dest: /etc/chkrootkit.ignore
+        dest: "{{ chkrootkit_conf_dir }}/chkrootkit.ignore"
         owner: root
         group: root
         mode: '0400'
@@ -115,10 +114,10 @@
       ansible.builtin.replace:
         path: /etc/cron.daily/chkrootkit
         regexp: '^(IGNORE_FILE=).*'
-        replace: '\g<1>/etc/chkrootkit.ignore'
+        replace: '\g<1>{{ chkrootkit_conf_dir }}/chkrootkit.ignore'
     - name: Enable daily chkrootkit run
       ansible.builtin.replace:
-        path: /etc/chkrootkit.conf
+        path: "{{ chkrootkit_conf_dir }}/chkrootkit.conf"
         regexp: '^(RUN_DAILY=).*'
         replace: '\g<1>"true"'
 
