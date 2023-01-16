@@ -51,3 +51,4 @@ pass_max_days: 365
 pass_min_days: 7
 pass_warn_age: 30
 inactive_password_lock: 30
+lynis_location: '{% if ansible_os_family == "RedHat" or ansible_distribution == "Slackware" %}/usr/bin/lynis{% else %}/usr/sbin/lynis{% endif %}'

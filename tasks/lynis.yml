@@ -140,8 +140,8 @@
         - name: Fix Lynis path into lynis.service
           ansible.builtin.replace:
             path: /etc/systemd/system/lynis.service
-            regexp: '^(ExecStart=)/path/to/(lynis audit system --cronjob)$'
-            replace: '\g<1>/usr/sbin/\g<2>'
+            regexp: '^(ExecStart=)/path/to/lynis( audit system --cronjob)$'
+            replace: '\g<1>{{ lynis_location }}\g<2>'
         - name: Enable Lynis systemd unit
           ansible.builtin.systemd:
             name: lynis.timer
