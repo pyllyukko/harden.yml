@@ -436,3 +436,32 @@ template users/%u {
 	net_cls {
 	}
 }
+# https://www.chriswilling.com/lxc/setup-unpriv-slackware.html
+#group lxc {
+#	perm {
+#		task {
+#			uid = pyllyukko;
+#			gid = users;
+#		}
+#		admin {
+#			uid = pyllyukko;
+#			gid = users;
+#		}
+#	}
+#
+#	cpuset {
+#		cgroup.clone_children = 1;
+#		cpuset.mems = 0;
+#		cpuset.cpus = 0-3;
+#	}
+#	cpu {}
+#	cpuacct {}
+#	blkio {}
+#	memory { memory.use_hierarchy = 1; }
+#	devices {}
+#	freezer {}
+#	net_cls {}
+#	perf_event {}
+#	net_prio {}
+#	pids {}
+#}
