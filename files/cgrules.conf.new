@@ -29,5 +29,7 @@ root:/usr/sbin/arpwatch		net_cls daemons/arpwatch/
 root:/usr/sbin/icmpinfo		net_cls daemons/icmpinfo/
 root:/sbin/mdadm		net_cls daemons/mdadm/
 root:/usr/sbin/rpc.gssd		net_cls daemons/rpc-gssd/
+rpc:/sbin/rpcbind		net_cls daemons/rpc/
+rpc:/sbin/rpc.statd		net_cls daemons/rpc/
 @users				cpu,cpuacct,net_cls	users/%u
 # End of file
