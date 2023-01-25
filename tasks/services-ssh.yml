@@ -64,6 +64,7 @@
     owner: root
     group: root
     mode: '0644'
+    backup: true
 - name: Harden SSH client configuration (Debian)
   tags:
     - configuration
