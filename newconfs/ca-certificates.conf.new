@@ -16,5 +16,6 @@ mozilla/GlobalSign_Root_CA_-_R3.crt
 mozilla/GlobalSign_Root_CA_-_R2.crt
 mozilla/QuoVadis_Root_CA_2_G3.crt
 mozilla/USERTrust_RSA_Certification_Authority.crt
+mozilla/USERTrust_ECC_Certification_Authority.crt
 mozilla/SSL.com_Root_Certification_Authority_RSA.crt
 mozilla/ISRG_Root_X1.crt
