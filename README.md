@@ -110,6 +110,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * Sets maximum amount of processes (or threads, see `setrlimit(3)`)
     * Sets `nproc` to 0 for system users that don't need to run any processes
 * Run `ansible-playbook --list-tasks --tags pam harden.yml` to list all PAM related tasks
+* You can also run `ansible-playbook --check --diff --tags pam harden.yml` to see details of the changes
 
 ### Miscellaneous
 
