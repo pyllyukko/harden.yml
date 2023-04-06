@@ -134,6 +134,7 @@
         owner: root
         group: root
         mode: '0644'
+        backup: true
       tags: configuration
     - name: Create faillock directory
       ansible.builtin.file:
