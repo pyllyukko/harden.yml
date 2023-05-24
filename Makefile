@@ -48,7 +48,7 @@ modulis := /etc/ssh/moduli-3072 /etc/ssh/moduli-4096 /etc/ssh/moduli-6144 /etc/s
 $(foreach l,$(bits),$(eval $(call make-moduli-candidates-target,$l)))
 
 /etc/ssh/moduli-%: /etc/ssh/moduli-%.candidates
-	ssh-keygen -T $@ -f $< && rm -v $<
+	ssh-keygen -M screen -f $< $@ && rm -v $<
 
 /etc/ssh/moduli.new: $(modulis)
 	cat $^ 1>$@
