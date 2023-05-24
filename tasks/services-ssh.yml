@@ -78,6 +78,18 @@
     owner: root
     group: root
     mode: '0644'
+# These are only used if you have diffie-hellman-group-exchange-sha* key exchanges enabled in sshd_config.
+- name: Remove 2048-bit moduli from /etc/ssh/moduli
+  become: true
+  tags:
+    - pki
+    - configuration
+    - ssh
+  ansible.builtin.lineinfile:
+    path: /etc/ssh/moduli
+    state: absent
+    regexp: '^[0-9]{14}\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+2047\b'
+    backup: true
 
 - name: Print Lynis score for SSH hardening
   become: true
