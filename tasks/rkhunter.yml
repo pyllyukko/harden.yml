@@ -3,50 +3,50 @@
   tags: rkhunter
   become: true
   block:
-  - name: Install rkhunter (Debian)
-    ansible.builtin.apt:
-      name: rkhunter
-      update_cache: true
-    when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
-    tags:
-      - packages
-      - debian
-  - name: Get package_facts to check if libwww-perl package is installed (Debian)
-    when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
-    tags:
-      - debian
-      - check
-    ansible.builtin.package_facts:
-      manager: auto
-  - name: 'Create /etc/rkhunter.conf'
-    ansible.builtin.template:
-      src: "{{ playbook_dir }}/templates/rkhunter.conf.j2"
-      dest: /etc/rkhunter.conf
-      mode: '0400'
-      owner: root
-      group: root
-      backup: true
-    tags: configuration
-    notify: "Create rkhunter.dat"
-  # https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/FAQ: "3.3) How can I automatically run Rootkit Hunter every day?"
-  # We don't use --update as rkhunter.sourceforge.net doesn't have HTTPS
-  - name: Add rkhunter cronjob
-    ansible.builtin.cron:
-      name: "Run rkhunter"
-      minute: "30"
-      hour: "5"
-      job: "/usr/bin/test -x /usr/bin/rkhunter && /usr/bin/rkhunter --cronjob --rwo"
-    when: ansible_distribution != "Debian"
-    tags: configuration
-  - name: Configure Debian specific rkhunter settings in /etc/default/rkhunter
-    ansible.builtin.replace:
-      path: /etc/default/rkhunter
-      regexp: '^({{ item.key }}=).*'
-      replace: '\g<1>"{{ item.value }}"'
-    when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
-    with_dict:
-      CRON_DAILY_RUN: "yes"
-      APT_AUTOGEN: "yes"
-    tags:
-      - configuration
-      - debian
+    - name: Install rkhunter (Debian)
+      ansible.builtin.apt:
+        name: rkhunter
+        update_cache: true
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+      tags:
+        - packages
+        - debian
+    - name: Get package_facts to check if libwww-perl package is installed (Debian)
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+      tags:
+        - debian
+        - check
+      ansible.builtin.package_facts:
+        manager: auto
+    - name: 'Create /etc/rkhunter.conf'
+      ansible.builtin.template:
+        src: "{{ playbook_dir }}/templates/rkhunter.conf.j2"
+        dest: /etc/rkhunter.conf
+        mode: '0400'
+        owner: root
+        group: root
+        backup: true
+      tags: configuration
+      notify: "Create rkhunter.dat"
+    # https://sourceforge.net/p/rkhunter/rkh_code/ci/master/tree/files/FAQ: "3.3) How can I automatically run Rootkit Hunter every day?"
+    # We don't use --update as rkhunter.sourceforge.net doesn't have HTTPS
+    - name: Add rkhunter cronjob
+      ansible.builtin.cron:
+        name: "Run rkhunter"
+        minute: "30"
+        hour: "5"
+        job: "/usr/bin/test -x /usr/bin/rkhunter && /usr/bin/rkhunter --cronjob --rwo"
+      when: ansible_distribution != "Debian"
+      tags: configuration
+    - name: Configure Debian specific rkhunter settings in /etc/default/rkhunter
+      ansible.builtin.replace:
+        path: /etc/default/rkhunter
+        regexp: '^({{ item.key }}=).*'
+        replace: '\g<1>"{{ item.value }}"'
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+      with_dict:
+        CRON_DAILY_RUN: "yes"
+        APT_AUTOGEN: "yes"
+      tags:
+        - configuration
+        - debian

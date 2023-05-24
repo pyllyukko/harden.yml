@@ -55,7 +55,7 @@
         path: /etc/rc.d/rc.sysstat
         owner: root
         group: root
-        mode: 0700
+        mode: '0700'
       tags:
         - services
         - permissions

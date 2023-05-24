@@ -56,7 +56,7 @@
         dest: /etc/aide/aide.conf.d/70_hardensh_misc
         owner: root
         group: root
-        mode: 0600
+        mode: '0600'
       tags: configuration
       notify: "Create aide.db"
     - name: Fix /var/log/exim4/(main|reject)log rule

@@ -4,8 +4,8 @@
   when: ansible_os_family != "RedHat"
   ansible.builtin.command: /usr/sbin/update-ca-certificates --verbose --fresh
   tags:
-  - configuration
-  - pki
+    - configuration
+    - pki
 # This will usually return 255 with "sysctl: cannot stat /proc/.+: No such file or directory"
 - name: Load sysctl settings
   become: true

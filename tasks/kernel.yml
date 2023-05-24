@@ -6,7 +6,7 @@
     dest: /etc/sysctl.d/{{ item }}.conf
     owner: root
     group: root
-    mode: 0600
+    mode: '0600'
   with_items:
     - sysctl
     - network
@@ -31,7 +31,7 @@
     dest: /etc/modprobe.d/{{ item }}.conf
     owner: root
     group: root
-    mode: 0600
+    mode: '0600'
   tags:
     - configuration
     - kernel
