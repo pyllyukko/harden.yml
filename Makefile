@@ -40,7 +40,7 @@ FORCE:
 
 define make-moduli-candidates-target
 /etc/ssh/moduli-$1.candidates:
-	ssh-keygen -G $$@ -b $1
+	ssh-keygen -M generate -O bits=$1 $$@
 endef
 # 1024 is only for testing, it is not included in the final moduli
 bits := 1024 3072 4096 6144 7680 8192
