@@ -43,8 +43,8 @@ define make-moduli-candidates-target
 	ssh-keygen -G $$@ -b $1
 endef
 # 1024 is only for testing, it is not included in the final moduli
-bits := 1024 2048 3072 4096 6144 7680 8192
-modulis := /etc/ssh/moduli-2048 /etc/ssh/moduli-3072 /etc/ssh/moduli-4096 /etc/ssh/moduli-6144 /etc/ssh/moduli-7680 /etc/ssh/moduli-8192
+bits := 1024 3072 4096 6144 7680 8192
+modulis := /etc/ssh/moduli-3072 /etc/ssh/moduli-4096 /etc/ssh/moduli-6144 /etc/ssh/moduli-7680 /etc/ssh/moduli-8192
 $(foreach l,$(bits),$(eval $(call make-moduli-candidates-target,$l)))
 
 /etc/ssh/moduli-%: /etc/ssh/moduli-%.candidates
