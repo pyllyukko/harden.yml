@@ -38,12 +38,15 @@
       job: "/usr/bin/test -x /usr/bin/rkhunter && /usr/bin/rkhunter --cronjob --rwo"
     when: ansible_distribution != "Debian"
     tags: configuration
-  - name: Enable daily rkhunter check in Debian
+  - name: Configure Debian specific rkhunter settings in /etc/default/rkhunter
     ansible.builtin.replace:
       path: /etc/default/rkhunter
-      regexp: '^(CRON_DAILY_RUN=).*'
-      replace: '\g<1>"yes"'
+      regexp: '^({{ item.key }}=).*'
+      replace: '\g<1>"{{ item.value }}"'
     when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+    with_dict:
+      CRON_DAILY_RUN: "yes"
+      APT_AUTOGEN: "yes"
     tags:
       - configuration
       - debian
