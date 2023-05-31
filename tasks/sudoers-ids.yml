@@ -23,7 +23,7 @@
         #- backup-alias.pl
     # "sudoedit should not be specified with a path"
     - name: Run sudodigest.pl
-      ansible.builtin.shell: /usr/bin/perl /etc/sudoers.d.tmp/sudodigest.pl | gawk 'NF<=5 && $0!~/!/ && $0!~/sudoedit$/{print}' 1>/etc/sudoers.d.tmp/00-digests
+      ansible.builtin.shell: set -o pipefail; /usr/bin/perl /etc/sudoers.d.tmp/sudodigest.pl | gawk 'NF<=5 && $0!~/!/ && $0!~/sudoedit$/{print}' 1>/etc/sudoers.d.tmp/00-digests
       args:
         creates: /etc/sudoers.d.tmp/00-digests
     - name: Copy shells-alias.pl

@@ -13,7 +13,7 @@
         - services
         - debian
     - name: Determine ClamAV sysconfdir
-      ansible.builtin.shell: clamconf | awk '/^Checking configuration files in/{print$5}' # noqa no-changed-when
+      ansible.builtin.shell: set -o pipefail; clamconf | awk '/^Checking configuration files in/{print$5}' # noqa no-changed-when
       register: clamav_sysconfdir
       tags: check
     - name: Verify ClamAV sysconfdir
