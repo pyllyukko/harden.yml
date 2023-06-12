@@ -23,7 +23,7 @@
           - clamav_sysconfdir.stdout | regex_search('^/etc')
       tags: check
     - name: Generate fresh configs
-      ansible.builtin.shell: /usr/bin/clamconf -g {{ item }}.conf 1>{{ clamav_sysconfdir.stdout }}/{{ item }}.conf
+      ansible.builtin.shell: /usr/bin/clamconf -g {{ item }}.conf 1>{{ clamav_sysconfdir.stdout }}/{{ item }}.conf.new
       with_items:
         - freshclam
         - clamd
@@ -31,7 +31,7 @@
       changed_when: true
     - name: Comment out Example lines
       ansible.builtin.replace:
-        path: '{{ clamav_sysconfdir.stdout }}/{{ item }}.conf'
+        path: '{{ clamav_sysconfdir.stdout }}/{{ item }}.conf.new'
         regexp: '^(Example)$'
         replace: '#\g<1>'
       with_items:
@@ -48,7 +48,7 @@
     # https://docs.clamav.net/manual/Usage/Configuration.html#clamdconf
     - name: Configure ClamAV
       ansible.builtin.replace:
-        path: '{{ clamav_sysconfdir.stdout }}/clamd.conf'
+        path: '{{ clamav_sysconfdir.stdout }}/clamd.conf.new'
         regexp: '^#?({{ item.key }} ).*$'
         replace: '\g<1>{{ item.value }}'
         validate: '/bin/grep "^{{ item.key }} {{ item.value }}$" %s'
@@ -89,7 +89,7 @@
     # https://docs.clamav.net/manual/Usage/Configuration.html#freshclamconf
     - name: Configure freshclam
       ansible.builtin.replace:
-        path: '{{ clamav_sysconfdir.stdout }}/freshclam.conf'
+        path: '{{ clamav_sysconfdir.stdout }}/freshclam.conf.new'
         regexp: '^#?({{ item.key }} ).*$'
         replace: '\g<1>{{ item.value }}'
         validate: '/bin/grep "^{{ item.key }} {{ item.value }}$" %s'
@@ -107,14 +107,24 @@
           DatabaseOwner: clamav
           PidFile: /var/run/clamav/freshclam.pid
       tags: configuration
+    - name: Copy new ClamAV configurations into place
+      ansible.builtin.copy:
+        remote_src: yes
+        src: '{{ clamav_sysconfdir.stdout }}/{{ item }}.conf.new'
+        dest: '{{ clamav_sysconfdir.stdout }}/{{ item }}.conf'
+        owner: root
+        group: root
+        mode: '0644'
+        backup: yes
+      with_items:
+        - freshclam
+        - clamd
+      tags: configuration
     - name: Remove .new configs
-      when: ansible_distribution == "Slackware"
-      tags: slackware
       ansible.builtin.file:
         path: '{{ clamav_sysconfdir.stdout }}/{{ item }}.conf.new'
         state: absent
       with_items:
-        - clamav-milter
         - clamd
         - freshclam
     # Make the dir and the necessary files readable by other users so they can run clamscan
