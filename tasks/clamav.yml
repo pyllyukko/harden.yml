@@ -16,6 +16,8 @@
       ansible.builtin.shell: set -o pipefail; clamconf | awk '/^Checking configuration files in/{print$5}' # noqa no-changed-when
       register: clamav_sysconfdir
       tags: check
+      args:
+        executable: /bin/bash
     - name: Verify ClamAV sysconfdir
       ansible.builtin.assert:
         that:
@@ -29,6 +31,8 @@
         - clamd
       tags: configuration
       changed_when: true
+      args:
+        executable: /bin/bash
     - name: Comment out Example lines
       ansible.builtin.replace:
         path: '{{ clamav_sysconfdir.stdout }}/{{ item }}.conf.new'
