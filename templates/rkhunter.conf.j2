@@ -598,7 +598,10 @@ SCRIPTWHITELIST=/usr/sbin/adduser
 SCRIPTWHITELIST=/usr/bin/ldd
 SCRIPTWHITELIST=/usr/bin/which
 SCRIPTWHITELIST=/bin/egrep
+SCRIPTWHITELIST=/usr/bin/egrep
 SCRIPTWHITELIST=/bin/fgrep
+SCRIPTWHITELIST=/usr/bin/fgrep
+SCRIPTWHITELIST=/usr/bin/which.debianutils
 {% if 'libwww-perl' in ansible_facts.packages %}
 SCRIPTWHITELIST=/usr/bin/lwp-request
 {% endif %}
