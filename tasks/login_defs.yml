@@ -46,6 +46,7 @@
     SHA_CRYPT_MIN_ROUNDS: "{{ crypt_rounds }}"
     ENCRYPT_METHOD: "SHA512"
     FAIL_DELAY: "{{ fail_delay }}"
+    PREVENT_NO_AUTH: "yes"
   tags:
     - configuration
     - passwords
