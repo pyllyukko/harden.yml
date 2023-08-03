@@ -132,3 +132,6 @@
   when: ansible_distribution == "Slackware"
   become: true
   ansible.builtin.shell: set -o pipefail; yes | grpck
+  register: result
+  changed_when:
+    - result.rc != 0

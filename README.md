@@ -3,6 +3,8 @@ harden.yml
 
 Ansible playbook to harden your Linux system.
 
+![ansible-lint](https://github.com/pyllyukko/harden.yml/actions/workflows/ansible-lint.yml/badge.svg)
+
 [![asciicast of harden.yml 1294b6f](https://asciinema.org/a/spPzbjtEal2LiOKNQKFORQ1Ay.svg)](https://asciinema.org/a/spPzbjtEal2LiOKNQKFORQ1Ay)
 
 Supported distros
