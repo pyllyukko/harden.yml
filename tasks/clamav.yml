@@ -113,13 +113,13 @@
       tags: configuration
     - name: Copy new ClamAV configurations into place
       ansible.builtin.copy:
-        remote_src: yes
+        remote_src: true
         src: '{{ clamav_sysconfdir.stdout }}/{{ item }}.conf.new'
         dest: '{{ clamav_sysconfdir.stdout }}/{{ item }}.conf'
         owner: root
         group: root
         mode: '0644'
-        backup: yes
+        backup: true
       with_items:
         - freshclam
         - clamd
