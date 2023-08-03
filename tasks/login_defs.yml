@@ -222,7 +222,7 @@
 # so we'll use chage instead.
 - name: Set password policies for existing users
   become: true
-  ansible.builtin.command: chage --inactive {{ inactive_password_lock }} --mindays {{ pass_min_days }} --maxdays {{ pass_max_days }} --warndays {{ pass_warn_age }} {{ item.key }}
+  ansible.builtin.command: chage --inactive {{ inactive_password_lock }} --mindays {{ pass_min_days }} --maxdays {{ pass_max_days }} --warndays {{ pass_warn_age }} {{ item.key }} # noqa yaml[line-length]
   when: item.value[1] | int >= uid_min | int and item.value[1] | int <= uid_max | int
   with_dict: "{{ getent_passwd }}"
   tags:
