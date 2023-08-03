@@ -6,6 +6,7 @@
   tags:
     - configuration
     - pki
+  changed_when: true
 # This will usually return 255 with "sysctl: cannot stat /proc/.+: No such file or directory"
 - name: Load sysctl settings
   become: true
@@ -16,10 +17,12 @@
     - result.failed
     - result.rc != 255
     - "'sysctl: cannot stat' not in result.stderr"
+  changed_when: true
 - name: Create rkhunter.dat
   ansible.builtin.command: /usr/bin/rkhunter --propupd
   become: true
   tags: rkhunter
+  changed_when: true
 # This takes a long time so we do it async
 - name: Create aide.db
   ansible.builtin.command: /usr/sbin/aideinit --yes --force
@@ -28,6 +31,7 @@
   async: 3600
   poll: 0
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  changed_when: true
 - name: Create aide.db (Slackware)
   ansible.builtin.command: /usr/bin/aide -i
   args:
@@ -55,12 +59,14 @@
     - pam
     - configuration
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  changed_when: true
 # rc.sshd exits if /var/run/sshd.pid doesn't exist
 - name: Restart sshd (Slackware)
   when: ansible_distribution == "Slackware"
   become: true
   ansible.builtin.command: /bin/sh /etc/rc.d/rc.sshd restart
   register: result
+  changed_when: true
   failed_when:
     - result.failed == true
     - '"WARNING: There does not appear to be a parent instance of sshd running." not in result.stdout'
