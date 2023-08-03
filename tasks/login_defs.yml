@@ -44,9 +44,10 @@
     PASS_MIN_DAYS: "{{ pass_min_days }}"
     PASS_WARN_AGE: "{{ pass_warn_age }}"
     SHA_CRYPT_MIN_ROUNDS: "{{ crypt_rounds }}"
-    ENCRYPT_METHOD: "SHA512"
+    ENCRYPT_METHOD: "{{ 'YESCRYPT' if ansible_distribution == 'Debian' else 'SHA512' }}"
     FAIL_DELAY: "{{ fail_delay }}"
     PREVENT_NO_AUTH: "yes"
+    YESCRYPT_COST_FACTOR: 11
   tags:
     - configuration
     - passwords
