@@ -96,7 +96,7 @@
     - chkrootkit
     - debian
   block:
-    - name: Create /etc/chkrootkit.ignore
+    - name: Create /etc/chkrootkit/chkrootkit.ignore
       ansible.builtin.copy:
         dest: "{{ chkrootkit_conf_dir }}/chkrootkit.ignore"
         owner: root
