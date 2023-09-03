@@ -795,7 +795,12 @@ ALLOWIPCPROC=/usr/sbin/pi-greeter
 #
 # The default is 1048576 (1M) bytes.
 #
+{% if ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian" %}
+# /usr/sbin/lightdm-gtk-greeter
+IPC_SEG_SIZE=67108864
+{% else %}
 #IPC_SEG_SIZE=1048576
+{% endif %}
 
 #
 # This option is used to indicate if the Phalanx2 test is to perform a basic
