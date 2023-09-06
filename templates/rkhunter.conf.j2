@@ -797,7 +797,7 @@ ALLOWIPCPROC=/usr/sbin/pi-greeter
 #
 {% if ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian" %}
 # /usr/sbin/lightdm-gtk-greeter
-IPC_SEG_SIZE=67108864
+IPC_SEG_SIZE=68157440
 {% else %}
 #IPC_SEG_SIZE=1048576
 {% endif %}
