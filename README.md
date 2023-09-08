@@ -71,7 +71,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 ### Application specific
 
 * Configures basic auditing based on [stig.rules](https://fedorahosted.org/audit/browser/trunk/contrib/stig.rules) if audit is installed (see [audit.yml](tasks/audit.yml))
-* Configures `sshd_config` and `ssh_config`
+* Configures `sshd_config` and `ssh_config` (see `ansible-playbook --list-tasks --tags ssh harden.yml` for details)
 * Configures [sudo](https://www.sudo.ws/) (see [sudoers.j2](templates/sudoers.j2))
 * [ClamAV](https://www.clamav.net/) configuration (see [clamav.yml](tasks/clamav.yml))
 * [rkhunter](https://sourceforge.net/projects/rkhunter/) configuration (see [rkhunter.yml](tasks/rkhunter.yml))
