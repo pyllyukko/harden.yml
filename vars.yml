@@ -36,7 +36,7 @@ allowed_tcp_ports:
 sshd_config:
   Ciphers: chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes256-ctr
   MACs: hmac-sha2-512-etm@openssh.com
-  KexAlgorithms: curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512
+  KexAlgorithms: sntrup761x25519-sha512@openssh.com,curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512
   HostKeyAlgorithms: ssh-ed25519,rsa-sha2-512
   MaxAuthTries: 3
 # Value from system-hardening-10.2.txt
