@@ -89,6 +89,7 @@
           User: clamav
           AlertOLE2Macros: "yes"
           FixStaleSocket: "yes"
+          DatabaseDirectory: /var/lib/clamav
       tags: configuration
     # https://docs.clamav.net/manual/Usage/Configuration.html#freshclamconf
     - name: Configure freshclam
@@ -110,6 +111,7 @@
           DatabaseMirror: database.clamav.net
           DatabaseOwner: clamav
           PidFile: /var/run/clamav/freshclam.pid
+          DatabaseDirectory: /var/lib/clamav
       tags: configuration
     - name: Copy new ClamAV configurations into place
       ansible.builtin.copy:
