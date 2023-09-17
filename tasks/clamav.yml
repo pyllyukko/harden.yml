@@ -179,6 +179,7 @@
     # LibClamAV Warning: load_oneyara[verify]: wide modifier [w] is not supported for regex subsigs
     #
     # So far we have included all the working rules from (e36e80a):
+    # * crime_*.yar
     # * expl_*.yar
     # * exploit_*.yar
     # * mal_*.yar
@@ -191,6 +192,79 @@
         group: root
         mode: '0644'
       with_items:
+        - crime_academic_data_centers_camp_may20.yar
+        - crime_andromeda_jun17.yar
+        - crime_antifw_installrex.yar
+        - crime_atm_javadipcash.yar
+        - crime_atm_loup.yar
+        - crime_atm_xfsadm.yar
+        - crime_atm_xfscashncr.yar
+        - crime_bad_patch.yar
+        - crime_badrabbit.yar
+        - crime_bazarbackdoor.yar
+        - crime_bernhard_pos.yar
+        - crime_bluenoroff_pos.yar
+        - crime_buzus_softpulse.yar
+        - crime_cmstar.yar
+        - crime_cn_group_btc.yar
+        - crime_cobalt_gang_pdf.yar
+        - crime_covid_ransom.yar
+        - crime_credstealer_generic.yar
+        - crime_crypto_miner.yar
+        - crime_cryptowall_svg.yar
+        - crime_dearcry_ransom.yar
+        - crime_dexter_trojan.yar
+        - crime_dridex_xml.yar
+        - crime_enfal.yar
+        - crime_envrial.yar
+        - crime_eternalrocks.yar
+        - crime_fareit.yar
+        - crime_fireball.yar
+        - crime_gamaredon.yar
+        - crime_goldeneye.yar
+        - crime_gozi_crypter.yar
+        - crime_guloader.yar
+        - crime_h2miner_kinsing.yar
+        - crime_hermes_ransom.yar
+        - crime_icedid.yar
+        - crime_kins_dropper.yar
+        - crime_kr_malware.yar
+        - crime_kraken_bot1.yar
+        - crime_kriskynote.yar
+        - crime_locky.yar
+        - crime_loki_bot.yar
+        - crime_malumpos.yar
+        - crime_malware_generic.yar
+        - crime_malware_set_oct16.yar
+        - crime_maze_ransomware.yar
+        - crime_mikey_trojan.yar
+        - crime_mirai.yar
+        - crime_mywscript_dropper.yar
+        - crime_nkminer.yar
+        - crime_nopetya_jun17.yar
+        - crime_ole_loadswf_cve_2018_4878.yar
+        - crime_parallax_rat.yar
+        - crime_phish_gina_dec15.yar
+        - crime_ransom_conti.yar
+        - crime_ransom_generic.yar
+        - crime_ransom_germanwiper.yar
+        - crime_ransom_lockergoga.yar
+        - crime_ransom_prolock.yar
+        - crime_ransom_revil.yar
+        - crime_ransom_robinhood.yar
+        - crime_ransom_stealbit_lockbit.yar
+        - crime_rat_parallax.yar
+        - crime_rombertik_carbongrabber.yar
+        - crime_shifu_trojan.yar
+        - crime_socgholish.yar
+        - crime_stealer_exfil_zip.yar
+        - crime_teledoor.yar
+        - crime_upatre_oct15.yar
+        - crime_wannacry.yar
+        - crime_wsh_rat.yar
+        - crime_xbash.yar
+        - crime_zeus_panda.yar
+        - crime_zloader_maldocs.yar
         - expl_adselfservice_cve_2021_40539.yar
         - expl_cve_2021_1647.yar
         - expl_cve_2021_40444.yar
