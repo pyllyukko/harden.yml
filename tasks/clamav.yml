@@ -176,8 +176,10 @@
     # LibClamAV Error: yyerror(): undefined identifier "filename"
     # LibClamAV Error: yyerror(): undefined identifier "pe"
     # LibClamAV Error: yyerror(): undefined identifier "uint32be"
+    # LibClamAV Warning: load_oneyara[verify]: wide modifier [w] is not supported for regex subsigs
     #
     # So far we have included all the working rules from (e36e80a):
+    # * expl_*.yar
     # * exploit_*.yar
     # * mal_*.yar
     # * [pst]*.yar
@@ -189,6 +191,19 @@
         group: root
         mode: '0644'
       with_items:
+        - expl_adselfservice_cve_2021_40539.yar
+        - expl_cve_2021_1647.yar
+        - expl_cve_2021_40444.yar
+        - expl_cve_2022_41040_proxynoshell.yar
+        - expl_cve_2022_46169_cacti.yar
+        - expl_ivanti_epmm_mobileiron_cve_2023_35078.yar
+        - expl_keepass_cve_2023_24055.yar
+        - expl_libssh_cve_2023_2283_jun23.yar
+        - expl_log4j_cve_2021_44228.yar
+        - expl_macos_switcharoo_dec22.yar
+        - expl_manageengine_jan23.yar
+        - expl_proxyshell.yar
+        - expl_spring4shell.yar
         - exploit_cve_2014_4076.yar
         - exploit_cve_2015_1674.yar
         - exploit_cve_2015_1701.yar
