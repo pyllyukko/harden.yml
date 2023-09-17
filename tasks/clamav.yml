@@ -167,3 +167,61 @@
         content: |
           ZipPasswordInfected;Engine:81-255;0;infected
       tags: configuration
+    # https://docs.clamav.net/manual/Signatures/YaraRules.html
+    # https://github.com/Neo23x0/signature-base
+    #
+    # TODO: This needs to be continued to include more YARA rules,
+    #       but it's really tedious as ClamAV doesn't support all the YARA features/extensions.
+    #
+    # LibClamAV Error: yyerror(): undefined identifier "filename"
+    # LibClamAV Error: yyerror(): undefined identifier "pe"
+    # LibClamAV Error: yyerror(): undefined identifier "uint32be"
+    #
+    # So far we have included all the working rules from (e36e80a):
+    # * exploit_*.yar
+    # * mal_*.yar
+    # * [pst]*.yar
+    - name: Download YARA rules
+      tags: test
+      ansible.builtin.get_url:
+        url: "https://raw.githubusercontent.com/Neo23x0/signature-base/master/yara/{{ item }}"
+        dest: /var/lib/clamav/
+        owner: root
+        group: root
+        mode: '0644'
+      with_items:
+        - exploit_cve_2014_4076.yar
+        - exploit_cve_2015_1674.yar
+        - exploit_cve_2015_1701.yar
+        - exploit_cve_2015_2426.yar
+        - exploit_cve_2015_2545.yar
+        - exploit_cve_2015_5119.yar
+        - exploit_cve_2017_9800.yar
+        - exploit_cve_2021_31166.yar
+        - exploit_cve_2021_33766_proxytoken.yar
+        - exploit_cve_2022_22954_vmware_workspace_one.yar
+        - exploit_cve_2023_38146.yar
+        - exploit_f5_bigip_cve_2021_22986_log.yar
+        - exploit_gitlab_cve_2021_22205.yar
+        - exploit_shitrix.yar
+        - exploit_uac_elevators.yar
+        - mal_avemaria_rat.yar
+        - mal_codecov_hack.yar
+        - mal_crime_unknown.yar
+        - mal_ducktail_compromised_certs_jun23.yar
+        - mal_efile_apr23.yar
+        - mal_lnx_implant_may22.yar
+        - mal_passwordstate_backdoor.yar
+        - mal_qbot_payloads.yar
+        - mal_ransom_esxi_attacks_feb23.yar
+        - mal_ransom_lorenz.yar
+        - mal_ru_sparepart_dec22.yar
+        - pua_cryptocoin_miner.yar
+        - pua_xmrig_monero_miner.yar
+        - pup_lightftp.yar
+        - spy_equation_fiveeyes.yar
+        - spy_querty_fiveeyes.yar
+        - spy_regin_fiveeyes.yar
+        - susp_vulndriver_hp_hardware_diagnostics_etdsupp_may23.yar
+        - thor-webshells.yar
+        - threat_lenovo_superfish.yar
