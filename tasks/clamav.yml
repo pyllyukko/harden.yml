@@ -182,7 +182,6 @@
     # * mal_*.yar
     # * [pst]*.yar
     - name: Download YARA rules
-      tags: test
       ansible.builtin.get_url:
         url: "https://raw.githubusercontent.com/Neo23x0/signature-base/master/yara/{{ item }}"
         dest: /var/lib/clamav/
