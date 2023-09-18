@@ -83,9 +83,9 @@
           ScanArchive: "yes"
           Bytecode: "yes"
           BytecodeSecurity: Paranoid
-          LocalSocket: /var/run/clamav/clamd.ctl
+          LocalSocket: /run/clamav/clamd.sock
           LocalSocketMode: 660
-          PidFile: /var/run/clamav/clamd.pid
+          PidFile: /run/clamav/clamd.pid
           User: clamav
           AlertOLE2Macros: "yes"
           FixStaleSocket: "yes"
@@ -110,7 +110,7 @@
           Bytecode: "yes"
           DatabaseMirror: database.clamav.net
           DatabaseOwner: clamav
-          PidFile: /var/run/clamav/freshclam.pid
+          PidFile: /run/clamav/freshclam.pid
           DatabaseDirectory: /var/lib/clamav
       tags: configuration
     - name: Copy new ClamAV configurations into place
