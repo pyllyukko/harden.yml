@@ -152,7 +152,6 @@
         - bytecode.cvd
         - main.cvd
         - main.cld
-        - general_officemacros.yar
       register: result
       failed_when:
         - result.failed == true
