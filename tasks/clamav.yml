@@ -181,24 +181,15 @@
           sigs.InterServer.net.HEX.Topline.malware.string.11334.179
       tags: configuration
     # https://docs.clamav.net/manual/Signatures/YaraRules.html
-    # https://github.com/Neo23x0/signature-base
+    # https://github.com/Neo23x0/signature-base (e36e80a)
     #
-    # TODO: This needs to be continued to include more YARA rules,
-    #       but it's really tedious as ClamAV doesn't support all the YARA features/extensions.
+    # Some of the YARA rules do not work with ClamAV.
+    # At least the following error messages might occure with some rules:
     #
     # LibClamAV Error: yyerror(): undefined identifier "filename"
     # LibClamAV Error: yyerror(): undefined identifier "pe"
     # LibClamAV Error: yyerror(): undefined identifier "uint32be"
     # LibClamAV Warning: load_oneyara[verify]: wide modifier [w] is not supported for regex subsigs
-    #
-    # So far we have included all the working rules from (e36e80a):
-    # * apt_*.yar
-    # * crime_*.yar
-    # * expl_*.yar
-    # * exploit_*.yar
-    # * gen_*.yar
-    # * mal_*.yar
-    # * [pst]*.yar
     - name: Download YARA rules
       ansible.builtin.get_url:
         url: "https://raw.githubusercontent.com/Neo23x0/signature-base/master/yara/{{ item }}"
@@ -634,6 +625,29 @@
         - gen_wmi_implant.yar
         - gen_ysoserial_payloads.yar
         - gen_zoho_rcef_logs.yar
+        - cn_pentestset_scripts.yar
+        - cn_pentestset_tools.yar
+        - cn_pentestset_webshells.yar
+        - generic_cryptors.yar
+        - generic_exe2hex_payload.yar
+        - hktl_bruteratel_c4_badger.yar
+        - hktl_natbypass.yar
+        - log_teamviewer_keyboard_layouts.yar
+        - vul_backdoor_antitheftweb.yar
+        - vul_cve_2020_0688.yar
+        - vul_cve_2020_1938.yar
+        - vul_dell_bios_upd_driver.yar
+        - vul_drivecrypt.yar
+        - vul_jquery_fileupload_cve_2018_9206.yar
+        - vul_php_zlib_backdoor.yar
+        - vuln_gigabyte_driver.yar
+        - vuln_keepass_brute_forcible.yar
+        - vuln_moveit_0day_jun23.yar
+        - vuln_proxynotshell_cve_2022_41040.yar
+        - webshell_regeorg.yar
+        - webshell_xsl_transform.yar
+        - yara-rules_mal_drivers.yar
+        - yara-rules_vuln_drivers_strict.yar
     # Debian uses --move=/root/quarantine
     #- name: mkdir /root/quarantine
     #  ansible.builtin.file:
