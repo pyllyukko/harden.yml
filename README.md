@@ -204,6 +204,12 @@ Usage
     * Interactive shells to `root` have timeout, so use `screen` for those longer administrative tasks
 * Rebooting the system after running this is highly recommended
 * The AIDE DB creation is made [asynchronously](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_async.html) and without polling, so let that finish before rebooting
+* You might want to get additional (unofficial) rules for ClamAV with [clamav-unofficial-sigs](https://github.com/extremeshok/clamav-unofficial-sigs). At least the following rulesets are freely available:
+    * [Sanesecurity](https://sanesecurity.com/usage/signatures/)
+        * Porcupine ("The following databases are distributed by Sanesecurity, but produced by Porcupine Signatures")
+        * bofhland ("The following databases are distributed by Sanesecurity, but produced by bofhland")
+    * [Linux Malware Detect](https://www.rfxn.com/projects/linux-malware-detect/)
+    * [InterServer](https://sigs.interserver.net)
 
 ### Tags
 

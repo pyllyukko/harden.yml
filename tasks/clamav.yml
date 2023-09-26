@@ -90,6 +90,7 @@
           AlertOLE2Macros: "yes"
           FixStaleSocket: "yes"
           DatabaseDirectory: /var/lib/clamav
+          OnAccessExcludeUname: clamav
       tags: configuration
     # https://docs.clamav.net/manual/Usage/Configuration.html#freshclamconf
     - name: Configure freshclam
@@ -505,3 +506,22 @@
         - susp_vulndriver_hp_hardware_diagnostics_etdsupp_may23.yar
         - thor-webshells.yar
         - threat_lenovo_superfish.yar
+    # Debian uses --move=/root/quarantine
+    #- name: mkdir /root/quarantine
+    #  ansible.builtin.file:
+    #    path: /root/quarantine
+    #    state: directory
+    #    owner: root
+    #    group: root
+    #    mode: '0700'
+    # https://docs.clamav.net/manual/OnAccess.html
+    # This is disabled for now because of "ERROR: ClamInotif: could not watch path '/home/pyllyukko', Invalid argument"
+    - name: Stop & disable ClamAV's On-Access service (Debian)
+      when: ansible_distribution == "Debian"
+      tags:
+        - debian
+        - services
+      ansible.builtin.service:
+        name: clamav-clamonacc
+        state: stopped
+        enabled: false
