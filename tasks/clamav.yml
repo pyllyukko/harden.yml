@@ -168,6 +168,19 @@
         content: |
           ZipPasswordInfected;Engine:81-255;0;infected
       tags: configuration
+    # https://docs.clamav.net/faq/faq-ignore.html
+    #
+    # sigs.InterServer.net.HEX.Topline.malware.string.11334.179 alerts on tables.go (1.20.5)
+    #   https://www.virustotal.com/gui/file/77daba99ce1c13daa2b200ab40b3e06d484cffc1a39ec5201fd1ec8a25426c4b
+    - name: Create a signature ignore list
+      ansible.builtin.copy:
+        dest: /var/lib/clamav/ignore_list.ign2
+        owner: root
+        group: root
+        mode: '0644'
+        content: |
+          sigs.InterServer.net.HEX.Topline.malware.string.11334.179
+      tags: configuration
     # https://docs.clamav.net/manual/Signatures/YaraRules.html
     # https://github.com/Neo23x0/signature-base
     #
