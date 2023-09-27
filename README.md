@@ -112,7 +112,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Creates a secure [/etc/pam.d/other](http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html)
 * Configures `/etc/security/limits.conf` as follows:
     * Disable [core dumps](https://en.wikipedia.org/wiki/Core_dump)
-    * Sets maximum amount of processes (or threads, see `setrlimit(3)`)
+    * Sets maximum amount of processes (or threads, see [setrlimit(2)](https://man7.org/linux/man-pages/man2/setrlimit.2.html))
     * Sets `nproc` to 0 for system users that don't need to run any processes
 * Run `ansible-playbook --list-tasks --tags pam harden.yml` to list all PAM related tasks
 * You can also run `ansible-playbook --check --diff --tags pam harden.yml` to see details of the changes
@@ -294,6 +294,7 @@ Some of these documents are quite old, but most of the stuff still applies.
 * [Linux Firewalls](https://nostarch.com/firewalls.htm)
 * [Secure Secure Shell](https://stribika.github.io/2015/01/04/secure-secure-shell.html)
 * [Securing Debian Manual](https://www.debian.org/doc/manuals/securing-debian-manual/index.en.html)
+* [ArchWiki: limits.conf](https://wiki.archlinux.org/title/Limits.conf)
 
 [1]: http://benchmarks.cisecurity.org/downloads/browse/index.cfm?category=benchmarks.os.linux.slackware
 [2]: http://dentonj.freeshell.org/system-hardening-10.2.txt

@@ -387,6 +387,8 @@
   block:
     # CIS Debian Linux 10 Benchmark v1.0.0 - 1.6.4 Ensure core dumps are restricted
     # https://en.wikipedia.org/wiki/Fork_bomb#Prevention
+    # https://wiki.archlinux.org/title/Limits.conf
+    # https://github.com/pyllyukko/harden.yml/wiki/PAM#pam_limits
     - name: Configure /etc/security/limits.conf
       community.general.pam_limits:
         domain: '*'
