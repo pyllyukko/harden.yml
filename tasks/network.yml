@@ -72,11 +72,14 @@
         - slackware
     # https://wiki.nftables.org/wiki-nftables/index.php/Simple_ruleset_for_a_workstation
     # https://wiki.nftables.org/wiki-nftables/index.php/Simple_ruleset_for_a_server
+    # The backup=true isn't really necessary here, as it won't be touched if it exists,
+    # but we'll leave it here just in case and if the logic will be changed at some point :)
     - name: Create /etc/rc.d/rc.firewall (Slackware)
       ansible.builtin.template:
         src: "{{ playbook_dir }}/templates/rc.firewall-nft.j2"
         dest: /etc/rc.d/rc.firewall
         mode: '0700'
+        backup: true
       tags:
         - services
         - slackware
@@ -115,6 +118,7 @@
         src: nftables.conf.j2
         dest: /etc/nftables.conf
         mode: '0600'
+        backup: true
       tags: configuration
     - name: Activate firewall
       ansible.builtin.command: /usr/sbin/nft -f /etc/nftables.conf
