@@ -3,7 +3,7 @@
 flush ruleset
 
 table inet filter {
-	chain input {
+	chain INPUT {
 		type filter hook input priority 0;
 		ct state invalid counter drop
 		ip protocol {tcp, udp, icmp} ct state established counter accept
@@ -16,10 +16,10 @@ table inet filter {
 		iifname "lo" ip6 saddr ::1 ip6 daddr ::1 counter accept
 		counter reject with icmpx type admin-prohibited
 	}
-	chain forward {
+	chain FORWARD {
 		type filter hook forward priority 0; policy drop;
 	}
-	chain output {
+	chain OUTPUT {
 		type filter hook output priority 0;
 	}
 }
