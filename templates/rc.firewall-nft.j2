@@ -7,8 +7,16 @@ function start() {
 
 	add table inet filter
 	add chain inet filter INPUT   { type filter hook input   priority 0; policy drop; }
-	add chain inet filter FORWARD { type filter hook forward priority 0; policy drop; }
+	# The forward policy for inet table is allowed, but drop for the ip & ip6 tables.
+	# This is because of Docker.
+	add chain inet filter FORWARD { type filter hook forward priority 0; }
 	add chain inet filter OUTPUT  { type filter hook output  priority 0; }
+
+	# Because of Docker
+	add table ip filter
+	add table ip6 filter
+	add chain ip filter FORWARD { type filter hook forward priority 0; policy drop; }
+	add chain ip6 filter FORWARD { type filter hook forward priority 0; policy drop; }
 
 	add rule inet filter INPUT ct state invalid counter drop
 	add rule inet filter INPUT ct state related,established counter accept
