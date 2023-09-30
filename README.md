@@ -10,7 +10,7 @@ Ansible playbook to harden your Linux system.
 Supported distros
 -----------------
 
-* Debian (Bullseye)
+* Debian (Bookworm)
     * Kali
     * Raspbian
 * Slackware (>= [15.0](http://www.slackware.com/announce/15.0.php))
