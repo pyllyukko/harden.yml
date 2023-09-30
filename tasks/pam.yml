@@ -399,6 +399,7 @@
         core: 0
         nproc: '{{ nproc_limit }}'
     - name: Set nproc to 0 in limits.conf for system users that don't need to run any processes
+      tags: accounts
       community.general.pam_limits:
         domain: '{{ item }}'
         limit_type: hard

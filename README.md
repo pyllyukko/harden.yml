@@ -92,6 +92,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * Lock the user's password
     * Sets shell to `/sbin/nologin`
     * Expire the account
+    * Set `RLIMIT_NPROC` to `0` in [pam\_limits](#pam) for those system accounts that don't need to run any processes
 * Configures the default password inactivity period
     * Run `ansible-playbook --list-tasks --tags passwords harden.yml` to list all password related tasks
 * Makes minor modifications to existing accounts. See `ansible-playbook --list-tasks --tags accounts harden.yml` for details.
