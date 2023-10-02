@@ -73,6 +73,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Configures basic auditing based on [stig.rules](https://fedorahosted.org/audit/browser/trunk/contrib/stig.rules) if audit is installed (see [audit.yml](tasks/audit.yml))
 * Configures `sshd_config` and `ssh_config` (see `ansible-playbook --list-tasks --tags ssh harden.yml` for details)
 * Configures [sudo](https://www.sudo.ws/) (see [sudoers.j2](templates/sudoers.j2))
+    * You can set the `sudo_iolog` in `vars.yml` to `true` to enable I/O logging
 * [ClamAV](https://www.clamav.net/) configuration (see [clamav.yml](tasks/clamav.yml))
     * Configures `clamd` & `freshclam` by first generating fresh configurations with [clamconf](https://docs.clamav.net/manual/Usage/Configuration.html#clamconf)
     * Configured ClamAV to unarchive with password "infected" (see [Passwords for archive files](https://docs.clamav.net/manual/Signatures/EncryptedArchives.html) & [ClamAV and ZIP File Decryption](https://blog.didierstevens.com/2017/02/15/quickpost-clamav-and-zip-file-decryption/))
