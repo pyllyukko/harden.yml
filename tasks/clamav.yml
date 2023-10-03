@@ -648,6 +648,25 @@
         - webshell_xsl_transform.yar
         - yara-rules_mal_drivers.yar
         - yara-rules_vuln_drivers_strict.yar
+    # 85cccb3
+    # The Sliver rules are already covered with gen_gcti_sliver.yar
+    - name: Download GCTI YARA rules
+      ansible.builtin.get_url:
+        url: "https://raw.githubusercontent.com/chronicle/GCTI/main/YARA/CobaltStrike/{{ item }}"
+        dest: /var/lib/clamav/
+        owner: root
+        group: root
+        mode: '0644'
+      with_items:
+        - CobaltStrike__Resources_Command_Ps1_v2_5_to_v3_7_and_Resources_Compress_Ps1_v3_8_to_v4_x.yara
+        - CobaltStrike__Resources_Template_Py_v3_3_to_v4_x.yara
+        - CobaltStrike__Resources_Template_Sct_v3_3_to_v4_x.yara
+        - CobaltStrike__Resources_Template_Vbs_v3_3_to_v4_x.yara
+        - CobaltStrike__Resources_Template__x32_x64_Ps1_v1_45_to_v2_5_and_v3_11_to_v3_14.yara
+        - CobaltStrike__Resources_Template_x64_Ps1_v3_0_to_v4_x_excluding_3_12_3_13.yara
+        - CobaltStrike__Resources_Template_x86_Vba_v3_8_to_v4_x.yara
+        - CobaltStrike__Resources_Xor_Bin__32bit_v2_x_to_4_x.yara
+        - CobaltStrike__Resources_Xor_Bin__64bit_v3_12_to_4_x.yara
     # Debian uses --move=/root/quarantine
     #- name: mkdir /root/quarantine
     #  ansible.builtin.file:
