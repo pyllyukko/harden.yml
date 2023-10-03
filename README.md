@@ -78,7 +78,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * [ClamAV](https://www.clamav.net/) configuration (see [clamav.yml](tasks/clamav.yml))
     * Configures `clamd` & `freshclam` by first generating fresh configurations with [clamconf](https://docs.clamav.net/manual/Usage/Configuration.html#clamconf)
     * Configured ClamAV to unarchive with password "infected" (see [Passwords for archive files](https://docs.clamav.net/manual/Signatures/EncryptedArchives.html) & [ClamAV and ZIP File Decryption](https://blog.didierstevens.com/2017/02/15/quickpost-clamav-and-zip-file-decryption/))
-    * Downloads YARA rules from <https://github.com/Neo23x0/signature-base> for [ClamAV to use](https://docs.clamav.net/manual/Signatures/YaraRules.html)
+    * Downloads YARA rules from [Neo23x0](https://github.com/Neo23x0/signature-base), [GCTI](https://github.com/chronicle/GCTI/) & [Elastic](https://github.com/elastic/protections-artifacts) for [ClamAV to use](https://docs.clamav.net/manual/Signatures/YaraRules.html)
 * [rkhunter](https://sourceforge.net/projects/rkhunter/) configuration (see [rkhunter.yml](tasks/rkhunter.yml))
 * [Lynis](https://cisofy.com/lynis/) configuration (see [lynis.yml](tasks/lynis.yml))
 * Configures AIDE (see [aide.yml](tasks/aide.yml))
