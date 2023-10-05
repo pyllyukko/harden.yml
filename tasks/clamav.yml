@@ -179,6 +179,13 @@
         mode: '0644'
         content: |
           sigs.InterServer.net.HEX.Topline.malware.string.11334.179
+          PoetRat_Python
+          with_sqlite
+          php_uname
+          php_malfunctions
+          blackhole_basic
+          PM_Email_Sent_By_PHP_Script
+          CAP_HookExKeylogger
       tags: configuration
     # https://docs.clamav.net/manual/Signatures/YaraRules.html
     # https://github.com/Neo23x0/signature-base (e36e80a)
