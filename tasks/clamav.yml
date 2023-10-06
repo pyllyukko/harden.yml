@@ -186,7 +186,9 @@
           blackhole_basic
           PM_Email_Sent_By_PHP_Script
           CAP_HookExKeylogger
-      tags: configuration
+      tags:
+        - configuration
+        - yara
     # https://docs.clamav.net/manual/Signatures/YaraRules.html
     # https://github.com/Neo23x0/signature-base (e36e80a)
     #
