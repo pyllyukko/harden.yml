@@ -186,6 +186,7 @@
           blackhole_basic
           PM_Email_Sent_By_PHP_Script
           CAP_HookExKeylogger
+          UPX
       tags:
         - configuration
         - yara
