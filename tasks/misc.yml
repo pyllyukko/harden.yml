@@ -231,6 +231,7 @@
         allow_url_include: 'Off'
         allow_url_fopen: 'Off'
         disable_functions: 'system,exec,shell_exec,popen,proc_open,pcntl_exec,passthru,str_rot13'
+        enable_dl: 'Off'
     - name: Configure php.ini (Session section)
       become: true
       when: stat_result.stat.exists
