@@ -210,7 +210,10 @@
     # https://www.cyberciti.biz/faq/linux-unix-apache-lighttpd-phpini-disable-functions/
     # https://stackoverflow.com/questions/3115559/exploitable-php-functions/3697776#3697776
     # https://www.feistyduck.com/library/apache-security/
-    # The e modifier has been deprecated, so this list doesn't disable preg_replace function (https://www.php.net/manual/en/reference.pcre.pattern.modifiers.php)
+    # The e modifier has been deprecated,
+    # so this list doesn't disable preg_replace function
+    # (https://www.php.net/manual/en/reference.pcre.pattern.modifiers.php)
+    #
     # PHP-2372
     # TODO: Moar content!
     - name: Configure php.ini (PHP section)
