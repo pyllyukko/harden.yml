@@ -85,6 +85,8 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Display managers:
     * Disables user lists in GDM3 & LightDM
     * Disables guest sessions and VNC in LightDM
+* Minor Apache HTTP server hardening
+* Minor PHP (`php.ini`) hardening
 
 ### User accounts / authentication / authorization
 
@@ -244,6 +246,8 @@ Tags that you can use with `ansible-playbook --tags`:
         * `yara`
     * `apparmor`
     * `cron` (also includes tasks regarding `at`)
+    * `php`
+    * `apache`
 * `banners`
 * [AAA](https://en.wikipedia.org/wiki/AAA_(computer_security)):
     * `accounting` (includes `sysstat`)
