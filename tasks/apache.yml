@@ -87,3 +87,11 @@
         regexp: '^#?(Include\s+/etc/httpd/extra/httpd-default\.conf)$'
         replace: '\g<1>'
         validate: '/bin/grep "^Include\s\+/etc/httpd/extra/httpd-default\.conf$" %s'
+    - name: Configure TraceEnable
+      ansible.builtin.lineinfile:
+        path: /etc/httpd/httpd.conf
+        regexp: '^TraceEnable\s+off$'
+        line: 'TraceEnable off'
+        owner: root
+        group: root
+        mode: '0644'
