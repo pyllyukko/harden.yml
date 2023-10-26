@@ -73,3 +73,11 @@
             owner: root
             group: root
             mode: '0644'
+
+    # https://httpd.apache.org/docs/2.4/mod/core.html#servertokens
+    - name: Configure ServerTokens
+      ansible.builtin.replace:
+        path: /etc/httpd/extra/httpd-default.conf
+        regexp: '^(ServerTokens\s+).+$'
+        replace: '\g<1>Prod'
+        validate: '/bin/grep "^ServerTokens\s\+Prod$" %s'
