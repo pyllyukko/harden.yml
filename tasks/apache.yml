@@ -81,3 +81,9 @@
         regexp: '^(ServerTokens\s+).+$'
         replace: '\g<1>Prod'
         validate: '/bin/grep "^ServerTokens\s\+Prod$" %s'
+    - name: Include httpd-default.conf
+      ansible.builtin.replace:
+        path: /etc/httpd/httpd.conf
+        regexp: '^#?(Include\s+/etc/httpd/extra/httpd-default\.conf)$'
+        replace: '\g<1>'
+        validate: '/bin/grep "^Include\s\+/etc/httpd/extra/httpd-default\.conf$" %s'
