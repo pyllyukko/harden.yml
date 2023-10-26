@@ -95,3 +95,11 @@
         owner: root
         group: root
         mode: '0644'
+    - name: Add X-Frame-Options HTTP header
+      ansible.builtin.lineinfile:
+        path: /etc/httpd/httpd.conf
+        regexp: '^Header\s+always\s+set\s+X-Frame-Options\s+SAMEORIGIN$'
+        line: 'Header always set X-Frame-Options SAMEORIGIN'
+        owner: root
+        group: root
+        mode: '0644'
