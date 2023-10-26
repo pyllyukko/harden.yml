@@ -248,6 +248,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `cron` (also includes tasks regarding `at`)
     * `php`
     * `apache`
+        * `hsts`
 * `banners`
 * [AAA](https://en.wikipedia.org/wiki/AAA_(computer_security)):
     * `accounting` (includes `sysstat`)

@@ -55,3 +55,4 @@ inactive_password_lock: 30
 lynis_location: '{% if ansible_os_family == "RedHat" or ansible_distribution == "Slackware" %}/usr/bin/lynis{% else %}/usr/sbin/lynis{% endif %}'
 chkrootkit_conf_dir: '/etc/chkrootkit'
 cisofy_keyring: /etc/apt/keyrings/cisofy.asc
+hsts_max_age: 600

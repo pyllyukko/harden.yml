@@ -55,3 +55,21 @@
         SSLHonorCipherOrder: "on"
         SSLProtocol: all -SSLv2 -SSLv3 -TLSv1 -TLSv1.1 -TLSv1.2
         SSLCipherSuite: "HIGH"
+
+    - name: HSTS
+      tags: hsts
+      block:
+        - name: Enable headers module
+          ansible.builtin.replace:
+            path: /etc/httpd/httpd.conf
+            regexp: '^#?(LoadModule\s+headers_module\s+.+\.so)$'
+            replace: '\g<1>'
+            validate: '/bin/grep "^LoadModule\s\+headers_module\s\+.\+\.so$" %s'
+        - name: Add HSTS header configuration to /etc/httpd/httpd.conf
+          ansible.builtin.lineinfile:
+            path: /etc/httpd/httpd.conf
+            regexp: '^Header always set Strict-Transport-Security "max-age=[0-9]+; includeSubDomains"$'
+            line: 'Header always set Strict-Transport-Security "max-age={{ hsts_max_age }}; includeSubDomains"'
+            owner: root
+            group: root
+            mode: '0644'
