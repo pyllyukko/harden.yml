@@ -187,6 +187,7 @@
           PM_Email_Sent_By_PHP_Script
           CAP_HookExKeylogger
           UPX
+          Ramnit
       tags:
         - configuration
         - yara
