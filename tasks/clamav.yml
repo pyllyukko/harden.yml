@@ -1372,6 +1372,63 @@
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/webshells/Wshell_ChineseSpam.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/webshells/Wshell_fire2013.yar
             - https://raw.githubusercontent.com/JPCERTCC/MalConfScan/master/yara/rule.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/Lazarus/lazarus.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/Lazarus/applejeus.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/Lazarus/crypthunter.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/APT29/apt29.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/Tick/tick.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/qbot.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/windealer.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/maldocinpdf.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/nanocore.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/shellcode.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/phpfilemanager.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/b374k.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/RestyLink.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/donut.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/cve202120837.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/vboxuserrat.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/waterpamola.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/TokyoX.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/cobaltstrike.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/smokeloader.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/steelclover.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/lodeinfo.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/azorult.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/netwire.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/adminer.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/Remcos.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/quasar.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/sqroot.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/formbook.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/bebloh.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/flubot.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/plugx.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/noderat.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/inetget.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/StealthWorker.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/hawkeye.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/lokibot.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/agenttesla.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/foxwso.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/ares.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/phpmal.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/pulsesecure.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/filesman.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/asyncrat.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/nimfilecoder.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/pangolin8rat.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/njrat.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/poisonivy.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/brc4.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/ursnif.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/sysrvbot.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/3proxy.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/darkcloud.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/emotet.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/Darkhotel/darkhotel.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/DragonOK/dragonok.yara
+            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/APT10/apt10.yara
         - name: Copy miscellaneous YARA rules
           ansible.builtin.copy:
             src: "{{ item }}"
