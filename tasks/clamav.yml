@@ -1370,6 +1370,7 @@
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/webshells/WShell_PHP_in_images.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/webshells/Wshell_ChineseSpam.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/webshells/Wshell_fire2013.yar
+            - https://raw.githubusercontent.com/JPCERTCC/MalConfScan/master/yara/rule.yara
         - name: Copy miscellaneous YARA rules
           ansible.builtin.copy:
             src: "{{ item }}"
