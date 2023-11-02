@@ -3,17 +3,39 @@
   become: true
   tags: clamav
   block:
-    - name: Install ClamAV (Debian)
+    - name: Install ClamAV (Debian) (non-x86_64)
       ansible.builtin.apt:
         name: ['clamav', 'clamav-daemon']
         update_cache: true
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+      when: (ansible_distribution == "Debian" or ansible_distribution == "Kali") and ansible_architecture != "x86_64"
       tags:
         - packages
         - services
         - debian
+
+    - name: ClamAV Debian x86_64
+      when: (ansible_distribution == "Debian" or ansible_distribution == "Kali") and ansible_architecture == "x86_64"
+      tags:
+        - packages
+        - debian
+      block:
+        - name: Uninstall ClamAV (Debian) (x86_64)
+          ansible.builtin.apt:
+            name: ['clamav', 'clamav-daemon', 'clamav-base', 'clamav-freshclam', 'libclamav11']
+            state: absent
+          tags: services
+        - name: Download ClamAV
+          ansible.builtin.get_url:
+            url: "https://www.clamav.net/downloads/production/clamav-{{ clamav_version }}.linux.x86_64.deb"
+            dest: /var/cache/apt/archives/
+            owner: root
+            group: root
+            mode: '0600'
+        - name: Install ClamAV (x86_64)
+          apt: deb="/var/cache/apt/archives/clamav-{{ clamav_version }}.linux.x86_64.deb"
+
     - name: Determine ClamAV sysconfdir
-      ansible.builtin.shell: set -o pipefail; clamconf | awk '/^Checking configuration files in/{print$5}' # noqa no-changed-when
+      ansible.builtin.shell: set -o pipefail; {{ clamav_location }}/clamconf | awk '/^Checking configuration files in/{print$5}' # noqa no-changed-when
       register: clamav_sysconfdir
       tags: check
       args:
@@ -22,10 +44,10 @@
       ansible.builtin.assert:
         that:
           - clamav_sysconfdir.stdout | length > 0
-          - clamav_sysconfdir.stdout | regex_search('^/etc')
+          - clamav_sysconfdir.stdout | regex_search('/etc')
       tags: check
     - name: Generate fresh configs
-      ansible.builtin.shell: /usr/bin/clamconf -g {{ item }}.conf 1>{{ clamav_sysconfdir.stdout }}/{{ item }}.conf.new
+      ansible.builtin.shell: "{{ clamav_location }}/clamconf -g {{ item }}.conf 1>{{ clamav_sysconfdir.stdout }}/{{ item }}.conf.new"
       with_items:
         - freshclam
         - clamd
@@ -1448,7 +1470,7 @@
     # https://docs.clamav.net/manual/OnAccess.html
     # This is disabled for now because of "ERROR: ClamInotif: could not watch path '/home/pyllyukko', Invalid argument"
     - name: Stop & disable ClamAV's On-Access service (Debian)
-      when: ansible_distribution == "Debian"
+      when: ansible_distribution == "Debian" and ansible_architecture != "x86_64"
       tags:
         - debian
         - services
