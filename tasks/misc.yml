@@ -236,3 +236,16 @@
   with_dict:
     Storage: none
     ProcessSizeMax: 0
+
+- name: Comment out default keys from /etc/ntp.keys
+  become: true
+  register: result
+  failed_when:
+    - result.failed == true
+    - result.state != "absent"
+  tags:
+    - ntp
+  ansible.builtin.replace:
+    path: /etc/ntp.keys
+    regexp: '^((1|65535)\s+M\s+(akey|pass))$'
+    replace: '#\g<1>'
