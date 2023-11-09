@@ -237,15 +237,26 @@
     Storage: none
     ProcessSizeMax: 0
 
-- name: Comment out default keys from /etc/ntp.keys
+- name: NTP
   become: true
-  register: result
-  failed_when:
-    - result.failed == true
-    - result.state != "absent"
-  tags:
-    - ntp
-  ansible.builtin.replace:
-    path: /etc/ntp.keys
-    regexp: '^((1|65535)\s+M\s+(akey|pass))$'
-    replace: '#\g<1>'
+  tags: ntp
+  block:
+    - name: Comment out default keys from /etc/ntp.keys
+      register: result
+      failed_when:
+        - result.failed
+        - result.msg != "Path /etc/ntp.keys does not exist !"
+      ansible.builtin.replace:
+        path: /etc/ntp.keys
+        regexp: '^((1|65535)\s+M\s+(akey|pass))$'
+        replace: '#\g<1>'
+    - name: Disable monlist in NTP
+      ansible.builtin.lineinfile:
+        path: /etc/ntp.conf
+        regexp: '^disable\s+monitor$'
+        line: disable monitor
+        create: false
+      register: result
+      failed_when:
+        - result.failed
+        - result.msg != "Destination /etc/ntp.conf does not exist !"
