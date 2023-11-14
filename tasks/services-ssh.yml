@@ -90,6 +90,19 @@
     state: absent
     regexp: '^[0-9]{14}\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+2047\b'
     backup: true
+- name: Set SSH_USE_STRONG_RNG for sshd (RH)
+  when: ansible_os_family == "RedHat"
+  become: true
+  tags:
+    - configuration
+    - ssh
+    - centos
+  ansible.builtin.lineinfile:
+    path: /etc/sysconfig/sshd
+    state: present
+    regexp: '^SSH_USE_STRONG_RNG=[0-9]+$'
+    line: 'SSH_USE_STRONG_RNG=32'
+    backup: true
 
 - name: Print Lynis score for SSH hardening
   become: true
