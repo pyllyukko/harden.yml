@@ -20,16 +20,13 @@
       # https://github.com/linux-pam/linux-pam/blob/master/modules/pam_access/access.conf
       when: stat_result.stat.exists and stat_result.stat.checksum == "b27e5ad84e17b7a63611e5cfa88f72556f240d6d0ae1d4437f173808d65091b65d3316dcd3fa133d358c5f14508dc0314a8b3f44abf1c42ccb369586b97f5422" # noqa yaml[line-length]
       become: true
-      ansible.builtin.blockinfile:
-        path: /etc/security/access.conf
-        block: |
-          + : root : LOCAL
-          + : daemon : cron
-          + : logcheck : cron
-          - : ALL : cron
-          + : ({{ allowed_group }}) : ALL
-          + : Debian-gdm lightdm : LOCAL
-          - : ALL : ALL
+      ansible.builtin.template:
+        src: access.conf.j2
+        dest: /etc/security/access.conf
+        owner: root
+        group: root
+        mode: '0644'
+        backup: true
 
 # This needs to happen before populating /etc/pam.d/other with pam_deny or otherwise sudo will stop working
 - name: Create /etc/pam.d/sudo (Slackware)
