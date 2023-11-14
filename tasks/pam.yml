@@ -67,6 +67,7 @@
     - configuration
     - pam
     - slackware
+    - umask
 
 # http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html
 # https://tldp.org/HOWTO/User-Authentication-HOWTO/x263.html#AEN266
@@ -263,6 +264,7 @@
     - debian
   block:
     - name: Copying new pam-configs
+      tags: umask
       ansible.builtin.copy:
         src: "{{ playbook_dir }}/newconfs/pam-configs/{{ item }}.new"
         dest: /usr/share/pam-configs/{{ item }}

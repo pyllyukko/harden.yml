@@ -90,7 +90,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 
 ### User accounts / authentication / authorization
 
-* Sets default [umask](https://en.wikipedia.org/wiki/Umask) to a more stricter `077`
+* Sets default [umask](https://en.wikipedia.org/wiki/Umask) to a more stricter `077` (see <https://github.com/pyllyukko/harden.yml/wiki/umask>)
 * Sets console session timeout via `$TMOUT` (Bash)
 * Properly locks down system accounts (0 - `SYS_UID_MAX` && !`root`)
     * Lock the user's password
@@ -261,6 +261,7 @@ Tags that you can use with `ansible-playbook --tags`:
 * `cgroup` (Slackware)
 * `hidepid` (Slackware)
 * `shells`
+* `umask`
 
 There are also operating system tags for tasks that only apply to specific OS.
 You can speed up the hardening by skipping OSs that don't apply. E.g. if you're

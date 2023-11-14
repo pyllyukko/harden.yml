@@ -22,6 +22,7 @@
     - configuration
     - permissions
     - logging
+    - umask
 # This is separated so you can run "ansible-playbook --tags passwords"
 # AUTH-9286
 # https://www.redhat.com/sysadmin/more-lockdown-controls:
@@ -117,6 +118,7 @@
   tags:
     - configuration
     - debian
+    - umask
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
 # </profile.d>
 

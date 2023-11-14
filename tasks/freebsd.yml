@@ -96,6 +96,7 @@
           path: /root
           mode: '0700'
       - name: Set default umask to 077
+        tags: umask
         ansible.builtin.replace:
           path: /etc/login.conf
           regexp: '^(\s+:umask=)022:\\$'
