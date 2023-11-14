@@ -1,0 +1,2 @@
+-w /var/lib/aide/aide.db -p wa -k sectools
+-w /var/lib/rkhunter/db/ -p wa -k sectools
