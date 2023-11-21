@@ -211,6 +211,10 @@
           CAP_HookExKeylogger
           UPX
           Ramnit
+          malware_lodeinfo_c2_cmd_xor_bruteforce
+          malware_lodeinfo_network_decode_process_xor_bruteforce
+          CS_encrypted_beacon_x86
+          malware_shellcode_hash
       tags:
         - configuration
         - yara
@@ -1452,6 +1456,10 @@
             - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/Darkhotel/darkhotel.yara
             - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/DragonOK/dragonok.yara
             - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/APT10/apt10.yara
+            - https://raw.githubusercontent.com/Te-k/cobaltstrike/master/rules.yar
+            - https://raw.githubusercontent.com/advanced-threat-research/Yara-Rules/master/malware/MALW_cobaltstrike.yar
+            - https://raw.githubusercontent.com/avast/ioc/master/CobaltStrike/yara_rules/cs_rules.yar
+            - https://raw.githubusercontent.com/malpedia/signator-rules/main/rules/win.cobalt_strike_auto.yar
         - name: Copy miscellaneous YARA rules
           ansible.builtin.copy:
             src: "{{ item }}"
