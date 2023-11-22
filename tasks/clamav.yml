@@ -2775,6 +2775,19 @@
             - https://raw.githubusercontent.com/malpedia/signator-rules/main/rules/win.zumanek_auto.yar
             - https://raw.githubusercontent.com/malpedia/signator-rules/main/rules/win.zupdax_auto.yar
             - https://raw.githubusercontent.com/malpedia/signator-rules/main/rules/win.zxxz_auto.yar
+            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Vinsula/Vinsula_index.yara
+            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/plxsertr/plxsertr_index.yara
+            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/RSA/RSA_index.yar
+            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mike%20Schladt/Mike_Schladt_index.yara
+            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Rapid7/Rapid7_index.yara
+            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/McAfee/McAfee_index.yara
+            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/iocbucket/iocbucket_index.yara
+            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/malc0de/malc0de_index.yara
+            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Spider-labs/Spiderlabs_index.yara
+            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/73mp74710n/73mp74710n_index.yara
+            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Zerk%20Labs/Zerk_Labs_index.yara
+            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/crowdstrike/Crowdstrike_index.yara
+            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/phoul/phoul_index.yara
             - https://raw.githubusercontent.com/Te-k/cobaltstrike/master/rules.yar
             - https://raw.githubusercontent.com/advanced-threat-research/Yara-Rules/master/malware/MALW_cobaltstrike.yar
             - https://raw.githubusercontent.com/avast/ioc/master/CobaltStrike/yara_rules/cs_rules.yar
