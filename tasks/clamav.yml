@@ -217,6 +217,7 @@
           malware_shellcode_hash
           Windows_Trojan_BloodAlchemy_de591c5a
           malware_PlugX_config
+          mimikatz
       tags:
         - configuration
         - yara
