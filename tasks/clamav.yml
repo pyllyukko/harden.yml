@@ -2779,6 +2779,7 @@
             - https://raw.githubusercontent.com/Te-k/cobaltstrike/master/rules.yar
             - https://raw.githubusercontent.com/advanced-threat-research/Yara-Rules/master/malware/MALW_cobaltstrike.yar
             - https://raw.githubusercontent.com/avast/ioc/master/CobaltStrike/yara_rules/cs_rules.yar
+            - https://raw.githubusercontent.com/gentilkiwi/mimikatz/master/kiwi_passwords.yar
         - name: Copy miscellaneous YARA rules
           ansible.builtin.copy:
             src: "{{ item }}"
