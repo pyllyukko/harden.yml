@@ -600,7 +600,6 @@
             - gen_invoke_thehash.yar
             - gen_javascript_powershell.yar
             - gen_kerberoast.yar
-            - gen_kirbi_mimkatz.yar
             - gen_lnx_malware_indicators.yar
             - gen_macro_builders.yar
             - gen_mal_backnet.yar
