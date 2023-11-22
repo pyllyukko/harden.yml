@@ -216,6 +216,7 @@
           CS_encrypted_beacon_x86
           malware_shellcode_hash
           Windows_Trojan_BloodAlchemy_de591c5a
+          malware_PlugX_config
       tags:
         - configuration
         - yara
