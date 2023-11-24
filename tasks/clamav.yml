@@ -2785,7 +2785,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/iocbucket/iocbucket_index.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/malc0de/malc0de_index.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Spider-labs/Spiderlabs_index.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/73mp74710n/73mp74710n_index.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Zerk%20Labs/Zerk_Labs_index.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/crowdstrike/Crowdstrike_index.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/phoul/phoul_index.yara
