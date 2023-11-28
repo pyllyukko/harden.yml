@@ -2778,6 +2778,8 @@
             - https://raw.githubusercontent.com/malpedia/signator-rules/main/rules/win.zumanek_auto.yar
             - https://raw.githubusercontent.com/malpedia/signator-rules/main/rules/win.zupdax_auto.yar
             - https://raw.githubusercontent.com/malpedia/signator-rules/main/rules/win.zxxz_auto.yar
+            - https://raw.githubusercontent.com/citizenlab/malware-signatures/master/payloads.yara
+            - https://raw.githubusercontent.com/citizenlab/malware-signatures/master/filetypes.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Vinsula/Vinsula_index.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/plxsertr/plxsertr_index.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/RSA/RSA_index.yar
@@ -3537,8 +3539,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/Hangover_ron_babylon.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/CaptainWord.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/secureworks/Mirage_APT_Backdoor.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Citizen%20Lab/filetypes.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Citizen%20Lab/payloads.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/phish%20me/PM_Dyre_Voice_Message.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/phish%20me/Cryptowall_docx_macro.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/phish%20me/PM_docx_with_vba_bin.yar
