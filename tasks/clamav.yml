@@ -2780,6 +2780,17 @@
             - https://raw.githubusercontent.com/malpedia/signator-rules/main/rules/win.zxxz_auto.yar
             - https://raw.githubusercontent.com/citizenlab/malware-signatures/master/payloads.yara
             - https://raw.githubusercontent.com/citizenlab/malware-signatures/master/filetypes.yara
+            - https://raw.githubusercontent.com/godaddy/yara-rules/master/packers/sogu_packer.yara
+            - https://raw.githubusercontent.com/godaddy/yara-rules/master/packers/rlpack.yara
+            - https://raw.githubusercontent.com/godaddy/yara-rules/master/packers/upx.yara
+            - https://raw.githubusercontent.com/godaddy/yara-rules/master/wiper.yara
+            - https://raw.githubusercontent.com/godaddy/yara-rules/master/granite_coroner.yara
+            - https://raw.githubusercontent.com/godaddy/yara-rules/master/packers/aspack.yara
+            - https://raw.githubusercontent.com/godaddy/yara-rules/master/l_exe.yara
+            - https://raw.githubusercontent.com/godaddy/yara-rules/master/packers/vmprotect.yara
+            - https://raw.githubusercontent.com/godaddy/yara-rules/master/appraisel.yara
+            - https://raw.githubusercontent.com/godaddy/yara-rules/master/mimikatz.yara
+            - https://raw.githubusercontent.com/godaddy/yara-rules/master/turla.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Vinsula/Vinsula_index.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/plxsertr/plxsertr_index.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/RSA/RSA_index.yar
@@ -2814,18 +2825,7 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/abhinavbom/ghostRAT.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/abhinavbom/pos_malwares.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/fox-it/rule%20Ponmocup_plugins.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/GoDaddy/sogu_packer.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/GoDaddy/rlpack.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/GoDaddy/upx.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/GoDaddy/wiper.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/GoDaddy/granite_coroner.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/GoDaddy/aspack.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/GoDaddy/l_exe.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/GoDaddy/vmprotect.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/GoDaddy/reign.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/GoDaddy/appraisel.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/GoDaddy/mimikatz.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/GoDaddy/turla.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/swood/browser_pass.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/LastLine/AgentTesla.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/arbor/dirtjumper_drive2.yar
