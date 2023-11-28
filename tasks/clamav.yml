@@ -2791,6 +2791,9 @@
             - https://raw.githubusercontent.com/godaddy/yara-rules/master/appraisel.yara
             - https://raw.githubusercontent.com/godaddy/yara-rules/master/mimikatz.yara
             - https://raw.githubusercontent.com/godaddy/yara-rules/master/turla.yara
+            - https://raw.githubusercontent.com/DidierStevens/DidierStevensSuite/master/maldoc.yara
+            - https://raw.githubusercontent.com/DidierStevens/DidierStevensSuite/master/contains_vbe_file.yara
+            - https://raw.githubusercontent.com/DidierStevens/DidierStevensSuite/master/contains_pe_file.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Vinsula/Vinsula_index.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/plxsertr/plxsertr_index.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/RSA/RSA_index.yar
@@ -3469,9 +3472,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/kaspersky/apt_regin_dispatcher_disp_dll.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/kaspersky/exploit_Silverlight_Toropov_Generic_XAP.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/crysys/duqu2.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Didier%20Stevens/maldoc.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Didier%20Stevens/contains_vbe_file.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Didier%20Stevens/contains_pe_file.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/clearskysec/gholee.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/PWC/Tendrit_2014.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/PWC/MSSUP.yar
