@@ -227,6 +227,18 @@
           maldoc_OLE_file_magic_number
           Contains_PE_File
           vmdetect_misc
+          APT28_SkinnyBoy_Dropper
+          ROKRAT_loader
+          Hancidoc
+          PoetRat_Python
+          cmstp_macro_builder_rev_a
+          js_RATDispenser
+          maldoc_indirect_function_call_2
+          maldoc_indirect_function_call_3
+          obfuscated_dde
+          Ramnit
+          FE_APT_Backdoor_Linux32_SLOWPULSE_2
+          trickbot_maldoc_embedded_dll_september_2020
       tags:
         - configuration
         - yara
