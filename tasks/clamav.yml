@@ -219,7 +219,14 @@
           malware_PlugX_config
           mimikatz
           ft_elf
+          ft_exe
           DebuggerPattern__RDTSC
+          maldoc_suspicious_strings
+          maldoc_structured_exception_handling
+          maldoc_function_prolog_signature
+          maldoc_OLE_file_magic_number
+          Contains_PE_File
+          vmdetect_misc
       tags:
         - configuration
         - yara
