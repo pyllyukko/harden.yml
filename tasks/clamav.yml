@@ -220,7 +220,6 @@
           mimikatz
           ft_elf
           ft_exe
-          DebuggerPattern__RDTSC
           maldoc_suspicious_strings
           maldoc_structured_exception_handling
           maldoc_function_prolog_signature
@@ -239,6 +238,30 @@
           Ramnit
           FE_APT_Backdoor_Linux32_SLOWPULSE_2
           trickbot_maldoc_embedded_dll_september_2020
+          reads_clipboard
+          cve_2014_6352
+          upx
+          embedded_macho
+          maldoc_find_kernel32_base_method_1
+          browser_pass
+          shylock
+          XYPayload
+          sysocmgr
+          maldoc_getEIP_method_1
+          cmd_shell
+          obfuscation_singlebyte_mov
+          vmdetect
+          Embedded_PE
+          dotnet_libraries
+          TrojanWin32CitadelSampleA
+          executable_au3
+          dbgdetect_funcs
+          MD5_Constants
+          RIPEMD160_Constants
+          _UPX_V200V290
+          RogueFakePAVSample
+          SHA1_Constants
+          Check_VBox_Guest_Additions
       tags:
         - configuration
         - yara
