@@ -3016,7 +3016,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Brian%20Carter%20-carterb/mal_pdf.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Brian%20Carter%20-carterb/injector_panel_sqlite.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Brian%20Carter%20-carterb/pony_config.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/naxonez/DebuggerCheck.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/checkpoint/lyceum_golang_backdoor.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/checkpoint/lyceum_dotnet_http_backdoor.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/checkpoint/goziv3_trojan.yar
@@ -3104,7 +3103,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/xanda/iframeRedKit.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/xanda/counterPHPredirectBHEK.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/xanda/MS12_052.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/clamsrch%20signatures/signsrch.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/one%20offs/Hancidoc_Dropper.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/one%20offs/snake_uroburos.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/one%20offs/nettraveler.yar
