@@ -262,6 +262,10 @@
           RogueFakePAVSample
           SHA1_Constants
           Check_VBox_Guest_Additions
+          Doki_Attack
+          blackhole_basic
+          blackhole2_css
+          Contains_VBE_File
       tags:
         - configuration
         - yara
@@ -3122,10 +3126,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/kevthehermit/AlienSpy.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/kevthehermit/Hangover_ron_babylon.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/kevthehermit/BlackShades.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/xanda/jjEncode.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/xanda/iframeRedKit.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/xanda/counterPHPredirectBHEK.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/xanda/MS12_052.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/one%20offs/Hancidoc_Dropper.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/one%20offs/snake_uroburos.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/one%20offs/nettraveler.yar
