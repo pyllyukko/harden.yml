@@ -267,7 +267,6 @@
           blackhole2_css
           Contains_VBE_File
           ft_gzip
-          mbedded_win_api
           shell_functions
           shell_names
           DarkComet_Keylogs_Memory
@@ -3025,7 +3024,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mikesxrs/Poisioned_Hurricane_Certs.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mikesxrs/Final1stspy_PDB.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mikesxrs/Cleaver_PDB.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/nex/embedded_win_api.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/nex/vm_detect.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/nex/embedded_macho.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/nex/embedded_pe.yar
