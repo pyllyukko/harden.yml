@@ -266,6 +266,20 @@
           blackhole_basic
           blackhole2_css
           Contains_VBE_File
+          ft_gzip
+          mbedded_win_api
+          shell_functions
+          shell_names
+          DarkComet_Keylogs_Memory
+          PM_Dyre_Delivery1
+          web_log_review
+          Mozi_Obfuscation_Technique
+          Cerberus
+          dbgdetect_files
+          N3utrino
+          LinuxDDOS_Agent
+          shellshock_generic
+          memory_shylock
       tags:
         - configuration
         - yara
@@ -2970,26 +2984,11 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/NCSC/SparrowDoor_xor.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/NCSC/SparrowDoor_apipatch.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Niels%20Warnars/encoded_vbs.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Niels%20Warnars/office_filetype.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Pasquale%20Stirparo/beef_pretty_theft.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Xylitol/Zeus_1134.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Xylitol/ibanking.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/contextis/Trojan_W32_Gh0stMiancha_1_0_0.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/EmersonElectricCo/ft_cab.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/EmersonElectricCo/ft_rar.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/EmersonElectricCo/misc_ooxml_core_properties.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/EmersonElectricCo/ft_rtf.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/EmersonElectricCo/ft_tar.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/EmersonElectricCo/ft_gzip.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/EmersonElectricCo/ft_java_class.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/EmersonElectricCo/ft_ole_cf.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/EmersonElectricCo/ft_exe.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/EmersonElectricCo/ft_elf.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/EmersonElectricCo/ft_office_open_xml.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/EmersonElectricCo/ft_zip.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/EmersonElectricCo/ft_pdf.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/EmersonElectricCo/ft_jar.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/EmersonElectricCo/misc_hexascii_pe_in_html.yara
+            - https://raw.githubusercontent.com/EmersonElectricCo/fsf/master/fsf-server/yara/misc_hexascii_pe_in_html.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Checkpoint/injector_ZZ_dotRunpeX.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Checkpoint/injector_ZZ_dotRunpeX_oldnew.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/WalmartGlobalTech/cs_hexlified_stager_sc.yar
