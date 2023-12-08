@@ -279,6 +279,7 @@
           LinuxDDOS_Agent
           shellshock_generic
           memory_shylock
+          CrowdStrike_CVE_2014_4113
       tags:
         - configuration
         - yara
