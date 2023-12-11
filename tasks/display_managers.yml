@@ -8,8 +8,11 @@
     - network
     - configuration
     - check
+    - lightdm
 - name: Configure LightDM
-  tags: configuration
+  tags:
+    - configuration
+    - lightdm
   when: stat_result.stat.exists
   become: true
   block:

@@ -250,6 +250,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `apache`
         * `hsts`
     * `ntp`
+    * `lightdm`
 * `banners`
 * [AAA](https://en.wikipedia.org/wiki/AAA_(computer_security)):
     * `accounting` (includes `sysstat`)
