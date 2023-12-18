@@ -195,17 +195,20 @@
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
       tags:
         - debian
-    - name: Mask tracker-miner-fs-3 systemd unit
+    - name: Mask tracker-miner-fs-3 & tracker-extract-3 systemd units
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
       become: true
       ansible.builtin.systemd:
-        name: tracker-miner-fs-3
+        name: '{{ item }}'
         scope: global
         masked: true
       register: result
       failed_when:
         - result.failed
         - '"Failed to connect to bus: No such file or directory" not in result.msg'
+      with_items:
+        - tracker-miner-fs-3
+        - tracker-extract-3
 
 # SHLL-6211
 - name: Remove extraneous shells from /etc/shells
