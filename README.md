@@ -41,6 +41,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 
 * Configure log retention time to be 6 months
 * Configures `logrotate` to `shred` files
+    * **NOTE**: Read the fine print in [SHRED(1)](https://www.man7.org/linux/man-pages/man1/shred.1.html): "CAUTION: shred assumes the file system and hardware overwrite data in place.  Although this is common, many platforms operate otherwise."
 * Run `ansible-playbook --list-tasks --tags logging harden.yml` for a full list
 
 ### Accounting
