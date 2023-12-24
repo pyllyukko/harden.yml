@@ -280,6 +280,25 @@
           shellshock_generic
           memory_shylock
           CrowdStrike_CVE_2014_4113
+          PlugX
+          misc_php_exploits
+          CryptoLocker_set1
+          silent_banker
+          Trojan
+          BLOWFISH_Constants
+          misc_hexascii_pe_in_html
+          embedded_pe
+          SHA512_Constants
+          dbgdetect_procs
+          wannacry_1
+          MachO_File_pyinstaller
+          SHA256_Constants
+          redkit_bin_basic
+          Hacktool_Strings_p0wnedShell
+          TrojanDownloaderCbeplaySample
+          mime_mso
+          CrowdStrike_CVE_2014_4113
+          WHIRLPOOL_Constants
       tags:
         - configuration
         - yara
