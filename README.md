@@ -191,6 +191,8 @@ Creates bunch of `pam-config`s that are toggleable with `pam-auth-update`:
 1. <span id="fn1"/>Not a `pam-config`, but a modification to existing `/etc/pam.d/` files
 2. <span id="fn2"/>For all login methods and not just the console login
 3. <span id="fn3"/>Disabled by default and requires [libpam-ssh-agent-auth](https://packages.debian.org/sid/libpam-ssh-agent-auth) package. Needs to have higher priority than `krb5` or other password auths.
+    * `sshd` needs to have `AllowAgentForwarding yes`
+    * You need to configure `sudo` with `Defaults env_keep += "SSH_AUTH_SOCK"`
 
 Usage
 -----
