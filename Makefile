@@ -38,6 +38,11 @@ pam-configs: /usr/share/pam-configs/tally2 /usr/share/pam-configs/access /usr/sh
 .PHONY: FORCE
 FORCE:
 
+# TODO: ldap
+.PHONY: crls
+crls:
+	umask 022; for i in /etc/ssl/certs/????????.*; do crls=($$(openssl x509 -in "$${i}" -noout -ext crlDistributionPoints 2>/dev/null | sed -n 's/^\s\+URI:\(http.\+$$\)/\1/p')); [ $${#crls[*]} -eq 1 -a -n "$${crls[0]}" ] && { wget -nv "$${crls[0]}" -O "$${i/./.r}"; openssl crl -in "$${i/./.r}" -inform DER -CAfile "$${i}" -noout; }; done
+
 define make-moduli-candidates-target
 /etc/ssh/moduli-$1.candidates:
 	ssh-keygen -M generate -O bits=$1 $$@
