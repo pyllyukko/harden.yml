@@ -1366,7 +1366,6 @@
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Magento_suspicious.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Mailers.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_MedusaHTTP_2019.yar
-            - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_MiniAsp3_mem.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Monero_Miner_installer.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_NionSpy.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_PittyTiger.yar
@@ -1417,7 +1416,6 @@
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/RANSOM_DMALocker.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/RANSOM_DoublePulsar_Petya.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/RANSOM_Erebus.yar
-            - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/RANSOM_GPGQwerty.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/RANSOM_Maze.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/RANSOM_PetrWrap.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/RANSOM_Petya.yar
@@ -3019,7 +3017,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mikesxrs/CN_group_PDB.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mikesxrs/android_tempting_cedar_spyware.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mikesxrs/Greenbug_PDB.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mikesxrs/BADPATCH_PDB.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mikesxrs/JRAT.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mikesxrs/Nitlove_PoS.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mikesxrs/KASPERAGENT_MICROPSIA_PDB.yar
@@ -3042,7 +3039,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mikesxrs/REHASHED_PDB.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mikesxrs/AppleJeus_PDB.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mikesxrs/Poisioned_Hurricane_Certs.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mikesxrs/Final1stspy_PDB.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mikesxrs/Cleaver_PDB.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/nex/vm_detect.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/nex/embedded_macho.yar
@@ -3190,7 +3186,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Florian%20Roth/apt_apt28.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Florian%20Roth/apt_turla.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Florian%20Roth/Havex_Trojan.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Florian%20Roth/POSCardStealer_SpyBot.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Florian%20Roth/generic_dumps.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Florian%20Roth/Havex_Trojan_PHP_Server.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/unknown/SANSDFIR.yara
@@ -3522,7 +3517,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/kaspersky/apt_regin_vfs.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/kaspersky/apt_duqu2_drivers.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/kaspersky/apt_equation_doublefantasy_genericresource.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/kaspersky/Crime_eyepyramid.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/kaspersky/apt_duqu2_loaders.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/kaspersky/apt_regin_2013_64bit_stage1.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/kaspersky/apt_regin_dispatcher_disp_dll.yar
@@ -3537,13 +3531,11 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/openanalysis/andromeda.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Fidelis/crime_win_PWS_Fareit.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Fidelis/apt_nix_elf_derusbi.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Fidelis/crime_win32_exe_rat_netwire.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Fidelis/apt_nix_elf_Derusbi_Linux_SharedMemCreation.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Fidelis/Ursnif_report_variant_memory.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Fidelis/apt_nix_elf_derusbi_kernelModule.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Fidelis/apt_nix_elf_Derusbi_Linux_Strings.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Fidelis/AlienSpy.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Fidelis/DarkCometDownloader.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Fidelis/network_traffic_njRAT.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Fidelis/win_exe_njRAT.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/sentinelone/iOS.GuiInject.yara
@@ -3577,7 +3569,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/EzuriLoaderOSX.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/OSX_MacSpy.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/Careto_OSX_SBD.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/OSX_Proton_B_systemd.1.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/EzuriLoader.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/Keyboy_document_ppsx_sct.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/dbgdetect_funcs.yar
