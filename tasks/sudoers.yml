@@ -55,18 +55,25 @@
       changed_when:
         - '"parsed OK" not in result.stdout'
       tags: check
-    - name: Stat /etc/sudoers.d/vagrant
-      ansible.builtin.stat:
-        path: /etc/sudoers.d/vagrant
-      register: result
-      tags: check
-    - name: Fix /etc/sudoers.d/vagrant
-      when: result.stat.exists
+    # As we define "Defaults noexec" in our main sudoers file, sudo will "break" if
+    # there are includes without explicit exec that match our "become: true" tasks.
+    # Usually these are catchall rules like "vagrant ALL=(ALL) NOPASSWD: ALL".
+    #
+    # SUDOERS(5): "Where there are multiple matches, the last match is used (which is not necessarily the most specific match)."
+    - name: Find files in /etc/sudoers.d/
+      ansible.builtin.find:
+        paths: /etc/sudoers.d
+        file_type: file
+        excludes: 'README'
+      register: sudoers_includes
+    - name: Fix NOPASSWD rules in /etc/sudoers.d/ to have explicit EXEC
       ansible.builtin.replace:
-        path: /etc/sudoers.d/vagrant
-        regexp: '^(vagrant\s+ALL=\(ALL\)\s+NOPASSWD:)(\s*ALL)$'
-        replace: '\g<1>EXEC:\g<2>'
+        path: '{{ item.path }}'
+        regexp: '^(.+\s+ALL\s*=\s*\(ALL(:ALL)?\)\s*NOPASSWD:)(\s*ALL)$'
+        replace: '\g<1>EXEC:\g<3>'
         validate: 'visudo -cs -f %s'
+      with_items: "{{ sudoers_includes.files }}"
+      tags: configuration
     - name: 'Copy /etc/sudoers.new to /etc/sudoers'
       ansible.builtin.copy:
         remote_src: true
