@@ -8,6 +8,7 @@
   tags:
     - packages
     - slackware
+
 - name: Install sudo (Debian)
   become: true
   ansible.builtin.apt:
@@ -17,6 +18,7 @@
   tags:
     - packages
     - debian
+
 - name: 'Configure /etc/sudoers'
   when: >
     ansible_distribution == "Slackware" or
@@ -88,6 +90,7 @@
       ansible.builtin.file:
         path: /etc/sudoers.new
         state: absent
+
 # https://www.raspberrypi.org/documentation/configuration/security.md
 - name: 'Remove /etc/sudoers.d/010_pi-nopasswd'
   become: true
