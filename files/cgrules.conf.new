@@ -32,5 +32,6 @@ root:/usr/sbin/rpc.gssd		net_cls daemons/rpc-gssd/
 rpc:/sbin/rpcbind		net_cls daemons/rpc/
 rpc:/sbin/rpc.statd		net_cls daemons/rpc/
 root:/usr/sbin/usbguard-daemon	net_cls daemons/usbguard/
+root:/usr/sbin/pcscd		net_cls daemons/pcscd/
 @users				cpu,cpuacct,net_cls	users/%u
 # End of file
