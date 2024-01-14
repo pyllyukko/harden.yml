@@ -203,20 +203,16 @@
         content: |
           sigs.InterServer.net.HEX.Topline.malware.string.11334.179
           PoetRat_Python
-          with_sqlite
           php_uname
           php_malfunctions
           blackhole_basic
           PM_Email_Sent_By_PHP_Script
-          CAP_HookExKeylogger
           UPX
           Ramnit
           malware_lodeinfo_c2_cmd_xor_bruteforce
           malware_lodeinfo_network_decode_process_xor_bruteforce
           CS_encrypted_beacon_x86
-          malware_shellcode_hash
           Windows_Trojan_BloodAlchemy_de591c5a
-          malware_PlugX_config
           mimikatz
           ft_elf
           ft_exe
@@ -224,89 +220,46 @@
           maldoc_structured_exception_handling
           maldoc_function_prolog_signature
           maldoc_OLE_file_magic_number
-          Contains_PE_File
           vmdetect_misc
-          APT28_SkinnyBoy_Dropper
           ROKRAT_loader
-          Hancidoc
           PoetRat_Python
           cmstp_macro_builder_rev_a
-          js_RATDispenser
           maldoc_indirect_function_call_2
           maldoc_indirect_function_call_3
-          obfuscated_dde
           Ramnit
-          FE_APT_Backdoor_Linux32_SLOWPULSE_2
-          trickbot_maldoc_embedded_dll_september_2020
-          reads_clipboard
-          cve_2014_6352
           upx
-          embedded_macho
           maldoc_find_kernel32_base_method_1
           browser_pass
           shylock
-          XYPayload
           sysocmgr
           maldoc_getEIP_method_1
-          cmd_shell
-          obfuscation_singlebyte_mov
           vmdetect
-          Embedded_PE
           dotnet_libraries
-          TrojanWin32CitadelSampleA
           executable_au3
-          dbgdetect_funcs
           MD5_Constants
           RIPEMD160_Constants
-          _UPX_V200V290
-          RogueFakePAVSample
           SHA1_Constants
-          Check_VBox_Guest_Additions
-          Doki_Attack
           blackhole_basic
           blackhole2_css
-          Contains_VBE_File
           ft_gzip
-          shell_functions
-          shell_names
           DarkComet_Keylogs_Memory
-          PM_Dyre_Delivery1
-          web_log_review
-          Mozi_Obfuscation_Technique
-          Cerberus
-          dbgdetect_files
-          N3utrino
-          LinuxDDOS_Agent
-          shellshock_generic
-          memory_shylock
           CrowdStrike_CVE_2014_4113
           PlugX
-          misc_php_exploits
           CryptoLocker_set1
           silent_banker
           Trojan
           BLOWFISH_Constants
-          misc_hexascii_pe_in_html
-          embedded_pe
           SHA512_Constants
-          dbgdetect_procs
           wannacry_1
-          MachO_File_pyinstaller
           SHA256_Constants
-          redkit_bin_basic
           Hacktool_Strings_p0wnedShell
-          TrojanDownloaderCbeplaySample
           mime_mso
           CrowdStrike_CVE_2014_4113
           WHIRLPOOL_Constants
-          FE_APT_Webshell_PL_SLIGHTPULSE_1
-          FE_APT_Webshell_PL_SLIGHTPULSE_1
           cmstp_macro_builder_rev_a
           Windows_Trojan_ShadowPad_0d899241
-          ChinaChopper_Generic
           md5_825a3b2a6abbe6abcdeda64a73416b3d
           md5_e03b5df1fa070675da8b6340ff4a67c2
-          EXPL_CVE_2021_31166_Accept_Encoding_May21_1
           Methodology_Shortcut_HotKey
           Methodology_Contains_Shortcut_OtherURIhandlers
           Methodology_Suspicious_Shortcut_IconNotFromExeOrDLLOrICO
@@ -314,49 +267,23 @@
           Methodology_Suspicious_Shortcut_LOLcommand
           Methodology_Suspicious_Shortcut_WebDAV
           Methodology_Suspicious_Shortcut_ScriptURL
-          apt_all_JavaScript_ScanboxFramework_obfuscated
-          FE_APT_Webshell_PL_RAPIDPULSE_1
-          FE_APT_Trojan_PL_RADIALPULSE_3
           hikit
-          FE_APT_Trojan_PL_QUIETPULSE
           eval_with_comments
           PoetRat_Python
           PoetRat_Python
           PoetRat_Python
-          Hancidoc
-          Persistence_Agent_MacOS
-          Persistence_Agent_MacOS
-          Persistence_Agent_MacOS
-          Persistence_Agent_MacOS
-          Persistence_Agent_MacOS
           FE_CPE_MS17_010_RANSOMWARE
           APT1_WEBC2_TABLE
-          js_downloader_gootloader
-          FE_Webshell_PL_ATRIUM_1
           EXPL_Log4j_CallBackDomain_IOCs_Dec21_1
           EXPL_Log4j_CVE_2021_44228_Dec21_Hard
           SUSP_JDNIExploit_Indicators_Dec21
           PoetRat_Doc
-          obfuscated_dde
           RTF_Byte_Nibble_Obfuscation_method1
-          FE_APT_Trojan_PL_RADIALPULSE_2
-          FE_APT_Trojan_PL_RADIALPULSE_2
           early_october2015_vawtrak_dropper
           early_october2015_vawtrak_dropper
           Suspicious_PowerShell_Code_1
           Suspicious_PowerShell_Code_1
-          FE_APT_Webshell_PL_HARDPULSE
-          FE_APT_Webshell_PL_HARDPULSE
           DarkComet_Keylogs_Memory
-          doc_efax_buran
-          OSX_backdoor_EvilOSX
-          OSX_backdoor_EvilOSX
-          jRat
-          jRat
-          win_ostap_jse
-          win_ostap_jse
-          IQY_File
-          FE_APT_Backdoor_Linux32_SLOWPULSE_2
           manitsme
       tags:
         - configuration
@@ -568,7 +495,6 @@
             - apt_waterbear.yar
             - apt_waterbug.yar
             - apt_webmonitor_rat.yar
-            - apt_webshell_chinachopper.yar
             - apt_wildneutron.yar
             - apt_win_plugx.yar
             - apt_winnti_hdroot.yar
@@ -669,7 +595,6 @@
             - exploit_cve_2015_2545.yar
             - exploit_cve_2015_5119.yar
             - exploit_cve_2017_9800.yar
-            - exploit_cve_2021_31166.yar
             - exploit_cve_2021_33766_proxytoken.yar
             - exploit_cve_2022_22954_vmware_workspace_one.yar
             - exploit_cve_2023_38146.yar
@@ -757,8 +682,6 @@
             - gen_nopowershell.yar
             - gen_onenote_phish.yar
             - gen_osx_backdoor_bella.yar
-            - gen_osx_evilosx.yar
-            - gen_osx_pyagent_persistence.yar
             - gen_p0wnshell.yar
             - gen_pirpi.yar
             - gen_powerkatz.yar
@@ -1370,7 +1293,6 @@
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/APT_Pipcreat.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/APT_RedLeaves.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/APT_Sofacy_Bundestag.yar
-            - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/APT_TradeSecret.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/APT_Turla_Neuron.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/APT_Windigo_Onimiki.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/APT_Winnti.yar
@@ -1389,7 +1311,6 @@
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Backoff.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_BlackRev.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_BlackWorm.yar
-            - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_CAP_HookExKeylogger.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Chicken.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Citadel.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Cloaking.yar
@@ -1433,14 +1354,12 @@
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Predator.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_PurpleWave.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_PyPI.yar
-            - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Pyinstaller_OSX.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Rockloader.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Rovnix.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Sakurel.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Sendsafe.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Shifu.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Spora.yar
-            - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Sqlite.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Tedroo.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Tinba.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_TreasureHunt.yar
@@ -1547,7 +1466,6 @@
             - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/windealer.yara
             - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/maldocinpdf.yara
             - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/nanocore.yara
-            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/shellcode.yara
             - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/phpfilemanager.yara
             - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/b374k.yara
             - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/RestyLink.yara
@@ -1569,7 +1487,6 @@
             - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/formbook.yara
             - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/bebloh.yara
             - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/flubot.yara
-            - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/plugx.yara
             - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/noderat.yara
             - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/inetget.yara
             - https://raw.githubusercontent.com/JPCERTCC/jpcert-yara/main/other/StealthWorker.yara
@@ -2913,7 +2830,6 @@
             - https://raw.githubusercontent.com/malpedia/signator-rules/main/rules/win.zumanek_auto.yar
             - https://raw.githubusercontent.com/malpedia/signator-rules/main/rules/win.zupdax_auto.yar
             - https://raw.githubusercontent.com/malpedia/signator-rules/main/rules/win.zxxz_auto.yar
-            - https://raw.githubusercontent.com/citizenlab/malware-signatures/master/payloads.yara
             - https://raw.githubusercontent.com/citizenlab/malware-signatures/master/filetypes.yara
             - https://raw.githubusercontent.com/godaddy/yara-rules/master/packers/sogu_packer.yara
             - https://raw.githubusercontent.com/godaddy/yara-rules/master/packers/rlpack.yara
@@ -2927,8 +2843,6 @@
             - https://raw.githubusercontent.com/godaddy/yara-rules/master/mimikatz.yara
             - https://raw.githubusercontent.com/godaddy/yara-rules/master/turla.yara
             - https://raw.githubusercontent.com/DidierStevens/DidierStevensSuite/master/maldoc.yara
-            - https://raw.githubusercontent.com/DidierStevens/DidierStevensSuite/master/contains_vbe_file.yara
-            - https://raw.githubusercontent.com/DidierStevens/DidierStevensSuite/master/contains_pe_file.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Vinsula/Vinsula_index.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/plxsertr/plxsertr_index.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/RSA/RSA_index.yar
@@ -2993,7 +2907,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Tenable/fopo_webshell.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Tenable/obfuscated_php.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Tenable/cerber3.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Elastic/Mozi_Obfuscation_Technique.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Elastic/APT_APT40_Implant_June2020.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Elastic/Linux_Trojan_BPFDoor_1.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Elastic/Windows_Wiper_HERMETICWIPER.yar
@@ -3064,7 +2977,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Xylitol/Zeus_1134.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Xylitol/ibanking.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/contextis/Trojan_W32_Gh0stMiancha_1_0_0.yar
-            - https://raw.githubusercontent.com/EmersonElectricCo/fsf/master/fsf-server/yara/misc_hexascii_pe_in_html.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Checkpoint/injector_ZZ_dotRunpeX.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Checkpoint/injector_ZZ_dotRunpeX_oldnew.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/WalmartGlobalTech/cs_hexlified_stager_sc.yar
@@ -3100,8 +3012,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mikesxrs/Poisioned_Hurricane_Certs.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mikesxrs/Cleaver_PDB.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/nex/vm_detect.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/nex/embedded_macho.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/nex/embedded_pe.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/venom23/Neurevt.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/tekdefense/DarkComet.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/CyberDefenses/u34.yar
@@ -3136,7 +3046,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/1aN0rmus/exe_rules.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/1aN0rmus/rtf_rules.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/1aN0rmus/memory.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Damian%20Baran/rule%20LinuxDDOS_Agent.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/McAfee/kraken_ransomware.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/McAfee/CredStealer.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/McAfee/W97M_Vawtrak_dropper.yar
@@ -3193,11 +3102,9 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/kevthehermit/njRat.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/kevthehermit/ShadowTech.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/kevthehermit/Pandora.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/kevthehermit/jRat.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/kevthehermit/AlienSpy.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/kevthehermit/Hangover_ron_babylon.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/kevthehermit/BlackShades.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/one%20offs/Hancidoc_Dropper.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/one%20offs/snake_uroburos.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/one%20offs/nettraveler.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/one%20offs/mwi_document.yar
@@ -3214,7 +3121,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/one%20offs/CoreFlood_ldr.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/ReversingLabs/Rana_Android_resources.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/ReversingLabs/BadRabbitRansomware.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/ReversingLabs/obfuscated_dde.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/ReversingLabs/Unpacker_Stub.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/ReversingLabs/image_eval_hunt.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Seth%20Hardy/leverage.yar
@@ -3226,7 +3132,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Seth%20Hardy/urausy_skypedat.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/jackcr/gh0st.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/jackcr/pivy.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/jackcr/shylock.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Stairwell/NK_GOLDBACKDOOR_inital_shellcode.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Stairwell/NK_GOLDBACKDOOR_LNK_payload.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Stairwell/NK_GOLDBACKDOOR_injected_shellcode.yar
@@ -3255,7 +3160,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Intezer/IPStorm.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Intezer/Lazarus_2020.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Intezer/WatchBog.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Intezer/Doki_Attack.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Intezer/APT15.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Intezer/AgeLocker.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/dragos/olympic_destroyer_service_manipulator.yar
@@ -3264,12 +3168,10 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/dragos/crashoverride_configReader.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/dragos/embedded_psexec.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/InQuest/Microsoft_Office_Document_with_Embedded_Flash_File.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/InQuest/Excel_IQY_File.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/InQuest/Excel_IQY_File_With_file_extension.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/InQuest/RTF_Byte_Nibble_Obfuscation_method.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/InQuest/Excel_IQY_File_Suspicious_Request.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/InQuest/AgentTesla.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/InQuest/Embedded_PE_File.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/proofpoint/AdGholas_mem_MIME.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/proofpoint/abaddon.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/proofpoint/blackmoon_banker.yar
@@ -3278,7 +3180,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/WithSecure/ducktail_artifacts.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/adamburt/win_Dexter.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/adamburt/win_trojan-poweliks-dropper.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/adamburt/*nix_shellshock.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/adamburt/win_BackoffPOS.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Novetta/hikit.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Novetta/zox.yar
@@ -3288,7 +3189,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Cluster%2025/APT29_HTMLSmuggling_ZIP_82733_00001.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Cluster%2025/GhostWriter_MicroBackdoor_72632_00001.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Cluster%2025/APT28_SkinnyBoy_Launcher.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Cluster%2025/APT28_SkinnyBoy_Dropper.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Cluster%2025/UNC1222_HermeticWiper_23433_10001.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Cluster%2025/GhostWriter_MicroLoader_72632_00001.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Kevin%20Falcoz/Zegost_Trojan.yar
@@ -3298,7 +3198,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Kevin%20Falcoz/xtreme_rat.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Kevin%20Falcoz/universal_1337_stealer_serveur.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Kevin%20Falcoz/Bublik_Downloader.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/codewatchorg/redkit_bin_basic.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/codewatchorg/angler_ek_checkpoint.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Dragonthreatlabs/apt_win_mocelpa.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/securityartwork/linux_Okiru.yar
@@ -3350,7 +3249,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Adware.Dlhelper.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Backdoor.Fynloski.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Trojan.Sirefef.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Trojan.Citadel.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Adware.BrowseFox.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Rogue.LiveSP.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Rogue.Winwebsec.yar
@@ -3371,14 +3269,12 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/PUP.Systweak.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Adware.Vitruvian.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Adware.NextLive.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Rogue.FakePAV.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Adware.Genieo.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Virus.Madang.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Malware.BitCoinMiner.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Trojan.GBot.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Trojan.Necurs.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Trojan.Kovter.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Trojan.Cbeplay.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Adware.Downloader.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Trojan.Frethog.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/g00dv1n/Adware.WebTools.yar
@@ -3408,7 +3304,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/CISA/ISAACWIPER_BYTES.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/CISA/CADDYWIPER.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/vred/W32HavexNetscan.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/forcepoint/CVE_2014_6352.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/forcepoint/f0xy.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/forcepoint/Zbot.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/malwarebytes/MonkerTrojan.yar
@@ -3416,7 +3311,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/paloalto/webshell_chinachopper_oab.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/paloalto/cobalt_gang_builder.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/h3x2b/lin_torlus.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/h3x2b/obfuscation.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/h3x2b/win_bookworm.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/h3x2b/win_spora.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/h3x2b/nccgroup_stdolelink.yara
@@ -3526,25 +3420,17 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/bloodbank.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/steadypulse.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/Backdoor_Win_C3_1.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/radialpulse2.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/MTI_Hunting_INDUSTROYERv2_Strings.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/radialpulse.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/bloodbank2.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/atrium2.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/thinblood.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/cleanpulse2.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/radialpulse3.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/atrium.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/slowpulse2.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/pulsejump.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/rapidpulse.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/bloodmine2.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/Dropper_Win_Darkside_1.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/quietpulse.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/hardpulse.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/MTI_Hunting_AsRockDriver_Exploit_PDB.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/pacemaker_linux64.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/slightpulse.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/MTI_Hunting_AsRockDriver_Exploit_Generic.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Mandiant/pulsecheck.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Cado%20Security/Wiper_Ukr_Feb_2022.yar
@@ -3599,14 +3485,12 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Fidelis/win_exe_njRAT.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/sentinelone/iOS.GuiInject.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/HorribleCanoe/delphi-wlan.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/HorribleCanoe/reads_clipboard.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/HorribleCanoe/ejects_cdrom.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/HorribleCanoe/compiled_autoit.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/HorribleCanoe/lowers_security.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/HorribleCanoe/connection_manager_phonebook.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Nick%20Hoffman/Check_VBox_Description.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Nick%20Hoffman/Check_VmTools.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Nick%20Hoffman/N3utrino.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Nick%20Hoffman/logpos.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Nick%20Hoffman/Dropper_Hancitor.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Nick%20Hoffman/Check_Dlls.yar
@@ -3615,7 +3499,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Nick%20Hoffman/Check_VBox_VideoDrivers.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Nick%20Hoffman/Check_VMWare.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Nick%20Hoffman/Check_Qemu_DeviceMap.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Nick%20Hoffman/Check_VBox_GuestAdditions.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/evild3ad%20/contains_userform_object_3.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/evild3ad%20/mime_mso_activemime_base64.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/evild3ad%20/contains_userform_object_1.yara
@@ -3630,12 +3513,9 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/Careto_OSX_SBD.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/EzuriLoader.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/Keyboy_document_ppsx_sct.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/dbgdetect_funcs.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/Keyboy_mobile_titan.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/Careto_CnC_domains.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/Careto_CnC.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/dbgdetect_files.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/dbgdetect_procs.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/CVE2012XXXX.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/OSX_Proton.B.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/alienvault/FatalRAT_unpacked.yar
@@ -3650,16 +3530,12 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/phish%20me/PM_docx_with_vba_bin.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/phish%20me/criakl_metadata.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/phish%20me/PM_Dyre_Delivery%20:%20dyre%20cryptowall%20crimeware.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/phish%20me/PM_Dyre_Delivery%20:%20dyre%20cryptowall%20crimeware2.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/phish%20me/cryptowall_phish.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/phish%20me/PM_Zip_With_Exe.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/phish%20me/PM_outlook_setting_pdf_exe.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/phish%20me/PowerPoint_Embedded_OLE.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/wp_shell.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/UPX_V200V290.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/scanline_mcafee.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/misc_php_exploits.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/shell_names.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/procdump.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/winrar_4xx.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/dark_edition.yar
@@ -3674,16 +3550,13 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/mpress_2_xx_net%20:%20Packer.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/windows_credentials_editor.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/unknown_creds_dump.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/cmd_shell.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/nbtscan.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/html_exploit_GIF.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/web_log_review.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/gsec_generic.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/zend_framework.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/beep_remote_shell.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/acunetix_web_scanner.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/bcp_sql_tool.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/shell_functions.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/LNK_files.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/GIF_exploit.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/patrickrolsen/luxnet.yar
@@ -3705,18 +3578,12 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Blackberry/Snake.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Blackberry/HeaderTip.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/HP_Security/xll_custom_builder.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/HP_Security/trickbot_maldoc_embedded_dll_september_2020.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/HP_Security/doc_efax_buran.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/HP_Security/js_downloader_gootloader.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/HP_Security/js_RATDispenser.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/HP_Security/win_l0rdix.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/HP_Security/win_ostap_jse.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Jipe_/Dotfuscator.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Jipe_/office_document_vba.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Jipe_/Swrort.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Jipe_/XTremRat.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Jipe_/AutoIT.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Jipe_/Cerberus.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Jipe_/jRAT_conf.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Jipe_/NetWiredRC_B.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Jipe_/Ice-IX.yar
