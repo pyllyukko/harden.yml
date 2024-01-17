@@ -13,7 +13,6 @@
           - bootlogd
           - tiger
           - autolog
-          - chkrootkit
           - needrestart
           - arpwatch
           - usbguard
@@ -25,6 +24,12 @@
       tags:
         - packages
         - services
+    - name: Install chkrootkit
+      tags:
+        - chkrootkit
+        - packages
+      ansible.builtin.apt:
+        name: chkrootkit
     - name: Symlink /usr/lib/tiger/systems/Linux/5 -> 4
       ansible.builtin.file:
         src: /usr/lib/tiger/systems/Linux/4
