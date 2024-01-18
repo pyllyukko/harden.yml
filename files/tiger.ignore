@@ -21,3 +21,6 @@ The process `(collectd|rsyslogd)' is listening on socket [0-9]+ \(UDP\) on every
 The process `tor' is listening on socket 90(01|30|5[01]) \(TCP on (every|[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+) interface\) is run by debian-tor\.
 The process `mpd' is listening on socket 6600 \(TCP on every interface\) is run by mpd\.
 The process `systemd' is listening on socket 6600 \(TCP\) on every interface\.
+The process `smtpd' is listening on socket 25 \(TCP on every interface\) is run by postfix\.
+The process `master' is listening on socket 25 \(TCP\) on every interface\.
+The process `kismet' is listening on socket [23]501 \(TCP on (every|[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+) interface\) is run by kismet\.
