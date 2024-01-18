@@ -97,34 +97,64 @@
   become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   tags:
-    - configuration
     - chkrootkit
     - debian
   block:
+    # See https://github.com/pyllyukko/harden.yml/wiki/chkrootkit
     - name: Create /etc/chkrootkit/chkrootkit.ignore
+      tags: configuration
       ansible.builtin.copy:
         dest: "{{ chkrootkit_conf_dir }}/chkrootkit.ignore"
         owner: root
         group: root
         mode: '0400'
         content: |
-          ^-e The following suspicious files and directories were found:$
-          ^$
-          ^ ?/usr/lib/debug/\.build-id$
-          ^ ?/usr/lib/libreoffice/share/\.registry$
-          ^ ?/usr/lib/ruby/vendor_ruby/rubygems/ssl_certs/\.document$
-          ^ ?/usr/lib/pypy/lib_pypy/ctypes_config_cache/\.empty$
-          ^eth[0-9]+: PACKET SNIFFER\(/usr/sbin/dhcpcd\[[0-9]+\](, /usr/sbin/collectd\[[0-9]+\])?\)$
+          ^/usr/lib/debug/\.build-id$
+          ^/usr/lib/libreoffice/share/\.registry$
+          ^/usr/lib/jvm/\.java-1\.17\.0-openjdk-arm64\.jinfo$
+          ^/usr/lib/pypy/lib_pypy/ctypes_config_cache/\.empty$
+          ^/usr/lib/python3/dist-packages/numpy/(core/include/numpy/\.doxyfile|f2py/tests/src/(f2cmap/\.f2py_f2cmap|assumed_shape/\.f2py_f2cmap))$
+          ^/usr/lib/python3/dist-packages/matplotlib/tests/(tinypages/(_static/)?\.gitignore|baseline_images/\.keep)$
+          ^/usr/lib/python3/dist-packages/matplotlib/backends/web_backend/\.(prettier(ignore|rc)|eslintrc\.js)$
+          ^/usr/lib/ruby/gems/3\.1\.0/gems/typeprof-0\.21\.2/vscode/.(gitignore|vscode(ignore)?)$
+          ^/usr/lib/ruby/vendor_ruby/rubygems/(optparse|ssl_certs|tsort)/\.document$
     - name: Configure /etc/cron.daily/chkrootkit to use chkrootkit.ignore
+      tags: configuration
       ansible.builtin.replace:
         path: /etc/cron.daily/chkrootkit
         regexp: '^(IGNORE_FILE=).*'
         replace: '\g<1>{{ chkrootkit_conf_dir }}/chkrootkit.ignore'
-    - name: Enable daily chkrootkit run
+    - name: Configure chkrootkit.conf
+      tags: configuration
       ansible.builtin.replace:
         path: "{{ chkrootkit_conf_dir }}/chkrootkit.conf"
-        regexp: '^(RUN_DAILY=).*'
+        regexp: '^({{ item }}=).*'
         replace: '\g<1>"true"'
+      with_items:
+        - RUN_DAILY
+        - DIFF_MODE
+    - name: Stat /var/log/chkrootkit/log.today
+      tags: check
+      ansible.builtin.stat:
+        path: /var/log/chkrootkit/log.today
+      register: stat_log_today
+    - name: Stat /var/log/chkrootkit/log.expected
+      tags: check
+      ansible.builtin.stat:
+        path: /var/log/chkrootkit/log.expected
+      register: stat_log_expected
+    - name: Copy /var/log/chkrootkit/log.today -> /var/log/chkrootkit/log.expected
+      tags: configuration
+      when:
+        - stat_log_today.stat.exists
+        - not stat_log_expected.stat.exists
+      ansible.builtin.copy:
+        src: /var/log/chkrootkit/log.today
+        dest: /var/log/chkrootkit/log.expected
+        remote_src: true
+        owner: root
+        group: root
+        mode: '0600'
 
 # Ansible's apt module doesn't install suggested packages,
 # but we don't want them later on either.
