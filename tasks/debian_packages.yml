@@ -45,18 +45,28 @@
       ansible.builtin.stat:
         path: /etc/tiger
       register: stat_tiger
-    - name: Copy tiger.ignore
+    - name: Tiger configs
       tags: configuration
       when:
         - stat_tiger.stat.exists
         - stat_tiger.stat.isdir
-      ansible.builtin.copy:
-        src: tiger.ignore
-        dest: /etc/tiger/tiger.ignore
-        owner: root
-        group: root
-        mode: '0600'
-        backup: true
+      block:
+        - name: Copy tiger.ignore
+          ansible.builtin.copy:
+            src: tiger.ignore
+            dest: /etc/tiger/tiger.ignore
+            owner: root
+            group: root
+            mode: '0600'
+            backup: true
+        - name: Copy tigerrc
+          ansible.builtin.template:
+            src: tigerrc.j2
+            dest: /etc/tiger/tigerrc
+            owner: root
+            group: root
+            mode: '0600'
+            backup: true
 
 - name: Comment out user.max_user_namespaces=0 in /usr/lib/sysctl.d/10-hardening.conf
   tags:

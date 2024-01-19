@@ -1,0 +1,401 @@
+#
+# 'rc' file for tiger.  This file is preprocessed, and thus
+# can *only* contain variable assignments and comments.
+#
+#------------------------------------------------------------------------
+#
+# Select checks to perform.  Specify 'N' (uppercase) for checks
+# you don't want performed.
+#
+# Notice this does not affect which checks will be performed through
+# the cron job (Tiger's cronrc file governs that, usually under
+# /usr/local/etc/tiger or /etc/tiger), it only affects which
+# checks will be performed when running the full security checks
+# (i.e. 'tiger')
+#
+#
+TigerNoBuild=Y			# C files are corrupted (ouch.)
+Tiger_Check_PASSWD=Y		# Fast
+Tiger_Check_PASSWD_FORMAT=N     # Fast - not needed if on systems with pwck
+Tiger_Check_PASSWD_SHADOW=Y	# Time varies on # of users
+Tiger_Check_PASSWD_NIS=N	# Time varies on # of users
+Tiger_Check_GROUP=Y		# Fast
+Tiger_Check_ACCOUNTS=Y		# Time varies on # of users
+Tiger_Check_RHOSTS=Y		# Time varies on # of users
+Tiger_Check_NETRC=Y		# Time varies on # of users
+Tiger_Check_ALIASES=Y		# Fast
+Tiger_Check_CRON=Y		# Fast
+Tiger_Check_EXPORTS=Y		# Fast
+Tiger_Check_SERVICES=Y		# Could be faster, not bad though
+Tiger_Check_KNOWN=Y		# Fast
+Tiger_Check_PERMS=Y		# Could be faster, not bad though
+Tiger_Check_SIGNATURES=N	# Several minutes
+Tiger_Check_FILESYSTEM=Y	# Time varies on disk space... can be hours
+Tiger_Check_ROOTDIR=Y           # Fast, only 2 checks
+Tiger_Check_ROOT_ACCESS=Y       # Fast
+Tiger_Check_PATH=Y		# Fast for just root... varies for all 
+Tiger_Check_EMBEDDED=Y		# Several minutes
+Tiger_Check_BACKUPS=Y           # Fast
+Tiger_Check_LOGFILES=Y          # Fast
+Tiger_Check_USERUMASK=Y         # Fast
+Tiger_Check_ETCISSUE=N		# Fast, needs to be customised
+Tiger_Check_STRICTNW=Y		# Fast - stringent N/W server checks
+Tiger_Check_LISTENING=Y		# Fast
+Tiger_Check_SYSTEM=Y		# Depends on the specific system checks
+Tiger_Check_RUNPROC=N		# Fast, needs to be customized per system
+Tiger_Check_DELETED=N		# Depends on the number of processes on the
+Tiger_Check_EXRC=N		# Depends on the size of the filesystem
+Tiger_Check_ROOTKIT=Y		# Slow if chkrootkit is available
+				# system
+
+# The following checks might depend on the services installed in the
+# system, these need to be adjusted as required per system
+Tiger_Check_INETD=Y		# Fast for inetd, Varies on xinetd
+Tiger_Check_APACHE=N		# Fast
+Tiger_Check_SSH=Y		# Fast
+Tiger_Check_SENDMAIL=N		# Fast
+Tiger_Check_PRINTCAP=Y		# Fast, possibly not needed in systems that use CUPS
+Tiger_Check_ANONFTP=Y		# Fast
+Tiger_Check_FTPUSERS=Y		# Fast
+Tiger_Check_OMNIBACK=N  	# Fast
+Tiger_Check_NTP=Y 		# Fast
+
+# OS specific checks
+# You can comment them if they are not appropriate to your system but
+# they will not run if you are running a different OS
+# - Linux specific
+Tiger_Check_PATCH=N             # Depends on your network connection
+				# (if no timeout is fixed it might stall)
+Tiger_Check_SINGLE=Y            # Fast
+Tiger_Check_BOOT=Y              # Fast
+Tiger_Check_INITTAB=Y           # Fast
+Tiger_Check_RCUMASK=Y           # Fast
+Tiger_Check_NEVERLOG=Y          # Fast
+Tiger_Check_OS=Y                # Fast
+# - Linux, HPUX and Solaris specific
+Tiger_Check_NETWORKCONFIG=Y     # Fast
+# - Debian specific checks:
+Tiger_Deb_CheckMD5Sums=Y       
+Tiger_Deb_NoPackFiles=Y
+# End of Debian-specific checks
+# - HPUX specific
+Tiger_Check_TRUSTED=N
+# End of HPUX specific checks
+# 
+# Should reports with no info be sent on cron?
+#
+Tiger_Cron_SendOKReports=N
+#
+# How many reports should be kept for each check when run from the
+# crontab?
+#
+TigerCron_Log_Keep_Max=10
+#
+# Should reports be compared with a template? (if available)
+# (Note: takes precedence over previous run check)
+#
+Tiger_Cron_Template=N
+#
+# Should reports be compared with previous runs? (if available)
+#
+Tiger_Cron_CheckPrev=Y
+#
+# Should messages tagged with INFO be shown?
+#
+Tiger_Show_INFO_Msgs=N
+#
+# In order for this to be effective, you should define 'CRACK' in
+# a 'site' file.
+#
+# Note: Disabled for Debian since it (currently) does not work and 
+# the 'john' package can be configured to crack the passwords periodicly 
+Tiger_Run_CRACK=N               # First time, ages; subsequent fairly quick
+#
+# Custom Crack binary location (like read-only media),
+# this can be a generic location which can be overriden by the site
+# configuration file.
+#Tiger_CRACK_LOC_OVERRIDE=/mnt/cdrom/crack/Crack
+#Tiger_CRACKREPORTER_LOC_OVERRIDE=/mnt/cdrom/crack/Reporter
+# This directory needs to be writable for Crack to work
+#Tiger_CRACKDIR_LOC_OVERRIDE=/usr/local/crack
+#
+# Should we use canonical fully qualified domain names
+# in the reports?
+#
+Tiger_Output_FQDN=Y
+#
+# Integrity checkers:
+# Note: 
+# - Make sure you don't run more than one integrity checker as it will 
+# slow down checking drastically.
+# - These checks are disabled since they are provided by the own programs
+# when installing most integrity-checking programs (this is the default
+# behaviour in Debian, for example)
+#
+# Run Tripwire file integrity checker
+#
+Tiger_Run_TRIPW=N		# Slow
+#
+# Custom Tripwire binary location (like read-only media)
+# This can be a generic location which can be overriden by the site
+# configuration file.
+#Tiger_TRIPW_LOC_OVERRIDE=/mnt/cdrom/tripw/tripwire
+#
+# Run Aide file integrity checker
+Tiger_Run_AIDE=N                # Slow
+# Verbose reporting (not implemented yet)
+#Tiger_Run_AIDE_VERBOSE=1
+#
+# The options below are usefull if you use custom settings.
+# These can be a generic location which can be overriden by the site
+# configuration file.
+# Custom Aide location (like read-only media)
+#Tiger_AIDE_LOC_OVERRIDE=/mnt/cdrom/aide/aide.bin
+# Custom Aide configuration file (say, read-only media)
+#Tiger_AIDE_CFG_OVERRIDE=/mnt/cdrom/aide/aide.conf
+# Custom database (for instance in read-only media)
+#Tiger_AIDE_DB_OVERRIDE=/mnt/cdrom/aide/in.db
+#
+# I think there are enough hints to best practices like storing
+# crucial data ON READ-ONLY MEDIA.
+#
+# Run Integrit file integrity checker
+Tiger_Run_INTEGRIT=N                # Slow
+Tiger_INTEGRIT_CFG=/etc/integrit/integrit.conf
+#
+# Custom Integrit location (like read-only media)
+#Tiger_INTEGRIT_LOC_OVERRIDE=/mnt/cdrom/integrit/integrit.bin
+
+
+# Line size (for formatting of output)... default is 79...
+# Specifying '0' means unlimited
+#
+Tiger_Output_Width=79
+#
+# Same as above, except used when run via 'tigercron'...
+# You should set this once and never change it, 'cause if you
+# change it, you'll get lots and lots of new stuff according
+# to the scripts (the diff's against previous reports will find
+# lots of changes due to the formatting changes).
+#
+Tiger_CRON_Output_Width=0
+#
+# Global places to confirm some type of default PATH setting.
+# A simple space delimited list
+#
+Tiger_Global_PATH="/etc/profile /etc/csh.login"
+#
+# What password aging/constraints to check for.
+# A simple space delimited list.
+Tiger_Passwd_Constraints="PASS_MIN_DAYS PASS_MAX_DAYS PASS_WARN_AGE PASS_MIN_LEN"
+#
+# Acceptable password hashes.
+# List of password hashes separated by '|'... no whitespaces
+Tiger_Passwd_Hashes='sha512'
+#
+# Number of days of non-modified files in the home directory for a user
+# to be considered dormant (setting = 0 disables this check)
+Tiger_Dormant_Limit=60
+#
+# What accounts are considered administrative (beyond root)
+# (likely to not be used by humans, and therefore have impossible passwords)
+# List of usernames separated by '|'... no whitespaces
+Tiger_Admin_Accounts='adm|bin|daemon|games|lp|mail|news|operator|sync|sys|uucp|man|proxy|majordom|postgres|www-data|operator|irc|gnats'
+#
+# If an embedded pathname refers to an executable file, this executable
+# will in turn be checked.  This will continue "recursively" until
+# either no new executables are found, or a maximum reference depth
+# is reached.  Setting this variable to 0 is equivalent to infinity.
+# On a Sun 4/490, SunOS 4.1.2, 6GB disk, an infinite depth check
+# took about 30 minutes.  Your milage will vary.
+#
+# On small memory systems, a large search depth can result in out
+# of memory situations for 'sort'... :-(...
+#
+Tiger_Embed_Max_Depth=3
+#
+# Only search executables for embedded pathnames.  If this is
+# set to 'N', then all regular files will be searched.  Otherwise
+# only executable files will be searched.
+#
+Tiger_Embed_Check_Exec_Only=Y
+#
+# Check all setuid executables found.  This will cause 'tiger'
+# to run longer on many systems, as it will have to wait for the
+# file system scans to complete before it can begin checking the
+# embedded pathnames.
+#
+Tiger_Embed_Check_SUID=Y
+#
+# Only report executables which are writable or not owned by root.  If set
+# to 'Y' only the executables will be reported.  Any other value will result
+# in regular files and directories being reported as well.
+#
+# Note that currently, device files are never reported.
+#
+Tiger_Embed_Report_Exec_Only=Y
+#
+# Who do you allow to own system files.
+# List of usernames separated by '|'... no whitespace
+#
+#Tiger_Embedded_OK_Owners='root|bin|uucp|sys|daemon'
+Tiger_Embedded_OK_Owners=root
+#
+# What groups can have write access to system files?
+# List of group names separated by '|'... no whitespace.
+# No value means no groups should have write access.
+#
+Tiger_Embedded_OK_Group_Write='root'
+#
+# Should all users' PATH variables be checked.  This has the potential
+# of being dangerous because of the way it is done.  You might want to
+# take a look at check_path and decide for yourself whether the precautions
+# are sufficient before enabling this.
+#
+Tiger_Check_PATHALL=N           # Check all user PATHs in startup files.
+#
+# Who can own executables in 'root's PATH?
+# List of usernames separated by '|'... no whitespace
+#
+#Tiger_ROOT_PATH_OK_Owners='root|uucp|bin|news|sys|daemon'
+# If you are paranoid:
+Tiger_ROOT_PATH_OK_Owners='root'
+# If you are running HP-UX
+# Tiger_ROOT_PATH_OK_Owners='root|uucp|bin|news|sys|daemon|lp'
+#
+# What groups can have write access to executables in 'root's PATH?
+# List of group names separated by '|'... no whitespace.
+# No value means no groups should have write access.
+#
+Tiger_ROOT_PATH_OK_Group_Write='root'
+#
+# Who can own things in other users PATH?
+# List of usernames separated by '|'... no whitespace
+#
+Tiger_PATH_OK_Owners=$Tiger_ROOT_PATH_OK_Owners
+#
+# What groups can have write access to executables in non-root user PATH?
+# List of group names separated by '|'... no whitespace.
+# No value means no groups should have write access.
+#
+eval Tiger_PATH_OK_Group_Write='$Tiger_ROOT_PATH_OK_Group_Write'
+#
+# Should 'tiger' wait for Crack to finish?  If set to 'Y' it will wait
+# until it finishes.  If set to 'N', it will collect the output if
+# Crack finishes before the rest of the checks.  If it isn't finished
+# 'tiger' will simply report where the output will be stored.
+#
+Tiger_Collect_CRACK=Y
+#
+# Run Crack on local password sources only?  If set to Y, no network
+# sources will be used.  If set to 'N', NIS, NIS+, NetInfo, etc
+# sources will also be used.
+#
+Tiger_Crack_Local=Y
+#
+# Who sends output from 'tigercron'?
+# Default is "root@$HOSTNAME" (gets expanded by tigercron)
+#
+# Tiger_Mail_FROM="root@`uname -n`"
+#
+# Who gets output from 'tigercron'?
+#
+Tiger_Mail_RCPT=root
+#
+# List of '/' separated filename globs (NOT pathnames) to look for
+# on the filesystems.
+#
+Tiger_Files_of_Note="..[!.]*/.* */.*	*/.[!.]/.log/.FSP*"
+#
+# File system scan - things to look for
+#
+Tiger_FSScan_Setuid=N		# Setuid executables
+Tiger_FSScan_Setgid=N		# Setgid executables
+Tiger_FSScan_Devs=Y		# device files
+Tiger_FSScan_SymLinks=Y		# strange symbolic links
+Tiger_FSScan_ofNote=Y		# weird filenames
+Tiger_FSScan_WDIR=N		# world writable directories
+Tiger_FSScan_Unowned=Y		# files with undefined owners/groups
+#  The following variables change the way the GET_MOUNTS (gen_mounts) script works:
+Tiger_FSScan_WarnUnknown=Y	# Warn about unknown filesystems used
+Tiger_FSScan_Local=''		# Filesystems considered to be local to the system, pipe-separated
+Tiger_FSScan_NonLocal=''	# Filesystems considered to be non-local to the system, pipe-separated
+#
+# Should we scan read-only filesystems
+#
+Tiger_FSScan_ReadOnly=N
+#
+# List of dot files commonly found in user home directories.  These
+# will be checked by check_accounts for proper access permissions.
+# 
+# Note that .rhosts and .netrc need not appear here, as they will
+# be checked by scan_rhosts or scan_netrc.
+#
+USERDOTFILES=".alias .kshrc .cshrc .profile .login .mailrc .exrc .emacs .forward .tcshrc .zshenv .zshrc .zlogin .zprofile .rcrc .bashrc .bash_profile .inputrc .xinitrc .fvwm2rc .Xsession .Xclients .less"
+#
+# Rhost sites which are expected to be in the .rhosts files.
+# Anything that doesn't match will be reported.  The patterns
+# are simple patterns as used in Bourne Shell 'case' statement. 
+#
+#RHOST_SITES='*.tamu.edu|jupiter'
+
+# What uid's should not give warnings about valid shells 
+# (trusted or default users)
+# Debian GNU/Linux: default is 999, users are generated over 1000
+# Solaris: default should be 99, users are generated over 100
+# HP-UX (?): default should be 499, users are generated over 500
+Tiger_Accounts_Trust=999
+#
+# These SSH directive variables are used to specify "allowed" values
+# for the SSH Daemon.
+# Multiple options are seperated by '|', and directive variable can
+# be left blank to ignore the check.
+Tiger_SSH_Protocol='1|2'
+Tiger_SSH_RhostsAuthentication='no'
+Tiger_SSH_PasswordAuthentication='no'
+#
+# Should we give warnings on services that listen on all interfaces?
+# (i.e. those that have not been configured to listen only on one)
+# This is useful in servers which might add new interfaces (and thus
+# services will be unexpectedly be offered in them too) or to catch
+# "rogue" services
+Tiger_Listening_Every=Y
+#
+# Which *user* do you allow to have processes listening for incoming connections 
+# on the system?
+# List of usernames separated by '|'... no whitespaces allowed (but wildcards are)
+#
+Tiger_Listening_ValidUsers='root'
+#
+# Which processes are always considered valid, regardless of how are they
+# listening for incoming connections on the system?
+# This allows administrators to disable warnings on processes that might change
+# the listening port dynamically (and thus cannot be removed through the 
+# template definitions)
+# List of processes separated by '|'... no whitespaces allowed (but wildcards are)
+#
+Tiger_Listening_ValidProcs=''
+#
+# Which processess should be checked for by Tiger?
+# Processes in this list (separated by whitespaces) which are not
+# seen in the process table will generate a FAIL:
+#
+# The process list below is just an example (useful for Linux)
+# change it to suit your needs. You can use either the process name
+# or the full path name
+Tiger_Running_Procs='syslogd cron atd klogd'
+# or
+# Tiger_Running_Procs='/sbin/syslogd /usr/sbin/atd /usr/sbin/cron /sbin/klogd'
+#
+# Should we optimize DPKG checks? (by not using dpkg but looking on
+# the file database at /var/lib/dpkg?)
+#
+Tiger_DPKG_Optimize=Y
+# 
+# Other applications:
+# 
+# Arguments used in the command line for chkrootkit. If you are using
+# NFS filesystems you might want to add '-n' here too. '-q' makes the 
+# chkrootkit process work in 'quiet' mode.
+Tiger_CHKROOTKIT_ARGS="-q"
+#
