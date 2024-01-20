@@ -11,7 +11,7 @@ The owner of /var/(log|run)/[uw]tmp should be root \(owned by utmp\)\.
 /etc/inetd\.conf should not have (group|world) read\.
 /etc/pam\.d/sudo should not have world read\.
 The directory /dev/(ataraid|cciss|fd|input|pts|rd|usb|ida|block|char|dma_heap|mqueue|v4l|cpu|cryptvg|vfio) resides in a device directory\.
-/dev/(null|ptmx|gpmctl|gpmdata|log) has world permissions
+/dev/(null|ptmx|gpmctl|gpmdata|log|autofs|fuse|kmsg|rfkill) has world permissions
 File "\.fetchmail-UIDL-cache" in the mail spool, owned by "fetchmail"\.
 /dev/\.udev/.* is a dangling symlink\.
 The umask setting in /etc/csh\.login for the init scripts is insecure
@@ -41,7 +41,6 @@ Login ID [-_A-Za-z0-9]+ home directory \(/nonexistent\) is not accessible\.
 Username `[-_A-Za-z0-9]+' is not using an acceptable password hash \(x\)\.
 User (systemd-(network|timesync|coredump)|mail|nobody|ntp|oprofile|pop|rpc|sshd) has / as home directory
 Root crontab does not exist
-/dev/(autofs|fuse|kmsg|rfkill|log) has world permissions
 Path `/usr/sbin/clamav-milter' is not owned by root \(owned by clamav\)\.
 Login (halt|operator|shutdown|sync) has a group id of 0 which should be reserved for root
 /(bin/su|usr/bin/passwd) is setuid to `root'\.
