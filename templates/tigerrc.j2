@@ -200,7 +200,13 @@ Tiger_Dormant_Limit=60
 # What accounts are considered administrative (beyond root)
 # (likely to not be used by humans, and therefore have impossible passwords)
 # List of usernames separated by '|'... no whitespaces
-Tiger_Admin_Accounts='adm|bin|daemon|games|lp|mail|news|operator|sync|sys|uucp|man|proxy|majordom|postgres|www-data|operator|irc|gnats'
+{% if ansible_distribution == "Debian" or ansible_distribution == "Kali" %}
+Tiger_Admin_Accounts='bin|daemon|games|lp|mail|news|sync|sys|uucp|man|proxy|postgres|www-data|irc|gnats'
+{% elif ansible_distribution == "Slackware" %}
+Tiger_Admin_Accounts='adm|bin|daemon|games|lp|mail|news|operator|sync|uucp|postgres|apache'
+{% else %}
+Tiger_Admin_Accounts='adm|bin|daemon|games|lp|mail|news|operator|sync|sys|uucp|man|proxy|majordom|postgres|www-data|irc|gnats'
+{% endif %}
 #
 # If an embedded pathname refers to an executable file, this executable
 # will in turn be checked.  This will continue "recursively" until
