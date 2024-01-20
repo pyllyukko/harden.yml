@@ -82,6 +82,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * Configured ClamAV to unarchive with password "infected" (see [Passwords for archive files](https://docs.clamav.net/manual/Signatures/EncryptedArchives.html) & [ClamAV and ZIP File Decryption](https://blog.didierstevens.com/2017/02/15/quickpost-clamav-and-zip-file-decryption/))
     * Downloads YARA rules from [Neo23x0](https://github.com/Neo23x0/signature-base), [GCTI](https://github.com/chronicle/GCTI), [Elastic](https://github.com/elastic/protections-artifacts), [YaraRules Project](https://yara-rules.github.io/blog/), [JPCERT/CC](https://github.com/JPCERTCC/jpcert-yara), [Malpedia](https://malpedia.caad.fkie.fraunhofer.de/), [Citizen Lab](https://github.com/citizenlab/malware-signatures), [GoDaddy](https://github.com/godaddy/yara-rules), [Didier Stevens](https://github.com/search?q=repo%3ADidierStevens%2FDidierStevensSuite+path%3A*.yara) & [Open-Source-YARA-rules](https://github.com/mikesxrs/Open-Source-YARA-rules) for [ClamAV to use](https://docs.clamav.net/manual/Signatures/YaraRules.html)
 * [rkhunter](https://sourceforge.net/projects/rkhunter/) configuration (see [rkhunter.yml](tasks/rkhunter.yml))
+* [Tiger](https://www.nongnu.org/tiger/): Configures `tigerrc` & `tiger.ignore`
 * [Lynis](https://cisofy.com/lynis/) configuration (see [lynis.yml](tasks/lynis.yml))
 * Configures AIDE (see [aide.yml](tasks/aide.yml))
 * Display managers:
