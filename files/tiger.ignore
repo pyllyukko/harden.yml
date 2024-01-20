@@ -10,7 +10,7 @@ The owner of /var/(log|run)/[uw]tmp should be root \(owned by utmp\)\.
 /etc/fstab should not have (group|world) read\.
 /etc/inetd\.conf should not have (group|world) read\.
 /etc/pam\.d/sudo should not have world read\.
-The directory /dev/(ataraid|cciss|fd|input|pts|rd|usb|ida) resides in a device directory\.
+The directory /dev/(ataraid|cciss|fd|input|pts|rd|usb|ida|block|char|dma_heap|mqueue|v4l|cpu|cryptvg|vfio) resides in a device directory\.
 /dev/(null|ptmx|gpmctl|gpmdata|log) has world permissions
 File "\.fetchmail-UIDL-cache" in the mail spool, owned by "fetchmail"\.
 /dev/\.udev/.* is a dangling symlink\.
@@ -32,7 +32,50 @@ The process `krb5kdc' is listening on socket 88 \((TC|UD)P\) on every interface\
 The process `syslogd' is listening on socket 514 \(UDP\) on every interface\.
 The process `named' is listening on socket 53 \(TCP on (every|[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+) interface\) is run by named\.
 The process `slapd' is listening on socket 636 \(TCP on every interface\) is run by ldap\.
-Login _(apt|rpc) has non-alphanumeric characters\.
-Home directory /(nonexistent|run/systemd|var/lib/sendmail) exists multiple times \([0-9]+\) in (/etc/passwd|LDAP)\.
+The process `dhcpcd' is listening on socket 68 \(UDP\)? on (every|[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+) interface(\) is run by dhcpcd)?\.
+The process `dnsmasq' is listening on socket (53 \((TC|UD)P on [0-9]+\.[0-9]+\.[0-9]+\.[0-9]+|67 \(UDP on every) interface\) is run by nobody\.
+The process `dnsmasq' is listening on socket 67 \(UDP on every interface\) is run by nobody\.
+Login _(apt|rpc|aide|flatpak) has non-alphanumeric characters\.
+Home directory /(nonexistent|run/systemd|var/lib/sendmail)? exists multiple times \([0-9]+\) in (/etc/passwd|LDAP)\.
+Login ID [-_A-Za-z0-9]+ home directory \(/nonexistent\) is not accessible\.
 Username `[-_A-Za-z0-9]+' is not using an acceptable password hash \(x\)\.
-User systemd-(network|timesync|coredump) has / as home directory
+User (systemd-(network|timesync|coredump)|mail|nobody|ntp|oprofile|pop|rpc|sshd) has / as home directory
+Root crontab does not exist
+/dev/(autofs|fuse|kmsg|rfkill|log) has world permissions
+Path `/usr/sbin/clamav-milter' is not owned by root \(owned by clamav\)\.
+Login (halt|operator|shutdown|sync) has a group id of 0 which should be reserved for root
+/(bin/su|usr/bin/passwd) is setuid to `root'\.
+/usr/bin/(wall|write) is setgid to `tty'\.
+/usr/bin/at is set[ug]id to `daemon'\.
+The owner of /usr/bin/at should be root \(owned by daemon\)\.
+The group owner of /usr/bin/at should be root\.
+The port for service (afs3-fileserver|ircd-dalnet) is also assigned to service bbs\.
+The port for service ssmtp is also assigned to service submissions\.
+The port for service z3950 is also assigned to service z39\.50\.
+The port for service kerberos-master is also assigned to service (kerberos_master|pump)\.
+The port for service fsp is also assigned to service ftp\.
+The port for service whois is also assigned to service nicname\.
+The port for service kerberos is also assigned to service kerberos-sec\.
+The port for service snmp-trap is also assigned to service snmptrap\.
+The port for service cmip-agent is also assigned to service smip-agent\.
+The port for service nextstep is also assigned to service NextStep\.
+The port for service route is also assigned to service router\.
+The port for service prospero-np is also assigned to service orasrv\.
+The port for service radius-acct is also assigned to service radacct\.
+The port for service gds-db is also assigned to service gds_db\.
+The port for service wnn6 is also assigned to service wnn4\.
+The port for service kerberos4 is also assigned to service kerberos-iv\.
+The port for service passwd-server is also assigned to service qrh\.
+The port for service krb-prop is also assigned to service (krb_prop|tell)\.
+The port for service krbupdate is also assigned to service ns\.
+The port for service kpasswd is also assigned to service rxe\.
+The port for service swat is also assigned to service smpnameres\.
+The port for service linuxconf is also assigned to service tacnews\.
+The port for service poppassd is also assigned to service (pop3pw|3com-tsmux)\.
+The port for service ssmtp is also assigned to service smtps\.
+The port for service moira-db is also assigned to service entomb\.
+The port for service moira-update is also assigned to service multiling-http\.
+The port for service support is also assigned to service coauthor\.
+The port for service cisco-sccp is also assigned to service callbook\.
+The port for service cfinger is also assigned to service cfingerd\.
+The port for service pipe-server is also assigned to service search\.

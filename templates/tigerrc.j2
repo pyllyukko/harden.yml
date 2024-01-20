@@ -390,9 +390,9 @@ Tiger_Listening_ValidProcs=''
 # change it to suit your needs. You can use either the process name
 # or the full path name
 {% if ansible_distribution == "Debian" or ansible_distribution == "Kali" %}
-Tiger_Running_Procs='/lib/systemd/systemd-journald /usr/sbin/cron'
+Tiger_Running_Procs='/lib/systemd/systemd-journa /usr/sbin/cron /usr/bin/dbus-daemon /lib/systemd/systemd-timesy /lib/systemd/systemd-logind /lib/systemd/systemd-udevd /usr/lib/polkit-1/polkitd'
 {% elif ansible_distribution == "Slackware" %}
-Tiger_Running_Procs='/usr/sbin/syslogd /usr/sbin/crond'
+Tiger_Running_Procs='/usr/sbin/syslogd /usr/sbin/crond /usr/bin/dbus-daemon elogind-daemon /sbin/udevd /usr/lib/polkit-1/polkitd'
 {% else %}
 Tiger_Running_Procs='syslogd cron atd klogd'
 {% endif %}
