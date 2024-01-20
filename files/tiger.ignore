@@ -32,7 +32,8 @@ The process `krb5kdc' is listening on socket 88 \((TC|UD)P\) on every interface\
 The process `syslogd' is listening on socket 514 \(UDP\) on every interface\.
 The process `named' is listening on socket 53 \(TCP on (every|[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+) interface\) is run by named\.
 The process `slapd' is listening on socket 636 \(TCP on every interface\) is run by ldap\.
+The process `connmand' is listening on socket [0-9]+ \(UDP\) on every interface\.
 Login _(apt|rpc) has non-alphanumeric characters\.
-Home directory /nonexistent exists multiple times \([0-9]+\) in /etc/passwd\.
-Username `[-_A-Za-z]+' is not using an acceptable password hash \(x\)\.
-User systemd-(network|timesync) has / as home directory
+Home directory /(nonexistent|run/systemd|var/lib/sendmail) exists multiple times \([0-9]+\) in (/etc/passwd|LDAP)\.
+Username `[-_A-Za-z0-9]+' is not using an acceptable password hash \(x\)\.
+User systemd-(network|timesync|coredump) has / as home directory
