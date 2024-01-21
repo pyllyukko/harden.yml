@@ -318,6 +318,7 @@ Some of these documents are quite old, but most of the stuff still applies.
 * [Secure Secure Shell](https://stribika.github.io/2015/01/04/secure-secure-shell.html)
 * [Securing Debian Manual](https://www.debian.org/doc/manuals/securing-debian-manual/index.en.html)
 * [ArchWiki: limits.conf](https://wiki.archlinux.org/title/Limits.conf)
+* [Effectiveness of Linux Rootkit Detection Tools](http://jultika.oulu.fi/files/nbnfioulu-202004201485.pdf)
 
 [1]: http://benchmarks.cisecurity.org/downloads/browse/index.cfm?category=benchmarks.os.linux.slackware
 [2]: http://dentonj.freeshell.org/system-hardening-10.2.txt
