@@ -36,6 +36,42 @@
       ansible.builtin.apt:
         name: tiger
 
+- name: John
+  become: true
+  tags: john
+  block:
+    - name: Check /etc/john
+      tags: check
+      ansible.builtin.stat:
+        path: /etc/john
+      register: stat_john
+    - name: Check /etc/cron.d/john
+      tags: check
+      ansible.builtin.stat:
+        path: /etc/cron.d/john
+      register: stat_john_cron
+    - name: Configure John
+      tags: configuration
+      when:
+        - stat_john.stat.exists
+        - stat_john.stat.isdir
+        - stat_john_cron.stat.exists
+      block:
+        - name: Copy john-mail.conf
+          ansible.builtin.copy:
+            dest: /etc/john/john-mail.conf
+            src: john-mail.conf
+            owner: root
+            group: root
+            mode: '0600'
+            backup: true
+        - name: Enable John cronjobs
+          ansible.builtin.replace:
+            path: /etc/cron.d/john
+            regexp: '^#?([0-9]+\s+[0-9]+\s+\*\s+\*\s+\*\s+root\s+\[\s+-x\s+/usr/share/john/cronjob\s+\]\s+&&\s+(nice\s+)?/usr/share/john/cronjob\s+st(art|op))$'
+            replace: '\g<1>'
+            backup: true
+
 - name: Tiger
   become: true
   tags: tiger

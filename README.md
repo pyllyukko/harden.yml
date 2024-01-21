@@ -171,6 +171,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Installs a bunch of security related packages (see [debian\_packages.yml](tasks/debian_packages.yml))
 * Configures `chkrootkit` and enables daily checks
 * Configures APT not to install suggested packages
+* Configures periodic weak password checks with [John the Ripper](https://www.openwall.com/john/)
 
 Creates bunch of `pam-config`s that are toggleable with `pam-auth-update`:
 
@@ -258,6 +259,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `lightdm`
     * `gnome`
     * `tiger`
+    * `john`
 * `banners`
 * [AAA](https://en.wikipedia.org/wiki/AAA_(computer_security)):
     * `accounting` (includes `sysstat`)
