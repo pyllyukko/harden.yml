@@ -75,8 +75,13 @@ Tiger_Check_OS=Y                # Fast
 # - Linux, HPUX and Solaris specific
 Tiger_Check_NETWORKCONFIG=Y     # Fast
 # - Debian specific checks:
-Tiger_Deb_CheckMD5Sums=Y       
+{% if ansible_distribution == "Debian" or ansible_distribution == "Kali" %}
+Tiger_Deb_CheckMD5Sums=Y
 Tiger_Deb_NoPackFiles=Y
+{% else %}
+Tiger_Deb_CheckMD5Sums=N
+Tiger_Deb_NoPackFiles=N
+{% endif %}
 # End of Debian-specific checks
 # - HPUX specific
 Tiger_Check_TRUSTED=N
@@ -337,7 +342,7 @@ Tiger_FSScan_ReadOnly=N
 # Note that .rhosts and .netrc need not appear here, as they will
 # be checked by scan_rhosts or scan_netrc.
 #
-USERDOTFILES=".alias .kshrc .cshrc .profile .login .mailrc .exrc .emacs .forward .tcshrc .zshenv .zshrc .zlogin .zprofile .rcrc .bashrc .bash_profile .inputrc .xinitrc .fvwm2rc .Xsession .Xclients .less"
+USERDOTFILES=".alias .kshrc .cshrc .profile .login .mailrc .exrc .emacs .forward .tcshrc .zshenv .zshrc .zlogin .zprofile .rcrc .bashrc .bash_profile .bash_logout .bash_login .inputrc .xinitrc .fvwm2rc .Xsession .Xclients .less"
 #
 # Rhost sites which are expected to be in the .rhosts files.
 # Anything that doesn't match will be reported.  The patterns
@@ -359,6 +364,10 @@ Tiger_Accounts_Trust=999
 Tiger_SSH_Protocol='1|2'
 Tiger_SSH_RhostsAuthentication='no'
 Tiger_SSH_PasswordAuthentication='no'
+Tiger_SSH_PermitRootLogin='no'
+Tiger_SSH_PermitEmptyPasswords='no'
+Tiger_SSH_IgnoreRhosts='yes'
+Tiger_SSH_StrictModes='yes'
 #
 # Should we give warnings on services that listen on all interfaces?
 # (i.e. those that have not been configured to listen only on one)
