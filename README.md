@@ -173,6 +173,8 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Configures APT not to install suggested packages
 * Configures periodic weak password checks with [John the Ripper](https://www.openwall.com/john/)
 
+#### pam-configs
+
 Creates bunch of `pam-config`s that are toggleable with `pam-auth-update`:
 
 | PAM module                                                                                   | Type           | Description                                                                             |
