@@ -223,18 +223,29 @@
         group: root
         mode: '0600'
 
-# Ansible's apt module doesn't install suggested packages,
-# but we don't want them later on either.
-- name: Configure APT not to install suggested packages
+- name: Debian APT
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   become: true
   tags:
     - debian
     - configuration
-  ansible.builtin.copy:
-    content: "APT::Install-Suggests \"false\";\n"
-    dest: /etc/apt/apt.conf.d/99suggested
-    owner: root
-    group: root
-    mode: '0644'
-    force: false
+  block:
+    # Ansible's apt module doesn't install suggested packages,
+    # but we don't want them later on either.
+    - name: Configure APT not to install suggested packages
+      ansible.builtin.copy:
+        content: "APT::Install-Suggests \"false\";\n"
+        dest: /etc/apt/apt.conf.d/99suggested
+        owner: root
+        group: root
+        mode: '0644'
+        force: false
+    # https://www.debian.org/releases/buster/amd64/release-notes/ch-whats-new.en.html#apt-sandboxing
+    - name: Configure APT to use seccomp-BPF sandboxing
+      ansible.builtin.copy:
+        content: "APT::Sandbox::Seccomp \"true\";\n"
+        dest: /etc/apt/apt.conf.d/40sandbox
+        owner: root
+        group: root
+        mode: '0644'
+        force: false
