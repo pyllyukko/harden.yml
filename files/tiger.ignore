@@ -78,3 +78,4 @@ The port for service support is also assigned to service coauthor\.
 The port for service cisco-sccp is also assigned to service callbook\.
 The port for service cfinger is also assigned to service cfingerd\.
 The port for service pipe-server is also assigned to service search\.
+`/etc/printcap' does not exist \(file definition (src|infile)\)\.
