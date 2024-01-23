@@ -249,3 +249,33 @@
         group: root
         mode: '0644'
         force: false
+
+# https://www.whonix.org/wiki/Packages_for_Debian_Hosts
+# https://www.kicksecure.com/wiki/Packages_for_Debian_Hosts#Supported_Packages
+# https://www.kicksecure.com/wiki/Linux_Kernel_Runtime_Guard_LKRG
+#- name: LKRG
+#  become: true
+#  tags:
+#    - lkrg
+#    - debian
+#    - packages
+#    - kernel
+#  block:
+#    - name: Add Whonix PGP key
+#      ansible.builtin.get_url:
+#        #url: https://www.whonix.org/keys/derivative.asc
+#        url: https://www.kicksecure.com/keys/derivative.asc
+#        dest: /usr/share/keyrings/derivative.asc
+#        owner: root
+#        group: root
+#        mode: '0644'
+#    - name: Add Whonix repository
+#      ansible.builtin.apt_repository:
+#        # The Whonix repo didn't seem to contain LKRG
+#        #repo: "deb [signed-by=/usr/share/keyrings/derivative.asc] https://deb.whonix.org bookworm main contrib non-free"
+#        repo: "deb [signed-by=/usr/share/keyrings/derivative.asc] https://deb.kicksecure.com bookworm main contrib non-free"
+#        state: present
+#    - name: Install LKRG
+#      ansible.builtin.apt:
+#        name: lkrg
+#        update_cache: true
