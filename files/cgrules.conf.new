@@ -34,5 +34,6 @@ rpc:/sbin/rpc.statd		net_cls daemons/rpc/
 root:/usr/sbin/usbguard-daemon	net_cls daemons/usbguard/
 root:/usr/sbin/pcscd		net_cls daemons/pcscd/
 root:/usr/sbin/automount	net_cls daemons/autofs/
+root:/usr/bin/snort		net_cls daemons/snort/
 @users				cpu,cpuacct,net_cls	users/%u
 # End of file
