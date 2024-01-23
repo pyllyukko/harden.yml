@@ -522,6 +522,23 @@ group daemons/polkitd {
 	net_cls {
 	}
 }
+group daemons/dockerd {
+	perm {
+		task {
+			uid = root;
+			gid = root;
+			fperm = 600;
+		}
+		admin {
+			uid = root;
+			gid = root;
+			dperm = 700;
+			fperm = 600;
+		}
+	}
+	net_cls {
+	}
+}
 group users {
 	cpuacct{
 	}
