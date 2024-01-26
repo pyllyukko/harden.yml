@@ -213,7 +213,7 @@
   register: result
   failed_when:
     - result.failed == true
-    - result.msg != "Destination /lib/systemd/system/{{ item }}.service does not exist!"
+    - '"service does not exist!" not in result.msg'
 - name: Print Lynis score for accounting
   become: true
   tags: accounting
