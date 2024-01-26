@@ -8,7 +8,7 @@
   block:
     - name: Install AIDE package
       ansible.builtin.apt:
-        name: aide
+        name: ['aide', 's-nail']
         update_cache: true
       tags:
         - packages
