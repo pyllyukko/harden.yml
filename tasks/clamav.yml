@@ -163,6 +163,10 @@
         path: /var/lib/clamav/
         mode: '0755'
       tags: permissions
+      register: result
+      failed_when:
+        - result.failed == true
+        - result.state != "absent"
     # "CLD files are uncompressed and unsigned versions of the CVD that have had CDIFFs applied"
     - name: Make /var/lib/clamav/*.c[lv]d +r
       ansible.builtin.file:
