@@ -172,6 +172,7 @@
       tags:
         - packages
         - debian
+        - permissions
     # we don't want to mess with the group ownerships because these might be needed to be writable by utmp group
     - name: Grant group adm read rights on login records
       ansible.posix.acl:
