@@ -15,8 +15,12 @@
     regexp: '^(.(?!.*\blsm=apparmor\b).*)$'
     replace: '\1 lsm=apparmor'
   become: true
-  when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
+  when: ansible_distribution == "Debian"
   tags: configuration
+  register: result
+  failed_when:
+    - result.failed == true
+    - '"does not exist !" not in result.msg'
 # https://github.com/pyllyukko/harden.sh/wiki/AppArmor
 - name: Enable extra profiles
   vars:

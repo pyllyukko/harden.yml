@@ -156,10 +156,14 @@
         path: /boot/cmdline.txt
         regexp: '^(.(?!.*\baudit=1\b).*)$'
         replace: '\1 audit=1'
-      when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
+      when: ansible_distribution == "Debian"
       tags:
         - debian
         - configuration
+      register: result
+      failed_when:
+        - result.failed == true
+        - '"does not exist !" not in result.msg'
     # AUDISP-REMOTE(8): "you should edit auditd.conf to set the name_format to something meaningful and the log_format to enriched
     #- name: Configure auditd.conf for audisp
     #  ansible.builtin.replace:
