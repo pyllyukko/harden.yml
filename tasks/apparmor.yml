@@ -52,6 +52,8 @@
         remote_src: true
       with_items: '{{ apparmor_profiles }}'
     - name: Enable extra profiles
-      ansible.builtin.command: /usr/sbin/aa-enforce /etc/apparmor.d/{{ item }} # noqa no-changed-when
+      ansible.builtin.command: /usr/sbin/aa-enforce /etc/apparmor.d/{{ item }}
       with_items: '{{ apparmor_profiles }}'
       tags: configuration
+      register: result
+      changed_when: result.stdout | regex_search('^Setting .+ to enforce mode\.$')
