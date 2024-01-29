@@ -92,12 +92,12 @@
         state: absent
 
 # https://www.raspberrypi.org/documentation/configuration/security.md
-- name: 'Remove /etc/sudoers.d/010_pi-nopasswd'
+- name: 'Remove /etc/sudoers.d/010_pi-nopasswd (Raspberry Pi OS)'
   become: true
   ansible.builtin.file:
     path: /etc/sudoers.d/010_pi-nopasswd
     state: absent
-  when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
+  when: ansible_distribution == "Debian"
   tags:
     - configuration
     - debian

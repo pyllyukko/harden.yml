@@ -147,17 +147,25 @@
         owner: root
         group: root
         mode: '0600'
-    - name: Set ipv6.disable=1 in /boot/cmdline.txt (Raspbian)
+    - name: Set ipv6.disable=1 in /boot/cmdline.txt (Raspberry Pi OS)
       ansible.builtin.replace:
         path: /boot/cmdline.txt
         regexp: '^(.(?!.*\bipv6\.disable=1\b).*)$'
         replace: '\1 ipv6.disable=1'
-      when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
+      when: ansible_distribution == "Debian"
       tags: debian
+      register: result
+      failed_when:
+        - result.failed == true
+        - '"does not exist !" not in result.msg'
     - name: Set ipv6.disable=1 in /etc/default/grub
       ansible.builtin.replace:
         path: /etc/default/grub
         regexp: '^(GRUB_CMDLINE_LINUX="(?!.*\bipv6\.disable=1\b).*)"$'
         replace: '\1 ipv6.disable=1"'
-      when: (ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian") or ansible_distribution == "Kali" or ansible_os_family == "RedHat"
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat"
       notify: "Run update-grub"
+      register: result
+      failed_when:
+        - result.failed == true
+        - '"does not exist !" not in result.msg'

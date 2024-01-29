@@ -12,7 +12,7 @@ Supported distros
 
 * Debian (Bookworm)
     * Kali
-    * Raspbian
+    * Raspberry Pi OS
 * Slackware (>= [15.0](http://www.slackware.com/announce/15.0.php))
 * Limited hardening for CentOS 7 (see CentOS specific tasks with `ansible-playbook --list-tasks --tags centos harden.yml`)
 

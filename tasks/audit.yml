@@ -144,14 +144,14 @@
       with_items:
         - audit=1
         - audit_backlog_limit=8192
-      when: (ansible_distribution == "Debian" and ansible_lsb.id != "Raspbian") or ansible_distribution == "Kali" or ansible_os_family == "RedHat"
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat"
       tags: configuration
       notify: "Run update-grub"
       register: result
       failed_when:
         - result.failed == true
         - '"does not exist !" not in result.msg'
-    - name: Add audit=1 to /boot/cmdline.txt (Raspbian)
+    - name: Add audit=1 to /boot/cmdline.txt (Raspberry Pi OS)
       ansible.builtin.replace:
         path: /boot/cmdline.txt
         regexp: '^(.(?!.*\baudit=1\b).*)$'

@@ -8,7 +8,7 @@
   tags:
     - packages
 # https://github.com/raspberrypi/linux/pull/1698
-- name: Add lsm=apparmor to /boot/cmdline.txt (Raspbian)
+- name: Add lsm=apparmor to /boot/cmdline.txt (Raspberry Pi OS)
   ansible.builtin.replace:
     path: /boot/cmdline.txt
     # https://stackoverflow.com/a/61974725

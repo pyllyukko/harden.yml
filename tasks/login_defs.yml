@@ -154,8 +154,8 @@
   ansible.builtin.command: grpck -r # noqa no-changed-when
   tags: check
 
-- name: Remove pi from adm group (Raspbian)
-  when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
+- name: Remove pi from adm group (Raspberry Pi OS)
+  when: ansible_distribution == "Debian"
   become: true
   ansible.builtin.command: gpasswd -d pi adm
   register: result
@@ -356,9 +356,9 @@
             - getent_group["dip"][2] | length > 0
     # Raspbian gpio, i2c & spi groups
     # https://www.raspberrypi.com/documentation/computers/os.html#permissions
-    - name: Raspbian specific groups
+    - name: Remove users from Raspberry Pi OS specific groups
       become: true
-      when: ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian"
+      when: ansible_distribution == "Debian"
       tags: debian
       block:
         - name: Remove all users from group "gpio"

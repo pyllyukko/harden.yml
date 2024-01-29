@@ -680,7 +680,7 @@ ALLOWHIDDENFILE=/usr/man/man5/.k5identity.5.gz
 ALLOWHIDDENFILE=/usr/man/man5/.k5login.5.gz
 {% endif %}
 {% endif %}
-{% if ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian" %}
+{% if ansible_distribution == "Debian" %}
 # dphys-swapfile does this
 ALLOWHIDDENFILE=/etc/.fstab
 {% endif %}
@@ -763,9 +763,6 @@ SCAN_MODE_DEV=THOROUGH
 #
 #ALLOWIPCPROC=/usr/bin/firefox
 #ALLOWIPCPROC=/usr/bin/vlc
-{% if ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian" %}
-ALLOWIPCPROC=/usr/sbin/pi-greeter
-{% endif %}
 
 #
 # Allow the specified memory segment creator PIDs to use shared memory segments.
@@ -795,12 +792,7 @@ ALLOWIPCPROC=/usr/sbin/pi-greeter
 #
 # The default is 1048576 (1M) bytes.
 #
-{% if ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian" %}
-# /usr/sbin/lightdm-gtk-greeter
-IPC_SEG_SIZE=68157440
-{% else %}
 #IPC_SEG_SIZE=1048576
-{% endif %}
 
 #
 # This option is used to indicate if the Phalanx2 test is to perform a basic
@@ -1154,9 +1146,6 @@ ALLOW_SYSLOG_REMOTE_LOGGING=1
 # The default value is the null string.
 #
 #SHARED_LIB_WHITELIST=/lib/snoopy.so
-{% if ansible_distribution == "Debian" and ansible_lsb.id == "Raspbian" %}
-SHARED_LIB_WHITELIST='/usr/lib/arm-linux-gnueabihf/libarmmem-${PLATFORM}.so'
-{% endif %}
 
 #
 # To force rkhunter to use the supplied script for the 'stat' or 'readlink'
