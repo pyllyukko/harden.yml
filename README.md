@@ -144,6 +144,8 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Configures `inittab` to use `shutdown -a` (and `/etc/shutdown.allow`)
 * Reconfigured bunch of services (run `ansible-playbook --list-tasks --tags slackware harden.yml | grep '\bservices\b'` for a full list)
 * Configures cgroups ([v1](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v1/cgroups.html), because of too old `libcgroup`) into `/etc/cg{config,rules}.conf`
+* Enables `bootlogd`
+    * **NOTE**: Requires `CONFIG_LEGACY_PTYS` (which [KSPP recommends to disable](https://www.kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings))
 
 #### PAM
 
