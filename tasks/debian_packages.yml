@@ -193,13 +193,11 @@
         replace: '\g<1>{{ chkrootkit_conf_dir }}/chkrootkit.ignore'
     - name: Configure chkrootkit.conf
       tags: configuration
-      ansible.builtin.replace:
+      ansible.builtin.file:
         path: "{{ chkrootkit_conf_dir }}/chkrootkit.conf"
-        regexp: '^({{ item }}=).*'
-        replace: '\g<1>"true"'
-      with_items:
-        - RUN_DAILY
-        - DIFF_MODE
+        owner: root
+        group: root
+        mode: '0600'
     - name: Stat /var/log/chkrootkit/log.today
       tags: check
       ansible.builtin.stat:
