@@ -198,6 +198,7 @@
         owner: root
         group: root
         mode: '0600'
+        backup: true
     - name: Stat /var/log/chkrootkit/log.today
       tags: check
       ansible.builtin.stat:
