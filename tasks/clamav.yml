@@ -3077,7 +3077,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/US%20CERT/Destructive_Target_Cleaning_Tool_6.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/US%20CERT/Malware_used_by_cyber_threat_actor_2.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/US%20CERT/Proxy_Tool_2.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/US%20CERT/Destructive_Target_Cleaning_Tool_3.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/US%20CERT/Lightweight_Backdoor_6.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/US%20CERT/PAS_TOOL_PHP_WEB_KIT.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/US%20CERT/Hidden_Cobra_DPRK_DDoS_Tool.yara
