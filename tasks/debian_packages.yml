@@ -103,6 +103,17 @@
             group: root
             mode: '0600'
             backup: true
+        # [ -L /lib/ ] == false, but [ -L /lib ] == true
+        # https://git.savannah.nongnu.org/cgit/tiger.git/tree/systems/Linux/2/deb_nopackfiles#n121
+        # Since Debian's /usr merge the lin001w test will produce megabytes worth of FPs when the symlink test fails.
+        # https://wiki.debian.org/UsrMerge
+        # TODO: Add /usr/lib?
+        - name: Fix deb_nopackfiles
+          when: ansible_distribution == "Debian"
+          ansible.builtin.replace:
+            path: /usr/lib/tiger/systems/Linux/2/deb_nopackfiles
+            regexp: '^(dirlist=)"/bin/ /usr/bin/ /sbin/ /usr/sbin/ /lib/ /usr/X11R6/bin"$'
+            replace: '\g<1>"/bin /usr/bin /sbin /usr/sbin /lib /usr/X11R6/bin"'
 
 - name: Comment out user.max_user_namespaces=0 in /usr/lib/sysctl.d/10-hardening.conf
   tags:
