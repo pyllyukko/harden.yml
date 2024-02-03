@@ -753,6 +753,10 @@ SCAN_MODE_DEV=THOROUGH
 #
 #ALLOWDEVFILE=/dev/shm/pulse-shm-*
 #ALLOWDEVFILE=/dev/shm/sem.ADBE_*
+{% if ansible_distribution == "Debian" %}
+# https://bugs.lttng.org/issues/1143
+ALLOWDEVFILE=/dev/shm/lttng-ust-wait-*
+{% endif %}
 
 #
 # Allow the specified process pathnames to use shared memory segments.
