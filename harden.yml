@@ -109,6 +109,8 @@
       ansible.builtin.import_tasks: tasks/filesystem.yml
     - name: CA certificates
       ansible.builtin.import_tasks: tasks/ca-certs.yml
+    - name: AIDE
+      ansible.builtin.import_tasks: tasks/aide.yml
     - name: Debian packages
       ansible.builtin.import_tasks: tasks/debian_packages.yml
     - name: Audit
@@ -149,8 +151,6 @@
       ansible.builtin.import_tasks: tasks/apache.yml
     - name: Slackware cgroups
       ansible.builtin.import_tasks: tasks/cgroup.yml
-    - name: AIDE
-      ansible.builtin.import_tasks: tasks/aide.yml
 
   handlers:
     - name: Handlers
