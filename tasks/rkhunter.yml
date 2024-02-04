@@ -18,6 +18,10 @@
         - check
       ansible.builtin.package_facts:
         manager: auto
+    - name: getent passwd
+      ansible.builtin.getent:
+        database: passwd
+      tags: check
     - name: 'Create /etc/rkhunter.conf'
       ansible.builtin.template:
         src: "{{ playbook_dir }}/templates/rkhunter.conf.j2"
