@@ -204,8 +204,9 @@
         replace: '\g<1>{{ chkrootkit_conf_dir }}/chkrootkit.ignore'
     - name: Configure chkrootkit.conf
       tags: configuration
-      ansible.builtin.file:
-        path: "{{ chkrootkit_conf_dir }}/chkrootkit.conf"
+      ansible.builtin.copy:
+        dest: "{{ chkrootkit_conf_dir }}/chkrootkit.conf"
+        src: chkrootkit.conf
         owner: root
         group: root
         mode: '0600'
