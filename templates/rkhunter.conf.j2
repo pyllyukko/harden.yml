@@ -651,10 +651,17 @@ SCRIPTWHITELIST=/bin/fgrep
 #
 # The default value is the null string.
 #
+{% if ansible_distribution == "Debian" and 'openjdk-17-jre-headless' in ansible_facts.packages %}
+ALLOWHIDDENDIR=/etc/.java
+{% else %}
 #ALLOWHIDDENDIR=/etc/.java
+{% endif %}
 #ALLOWHIDDENDIR=/dev/.udev
 #ALLOWHIDDENDIR=/dev/.udevdb
 #ALLOWHIDDENDIR=/dev/.mdadm
+{% if getent_passwd.pihole is defined %}
+ALLOWHIDDENDIR=/etc/.pihole
+{% endif %}
 
 #
 # Allow the specified hidden file to be whitelisted.
@@ -756,6 +763,27 @@ SCAN_MODE_DEV=THOROUGH
 {% if ansible_distribution == "Debian" %}
 # https://bugs.lttng.org/issues/1143
 ALLOWDEVFILE=/dev/shm/lttng-ust-wait-*
+{% if getent_passwd.pihole is defined %}
+ALLOWDEVFILE=/dev/shm/FTL-clients
+ALLOWDEVFILE=/dev/shm/FTL-counters
+ALLOWDEVFILE=/dev/shm/FTL-dns-cache
+ALLOWDEVFILE=/dev/shm/FTL-domains
+ALLOWDEVFILE=/dev/shm/FTL-lock
+ALLOWDEVFILE=/dev/shm/FTL-overTime
+ALLOWDEVFILE=/dev/shm/FTL-per-client-regex
+ALLOWDEVFILE=/dev/shm/FTL-queries
+ALLOWDEVFILE=/dev/shm/FTL-settings
+ALLOWDEVFILE=/dev/shm/FTL-strings
+ALLOWDEVFILE=/dev/shm/FTL-upstreams
+{% endif %}
+{% if 'usbguard' in ansible_facts.packages %}
+ALLOWDEVFILE=/dev/shm/qb-*/qb-event-usbguard-data
+ALLOWDEVFILE=/dev/shm/qb-*/qb-event-usbguard-header
+ALLOWDEVFILE=/dev/shm/qb-*/qb-request-usbguard-data
+ALLOWDEVFILE=/dev/shm/qb-*/qb-request-usbguard-header
+ALLOWDEVFILE=/dev/shm/qb-*/qb-response-usbguard-data
+ALLOWDEVFILE=/dev/shm/qb-*/qb-response-usbguard-header
+{% endif %}
 {% endif %}
 
 #
