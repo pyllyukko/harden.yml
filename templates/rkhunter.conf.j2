@@ -824,7 +824,11 @@ ALLOWDEVFILE=/dev/shm/qb-*/qb-response-usbguard-header
 #
 # The default is 1048576 (1M) bytes.
 #
+{% if ansible_distribution == "Debian" and 'lightdm-gtk-greeter' in ansible_facts.packages %}
+IPC_SEG_SIZE=68157440
+{% else %}
 #IPC_SEG_SIZE=1048576
+{% endif %}
 
 #
 # This option is used to indicate if the Phalanx2 test is to perform a basic
