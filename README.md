@@ -225,6 +225,7 @@ Usage
         * bofhland ("The following databases are distributed by Sanesecurity, but produced by bofhland")
     * [Linux Malware Detect](https://www.rfxn.com/projects/linux-malware-detect/)
     * [InterServer](https://sigs.interserver.net)
+* **WARNING**: There is a hazard with immutable `loginuid` enabled in auditing in non-systemd systems (Slackware). See longer description of this in the [wiki](https://github.com/pyllyukko/harden.yml/wiki/PAM#pam_loginuidso).
 
 ### Tags
 
