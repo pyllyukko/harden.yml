@@ -38,5 +38,6 @@ root:/usr/bin/snort		net_cls daemons/snort/
 polkitd:/usr/lib/polkit-1/polkitd	net_cls daemons/polkitd/
 root:/usr/bin/dockerd		net_cls daemons/dockerd/
 root:/usr/bin/containerd	net_cls daemons/dockerd/
+amavis				net_cls daemons/amavisd/
 @users				cpu,cpuacct,net_cls	users/%u
 # End of file
