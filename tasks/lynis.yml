@@ -26,6 +26,14 @@
       ansible.builtin.apt:
         name: lynis
         update_cache: true
+    # As we install Lynis directly from CISOfy we need to get this separately
+    - name: Download Debian plugin for Lynis
+      ansible.builtin.get_url:
+        url: https://salsa.debian.org/debian/lynis/-/raw/master/debian/plugin_debian_phase1
+        dest: /usr/share/lynis/plugins/plugin_debian_phase1
+        owner: root
+        group: root
+        mode: '0600'
 - name: Install Lynis into CentOS
   when: ansible_distribution == "CentOS"
   become: true
