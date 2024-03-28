@@ -5,6 +5,7 @@ mozilla/COMODO_ECC_Certification_Authority.crt
 mozilla/DigiCert_High_Assurance_EV_Root_CA.crt
 mozilla/DigiCert_Global_Root_CA.crt
 mozilla/DigiCert_Global_Root_G2.crt
+mozilla/DigiCert_Global_Root_G3.crt
 mozilla/Entrust.net_Premium_2048_Secure_Server_CA.crt
 mozilla/Entrust_Root_Certification_Authority_-_G2.crt
 mozilla/GlobalSign_Root_CA.crt
@@ -14,7 +15,6 @@ mozilla/Starfield_Class_2_CA.crt
 mozilla/Starfield_Root_Certificate_Authority_-_G2.crt
 mozilla/SecureTrust_CA.crt
 mozilla/GlobalSign_Root_CA_-_R3.crt
-mozilla/GlobalSign_Root_CA_-_R2.crt
 mozilla/QuoVadis_Root_CA_2_G3.crt
 mozilla/USERTrust_RSA_Certification_Authority.crt
 mozilla/USERTrust_ECC_Certification_Authority.crt
