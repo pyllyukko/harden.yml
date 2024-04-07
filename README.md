@@ -68,6 +68,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Sets strict permissions to users home directories
 * Limits permissions to various configuration files and directories that might contain sensitive content (see `permissions` tag for a complete list)
 * Clean up `/tmp` during boot
+* Removes SUID and/or SGID bits from various binaries (see `ansible-playbook --list-tasks --tags suid,sgid harden.yml` for details)
 
 ### Application specific
 
@@ -241,6 +242,7 @@ Tags that you can use with `ansible-playbook --tags`:
 * Filesystem related:
     * `permissions`
     * `fstab`
+    * `suid` & `sgid`
 * Specific software:
     * `sysstat`
     * `ssh`

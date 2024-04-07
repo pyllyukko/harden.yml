@@ -126,13 +126,17 @@
                 capability: cap_net_raw+ep
                 state: present
             - name: Remove SUID bit from /bin/ping
+              tags: suid
               ansible.builtin.file:
                 path: /bin/ping
                 mode: u-s
                 owner: root
                 group: root
         - name: Remove SUID & SGID bits from /usr/bin/at
-          tags: cron
+          tags:
+            - cron
+            - suid
+            - sgid
           ansible.builtin.file:
             path: /usr/bin/at
             mode: ug-s
@@ -143,6 +147,7 @@
             - result.failed == true
             - result.state != "absent"
         - name: Remove SGID bits from /usr/bin/w{all,rite}
+          tags: sgid
           ansible.builtin.file:
             path: '{{ item }}'
             mode: g-s
@@ -152,12 +157,14 @@
             - /usr/bin/wall
             - /usr/bin/write
     - name: Remove SUID bit from /usr/bin/chfn
+      tags: suid
       ansible.builtin.file:
         path: /usr/bin/chfn
         mode: u-s
         owner: root
         group: root
     - name: Remove SUID bit from ssh-keysign
+      tags: suid
       ansible.builtin.file:
         path: '{{ item }}'
         mode: u-s
