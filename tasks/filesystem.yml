@@ -112,56 +112,64 @@
 
 - name: SUID bits
   become: true
-  when: ansible_distribution == "Slackware"
-  tags:
-    - permissions
-    - slackware
+  tags: permissions
   block:
-    - name: Ping
+    - name: Slackware
+      when: ansible_distribution == "Slackware"
+      tags: slackware
       block:
-        - name: Set CAP_NET_RAW capability to /bin/ping
-          capabilities:
-            path: /bin/ping
-            capability: cap_net_raw+ep
-            state: present
-        - name: Remove SUID bit from /bin/ping
+        - name: Ping
+          block:
+            - name: Set CAP_NET_RAW capability to /bin/ping
+              capabilities:
+                path: /bin/ping
+                capability: cap_net_raw+ep
+                state: present
+            - name: Remove SUID bit from /bin/ping
+              ansible.builtin.file:
+                path: /bin/ping
+                mode: u-s
+                owner: root
+                group: root
+        - name: Remove SUID & SGID bits from /usr/bin/at
+          tags: cron
           ansible.builtin.file:
-            path: /bin/ping
-            mode: u-s
+            path: /usr/bin/at
+            mode: ug-s
             owner: root
             group: root
-    - name: Remove SUID & SGID bits from /usr/bin/at
-      tags: cron
-      ansible.builtin.file:
-        path: /usr/bin/at
-        mode: ug-s
-        owner: root
-        group: root
-      register: result
-      failed_when:
-        - result.failed == true
-        - result.state != "absent"
+          register: result
+          failed_when:
+            - result.failed == true
+            - result.state != "absent"
+        - name: Remove SGID bits from /usr/bin/w{all,rite}
+          ansible.builtin.file:
+            path: '{{ item }}'
+            mode: g-s
+            owner: root
+            group: root
+          with_items:
+            - /usr/bin/wall
+            - /usr/bin/write
     - name: Remove SUID bit from /usr/bin/chfn
       ansible.builtin.file:
         path: /usr/bin/chfn
         mode: u-s
         owner: root
         group: root
-    - name: Remove SGID bits from /usr/bin/w{all,rite}
+    - name: Remove SUID bit from ssh-keysign
       ansible.builtin.file:
         path: '{{ item }}'
-        mode: g-s
-        owner: root
-        group: root
-      with_items:
-        - /usr/bin/wall
-        - /usr/bin/write
-    - name: Remove SUID bit from /usr/libexec/ssh-keysign
-      ansible.builtin.file:
-        path: /usr/libexec/ssh-keysign
         mode: u-s
         owner: root
         group: root
+      with_items:
+        - /usr/libexec/ssh-keysign # Slackware
+        - /usr/lib/openssh/ssh-keysign # Debian
+      register: result
+      failed_when:
+        - result.failed == true
+        - result.state != "absent"
 
 - name: Chmod sensitive files
   become: true
