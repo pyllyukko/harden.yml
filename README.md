@@ -109,6 +109,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 #### Authorization
 
 * Create a strict `securetty`
+    * See [securetty in Debian #47](https://github.com/pyllyukko/harden.yml/issues/47)
 * Creates `/etc/ftpusers`
 * Restricts the use of [cron](https://en.wikipedia.org/wiki/Cron) and `at`
 * Run `ansible-playbook --list-tasks --tags authorization` for a full list
