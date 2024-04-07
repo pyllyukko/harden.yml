@@ -33,6 +33,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 ### Network
 
 * Enables [TCP wrappers](https://en.wikipedia.org/wiki/TCP_Wrapper)
+    * Some people consider TCP wrappers as obsolete and unnecessary, because nowadays firewall(s) take care of this kind of network level access. I disagree, because TCP wrappers still provide an additional layer of control in a case where the firewall(s) might fail for any number of reasons (usually misconfiguration). TCP wrappers also work as an network level ACL for the programs that utilize it and is a "native" control for those programs.
 * IP stack hardening via sysctl settings
     * For the complete list, see [network.conf.new](newconfs/sysctl.d/network.conf.new)
 * Creates a basic firewall
