@@ -9,6 +9,7 @@
         name: "{{ packages }}"
         update_cache: true
       vars:
+        # checksecurity also brings logcheck
         packages:
           - bootlogd
           - autolog
