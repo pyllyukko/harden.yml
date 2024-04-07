@@ -141,6 +141,12 @@
       failed_when:
         - result.failed == true
         - result.state != "absent"
+    - name: Remove SUID bit from /usr/bin/chfn
+      ansible.builtin.file:
+        path: /usr/bin/chfn
+        mode: u-s
+        owner: root
+        group: root
 
 - name: Chmod sensitive files
   become: true
