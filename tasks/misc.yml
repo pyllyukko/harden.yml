@@ -90,6 +90,7 @@
         #- ModemManager
         - modemmanager-qt
         - inetd
+        - at
       tags: packages
     - name: Remove leftover files from removed packages
       ansible.builtin.file:
@@ -100,6 +101,7 @@
         - /etc/rc.d/rc.atalk
         - /etc/rc.d/rc.inetd
         - /etc/inetd.conf
+        - /etc/rc.d/rc.atd
 
 #- name: Download checksec into /usr/local/bin
 #  become: true

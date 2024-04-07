@@ -110,24 +110,37 @@
     - result.failed == true
     - result.state != "absent"
 
-- name: Ping
+- name: SUID bits
   become: true
   when: ansible_distribution == "Slackware"
   tags:
     - permissions
     - slackware
   block:
-    - name: Set CAP_NET_RAW capability to /bin/ping
-      capabilities:
-        path: /bin/ping
-        capability: cap_net_raw+ep
-        state: present
-    - name: Remove SUID bit from /bin/ping
+    - name: Ping
+      block:
+        - name: Set CAP_NET_RAW capability to /bin/ping
+          capabilities:
+            path: /bin/ping
+            capability: cap_net_raw+ep
+            state: present
+        - name: Remove SUID bit from /bin/ping
+          ansible.builtin.file:
+            path: /bin/ping
+            mode: u-s
+            owner: root
+            group: root
+    - name: Remove SUID & SGID bits from /usr/bin/at
+      tags: cron
       ansible.builtin.file:
-        path: /bin/ping
-        mode: u-s
+        path: /usr/bin/at
+        mode: ug-s
         owner: root
         group: root
+      register: result
+      failed_when:
+        - result.failed == true
+        - result.state != "absent"
 
 - name: Chmod sensitive files
   become: true
