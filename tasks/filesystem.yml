@@ -156,6 +156,12 @@
       with_items:
         - /usr/bin/wall
         - /usr/bin/write
+    - name: Remove SUID bit from /usr/libexec/ssh-keysign
+      ansible.builtin.file:
+        path: /usr/libexec/ssh-keysign
+        mode: u-s
+        owner: root
+        group: root
 
 - name: Chmod sensitive files
   become: true
