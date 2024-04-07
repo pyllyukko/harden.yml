@@ -147,6 +147,15 @@
         mode: u-s
         owner: root
         group: root
+    - name: Remove SGID bits from /usr/bin/w{all,rite}
+      ansible.builtin.file:
+        path: '{{ item }}'
+        mode: g-s
+        owner: root
+        group: root
+      with_items:
+        - /usr/bin/wall
+        - /usr/bin/write
 
 - name: Chmod sensitive files
   become: true
