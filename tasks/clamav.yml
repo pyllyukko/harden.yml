@@ -506,6 +506,7 @@
             - apt_winnti_ms_report_201701.yar
             - apt_woolengoldfish.yar
             - apt_xrat.yar
+            - bkdr_xz_util_cve_2024_3094.yar
             - crime_academic_data_centers_camp_may20.yar
             - crime_andromeda_jun17.yar
             - crime_antifw_installrex.yar
@@ -929,7 +930,7 @@
             - Linux_Trojan_Nuker.yar
             - Linux_Trojan_Orbit.yar
             - Linux_Trojan_Patpooty.yar
-            - Linux_Trojan_Pidief.yar
+            - Linux_Trojan_XZBackdoor.yar
             - Linux_Trojan_Pnscan.yar
             - Linux_Trojan_Pornoasset.yar
             - Linux_Trojan_Psybnc.yar
