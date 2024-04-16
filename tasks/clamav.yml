@@ -315,7 +315,9 @@
             owner: root
             group: root
             mode: '0644'
-          with_items:
+          async: 20 # Single yara rule download shouldn't take longer than this
+          poll: 0
+          loop:
             - apt_aa19_024a.yar
             - apt_alienspy_rat.yar
             - apt_apt17_malware.yar
@@ -771,7 +773,9 @@
             owner: root
             group: root
             mode: '0644'
-          with_items:
+          async: 20
+          poll: 0
+          loop:
             - CobaltStrike__Resources_Command_Ps1_v2_5_to_v3_7_and_Resources_Compress_Ps1_v3_8_to_v4_x.yara
             - CobaltStrike__Resources_Template_Py_v3_3_to_v4_x.yara
             - CobaltStrike__Resources_Template_Sct_v3_3_to_v4_x.yara
@@ -789,7 +793,9 @@
             owner: root
             group: root
             mode: '0644'
-          with_items:
+          async: 20
+          poll: 0
+          loop:
             - Linux_Backdoor_Bash.yar
             - Linux_Backdoor_Fontonlake.yar
             - Linux_Backdoor_Generic.yar
@@ -1271,7 +1277,9 @@
             owner: root
             group: root
             mode: '0644'
-          with_items:
+          async: 20
+          poll: 0
+          loop:
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/cve_rules/CVE-2010-0805.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/cve_rules/CVE-2010-0887.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/cve_rules/CVE-2010-1297.yar
