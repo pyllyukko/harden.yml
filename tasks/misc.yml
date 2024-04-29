@@ -91,6 +91,7 @@
         - modemmanager-qt
         - inetd
         - at
+        - ksh93
       tags: packages
     - name: Remove leftover files from removed packages
       ansible.builtin.file:
