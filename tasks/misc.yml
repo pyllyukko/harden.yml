@@ -92,6 +92,7 @@
         - inetd
         - at
         - ksh93
+        - popa3d
       tags: packages
     - name: Remove leftover files from removed packages
       ansible.builtin.file:
