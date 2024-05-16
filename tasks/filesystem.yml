@@ -156,6 +156,17 @@
           with_items:
             - /usr/bin/wall
             - /usr/bin/write
+        - name: Remove SUID bit from /usr/libexec/xscreensaver/sonar
+          tags: suid
+          ansible.builtin.file:
+            path: /usr/libexec/xscreensaver/sonar
+            mode: u-s
+            owner: root
+            group: root
+          register: result
+          failed_when:
+            - result.failed == true
+            - result.state != "absent"
     - name: Remove SUID bit from /usr/bin/chfn
       tags: suid
       ansible.builtin.file:
