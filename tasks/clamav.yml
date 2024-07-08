@@ -106,13 +106,13 @@
           ScanArchive: "yes"
           Bytecode: "yes"
           BytecodeSecurity: Paranoid
-          LocalSocket: /run/clamav/clamd.sock
+          LocalSocket: "{{ clamav['socket'] }}"
           LocalSocketMode: 660
-          PidFile: /run/clamav/clamd.pid
+          PidFile: "{{ clamav['pid'] }}"
           User: clamav
           AlertOLE2Macros: "yes"
           FixStaleSocket: "yes"
-          DatabaseDirectory: /var/lib/clamav
+          DatabaseDirectory: "{{ clamav['database'] }}"
           OnAccessExcludeUname: clamav
       tags: configuration
     # https://docs.clamav.net/manual/Usage/Configuration.html#freshclamconf
@@ -135,7 +135,7 @@
           DatabaseMirror: database.clamav.net
           DatabaseOwner: clamav
           PidFile: /run/clamav/freshclam.pid
-          DatabaseDirectory: /var/lib/clamav
+          DatabaseDirectory: "{{ clamav['database'] }}"
       tags: configuration
     - name: Copy new ClamAV configurations into place
       ansible.builtin.copy:
@@ -3630,3 +3630,24 @@
         name: clamav-clamonacc
         state: stopped
         enabled: false
+
+- name: clamav-unofficial-sigs
+  become: true
+  tags: clamav-unofficial-sigs
+  block:
+    - name: Stat /etc/clamav-unofficial-sigs
+      ansible.builtin.stat:
+        path: /etc/clamav-unofficial-sigs
+      register: clamav_unofficial_sigs
+      tags: check
+    - name: Copy os.conf
+      ansible.builtin.template:
+        src: os.slackware.conf.j2
+        dest: /etc/clamav-unofficial-sigs/os.conf
+        owner: root
+        group: root
+        mode: '0644'
+        backup: true
+      when:
+        - clamav_unofficial_sigs.stat.exists
+        - ansible_distribution == "Slackware"
