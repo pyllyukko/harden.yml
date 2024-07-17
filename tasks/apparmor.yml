@@ -39,6 +39,33 @@
       #- usr.sbin.sshd
       - usr.sbin.useradd
       - usr.sbin.userdel
+      - postfix-anvil
+      - postfix-bounce
+      - postfix-cleanup
+      - postfix-discard
+      - postfix-dnsblog
+      - postfix-error
+      - postfix-flush
+      - postfix-lmtp
+      - postfix-local
+      - postfix-master
+      - postfix-nqmgr
+      - postfix-oqmgr
+      - postfix-pickup
+      - postfix-pipe
+      - postfix-postscreen
+      - postfix-proxymap
+      - postfix-qmgr
+      - postfix-qmqpd
+      - postfix-scache
+      - postfix-showq
+      - postfix-smtp
+      - postfix-smtpd
+      - postfix-spawn
+      - postfix-tlsmgr
+      - postfix-trivial-rewrite
+      - postfix-verify
+      - postfix-virtual
   become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   block:
