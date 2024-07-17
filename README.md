@@ -325,6 +325,7 @@ Some of these documents are quite old, but most of the stuff still applies.
 * [Linux Firewalls](https://nostarch.com/firewalls.htm)
 * [Secure Secure Shell](https://stribika.github.io/2015/01/04/secure-secure-shell.html)
 * [Securing Debian Manual](https://www.debian.org/doc/manuals/securing-debian-manual/index.en.html)
+    * [AppArmor HowToUse](https://wiki.debian.org/AppArmor/HowToUse)
 * [ArchWiki: limits.conf](https://wiki.archlinux.org/title/Limits.conf)
 * [Effectiveness of Linux Rootkit Detection Tools](http://jultika.oulu.fi/files/nbnfioulu-202004201485.pdf)
 
