@@ -86,3 +86,36 @@
       tags: configuration
       register: result
       changed_when: result.stdout | regex_search('^Setting .+ to enforce mode\.$')
+    - name: Fix Postfix profiles
+      ansible.builtin.replace:
+        path: /etc/apparmor.d/{{ item }}
+        regexp: '/usr/lib/postfix/'
+        replace: '/usr/{lib,libexec}/postfix/'
+      with_items:
+        - postfix-anvil
+        - postfix-bounce
+        - postfix-cleanup
+        - postfix-discard
+        - postfix-dnsblog
+        - postfix-error
+        - postfix-flush
+        - postfix-lmtp
+        - postfix-local
+        - postfix-master
+        - postfix-nqmgr
+        - postfix-oqmgr
+        - postfix-pickup
+        - postfix-pipe
+        - postfix-postscreen
+        - postfix-proxymap
+        - postfix-qmgr
+        - postfix-qmqpd
+        - postfix-scache
+        - postfix-showq
+        - postfix-smtp
+        - postfix-smtpd
+        - postfix-spawn
+        - postfix-tlsmgr
+        - postfix-trivial-rewrite
+        - postfix-verify
+        - postfix-virtual
