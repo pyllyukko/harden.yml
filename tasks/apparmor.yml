@@ -69,6 +69,10 @@
       - postfix-verify
       - postfix-virtual
       - usr.bin.procmail
+      - usr.sbin.postalias
+      - usr.sbin.postdrop
+      - usr.sbin.postmap
+      - usr.sbin.postqueue
   become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   block:
