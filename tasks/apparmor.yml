@@ -68,6 +68,7 @@
       - postfix-trivial-rewrite
       - postfix-verify
       - postfix-virtual
+      - usr.bin.procmail
   become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   block:
