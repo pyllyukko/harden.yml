@@ -42,5 +42,6 @@ amavis				net_cls daemons/amavisd/
 dovecot				net_cls daemons/dovecot/
 dovenull			net_cls daemons/dovecot/
 root:/usr/sbin/dovecot		net_cls daemons/dovecot/
+opendmarc:/usr/sbin/opendmarc	net_cls daemons/opendmarc/
 @users				cpu,cpuacct,net_cls	users/%u
 # End of file
