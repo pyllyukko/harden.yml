@@ -95,7 +95,7 @@
       ansible.builtin.replace:
         path: /etc/apparmor.d/{{ item }}
         regexp: '/usr/lib/postfix/'
-        replace: '/usr/{lib,libexec}/postfix/'
+        replace: '/usr/lib{,exec}/postfix/'
       with_items:
         - postfix-anvil
         - postfix-bounce
@@ -124,3 +124,4 @@
         - postfix-trivial-rewrite
         - postfix-verify
         - postfix-virtual
+        - usr.lib.dovecot.dovecot-lda
