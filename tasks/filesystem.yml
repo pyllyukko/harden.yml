@@ -17,6 +17,7 @@
         regexp: '^(\s*/sbin/mount -v proc /proc -n -t proc).*$'
         replace: '\g<1> -o hidepid=2,gid={{ getent_group.polkitd[1] }} 2> /dev/null'
         validate: '/bin/grep "^\s*/sbin/mount -v proc /proc -n -t proc -o hidepid=2,gid={{ getent_group.polkitd[1] }} 2> /dev/null$" %s'
+        backup: true
       tags: configuration
     - name: Fix mkinitrd so initrd image uses hardened mount options for /proc and /dev
       ansible.builtin.blockinfile:
