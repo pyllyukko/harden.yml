@@ -289,6 +289,7 @@
           Suspicious_PowerShell_Code_1
           DarkComet_Keylogs_Memory
           manitsme
+          SUSP_Just_EICAR
       tags:
         - configuration
         - yara
@@ -3151,7 +3152,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Stairwell/NK_GOLDBACKDOOR_obf_payload.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Stairwell/NK_GOLDBACKDOOR_LNK.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Secuinfra/APT_Bitter_PDB_Paths.yar
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/Secuinfra/APT_Bitter_ZxxZ_Downloader.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/NCCGroup/badwinmail.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/NCCGroup/package_manager.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/NCCGroup/metaStealer_memory.yar
