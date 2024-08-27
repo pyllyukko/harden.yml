@@ -125,3 +125,4 @@
         - postfix-verify
         - postfix-virtual
         - usr.lib.dovecot.dovecot-lda
+        - usr.sbin.postqueue
