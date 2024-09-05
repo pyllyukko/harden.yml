@@ -20,3 +20,4 @@ mozilla/USERTrust_RSA_Certification_Authority.crt
 mozilla/USERTrust_ECC_Certification_Authority.crt
 mozilla/SSL.com_Root_Certification_Authority_RSA.crt
 mozilla/ISRG_Root_X1.crt
+mozilla/Amazon_Root_CA_1.crt
