@@ -122,7 +122,7 @@
         - name: Ping
           block:
             - name: Set CAP_NET_RAW capability to /bin/ping
-              capabilities:
+              community.general.capabilities:
                 path: /bin/ping
                 capability: cap_net_raw+ep
                 state: present

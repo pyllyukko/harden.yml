@@ -44,7 +44,7 @@
             password_lock: true
             state: present
         - name: Check latest ClamAV version
-          uri:
+          ansible.builtin.uri:
             url: https://api.github.com/repos/Cisco-Talos/clamav/releases/latest
             method: GET
           register: clamav_latest
