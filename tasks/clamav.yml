@@ -23,7 +23,26 @@
           ansible.builtin.apt:
             name: ['clamav', 'clamav-daemon', 'clamav-base', 'clamav-freshclam', 'libclamav11']
             state: absent
-          tags: services
+          tags:
+            - services
+            - accounts  # postrm removed the ClamAV user
+        - name: Create group for ClamAV
+          tags: accounts
+          ansible.builtin.group:
+            name: clamav
+            state: present
+            system: true
+        - name: Create user account for ClamAV
+          tags: accounts
+          ansible.builtin.user:
+            name: clamav
+            group: clamav
+            shell: /usr/sbin/nologin
+            system: true
+            create_home: false
+            home: /var/lib/clamav
+            password_lock: true
+            state: present
         - name: Download ClamAV
           ansible.builtin.get_url:
             url: "https://www.clamav.net/downloads/production/clamav-{{ clamav_version }}.linux.x86_64.deb"
