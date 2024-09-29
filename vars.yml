@@ -57,7 +57,6 @@ chkrootkit_conf_dir: '/etc/chkrootkit'
 cisofy_keyring: /etc/apt/keyrings/cisofy.asc
 hsts_max_age: 600
 clamav_location: '{% if ansible_distribution == "Debian" and ansible_architecture == "x86_64" %}/usr/local/bin{% else %}/usr/bin{% endif %}'
-clamav_version: 1.2.1
 clamav: {
   'socket': "/run/clamav/clamd.sock",
   'database': "/var/lib/clamav",

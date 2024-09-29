@@ -43,16 +43,25 @@
             home: /var/lib/clamav
             password_lock: true
             state: present
+        - name: Check latest ClamAV version
+          uri:
+            url: https://api.github.com/repos/Cisco-Talos/clamav/releases/latest
+            method: GET
+          register: clamav_latest
+        # TODO: Download PGP signature and verify it
         - name: Download ClamAV
           ansible.builtin.get_url:
-            url: "https://www.clamav.net/downloads/production/clamav-{{ clamav_version }}.linux.x86_64.deb"
+            url: "{{ clamav_latest.json | json_query(query) | first }}"
             dest: /var/cache/apt/archives/
             owner: root
             group: root
             mode: '0600'
+          vars:
+            query: "assets[?ends_with(name,'.linux.x86_64.deb')].browser_download_url"
+          register: clamav_download
         - name: Install ClamAV (x86_64)
           ansible.builtin.apt:
-            deb: /var/cache/apt/archives/clamav-{{ clamav_version }}.linux.x86_64.deb
+            deb: "{{ clamav_download.dest }}"
 
     - name: Determine ClamAV sysconfdir
       ansible.builtin.shell: set -o pipefail; {{ clamav_location }}/clamconf | awk '/^Checking configuration files in/{print$5}' # noqa no-changed-when
