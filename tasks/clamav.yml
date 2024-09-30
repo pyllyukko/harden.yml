@@ -185,6 +185,13 @@
       with_items:
         - clamd
         - freshclam
+    - name: mkdir /var/lib/clamav/
+      ansible.builtin.file:
+        path: /var/lib/clamav
+        state: directory
+        owner: clamav
+        group: clamav
+        mode: '0755'
     # Make the dir and the necessary files readable by other users so they can run clamscan
     - name: Make /var/lib/clamav/ +rx
       ansible.builtin.file:
