@@ -39,7 +39,9 @@
 
 - name: John
   become: true
-  tags: john
+  tags:
+    - john
+    - passwords
   block:
     - name: Check /etc/john
       tags: check
@@ -71,6 +73,13 @@
             path: /etc/cron.d/john
             regexp: '^#?([0-9]+\s+[0-9]+\s+\*\s+\*\s+\*\s+root\s+\[\s+-x\s+/usr/share/john/cronjob\s+\]\s+&&\s+(nice\s+)?/usr/share/john/cronjob\s+st(art|op))$'
             replace: '\g<1>'
+            backup: true
+        # https://www.shellcheck.net/wiki/SC2069
+        - name: Fix SC2069 in /usr/share/john/cronjob
+          ansible.builtin.replace:
+            path: /usr/share/john/cronjob
+            regexp: '^(\s+/sbin/start-stop-daemon --stop -q -o --pidfile \$PIDDIR/john.pid) 2>&1 >/dev/null$'
+            replace: '\g<1> >/dev/null 2>&1'
             backup: true
 
 - name: Tiger
