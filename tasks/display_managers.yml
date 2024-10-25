@@ -59,10 +59,7 @@
     - result.failed == true
     - result.msg != "Path /etc/gdm3/greeter.dconf-defaults does not exist !"
 
-# CIS Debian Linux 11 Benchmark v1.0.0 - 09-22-2022
-#   1.8.6 Ensure GDM automatic mounting of removable media is disabled
-# https://access.redhat.com/solutions/20107
-- name: Disable GNOME automount
+- name: GNOME settings
   become: true
   tags:
     - configuration
@@ -89,6 +86,9 @@
         content: |
           user-bd:user
           system-db:local
+    # CIS Debian Linux 11 Benchmark v1.0.0 - 09-22-2022
+    #   1.8.6 Ensure GDM automatic mounting of removable media is disabled
+    # https://access.redhat.com/solutions/20107
     - name: Disable GNOME automount
       community.general.ini_file:
         path: /etc/dconf/db/local.d/00-media-automount
@@ -102,3 +102,14 @@
       with_dict:
         automount: "false"
         automount-open: "false"
+    # CIS Debian Linux 12 Benchmark v1.0.1 - 04-15-2024: 1.7.8 Ensure GDM autorun-never is enabled
+    - name: Disable GNOME autorun
+      community.general.ini_file:
+        path: /etc/dconf/db/local.d/00-media-autorun
+        section: org/gnome/desktop/media-handling
+        option: autorun-never
+        value: "true"
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Run dconf update
