@@ -1,0 +1,2 @@
+# CIS Debian 12 v1.1.0: 6.2.3.18 Ensure successful and unsuccessful attempts to use the usermod command are collected
+-a always,exit -F path=/usr/sbin/usermod -F perm=x -F auid>=1000 -F auid!=unset -k usermod
