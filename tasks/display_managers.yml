@@ -72,6 +72,20 @@
         owner: root
         group: root
         mode: '0755'
+    # DCONF(7): "On startup, dconf consults the DCONF_PROFILE environment variable.
+    # If set, dconf will attempt to open the named profile, aborting if that fails.
+    # If the environment variable is not set, it will attempt to open the profile
+    # named "user" and if that fails, it will fall back to an internal hard-wired configuration."
+    - name: Configure dconf to include local db
+      ansible.builtin.copy:
+        dest: /etc/dconf/profile/user
+        owner: root
+        group: root
+        mode: '0644'
+        backup: true
+        content: |
+          user-bd:user
+          system-db:local
     - name: Disable GNOME automount
       community.general.ini_file:
         path: /etc/dconf/db/local.d/00-media-automount
@@ -81,6 +95,7 @@
         owner: root
         group: root
         mode: '0644'
+      notify: Run dconf update
       with_dict:
         automount: "false"
         automount-open: "false"

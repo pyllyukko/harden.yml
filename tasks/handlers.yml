@@ -90,3 +90,11 @@
   become: true
   ansible.builtin.command: /usr/sbin/update-grub
   changed_when: true
+# TODO: Make sure the dbs are readable by regular user
+- name: Run dconf update
+  become: true
+  ansible.builtin.command: dconf update
+  register: result
+  failed_when:
+    - result.failed
+    - '"No such file or directory" not in result.msg'
