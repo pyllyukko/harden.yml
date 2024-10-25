@@ -1,0 +1,2 @@
+# CIS Debian 12 v1.1.0: 6.2.3.15 Ensure successful and unsuccessful attempts to use the chcon command are collected
+-a always,exit -F path=/usr/bin/chcon -F perm=x -F auid>=1000 -F auid!=unset -k perm_chng
