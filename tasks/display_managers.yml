@@ -44,6 +44,7 @@
   tags:
     - configuration
     - banners
+    - gnome
   ansible.builtin.replace:
     regexp: '^(# ?)?({{ item.key }})=.+$'
     replace: '\g<2>={{ item.value }}'
@@ -63,7 +64,9 @@
 # https://access.redhat.com/solutions/20107
 - name: Disable GNOME automount
   become: true
-  tags: configuration
+  tags:
+    - configuration
+    - gnome
   block:
     - name: mkdir /etc/dconf/db/local.d
       ansible.builtin.file:
