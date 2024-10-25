@@ -1,0 +1,2 @@
+# CIS Debian 12 v1.1.0: 6.2.3.17 Ensure successful and unsuccessful attempts to use the chacl command are collected
+-a always,exit -F path=/usr/bin/chacl -F perm=x -F auid>=1000 -F auid!=unset -k perm_chng
