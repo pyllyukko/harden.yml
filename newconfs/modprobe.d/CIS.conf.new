@@ -1,12 +1,22 @@
 install cramfs /bin/true
+blacklist cramfs
 install freevxfs /bin/true
+blacklist freevxfs
 install jffs2 /bin/true
+blacklist jffs2
 install hfs /bin/true
+blacklist hfs
 install hfsplus /bin/true
+blacklist hfsplus
 #install squashfs /bin/true
 install udf /bin/true
+blacklist udf
 #install vfat /bin/true
 install dccp /bin/true
+blacklist dccp
 install sctp /bin/true
+blacklist sctp
 install rds /bin/true
+blacklist rds
 install tipc /bin/true
+blacklist tipc
