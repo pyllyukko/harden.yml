@@ -18,6 +18,7 @@ debian_services:
   - triggerhappy
   - xinetd
   - inetd
+  - rsync
   # for servers
   #- triggerhappy
   #- wpa_supplicant
