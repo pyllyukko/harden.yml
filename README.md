@@ -230,6 +230,7 @@ Usage
     * [InterServer](https://sigs.interserver.net)
     * [URLhaus](https://urlhaus.abuse.ch/downloads/urlhaus.ndb)
 * **WARNING**: There is a hazard with immutable `loginuid` enabled in auditing in non-systemd systems (Slackware). See longer description of this in the [wiki](https://github.com/pyllyukko/harden.yml/wiki/PAM#pam_loginuidso).
+* Review `/etc/fstab.new` manually and deploy applicable changes to `/etc/fstab`
 
 ### Tags
 
