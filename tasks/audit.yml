@@ -12,6 +12,8 @@
       tags:
         - packages
         - debian
+
+    # Rules
     - name: mkdir /etc/audit/rules.d
       ansible.builtin.file:
         path: /etc/audit/rules.d
@@ -136,6 +138,8 @@
       tags:
         - services
         - configuration
+
+    # Bootloaders
     - name: Configure GRUB for auditing
       ansible.builtin.replace:
         path: /etc/default/grub
@@ -164,6 +168,7 @@
       failed_when:
         - result.failed == true
         - '"does not exist !" not in result.msg'
+
     # AUDISP-REMOTE(8): "you should edit auditd.conf to set the name_format to something meaningful and the log_format to enriched
     #- name: Configure auditd.conf for audisp
     #  ansible.builtin.replace:
