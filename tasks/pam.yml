@@ -198,9 +198,13 @@
     - debian
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   ansible.builtin.replace:
-    path: /etc/pam.d/common-auth
+    path: '{{ item }}'
     regexp: '\s+nullok(_secure)?'
     replace: ''
+    backup: true
+  with_items:
+    - /etc/pam.d/common-auth
+    - /usr/share/pam-configs/unix
 
 # https://wiki.debian.org/WHEEL/PAM
 # This is not enabled in Slackware because it has a separate "Deny use of su" task
