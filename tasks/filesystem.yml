@@ -302,10 +302,11 @@
         mode: o-rwx
         owner: root
       tags: permissions
+    # Partly CIS Debian 12 v1.1.0: 6.2.4.5 Ensure audit configuration files mode is configured
     - name: chmod audit files
       ansible.builtin.file:
         path: "{{ item }}"
-        mode: o-rwx
+        mode: '0700'
         owner: root
         group: root
       with_items:
