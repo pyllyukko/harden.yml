@@ -21,6 +21,25 @@
   failed_when:
     - result.failed == true
     - '"does not exist !" not in result.msg'
+- name: Enable AppArmor in /etc/default/grub
+  become: true
+  ansible.builtin.replace:
+    path: /etc/default/grub
+    regexp: '^(GRUB_CMDLINE_LINUX="(?!.*\b{{ item }}\b).*)"$'
+    replace: '\1 {{ item }}"'
+    backup: true
+  with_items:
+    - apparmor=1
+    - security=apparmor
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  tags:
+    - configuration
+    - apparmor
+  notify: "Run update-grub"
+  register: result
+  failed_when:
+    - result.failed == true
+    - '"does not exist !" not in result.msg'
 # https://github.com/pyllyukko/harden.sh/wiki/AppArmor
 - name: Enable extra profiles
   vars:
