@@ -85,7 +85,7 @@ aircrack-apparmor-profiles: $(aircrack-apparmor-profiles)
 /etc/audit/audit.rules: FORCE
 	/sbin/augenrules
 
-/etc/audit/rules.d/31-privileged.rules:
+/etc/audit/rules.d/31-privileged.rules: FORCE
 	find /bin -type f \( -perm -04000 -o -perm -02000 \) 2>/dev/null | awk '{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$1 }' > $@
 	find /sbin -type f \( -perm -04000 -o -perm -02000 \) 2>/dev/null | awk '{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$1 }' >> $@
 	find /usr/bin -type f \( -perm -04000 -o -perm -02000 \) 2>/dev/null | awk '{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$1 }' >> $@
