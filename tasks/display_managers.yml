@@ -84,7 +84,7 @@
         mode: '0644'
         backup: true
         content: |
-          user-bd:user
+          user-db:user
           system-db:local
     # CIS Debian Linux 11 Benchmark v1.0.0 - 09-22-2022
     #   1.8.6 Ensure GDM automatic mounting of removable media is disabled
