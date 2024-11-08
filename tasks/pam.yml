@@ -68,6 +68,29 @@
     - slackware
     - umask
 
+- name: Add pam_namespace to /etc/pam.d/{login,sddm,sshd,xdm} (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/pam.d/{{ item }}
+    regexp: '^session\s+required\s+pam_namespace\.so$'
+    line: 'session required pam_namespace.so'
+    backup: true
+    insertafter: EOF
+  with_items:
+    - sshd
+    - login
+    - sddm
+    - xdm
+  tags:
+    - configuration
+    - pam
+    - slackware
+  register: result
+  failed_when:
+    - result.failed
+    - '"does not exist !" not in result.msg'
+
 # http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html
 # https://tldp.org/HOWTO/User-Authentication-HOWTO/x263.html#AEN266
 - name: /etc/pam.d/other
