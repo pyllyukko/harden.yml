@@ -49,7 +49,10 @@
     - pam
     - slackware
 
-- name: Add pam_umask, pam_cgroup & pam_namespace to /etc/pam.d/postlogin (Slackware)
+# NOTE: We can't add pam_namespace into /etc/pam.d/postlogin, as it should be
+# last line for session group (see PAM_NAMESPACE(8)) and Slackware's
+# configurations include postlogin before other session modules.
+- name: Add pam_umask & pam_cgroup to /etc/pam.d/postlogin (Slackware)
   when: ansible_distribution == "Slackware"
   become: true
   ansible.builtin.lineinfile:
@@ -59,7 +62,6 @@
   with_dict:
     umask: optional
     cgroup: optional
-    namespace: required
   tags:
     - configuration
     - pam
