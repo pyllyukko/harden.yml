@@ -81,7 +81,8 @@
     path: /etc/rc.d/rc.S
     regexp: '^(rm -rf) /tmp/\{.+\}$'
     replace: 'shopt -s dotglob; \g<1> /tmp{,-inst}/*; shopt -u dotglob'
-    validate: '/bin/grep "^shopt -s dotglob; rm -rf /tmp/\*; shopt -u dotglob$" %s'
+    validate: '/bin/grep "^shopt -s dotglob; rm -rf /tmp{,-inst}/\*; shopt -u dotglob$" %s'
+    backup: true
 - name: Clean up /tmp during boot (Debian)
   become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
