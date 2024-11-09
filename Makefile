@@ -163,7 +163,8 @@ pam-files/su pam-files/su-l: | $(CWD)/pam-files/
 pam-files/sshd: | $(CWD)/pam-files/
 	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/n/openssh/sshd.pam
 
-pam-files/login: | $(CWD)/pam-files/
+# See https://github.com/pyllyukko/harden.yml/wiki/PAM#etcpamdremote
+pam-files/login pam-files/remote: | $(CWD)/pam-files/
 	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/a/util-linux/pam.d/login
 
 pam-files/sddm pam-files/sddm-autologin pam-files/sddm-greeter: | $(CWD)/pam-files/
@@ -182,7 +183,7 @@ pam-files/dovecot: | $(CWD)/pam-files/
 	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/n/dovecot/dovecot.pam
 
 .PHONY: pam-files
-pam-files: pam-files/other pam-files/passwd pam-files/postlogin pam-files/system-auth pam-files/su pam-files/su-l pam-files/sshd pam-files/login pam-files/sddm pam-files/sddm-autologin pam-files/sddm-greeter pam-files/xscreensaver pam-files/screen pam-files/xdm pam-files/dovecot
+pam-files: pam-files/other pam-files/passwd pam-files/postlogin pam-files/system-auth pam-files/su pam-files/su-l pam-files/sshd pam-files/login pam-files/remote pam-files/sddm pam-files/sddm-autologin pam-files/sddm-greeter pam-files/xscreensaver pam-files/screen pam-files/xdm pam-files/dovecot
 
 .PHONY: pamcheck
 pamcheck: pam-files
@@ -199,6 +200,7 @@ pamcheck: pam-files
 	-diff --color pam-files/su-l		/etc/pam.d/su-l
 	-diff --color pam-files/sshd		/etc/pam.d/sshd
 	-diff --color pam-files/login		/etc/pam.d/login
+	-diff --color pam-files/remote		/etc/pam.d/remote
 	-diff --color pam-files/sddm		/etc/pam.d/sddm
 	-diff --color pam-files/sddm-autologin	/etc/pam.d/sddm-autologin
 	-diff --color pam-files/sddm-greeter	/etc/pam.d/sddm-greeter
