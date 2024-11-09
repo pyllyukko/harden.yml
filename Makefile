@@ -178,8 +178,11 @@ pam-files/screen: | $(CWD)/pam-files/
 pam-files/xdm: | $(CWD)/pam-files/
 	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/x/x11/post-install/xdm/xdm.pamd
 
+pam-files/dovecot: | $(CWD)/pam-files/
+	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/n/dovecot/dovecot.pam
+
 .PHONY: pam-files
-pam-files: pam-files/other pam-files/passwd pam-files/postlogin pam-files/system-auth pam-files/su pam-files/su-l pam-files/sshd pam-files/login pam-files/sddm pam-files/sddm-autologin pam-files/sddm-greeter pam-files/xscreensaver pam-files/screen pam-files/xdm
+pam-files: pam-files/other pam-files/passwd pam-files/postlogin pam-files/system-auth pam-files/su pam-files/su-l pam-files/sshd pam-files/login pam-files/sddm pam-files/sddm-autologin pam-files/sddm-greeter pam-files/xscreensaver pam-files/screen pam-files/xdm pam-files/dovecot
 
 .PHONY: pamcheck
 pamcheck: pam-files
@@ -202,6 +205,7 @@ pamcheck: pam-files
 	-diff --color pam-files/xscreensaver	/etc/pam.d/xscreensaver
 	-diff --color pam-files/screen		/etc/pam.d/screen
 	-diff --color pam-files/xdm		/etc/pam.d/xdm
+	-diff --color pam-files/dovecot		/etc/pam.d/dovecot
 
 .PHONY: manifest
 manifest: $(manifest_files)
