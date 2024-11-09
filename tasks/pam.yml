@@ -109,14 +109,24 @@
       tags:
         - configuration
         - pam
-    - name: Remove /etc/pam.d/other.new
-      ansible.builtin.file:
-        path: /etc/pam.d/other.new
-        state: absent
+    - name: Slackware specific PAM stuff
       when: ansible_distribution == "Slackware"
       tags:
         - pam
         - slackware
+      block:
+        - name: Remove /etc/pam.d/other.new (Slackware)
+          ansible.builtin.file:
+            path: /etc/pam.d/other.new
+            state: absent
+        - name: Create secure default /etc/pam.d/remote (Slackware)
+          ansible.builtin.copy:
+            src: "{{ playbook_dir }}/newconfs/pam.d/other.new"
+            dest: /etc/pam.d/remote
+            owner: root
+            group: root
+            mode: '0644'
+            backup: true
 
 - name: Check some Slackware's PAM files
   become: true
