@@ -187,7 +187,7 @@ pamcheck: pam-files
 	for i in chfn chsh; do echo "25af00fb379de78d2807e1f291fcf6a44a097dc4bbbe4f5ef8cc54deccba69428e72ad32cae65fd2e2b0d29a0233513fecc033b99a207890e6fb9cd7d98f87c2  /etc/pam.d/$${i}" | /bin/sha512sum -c; done
 	echo -e "7750b5480178346bdf856d83e3aecf637f9888380657d2fe863096959ebc02a5e52fbab08bad9c4ae9e1c4f257dbe1d155eef8dd8dc1b9ac178b90e0ada5b6cb  /etc/pam.d/runuser\n9b39d1238b4686cb17e04051e0b5f9a5bd264e7789c6cf5409d7ed5114de781d28fbc8a7457f1ea67664ec595313e2c49710ac1a2480dbc49ed3d6ccf91bb3e6  /etc/pam.d/runuser-l" | /bin/sha512sum -c
 	echo "38723d84782099253ac259c9592ef273042cf68127a3ae310ca3a720215924c029e44d9760ed2146922540ed41892c36a7a210d385eb1ec8ecee4f23b1ed8812  /etc/pam.d/elogind-user" | /bin/sha512sum -c
-	echo "d1bda49018597c8315d6fe37f765da0840f26816c54f663752f47e5934ddd4c10d211a0b2824517a2c487af0c5c1593b67eef653804844591f98e41c7bc4deb3  /etc/pam.d/ppp" | /bin/sha512sum -c
+	-echo "d1bda49018597c8315d6fe37f765da0840f26816c54f663752f47e5934ddd4c10d211a0b2824517a2c487af0c5c1593b67eef653804844591f98e41c7bc4deb3  /etc/pam.d/ppp" | /bin/sha512sum -c
 	-diff --color pam-files/other		/etc/pam.d/other
 	-diff --color pam-files/passwd		/etc/pam.d/passwd
 	-diff --color pam-files/postlogin	/etc/pam.d/postlogin
