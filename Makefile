@@ -168,7 +168,7 @@ pam-files/login pam-files/remote: | $(CWD)/pam-files/
 	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/a/util-linux/pam.d/login
 
 pam-files/sddm pam-files/sddm-autologin pam-files/sddm-greeter: | $(CWD)/pam-files/
-	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/kde/kde/post-install/sddm/pam.d/sddm
+	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/kde/kde/post-install/sddm/pam.d/$(notdir $@)
 
 pam-files/xscreensaver: | $(CWD)/pam-files/
 	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/xap/xscreensaver/xscreensaver.pam
