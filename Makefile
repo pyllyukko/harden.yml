@@ -150,6 +150,59 @@ $(CWD)/manifests/$(slackware)-$(slackware_version)/MANIFEST.bz2: $(CWD)/manifest
 	-wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/$(slackware)/$(notdir $@)
 	cd $(CWD)/manifests/$(slackware)-$(slackware_version) && fgrep "MANIFEST.bz2" CHECKSUMS.md5 | /bin/md5sum -c
 
+# Check Slackware's PAM files
+$(CWD)/pam-files/:
+	mkdir -pv $@
+
+pam-files/other pam-files/passwd pam-files/postlogin pam-files/system-auth: | $(CWD)/pam-files/
+	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/a/shadow/pam.d/$(notdir $@)
+
+pam-files/su pam-files/su-l: | $(CWD)/pam-files/
+	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/a/shadow/pam.d-su/$(notdir $@)
+
+pam-files/sshd: | $(CWD)/pam-files/
+	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/n/openssh/sshd.pam
+
+pam-files/login: | $(CWD)/pam-files/
+	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/a/util-linux/pam.d/login
+
+pam-files/sddm pam-files/sddm-autologin pam-files/sddm-greeter: | $(CWD)/pam-files/
+	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/kde/kde/post-install/sddm/pam.d/sddm
+
+pam-files/xscreensaver: | $(CWD)/pam-files/
+	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/xap/xscreensaver/xscreensaver.pam
+
+pam-files/screen: | $(CWD)/pam-files/
+	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/ap/screen/screen.pam
+
+pam-files/xdm: | $(CWD)/pam-files/
+	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/x/x11/post-install/xdm/xdm.pamd
+
+.PHONY: pam-files
+pam-files: pam-files/other pam-files/passwd pam-files/postlogin pam-files/system-auth pam-files/su pam-files/su-l pam-files/sshd pam-files/login pam-files/sddm pam-files/sddm-autologin pam-files/sddm-greeter pam-files/xscreensaver pam-files/screen pam-files/xdm
+
+.PHONY: pamcheck
+pamcheck: pam-files
+	for i in chage chgpasswd chpasswd groupadd groupdel groupmems groupmod newusers useradd userdel usermod; do echo "79e37b98714471de80ed60ac8aad337b547259ce27d669a58f8b9d94d77e676e336409f1da9a0f4e412c11398791ff3123a996899410729cda23b771e6111393  /etc/pam.d/$${i}" | /bin/sha512sum -c; done
+	for i in chfn chsh; do echo "25af00fb379de78d2807e1f291fcf6a44a097dc4bbbe4f5ef8cc54deccba69428e72ad32cae65fd2e2b0d29a0233513fecc033b99a207890e6fb9cd7d98f87c2  /etc/pam.d/$${i}" | /bin/sha512sum -c; done
+	echo -e "7750b5480178346bdf856d83e3aecf637f9888380657d2fe863096959ebc02a5e52fbab08bad9c4ae9e1c4f257dbe1d155eef8dd8dc1b9ac178b90e0ada5b6cb  /etc/pam.d/runuser\n9b39d1238b4686cb17e04051e0b5f9a5bd264e7789c6cf5409d7ed5114de781d28fbc8a7457f1ea67664ec595313e2c49710ac1a2480dbc49ed3d6ccf91bb3e6  /etc/pam.d/runuser-l" | /bin/sha512sum -c
+	echo "38723d84782099253ac259c9592ef273042cf68127a3ae310ca3a720215924c029e44d9760ed2146922540ed41892c36a7a210d385eb1ec8ecee4f23b1ed8812  /etc/pam.d/elogind-user" | /bin/sha512sum -c
+	echo "d1bda49018597c8315d6fe37f765da0840f26816c54f663752f47e5934ddd4c10d211a0b2824517a2c487af0c5c1593b67eef653804844591f98e41c7bc4deb3  /etc/pam.d/ppp" | /bin/sha512sum -c
+	-diff --color pam-files/other		/etc/pam.d/other
+	-diff --color pam-files/passwd		/etc/pam.d/passwd
+	-diff --color pam-files/postlogin	/etc/pam.d/postlogin
+	-diff --color pam-files/system-auth	/etc/pam.d/system-auth
+	-diff --color pam-files/su		/etc/pam.d/su
+	-diff --color pam-files/su-l		/etc/pam.d/su-l
+	-diff --color pam-files/sshd		/etc/pam.d/sshd
+	-diff --color pam-files/login		/etc/pam.d/login
+	-diff --color pam-files/sddm		/etc/pam.d/sddm
+	-diff --color pam-files/sddm-autologin	/etc/pam.d/sddm-autologin
+	-diff --color pam-files/sddm-greeter	/etc/pam.d/sddm-greeter
+	-diff --color pam-files/xscreensaver	/etc/pam.d/xscreensaver
+	-diff --color pam-files/screen		/etc/pam.d/screen
+	-diff --color pam-files/xdm		/etc/pam.d/xdm
+
 .PHONY: manifest
 manifest: $(manifest_files)
 
