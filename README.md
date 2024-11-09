@@ -121,6 +121,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Configures `/etc/security/pwquality.conf` if available
 * Require [pam\_wheel](http://linux-pam.org/Linux-PAM-html/sag-pam_wheel.html) in `/etc/pam.d/su`
 * Creates a secure [/etc/pam.d/other](http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html)
+    * See also [A strong /etc/pam.d/other](https://tldp.org/HOWTO/html_single/User-Authentication-HOWTO/#AEN266)
 * Configures `/etc/security/limits.conf` as follows:
     * Disable [core dumps](https://en.wikipedia.org/wiki/Core_dump)
     * Sets maximum amount of processes (or threads, see [setrlimit(2)](https://man7.org/linux/man-pages/man2/setrlimit.2.html))
