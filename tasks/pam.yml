@@ -59,6 +59,7 @@
     path: /etc/pam.d/postlogin
     regexp: '^session\s+{{ item.value }}\s+pam_{{ item.key }}\.so\b.*$'
     line: 'session     {{ item.value }}      pam_{{ item.key }}.so'
+    backup: true
   with_dict:
     umask: optional
     cgroup: optional
@@ -104,6 +105,7 @@
         owner: root
         group: root
         mode: '0644'
+        backup: true
       tags:
         - configuration
         - pam
@@ -177,6 +179,7 @@
         regexp: '^auth\s+required\s+pam_faillock\.so\s+preauth$'
         line: "auth\trequired\t\t\tpam_faillock.so\tpreauth" # noqa no-tabs
         insertbefore: '^# here are the per-package modules \(the "Primary" block\)$'
+        backup: true
 
 - name: Create custom /etc/pam.d/system-auth for Slackware
   become: true
@@ -203,6 +206,7 @@
     path: /etc/pam.d/{{ item }}
     regexp: '^auth\s+include\s+postlogin$'
     state: absent
+    backup: true
   with_items:
     - kde
     - login
@@ -241,6 +245,7 @@
     regexp: '^#\s*(auth\s+required\s+pam_wheel\.so(\s+use_uid)?)$'
     replace: '\1'
     validate: '/bin/grep "^auth\s\+required\s\+pam_wheel\.so.*$" %s'
+    backup: true
   tags:
     - configuration
     - pam
@@ -384,6 +389,7 @@
         path: /etc/pam.d/common-password
         regexp: '^(password\s+.+\s+pam_unix\.so(?!.*\brounds=[0-9]+\b).*)$'
         replace: '\1 rounds={{ crypt_rounds }}'
+        backup: true
     # CIS CentOS Linux 7 Benchmark v3.0.0 - 5.3.1 Ensure password creation requirements are configured
     # https://www.redhat.com/sysadmin/more-lockdown-controls
     - name: Configure pwquality
@@ -392,6 +398,7 @@
         regexp: '^(# ?)?({{ item.key }}\s+)=.*$'
         replace: '\g<2>= {{ item.value }}'
         validate: '/bin/grep "^{{ item.key }}\s\+= {{ item.value }}$" %s'
+        backup: true
       when: ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
       with_dict:
         retry: 3
@@ -423,6 +430,7 @@
         limit_type: hard
         limit_item: '{{ item.key }}' # noqa args[module]
         value: '{{ item.value }}'
+        backup: true
       with_dict:
         core: 0
         nproc: '{{ nproc_limit }}'
@@ -464,6 +472,7 @@
     owner: root
     group: root
     mode: '0644'
+    backup: true
   when: ansible_distribution == "Slackware"
   become: true
   tags:
