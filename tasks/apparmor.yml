@@ -49,7 +49,7 @@
       - usr.lib.firefox.firefox
       - usr.lib.firefox.firefox.sh
       - usr.lib.firefox.mozilla-xremote-client
-      - etc.cron.daily.logrotate
+      #- etc.cron.daily.logrotate
       - etc.cron.daily.slocate.cron
       - etc.cron.daily.tmpwatch
       - sbin.dhclient-script
