@@ -50,8 +50,11 @@ account     required      pam_permit.so
 # Default password quality checking with pam_pwquality. If you don't want
 # password quality checking, comment out these two lines and uncomment the
 # traditional password handling line below.
+{% if passwdqc_stat.stat.exists %}
+password    requisite     pam_passwdqc.so
+{% else %}
 password    requisite     pam_pwquality.so minlen=14 retry=3
-#password    requisite     pam_passwdqc.so
+{% endif %}
 password    sufficient    pam_unix.so sha512 shadow minlen=14 try_first_pass use_authtok rounds={{ crypt_rounds }}
 
 # Traditional password handling without pam_pwquality password checking.

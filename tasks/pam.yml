@@ -191,7 +191,7 @@
         insertbefore: '^# here are the per-package modules \(the "Primary" block\)$'
         backup: true
 
-- name: Create custom /etc/pam.d/system-auth for Slackware
+- name: Slackware system-auth
   become: true
   when: ansible_distribution == "Slackware"
   tags:
@@ -200,13 +200,20 @@
     - configuration
     - authorization
     - passwords
-  ansible.builtin.template:
-    src: system-auth.j2
-    dest: /etc/pam.d/system-auth
-    owner: root
-    group: root
-    mode: '0644'
-    backup: true
+  block:
+    - name: Stat /lib64/security/pam_passwdqc.so
+      ansible.builtin.stat:
+        path: /lib64/security/pam_passwdqc.so
+      register: passwdqc_stat
+      tags: check
+    - name: Create custom /etc/pam.d/system-auth for Slackware
+      ansible.builtin.template:
+        src: system-auth.j2
+        dest: /etc/pam.d/system-auth
+        owner: root
+        group: root
+        mode: '0644'
+        backup: true
 
 # postlogin doesn't include any auth lines
 - name: Remove auth include postlogin (Slackware)
