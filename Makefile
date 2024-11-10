@@ -167,6 +167,9 @@ pam-files/sshd: | $(CWD)/pam-files/
 pam-files/login pam-files/remote: | $(CWD)/pam-files/
 	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/a/util-linux/pam.d/login
 
+pam-files/chfn pam-files/chsh pam-files/runuser pam-files/runuser-l: | $(CWD)/pam-files/
+	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/a/util-linux/pam.d/$(notdir $@)
+
 pam-files/sddm pam-files/sddm-autologin pam-files/sddm-greeter: | $(CWD)/pam-files/
 	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/kde/kde/post-install/sddm/pam.d/$(notdir $@)
 
@@ -183,7 +186,7 @@ pam-files/dovecot: | $(CWD)/pam-files/
 	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/n/dovecot/dovecot.pam
 
 .PHONY: pam-files
-pam-files: pam-files/other pam-files/passwd pam-files/postlogin pam-files/system-auth pam-files/su pam-files/su-l pam-files/sshd pam-files/login pam-files/remote pam-files/sddm pam-files/sddm-autologin pam-files/sddm-greeter pam-files/xscreensaver pam-files/screen pam-files/xdm pam-files/dovecot
+pam-files: pam-files/other pam-files/passwd pam-files/postlogin pam-files/system-auth pam-files/su pam-files/su-l pam-files/sshd pam-files/login pam-files/remote pam-files/sddm pam-files/sddm-autologin pam-files/sddm-greeter pam-files/xscreensaver pam-files/screen pam-files/xdm pam-files/dovecot pam-files/chfn pam-files/chsh pam-files/runuser pam-files/runuser-l
 
 .PHONY: pamcheck
 pamcheck: pam-files
