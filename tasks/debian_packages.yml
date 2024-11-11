@@ -37,50 +37,51 @@
       ansible.builtin.apt:
         name: tiger
 
-- name: John
-  become: true
-  tags:
-    - john
-    - passwords
-  block:
-    - name: Check /etc/john
-      tags: check
-      ansible.builtin.stat:
-        path: /etc/john
-      register: stat_john
-    - name: Check /etc/cron.d/john
-      tags: check
-      ansible.builtin.stat:
-        path: /etc/cron.d/john
-      register: stat_john_cron
-    - name: Configure John
-      tags: configuration
-      when:
-        - stat_john.stat.exists
-        - stat_john.stat.isdir
-        - stat_john_cron.stat.exists
-      block:
-        - name: Copy john-mail.conf
-          ansible.builtin.copy:
-            dest: /etc/john/john-mail.conf
-            src: john-mail.conf
-            owner: root
-            group: root
-            mode: '0600'
-            backup: true
-        - name: Enable John cronjobs
-          ansible.builtin.replace:
-            path: /etc/cron.d/john
-            regexp: '^#?([0-9]+\s+[0-9]+\s+\*\s+\*\s+\*\s+root\s+\[\s+-x\s+/usr/share/john/cronjob\s+\]\s+&&\s+(nice\s+)?/usr/share/john/cronjob\s+st(art|op))$'
-            replace: '\g<1>'
-            backup: true
-        # https://www.shellcheck.net/wiki/SC2069
-        - name: Fix SC2069 in /usr/share/john/cronjob
-          ansible.builtin.replace:
-            path: /usr/share/john/cronjob
-            regexp: '^(\s+/sbin/start-stop-daemon --stop -q -o --pidfile \$PIDDIR/john.pid) 2>&1 >/dev/null$'
-            replace: '\g<1> >/dev/null 2>&1'
-            backup: true
+# The JtR packaged with Debian 12 (1.9.0) doesn't support the modern hashing algorithms
+#- name: John
+#  become: true
+#  tags:
+#    - john
+#    - passwords
+#  block:
+#    - name: Check /etc/john
+#      tags: check
+#      ansible.builtin.stat:
+#        path: /etc/john
+#      register: stat_john
+#    - name: Check /etc/cron.d/john
+#      tags: check
+#      ansible.builtin.stat:
+#        path: /etc/cron.d/john
+#      register: stat_john_cron
+#    - name: Configure John
+#      tags: configuration
+#      when:
+#        - stat_john.stat.exists
+#        - stat_john.stat.isdir
+#        - stat_john_cron.stat.exists
+#      block:
+#        - name: Copy john-mail.conf
+#          ansible.builtin.copy:
+#            dest: /etc/john/john-mail.conf
+#            src: john-mail.conf
+#            owner: root
+#            group: root
+#            mode: '0600'
+#            backup: true
+#        - name: Enable John cronjobs
+#          ansible.builtin.replace:
+#            path: /etc/cron.d/john
+#            regexp: '^#?([0-9]+\s+[0-9]+\s+\*\s+\*\s+\*\s+root\s+\[\s+-x\s+/usr/share/john/cronjob\s+\]\s+&&\s+(nice\s+)?/usr/share/john/cronjob\s+st(art|op))$'
+#            replace: '\g<1>'
+#            backup: true
+#        # https://www.shellcheck.net/wiki/SC2069
+#        - name: Fix SC2069 in /usr/share/john/cronjob
+#          ansible.builtin.replace:
+#            path: /usr/share/john/cronjob
+#            regexp: '^(\s+/sbin/start-stop-daemon --stop -q -o --pidfile \$PIDDIR/john.pid) 2>&1 >/dev/null$'
+#            replace: '\g<1> >/dev/null 2>&1'
+#            backup: true
 
 - name: Tiger
   become: true
