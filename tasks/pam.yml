@@ -92,6 +92,23 @@
     - result.failed
     - '"does not exist !" not in result.msg'
 
+- name: Remove nullok from /etc/pam.d/vsftpd (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: true
+  tags:
+    - configuration
+    - pam
+    - slackware
+  ansible.builtin.replace:
+    path: /etc/pam.d/vsftpd
+    regexp: '\s+nullok(_secure)?'
+    replace: ''
+    backup: true
+  register: result
+  failed_when:
+    - result.failed
+    - '"does not exist !" not in result.msg'
+
 # http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html
 # https://tldp.org/HOWTO/User-Authentication-HOWTO/x263.html#AEN266
 - name: /etc/pam.d/other
