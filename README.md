@@ -163,6 +163,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * The following PAM modules are added to `/etc/pam.d/postlogin`:
     * `pam_umask`
     * `pam_cgroup`
+    * `pam_keyinit`
 * Add `pam_namespace` to `/etc/pam.d/{login,sddm,sshd,xdm}`
 * Removes `auth include postlogin` from several files, as `postlogin` should (and has) only `session` module types
 * Creates `/etc/pam.d/sudo`, as that seemed to be missing
