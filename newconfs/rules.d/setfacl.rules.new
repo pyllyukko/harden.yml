@@ -1,0 +1,2 @@
+# CIS Debian Linux 12 Benchmark v1.1.0 - 09-26-2024 6.2.3.16 Ensure successful and unsuccessful attempts to use the setfacl command are collected
+-a always,exit -F path=/usr/bin/setfacl -F perm=x -F auid>=1000 -F auid!=unset -k perm_chng
