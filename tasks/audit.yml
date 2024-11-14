@@ -76,6 +76,13 @@
       with_items:
         - perm_mod
         - delete
+    # CIS Distribution Independent Linux v2.0.0 - 07-16-2019 4.1.16  Ensure changes to system administration scope (sudoers) is collected
+    # CIS Debian Linux 12 Benchmark v1.1.0 - 09-26-2024      6.2.3.1 Ensure changes to system administration scope (sudoers) is collected
+    - name: Rename sudoers rules to scope
+      ansible.builtin.replace:
+        path: /etc/audit/rules.d/30-stig.rules
+        regexp: "^(-a always,exit -F arch=b(32|64) -F (path=/etc/sudoers|dir=/etc/sudoers.d/) -F perm=wa -F )key=actions$"
+        replace: '\g<1>key=scope'
     - name: Create 31-privileged.rules
       block:
         - name: Create temp dir
