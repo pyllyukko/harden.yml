@@ -1,0 +1,12 @@
+# CIS Distribution Independent Linux v2.0.0 - 07-16-2019 4.1.18 Ensure kernel module loading and unloading is collected
+-w /sbin/insmod -p x -k modules
+-w /sbin/rmmod -p x -k modules
+-w /sbin/modprobe -p x -k modules
+
+# CIS Debian Linux 12 Benchmark v1.1.0 - 09-26-2024 6.2.3.19 Ensure kernel module loading unloading and modification is collected
+# init_module, finit_module & delete_module are covered in 43-module-load.rules
+-a always,exit -F arch=b64 -S create_module,query_module -F auid>=1000 -F auid!=-1 -F key=kernel_modules
+# Debian
+-a always,exit -S all -F path=/usr/bin/kmod -F perm=x -F auid>=1000 -F auid!=-1 -F key=kernel_modules
+# Slackware
+-a always,exit -S all -F path=/sbin/kmod -F perm=x -F auid>=1000 -F auid!=-1 -F key=kernel_modules
