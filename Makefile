@@ -90,10 +90,10 @@ aircrack-apparmor-profiles: $(aircrack-apparmor-profiles)
 	find /sbin -type f \( -perm -04000 -o -perm -02000 \) 2>/dev/null | awk '{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$1 }' >> $@
 	find /usr/bin -type f \( -perm -04000 -o -perm -02000 \) 2>/dev/null | awk '{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$1 }' >> $@
 	find /usr/sbin -type f \( -perm -04000 -o -perm -02000 \) 2>/dev/null | awk '{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$1 }' >> $@
-	find /opt -type f \( -perm -04000 -o -perm -02000 \) 2>/dev/null | awk '{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$1 }' > $@
-	find /usr/share -type f \( -perm -04000 -o -perm -02000 \) 2>/dev/null | awk '{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$1 }' > $@
-	find /usr/lib -type f \( -perm -04000 -o -perm -02000 \) 2>/dev/null | awk '{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$1 }' > $@
-	find /usr/libexec -type f \( -perm -04000 -o -perm -02000 \) 2>/dev/null | awk '{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$1 }' > $@
+	find /opt -type f \( -perm -04000 -o -perm -02000 \) 2>/dev/null | awk '{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$1 }' >> $@
+	find /usr/share -type f \( -perm -04000 -o -perm -02000 \) 2>/dev/null | awk '{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$1 }' >> $@
+	find /usr/lib -type f \( -perm -04000 -o -perm -02000 \) 2>/dev/null | awk '{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$1 }' >> $@
+	find /usr/libexec -type f \( -perm -04000 -o -perm -02000 \) 2>/dev/null | awk '{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$1 }' >> $@
 	filecap /bin 2>/dev/null | awk 'NR>1{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$2 }' >> $@
 	filecap /sbin 2>/dev/null | awk 'NR>1{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$2 }' >> $@
 	filecap /usr/bin 2>/dev/null | awk 'NR>1{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$2 }' >> $@
