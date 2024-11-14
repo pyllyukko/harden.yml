@@ -1,0 +1,3 @@
+# CIS Debian Linux 12 Benchmark v1.1.0 - 09-26-2024 6.2.3.8 Ensure events that modify user/group information are collected
+# Everything else is in 30-stig.rules and pam.rules.new
+-w /etc/nsswitch.conf -p wa -k identity
