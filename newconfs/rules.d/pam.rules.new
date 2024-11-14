@@ -1,4 +1,6 @@
+# The following two are in CIS Debian 12 v1.1.0 under "identity" (6.2.3.8)
 -w /etc/pam.d/ -p wa -k pam
+-w /etc/pam.conf -p wa -k pam
 -w /etc/security/ -p wa -k pam
 # CentOS/RH specific
 -w /usr/sbin/authconfig -p x -k pam
