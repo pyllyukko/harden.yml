@@ -1,11 +1,20 @@
 # CIS Distribution Independent Linux v2.0.0 - 07-16-2019 4.1.18 Ensure kernel module loading and unloading is collected
--w /sbin/insmod -p x -k modules
--w /sbin/rmmod -p x -k modules
--w /sbin/modprobe -p x -k modules
+#-w /sbin/insmod -p x -k modules
+#-w /sbin/rmmod -p x -k modules
+#-w /sbin/modprobe -p x -k modules
 
 # CIS Debian Linux 12 Benchmark v1.1.0 - 09-26-2024 6.2.3.19 Ensure kernel module loading unloading and modification is collected
-# init_module, finit_module & delete_module are covered in 43-module-load.rules
--a always,exit -F arch=b64 -S create_module,query_module -F auid>=1000 -F auid!=-1 -F key=kernel_modules
+# Some of these would be covered by 43-module-load.rules, but we'll use this to unify the key names
+#
+# * init_module - load a module
+# * finit_module - load a module (used when the overhead of using cryptographically signed modules to determine the authenticity of a module can be avoided)
+# * delete_module - delete a module
+# * create_module - create a loadable module entry
+# * query_module - query the kernel for various bits pertaining to modules
+#
+## These rules watch for kernel module insertion. By monitoring
+## the syscall, we do not need any watches on programs.
+-a always,exit -F arch=b64 -S create_module,init_module,delete_module,query_module,finit_module -F auid>=1000 -F auid!=-1 -F key=kernel_modules
 # Debian
 -a always,exit -S all -F path=/usr/bin/kmod -F perm=x -F auid>=1000 -F auid!=-1 -F key=kernel_modules
 # Slackware

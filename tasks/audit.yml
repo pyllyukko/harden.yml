@@ -35,7 +35,8 @@
         - 20-dont-audit.rules
         - 30-stig.rules
         - 42-injection.rules
-        - 43-module-load.rules
+        # These are covered in modules.rules.new
+        #- 43-module-load.rules
         - 99-finalize.rules
     - name: Fix 10-base-config.rules for CentOS 7
       ansible.builtin.replace:
