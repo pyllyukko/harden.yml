@@ -1,0 +1,7 @@
+# Most of these are already covered in 30-stig.rules. We'll just add the missing ones.
+# CIS Debian Linux 12 Benchmark v1.1.0 - 09-26-2024 6.2.3.5 Ensure events that modify the system's network environment are collected
+-w /etc/networks -p wa -k system-locale
+-w /etc/network/ -p wa -k system-locale
+-w /etc/netplan/ -p wa -k system-locale
+# CIS Distribution Independent Linux v2.0.0 - 07-16-2019 4.1.7 Ensure events that modify the system's network environment are collected
+-w /etc/sysconfig/network -p wa -k system-locale
