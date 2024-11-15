@@ -125,7 +125,9 @@
     - name: Load the audit rules
       ansible.builtin.command: /sbin/augenrules --load
       register: result
-      changed_when: '"/sbin/augenrules: No change" not in result.stdout'
+      changed_when:
+        - '"/sbin/augenrules: No change" not in result.stdout'
+        - '"/sbin/augenrules: Audit system is in immutable mode - exiting with no changes" not in result.stdout'
       tags: configuration
     - name: Configure auditd.conf
       ansible.builtin.replace:
