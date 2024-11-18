@@ -99,6 +99,9 @@ aircrack-apparmor-profiles: $(aircrack-apparmor-profiles)
 	filecap /usr/bin 2>/dev/null | awk 'NR>1{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$2 }' >> $@
 	filecap /usr/sbin 2>/dev/null | awk 'NR>1{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$2 }' >> $@
 
+/etc/audit/rules.d/40-authorized_keys.rules: FORCE
+	find /home -type d -maxdepth 1 -mindepth 1 \! -name lost+found | sed 's/\(.\+\)$$/-w \1\/.ssh\/authorized_keys -p wa -k authorized_keys/' 1>$@
+
 /etc/apparmor.d/usr.bin.irssi: | /etc/apparmor.d/
 	wget -nv -O $@ https://gitlab.com/apparmor/apparmor-profiles/raw/master/ubuntu/18.10/usr.bin.irssi
 

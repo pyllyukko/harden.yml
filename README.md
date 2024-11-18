@@ -74,6 +74,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 ### Application specific
 
 * Configures basic auditing based on [stig.rules](https://fedorahosted.org/audit/browser/trunk/contrib/stig.rules) if audit is installed (see [audit.yml](tasks/audit.yml))
+    * See also <https://github.com/pyllyukko/harden.yml/wiki/audit>
 * Configures `sshd_config` and `ssh_config` (see `ansible-playbook --list-tasks --tags ssh harden.yml` for details)
 * Configures [sudo](https://www.sudo.ws/) (see [sudoers.j2](templates/sudoers.j2))
     * **WARNING**: If there are rules in `/etc/sudoers.d/` that match our `become: true` tasks that do not have explicit `EXEC`, it can "break" `sudo` as we define `Defaults noexec` in the main `sudoers` file. There is a "Fix NOPASSWD rules" task in `sudoers.yml` which tries to tackle this problem, but it's not guaranteed to work.

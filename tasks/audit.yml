@@ -100,6 +100,10 @@
           community.general.make:
             chdir: "{{ tempdir_1.path }}"
             target: /etc/audit/rules.d/31-privileged.rules
+        - name: Generate 40-authorized_keys.rules
+          community.general.make:
+            chdir: "{{ tempdir_1.path }}"
+            target: /etc/audit/rules.d/40-authorized_keys.rules
         - name: Remove temp dir
           ansible.builtin.file:
             path: "{{ tempdir_1.path }}"
