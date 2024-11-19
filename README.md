@@ -309,10 +309,12 @@ References
 
 Some of these documents are quite old, but most of the stuff still applies.
 
-* [CIS Slackware Linux 10.2 Benchmark v1.1.0][1]
 * [Slackware System Hardening][2] by Jeffrey Denton
-* [CIS Debian Linux Benchmark](https://www.cisecurity.org/benchmark/debian_linux/)
-* [CIS CentOS Linux 7 Benchmark](https://www.cisecurity.org/benchmark/centos_linux/)
+* [Center for Internet Security](https://www.cisecurity.org/):
+    * [CIS Slackware Linux 10.2 Benchmark v1.1.0][1]
+    * [CIS Debian Linux Benchmark](https://www.cisecurity.org/benchmark/debian_linux/)
+    * [CIS CentOS Linux 7 Benchmark](https://www.cisecurity.org/benchmark/centos_linux/)
+    * [CIS Distribution Independent Linux](https://www.cisecurity.org/benchmark/distribution_independent_linux)
 * [SlackDocs: Security HOWTOs](http://docs.slackware.com/howtos:security:start)
 * [Alien's Wiki: Security issues](http://alien.slackbook.org/dokuwiki/doku.php?id=linux:admin#security_issues)
 * [SlackWiki: Basic Security Fixes](http://slackwiki.com/Basic_Security_Fixes)
@@ -333,6 +335,7 @@ Some of these documents are quite old, but most of the stuff still applies.
     * [AppArmor HowToUse](https://wiki.debian.org/AppArmor/HowToUse)
 * [ArchWiki: limits.conf](https://wiki.archlinux.org/title/Limits.conf)
 * [Effectiveness of Linux Rootkit Detection Tools](http://jultika.oulu.fi/files/nbnfioulu-202004201485.pdf)
+* [How to keep a detailed audit trail of what’s being done on your Linux systems](https://www.cyberciti.biz/tips/howto-log-user-activity-using-process-accounting.html)
 
 [1]: http://benchmarks.cisecurity.org/downloads/browse/index.cfm?category=benchmarks.os.linux.slackware
 [2]: http://dentonj.freeshell.org/system-hardening-10.2.txt
