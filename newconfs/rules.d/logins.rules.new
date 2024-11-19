@@ -1,7 +1,0 @@
-# CIS Debian Linux 12 Benchmark v1.1.0 - 09-26-2024      6.2.3.12 Ensure login and logout events are collected
-# CIS Distribution Independent Linux v2.0.0 - 07-16-2019 4.1.9 Ensure login and logout events are collected
-#
-# * /var/log/lastlog - maintain records of the last time a user successfully logged in.
-# * /var/run/faillock - directory maintains records of login failures via the pam_faillock module.
--w /var/log/lastlog -p wa -k logins
--w /var/run/faillock -p wa -k logins
