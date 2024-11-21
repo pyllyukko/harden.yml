@@ -384,6 +384,8 @@
             - apt_cn_netfilter.yar
             - apt_cn_pp_zerot.yar
             - apt_cn_reddelta.yar
+            - apt_cobaltstrike_evasive.yar
+            - apt_cobaltstrike.yar
             - apt_codoso.yar
             - apt_coreimpact_agent.yar
             - apt_danti_svcmondr.yar
@@ -2925,7 +2927,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/abhinavbom/pos_malwares.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/fox-it/rule%20Ponmocup_plugins.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/GoDaddy/reign.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/swood/browser_pass.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/LastLine/AgentTesla.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/arbor/dirtjumper_drive2.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/arbor/chicken.yar
