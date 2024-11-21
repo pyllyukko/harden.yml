@@ -1041,7 +1041,6 @@
             - MacOS_Virus_Vsearch.yar
             - Macos_Hacktool_JokerSpy.yar
             - Multi_AttackSimulation_Blindspot.yar
-            - Multi_EICAR.yar
             - Multi_Ransomware_BlackCat.yar
             - Multi_Ransomware_Luna.yar
             - Multi_Trojan_Coreimpact.yar
@@ -1368,7 +1367,6 @@
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Derkziel.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_DiamondFox.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_DirtJumper.yar
-            - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Eicar.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_Emotet.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_FALLCHILL.yar
             - https://raw.githubusercontent.com/Yara-Rules/rules/master/malware/MALW_FUDCrypt.yar
@@ -3406,7 +3404,6 @@
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/AirBnB/malware_macos_bella.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/AirBnB/hacktool_macos_keylogger_dannvix.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/AirBnB/hacktool_multi_ntlmrelayx.yara
-            - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/AirBnB/eicar.yar
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/AirBnB/hacktool_multi_pyrasite_py.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/AirBnB/malware_windows_moonlightmaze_loki2crypto.yara
             - https://raw.githubusercontent.com/mikesxrs/Open-Source-YARA-rules/master/AirBnB/malware_windows_t3ntman_crunchrat.yara
