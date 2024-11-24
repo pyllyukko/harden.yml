@@ -86,6 +86,13 @@
             path: /etc/audit/rules.d/30-stig.rules
             regexp: "^(-a always,exit -F arch=b(32|64) -F (path=/etc/sudoers|dir=/etc/sudoers.d/) -F perm=wa -F )key=actions$"
             replace: '\g<1>key=scope'
+        # CIS Distribution Independent Linux v2.0.0 - 07-16-2019 4.1.14 Ensure successful file system mounts are collected
+        # CIS Debian Linux 12 Benchmark v1.1.0 - 09-26-2024      6.2.3.10 Ensure successful file system mounts are collected
+        - name: Rename mount rules from export to mounts
+          ansible.builtin.replace:
+            path: /etc/audit/rules.d/30-stig.rules
+            regexp: '^(-a\s+always,exit\s+-F\s+arch=b(32|64)\s+-S\s+mount\s+-F\s+auid>=1000\s+-F\s+auid!=unset\s+-F\s+)key=export$'
+            replace: '\g<1>key=mounts'
         # CIS Debian Linux 12 Benchmark v1.1.0 - 09-26-2024      6.2.3.12 Ensure login and logout events are collected
         # CIS Distribution Independent Linux v2.0.0 - 07-16-2019 4.1.9    Ensure login and logout events are collected
         - name: Enable few rules from 30-stig.rules
