@@ -479,10 +479,30 @@
         - /var/log/lastlog
         - /var/log/btmp
         - /var/log/wtmp
-    - name: chmod o-rwx /var/log/lastlog
+    - name: chmod o-rwx bunch of logs in /var/log/
       ansible.builtin.file:
-        path: /var/log/lastlog
+        path: /var/log/{{ item }}
         mode: o-rwx
+      with_items:
+        # lastlog doesn't need to be readable for all users
+        - lastlog
+        # Stupid Citrix (ICA Client). Also has world-writable files there! 🙄
+        - citrix
+        # Slackware log dirs not owned by root
+        - icecream
+        - uucp
+        # Debian installer https://www.debian.org/releases/stable/amd64/ch06s01.en.html
+        - installer
+        # chkrootkit (at least in Debian)
+        - chkrootkit
+        # System accounting
+        - sysstat
+        # VMware
+        - vmware
+      register: result
+      failed_when:
+        - result.failed == true
+        - result.state != "absent"
     - name: chmod & chown /var/log/wtmp
       ansible.builtin.file:
         path: /var/log/wtmp
@@ -496,15 +516,6 @@
         mode: '0751'
         owner: root
         group: adm
-    # Stupid Citrix (ICA Client). Also has world-writable files there! 🙄
-    - name: chmod o-rwx /var/log/citrix
-      ansible.builtin.file:
-        path: /var/log/citrix
-        mode: o-rwx
-      register: result
-      failed_when:
-        - result.failed == true
-        - result.state != "absent"
     - name: Slackware pkgtools & sbopkg
       when: ansible_distribution == "Slackware"
       ansible.builtin.file:
@@ -541,19 +552,6 @@
       failed_when:
         - result.failed == true
         - result.state != "absent"
-    - name: Slackware log dirs not owned by root
-      when: ansible_distribution == "Slackware"
-      ansible.builtin.file:
-        path: /var/log/{{ item }}
-        mode: o-rwx
-      with_items:
-        - icecream
-        - uucp
-      register: result
-      failed_when:
-        - result.failed == true
-        - result.state != "absent"
-      tags: slackware
 
 - name: Print Lynis score for file permissions
   become: true
