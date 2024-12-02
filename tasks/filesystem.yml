@@ -71,6 +71,7 @@
         state: absent
 # </fstab>
 
+# Temp dirs
 - name: Clean up /tmp during boot (Slackware)
   become: true
   when: ansible_distribution == "Slackware"
@@ -254,31 +255,6 @@
         - packages
         - debian
         - permissions
-    # we don't want to mess with the group ownerships because these might be needed to be writable by utmp group
-    - name: Grant group adm read rights on login records
-      ansible.posix.acl:
-        path: "{{ item }}"
-        entity: adm
-        etype: group
-        permissions: r
-        state: present
-      with_items:
-        - /var/log/lastlog
-        - /var/log/btmp
-        - /var/log/wtmp
-      tags: permissions
-    - name: chmod o-rwx /var/log/lastlog
-      ansible.builtin.file:
-        path: /var/log/lastlog
-        mode: o-rwx
-      tags: permissions
-    - name: chmod & chown /var/log/wtmp
-      ansible.builtin.file:
-        path: /var/log/wtmp
-        mode: '0660'
-        owner: root
-        group: utmp
-      tags: permissions
     - name: chmod LDAP secrets
       ansible.builtin.file:
         path: "{{ item }}"
@@ -317,7 +293,9 @@
       failed_when:
         - result.failed == true
         - result.state != "absent"
-      tags: permissions
+      tags:
+        - permissions
+        - logging
     # Home directories
     - name: chmod /root
       ansible.builtin.file:
@@ -428,24 +406,6 @@
       tags:
         - permissions
         - cron
-    - name: chmod o-r /var/log
-      ansible.builtin.file:
-        path: /var/log
-        # apps that have own accounts & directories under /var/log need the x-bit (like freerad in Debian)
-        mode: '0751'
-        owner: root
-        group: adm
-      tags: permissions
-    # Stupid Citrix (ICA Client). Also has world-writable files there! 🙄
-    - name: chmod o-rwx /var/log/citrix
-      ansible.builtin.file:
-        path: /var/log/citrix
-        mode: o-rwx
-      tags: permissions
-      register: result
-      failed_when:
-        - result.failed == true
-        - result.state != "absent"
     # CIS Slackware Linux Benchmark v1.1 - 3.3 Disable GUI Login If Possible
     - name: chmod inittab
       when: ansible_distribution == "Slackware"
@@ -470,61 +430,6 @@
         - result.failed == true
         - result.state != "absent"
       tags: permissions
-    - name: Slackware pkgtools & sbopkg
-      when: ansible_distribution == "Slackware"
-      ansible.builtin.file:
-        path: "{{ item }}"
-        mode: '0750'
-        owner: root
-        group: adm
-      with_items:
-        - /var/log/pkgtools
-        - /var/lib/pkgtools
-        - /var/log/sbopkg
-      register: result
-      failed_when:
-        - result.failed == true
-        - result.state != "absent"
-      tags:
-        - permissions
-        - slackware
-    # bzgrep 'var/log/.\+/$' MANIFEST.bz2
-    - name: Slackware log dirs
-      when: ansible_distribution == "Slackware"
-      tags:
-        - permissions
-        - slackware
-      ansible.builtin.file:
-        path: /var/log/{{ item }}
-        mode: '0750'
-        owner: root
-        group: adm
-      with_items:
-        - httpd
-        - nfsd
-        - cups
-        - samba
-        - sa
-        - iptraf-ng
-      register: result
-      failed_when:
-        - result.failed == true
-        - result.state != "absent"
-    - name: Slackware log dirs not owned by root
-      when: ansible_distribution == "Slackware"
-      ansible.builtin.file:
-        path: /var/log/{{ item }}
-        mode: o-rwx
-      with_items:
-        - icecream
-        - uucp
-      register: result
-      failed_when:
-        - result.failed == true
-        - result.state != "absent"
-      tags:
-        - permissions
-        - slackware
     - name: /etc/httpd o-rx
       when: ansible_distribution == "Slackware"
       ansible.builtin.file:
@@ -554,6 +459,101 @@
         - permissions
         - slackware
         - ntp
+
+# Log files and dirs
+- name: Log files and dirs
+  become: true
+  tags:
+    - permissions
+    - logging
+  block:
+    # we don't want to mess with the group ownerships because these might be needed to be writable by utmp group
+    - name: Grant group adm read rights on login records
+      ansible.posix.acl:
+        path: "{{ item }}"
+        entity: adm
+        etype: group
+        permissions: r
+        state: present
+      with_items:
+        - /var/log/lastlog
+        - /var/log/btmp
+        - /var/log/wtmp
+    - name: chmod o-rwx /var/log/lastlog
+      ansible.builtin.file:
+        path: /var/log/lastlog
+        mode: o-rwx
+    - name: chmod & chown /var/log/wtmp
+      ansible.builtin.file:
+        path: /var/log/wtmp
+        mode: '0660'
+        owner: root
+        group: utmp
+    - name: chmod o-r /var/log
+      ansible.builtin.file:
+        path: /var/log
+        # apps that have own accounts & directories under /var/log need the x-bit (like freerad in Debian)
+        mode: '0751'
+        owner: root
+        group: adm
+    # Stupid Citrix (ICA Client). Also has world-writable files there! 🙄
+    - name: chmod o-rwx /var/log/citrix
+      ansible.builtin.file:
+        path: /var/log/citrix
+        mode: o-rwx
+      register: result
+      failed_when:
+        - result.failed == true
+        - result.state != "absent"
+    - name: Slackware pkgtools & sbopkg
+      when: ansible_distribution == "Slackware"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: '0750'
+        owner: root
+        group: adm
+      with_items:
+        - /var/log/pkgtools
+        - /var/lib/pkgtools
+        - /var/log/sbopkg
+      register: result
+      failed_when:
+        - result.failed == true
+        - result.state != "absent"
+      tags: slackware
+    # bzgrep 'var/log/.\+/$' MANIFEST.bz2
+    - name: Slackware log dirs
+      when: ansible_distribution == "Slackware"
+      tags: slackware
+      ansible.builtin.file:
+        path: /var/log/{{ item }}
+        mode: '0750'
+        owner: root
+        group: adm
+      with_items:
+        - httpd
+        - nfsd
+        - cups
+        - samba
+        - sa
+        - iptraf-ng
+      register: result
+      failed_when:
+        - result.failed == true
+        - result.state != "absent"
+    - name: Slackware log dirs not owned by root
+      when: ansible_distribution == "Slackware"
+      ansible.builtin.file:
+        path: /var/log/{{ item }}
+        mode: o-rwx
+      with_items:
+        - icecream
+        - uucp
+      register: result
+      failed_when:
+        - result.failed == true
+        - result.state != "absent"
+      tags: slackware
 
 - name: Print Lynis score for file permissions
   become: true
