@@ -20,7 +20,6 @@
       HOME_MODE: "0700"
   tags:
     - configuration
-    - permissions
     - logging
     - umask
 # This is separated so you can run "ansible-playbook --tags passwords"
@@ -266,7 +265,6 @@
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   tags:
     - configuration
-    - permissions
     - debian
   with_dict:
     DIR_MODE: "0700"

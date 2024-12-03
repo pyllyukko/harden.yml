@@ -35,7 +35,6 @@
   tags:
     - configuration
     - kerberos
-    - permissions
   community.general.ini_file:
     path: /etc/krb5.conf
     section: libdefaults

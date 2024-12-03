@@ -58,7 +58,6 @@
         mode: '0700'
       tags:
         - services
-        - permissions
         - configuration
         - slackware
     # https://github.com/sysstat/sysstat/blob/master/cron/sysstat.crond.in

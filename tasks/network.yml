@@ -46,7 +46,6 @@
   when: ansible_distribution == "Slackware"
   tags:
     - services
-    - permissions
     - network
     - firewall
     - slackware
@@ -98,7 +97,6 @@
     group: root
   tags:
     - services
-    - permissions
     - network
     - firewall
     - slackware
