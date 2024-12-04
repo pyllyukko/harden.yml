@@ -27,7 +27,11 @@ for host in \
   www.dwheeler.com		\
   cdn.kernel.org		\
   cisofy.com			\
-  letsencrypt.org
+  letsencrypt.org		\
+  zerossl.com			\
+  github.com			\
+  www.gandi.net			\
+  deb.debian.org
 do
   openssl s_client -connect "${host}":443 -verify_return_error -CAfile "${ca_file}" -showcerts 0</dev/null || exit 1
 done
@@ -37,7 +41,8 @@ for host in \
   mx01.mail.icloud.com				\
   alt4.gmail-smtp-in.l.google.com		\
   outlook-com.olc.protection.outlook.com	\
-  mta7.am0.yahoodns.net
+  mta7.am0.yahoodns.net				\
+  mail.cwo.com
 do
   openssl s_client -connect "${host}":25 -starttls smtp -verify_return_error -CAfile "${ca_file}" -showcerts 0</dev/null || exit 1
 done
