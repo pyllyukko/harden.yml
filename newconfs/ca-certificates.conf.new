@@ -2,6 +2,7 @@ mozilla/Baltimore_CyberTrust_Root.crt
 mozilla/COMODO_Certification_Authority.crt
 mozilla/COMODO_RSA_Certification_Authority.crt
 mozilla/COMODO_ECC_Certification_Authority.crt
+mozilla/Comodo_AAA_Services_root.crt
 mozilla/DigiCert_High_Assurance_EV_Root_CA.crt
 mozilla/DigiCert_Global_Root_CA.crt
 mozilla/DigiCert_Global_Root_G2.crt
