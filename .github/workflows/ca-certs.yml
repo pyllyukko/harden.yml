@@ -1,0 +1,11 @@
+name: ca-certs
+on: [push, pull_request]
+
+jobs:
+  ca-certs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run test_ca-certs.sh
+        run: bash tests/test_ca-certs.sh
