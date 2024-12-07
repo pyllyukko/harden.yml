@@ -42,7 +42,8 @@ for host in \
   alt4.gmail-smtp-in.l.google.com		\
   outlook-com.olc.protection.outlook.com	\
   mta7.am0.yahoodns.net				\
-  mail.cwo.com
+  mail.cwo.com					\
+  mail.protonmail.ch
 do
   openssl s_client -connect "${host}":25 -starttls smtp -verify_return_error -CAfile "${ca_file}" -showcerts 0</dev/null || exit 1
 done
