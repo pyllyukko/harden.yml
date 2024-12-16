@@ -33,7 +33,9 @@ for host in \
   www.gandi.net			\
   deb.debian.org
 do
+  echo "[*] Testing HTTPS for \`${host}'"
   openssl s_client -connect "${host}":443 -verify_return_error -CAfile "${ca_file}" -showcerts 0</dev/null || exit 1
+  echo -n $'\n'
 done
 
 # Mail servers
@@ -43,9 +45,13 @@ for host in \
   outlook-com.olc.protection.outlook.com	\
   mta7.am0.yahoodns.net				\
   mail.cwo.com					\
-  mail.protonmail.ch
+  mail.protonmail.ch				\
+  spool.mail.gandi.net				\
+  fb.mail.gandi.net
 do
+  echo "[*] Testing SMTP STARTTLS for \`${host}'"
   openssl s_client -connect "${host}":25 -starttls smtp -verify_return_error -CAfile "${ca_file}" -showcerts 0</dev/null || exit 1
+  echo -n $'\n'
 done
 
 rm -v "${ca_file}"
