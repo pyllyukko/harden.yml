@@ -153,7 +153,7 @@ jobs:
       - name: Run Lynis (pre-harden)
         run: sudo lynis audit system --skip-plugins --tests-from-group file_permissions
       - name: Run Ansible playbook for cron & permissions
-        run: ansible-playbook harden.yml --tags cron,permissions
+        run: ansible-playbook harden.yml --tags cron,permissions --skip-tags slackware
       - name: Run Lynis
         run: sudo lynis audit system --skip-plugins --tests-from-group file_permissions
       - name: chmod Lynis log
