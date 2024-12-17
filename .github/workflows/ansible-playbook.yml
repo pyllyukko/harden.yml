@@ -173,7 +173,9 @@ jobs:
       - name: Run Lynis (pre-harden)
         run: sudo lynis audit system --skip-plugins --tests-from-group kernel_hardening
       - name: Run Ansible playbook for kernel
-        run: ansible-playbook harden.yml --tags kernel --extra-vars run_lynis_after_hardening=true
+        run: ansible-playbook harden.yml --tags kernel
+      - name: Run Lynis
+        run: sudo lynis audit system --skip-plugins --tests-from-group kernel_hardening
       - name: chmod Lynis log
         run: sudo chmod -c 644 /var/log/lynis.log
       - name: Archive Lynis log
