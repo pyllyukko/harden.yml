@@ -94,7 +94,9 @@
 # Guide to the Secure Configuration of Red Hat Enterprise Linux 5 Revision 4.1 - 2.3.5.5 Implement Inactivity Time-out for Login Shells
 - name: Create /etc/profile.d/{tmout.sh,autologout.csh}
   become: true
-  tags: configuration
+  tags:
+    - configuration
+    - shells
   ansible.builtin.template:
     src: "{{ playbook_dir }}/templates/{{ item }}.j2"
     dest: /etc/profile.d/{{ item }}
