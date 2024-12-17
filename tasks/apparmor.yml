@@ -94,7 +94,7 @@
       - usr.sbin.postqueue
       - usr.lib.dovecot.dovecot-lda
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
   block:
     - name: Copy extra profiles
       ansible.builtin.copy:
