@@ -1,0 +1,13 @@
+name: ansible-playbook
+on: [push, pull_request]
+
+jobs:
+  banners:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Lynis
+        run: ansible-playbook -v harden.yml --tags lynis
+      - name: Run Ansible playbook for banners
+        run: ansible-playbook -v harden.yml --tags banners --extra-vars run_lynis_after_hardening=true
