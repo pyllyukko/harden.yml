@@ -14,7 +14,7 @@
         - debian
 
     - name: ClamAV Debian x86_64
-      when: (ansible_distribution == "Debian" or ansible_distribution == "Kali") and ansible_architecture == "x86_64"
+      when: (ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu") and ansible_architecture == "x86_64"
       tags:
         - packages
         - debian

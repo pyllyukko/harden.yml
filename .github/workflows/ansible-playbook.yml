@@ -101,3 +101,23 @@ jobs:
         with:
           name: lynis-shells.log
           path: /var/log/lynis.log
+  malware:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Lynis
+        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+      - name: Run Lynis (pre-harden)
+        run: sudo lynis audit system --skip-plugins --tests-from-group malware
+      - name: Run Ansible playbook for clamav, rkhunter & chkrootkit
+        run: ansible-playbook harden.yml --tags clamav,rkhunter,chkrootkit --skip-tags slackware,yara
+      - name: Run Lynis
+        run: sudo lynis audit system --skip-plugins --tests-from-group malware
+      - name: chmod Lynis log
+        run: sudo chmod -c 644 /var/log/lynis.log
+      - name: Archive Lynis log
+        uses: actions/upload-artifact@v4
+        with:
+          name: lynis-malware.log
+          path: /var/log/lynis.log
