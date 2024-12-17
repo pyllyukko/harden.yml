@@ -25,15 +25,18 @@
             state: absent
           tags:
             - services
-            - accounts  # postrm removed the ClamAV user
+            # This is commented out so that accounts tag can be run on it's own
+            #- accounts  # postrm removed the ClamAV user
         - name: Create group for ClamAV
-          tags: accounts
+          # This is commented out so that accounts tag can be run on it's own
+          #tags: accounts
           ansible.builtin.group:
             name: clamav
             state: present
             system: true
         - name: Create user account for ClamAV
-          tags: accounts
+          # This is commented out so that accounts tag can be run on it's own
+          #tags: accounts
           ansible.builtin.user:
             name: clamav
             group: clamav
