@@ -5,7 +5,7 @@
     - packages
     - lynis
     - debian
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
   block:
     - name: Install apt-transport-https & gnupg2
       ansible.builtin.apt:
