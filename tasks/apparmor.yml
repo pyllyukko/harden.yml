@@ -1,6 +1,6 @@
 ---
 - name: Install AppArmor
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
   become: true
   ansible.builtin.apt:
     name: ['apparmor', 'apparmor-profiles', 'apparmor-utils']
@@ -31,7 +31,7 @@
   with_items:
     - apparmor=1
     - security=apparmor
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
   tags:
     - configuration
     - apparmor
@@ -94,7 +94,7 @@
       - usr.sbin.postqueue
       - usr.lib.dovecot.dovecot-lda
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
   block:
     - name: Copy extra profiles
       ansible.builtin.copy:

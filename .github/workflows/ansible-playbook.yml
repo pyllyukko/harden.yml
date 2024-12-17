@@ -123,3 +123,23 @@ jobs:
         with:
           name: lynis-malware.log
           path: /var/log/lynis.log
+  mac_frameworks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Lynis
+        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+      - name: Run Lynis (pre-harden)
+        run: sudo lynis audit system --skip-plugins --tests-from-group mac_frameworks
+      - name: Run Ansible playbook for apparmor
+        run: ansible-playbook harden.yml --tags apparmor
+      - name: Run Lynis
+        run: sudo lynis audit system --skip-plugins --tests-from-group mac_frameworks
+      - name: chmod Lynis log
+        run: sudo chmod -c 644 /var/log/lynis.log
+      - name: Archive Lynis log
+        uses: actions/upload-artifact@v4
+        with:
+          name: lynis-mac_frameworks.log
+          path: /var/log/lynis.log
