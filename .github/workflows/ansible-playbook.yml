@@ -81,3 +81,23 @@ jobs:
         with:
           name: lynis-scheduling.log
           path: /var/log/lynis.log
+  shells:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Lynis
+        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+      - name: Run Lynis (pre-harden)
+        run: sudo lynis audit system --skip-plugins --tests-from-group shells
+      - name: Run Ansible playbook for umask & shells
+        run: ansible-playbook harden.yml --tags umask,shells --skip-tags slackware
+      - name: Run Lynis
+        run: sudo lynis audit system --skip-plugins --tests-from-group shells
+      - name: chmod Lynis log
+        run: sudo chmod -c 644 /var/log/lynis.log
+      - name: Archive Lynis log
+        uses: actions/upload-artifact@v4
+        with:
+          name: lynis-shells.log
+          path: /var/log/lynis.log
