@@ -12,7 +12,7 @@ jobs:
       - name: Run Ansible playbook for banners
         run: ansible-playbook -v harden.yml --tags banners --extra-vars run_lynis_after_hardening=true
       - name: chmod Lynis log
-        run: chmod -c 644 /var/log/lynis.log
+        run: sudo chmod -c 644 /var/log/lynis.log
       - name: Archive Lynis log
         uses: actions/upload-artifact@v4
         with:
