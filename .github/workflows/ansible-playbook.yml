@@ -143,3 +143,23 @@ jobs:
         with:
           name: lynis-mac_frameworks.log
           path: /var/log/lynis.log
+  file_permissions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Lynis
+        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+      - name: Run Lynis (pre-harden)
+        run: sudo lynis audit system --skip-plugins --tests-from-group file_permissions
+      - name: Run Ansible playbook for cron & permissions
+        run: ansible-playbook harden.yml --tags cron,permissions
+      - name: Run Lynis
+        run: sudo lynis audit system --skip-plugins --tests-from-group file_permissions
+      - name: chmod Lynis log
+        run: sudo chmod -c 644 /var/log/lynis.log
+      - name: Archive Lynis log
+        uses: actions/upload-artifact@v4
+        with:
+          name: lynis-file_permissions.log
+          path: /var/log/lynis.log
