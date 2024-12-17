@@ -28,6 +28,8 @@ jobs:
         uses: actions/checkout@v3
       - name: Install Lynis
         run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+      - name: Run Lynis (pre-harden)
+        run: sudo lynis audit system --skip-plugins --tests-from-group authentication
       - name: Run Ansible playbook for passwords, pam & umask
         run: ansible-playbook harden.yml --tags passwords,pam,umask --skip-tags slackware,centos
       - name: Run Lynis
