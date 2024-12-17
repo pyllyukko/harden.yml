@@ -1,6 +1,9 @@
 name: ansible-playbook
 on: [push, pull_request]
 
+env:
+  ANSIBLE_FORCE_COLOR: '1'
+
 jobs:
   banners:
     runs-on: ubuntu-latest
