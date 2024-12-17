@@ -111,7 +111,6 @@
 # http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html
 # https://tldp.org/HOWTO/User-Authentication-HOWTO/x263.html#AEN266
 - name: /etc/pam.d/other
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
   become: true
   block:
     - name: Create secure default /etc/pam.d/other
@@ -173,7 +172,7 @@
 # AUTH-9408
 - name: faillock
   become: true
-  when: ansible_distribution == "Slackware" or ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  when: ansible_os_family != "RedHat"
   tags:
     - pam
     - authorization
@@ -196,7 +195,7 @@
     # pam-auth-update as long as there are no failed logins recorded in
     # /var/run/faillock/
     - name: Insert "auth required pam_faillock.so preauth" into /etc/pam.d/common-auth
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
       tags:
         - configuration
         - debian
@@ -258,7 +257,7 @@
     - pam
     - passwords
     - debian
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
   ansible.builtin.replace:
     path: '{{ item }}'
     regexp: '\s+nullok(_secure)?'
@@ -271,7 +270,7 @@
 # https://wiki.debian.org/WHEEL/PAM
 # This is not enabled in Slackware because it has a separate "Deny use of su" task
 - name: Enable pam_wheel.so in /etc/pam.d/su
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat" or ansible_distribution == "Ubuntu"
   become: true
   ansible.builtin.replace:
     path: /etc/pam.d/su
@@ -320,7 +319,7 @@
 
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.19
 - name: Debian pam-configs
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
   become: true
   tags:
     - configuration
@@ -396,7 +395,7 @@
     - passwords
   block:
     - name: Install passwdqc (Debian)
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
       ansible.builtin.apt:
         name: libpam-passwdqc
         update_cache: true
@@ -416,7 +415,7 @@
         - packages
     # https://github.com/linux-pam/linux-pam/issues/352
     - name: Add rounds={{ crypt_rounds }} to pam_unix in /etc/pam.d/common-password
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
       tags: debian
       ansible.builtin.replace:
         path: /etc/pam.d/common-password
