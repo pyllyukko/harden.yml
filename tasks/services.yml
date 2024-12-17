@@ -50,7 +50,7 @@
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.1.8 Ensure at/cron is restricted to authorized users
 - name: Debian cron
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
   tags:
     - services
     - configuration
@@ -72,7 +72,7 @@
 
 - name: Create empty /etc/at.allow (whitelist) and remove /etc/at.deny (blacklist)
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Slackware"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Slackware" or ansible_distribution == "Ubuntu"
   tags:
     - services
     - configuration

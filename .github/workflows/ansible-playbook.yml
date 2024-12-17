@@ -1,0 +1,103 @@
+name: ansible-playbook
+on: [push, pull_request]
+
+env:
+  ANSIBLE_FORCE_COLOR: '1'
+
+jobs:
+  banners:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Lynis
+        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+      - name: Run Ansible playbook for banners
+        run: ansible-playbook -v harden.yml --tags banners --extra-vars run_lynis_after_hardening=true
+      - name: chmod Lynis log
+        run: sudo chmod -c 644 /var/log/lynis.log
+      - name: Archive Lynis log
+        uses: actions/upload-artifact@v4
+        with:
+          name: lynis-banner.log
+          path: /var/log/lynis.log
+  authentication:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Lynis
+        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+      - name: Run Lynis (pre-harden)
+        run: sudo lynis audit system --skip-plugins --tests-from-group authentication
+      - name: Run Ansible playbook for passwords, pam & umask
+        run: ansible-playbook harden.yml --tags passwords,pam,umask --skip-tags slackware,centos
+      - name: Run Lynis
+        run: sudo lynis audit system --skip-plugins --tests-from-group authentication
+      - name: chmod Lynis log
+        run: sudo chmod -c 644 /var/log/lynis.log
+      - name: Archive Lynis log
+        uses: actions/upload-artifact@v4
+        with:
+          name: lynis-authentication.log
+          path: /var/log/lynis.log
+  accounting:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Lynis
+        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+      - name: Run Lynis (pre-harden)
+        run: sudo lynis audit system --skip-plugins --tests-from-group accounting
+      - name: Run Ansible playbook for accounting, audit & sysstat
+        run: ansible-playbook harden.yml --tags accounting,audit,sysstat --skip-tags slackware,centos
+      - name: Run Lynis
+        run: sudo lynis audit system --skip-plugins --tests-from-group accounting
+      - name: chmod Lynis log
+        run: sudo chmod -c 644 /var/log/lynis.log
+      - name: Archive Lynis log
+        uses: actions/upload-artifact@v4
+        with:
+          name: lynis-accounting.log
+          path: /var/log/lynis.log
+  scheduling:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Lynis
+        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+      - name: Run Lynis (pre-harden)
+        run: sudo lynis audit system --skip-plugins --tests-from-group scheduling
+      - name: Run Ansible playbook for cron
+        run: ansible-playbook harden.yml --tags cron --skip-tags slackware
+      - name: Run Lynis
+        run: sudo lynis audit system --skip-plugins --tests-from-group scheduling
+      - name: chmod Lynis log
+        run: sudo chmod -c 644 /var/log/lynis.log
+      - name: Archive Lynis log
+        uses: actions/upload-artifact@v4
+        with:
+          name: lynis-scheduling.log
+          path: /var/log/lynis.log
+  shells:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Lynis
+        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+      - name: Run Lynis (pre-harden)
+        run: sudo lynis audit system --skip-plugins --tests-from-group shells
+      - name: Run Ansible playbook for umask & shells
+        run: ansible-playbook harden.yml --tags umask,shells --skip-tags slackware
+      - name: Run Lynis
+        run: sudo lynis audit system --skip-plugins --tests-from-group shells
+      - name: chmod Lynis log
+        run: sudo chmod -c 644 /var/log/lynis.log
+      - name: Archive Lynis log
+        uses: actions/upload-artifact@v4
+        with:
+          name: lynis-shells.log
+          path: /var/log/lynis.log

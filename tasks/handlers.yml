@@ -30,7 +30,7 @@
   become: true
   async: 3600
   poll: 0
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
   changed_when: true
 - name: Create aide.db (Slackware)
   ansible.builtin.command: /usr/bin/aide -i
@@ -58,7 +58,7 @@
   tags:
     - pam
     - configuration
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
   changed_when: true
 # rc.sshd exits if /var/run/sshd.pid doesn't exist
 - name: Restart sshd (Slackware)
