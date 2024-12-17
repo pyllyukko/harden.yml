@@ -2,13 +2,12 @@
 # Some documentation available at https://github.com/pyllyukko/harden.sh/wiki/audit
 - name: Install auditing
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Slackware" or ansible_os_family == "RedHat"
   block:
     - name: Install necessary software for auditing (Debian)
       ansible.builtin.apt:
         name: ['auditd', 'libcap-ng-utils', 'make']
         update_cache: true
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
       tags:
         - packages
         - debian
@@ -178,7 +177,7 @@
       with_items:
         - audit=1
         - audit_backlog_limit=8192
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat"
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat" or ansible_distribution == "Ubuntu"
       tags: configuration
       notify: "Run update-grub"
       register: result
