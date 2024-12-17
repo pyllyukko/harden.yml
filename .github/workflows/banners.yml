@@ -50,8 +50,8 @@ jobs:
         run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
       - name: Run Lynis (pre-harden)
         run: sudo lynis audit system --skip-plugins --tests-from-group accounting
-      - name: Run Ansible playbook for audit & sysstat
-        run: ansible-playbook harden.yml --tags audit,sysstat --skip-tags slackware,centos
+      - name: Run Ansible playbook for accounting, audit & sysstat
+        run: ansible-playbook harden.yml --tags accounting,audit,sysstat --skip-tags slackware,centos
       - name: Run Lynis
         run: sudo lynis audit system --skip-plugins --tests-from-group accounting
       - name: chmod Lynis log
