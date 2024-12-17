@@ -163,3 +163,23 @@ jobs:
         with:
           name: lynis-file_permissions.log
           path: /var/log/lynis.log
+  kernel_hardening:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Lynis
+        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+      - name: Run Lynis (pre-harden)
+        run: sudo lynis audit system --skip-plugins --tests-from-group kernel_hardening
+      - name: Run Ansible playbook for kernel
+        run: ansible-playbook harden.yml --tags kernel
+      - name: Run Lynis
+        run: sudo lynis audit system --skip-plugins --tests-from-group kernel_hardening
+      - name: chmod Lynis log
+        run: sudo chmod -c 644 /var/log/lynis.log
+      - name: Archive Lynis log
+        uses: actions/upload-artifact@v4
+        with:
+          name: lynis-kernel_hardening.log
+          path: /var/log/lynis.log
