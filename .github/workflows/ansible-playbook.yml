@@ -234,7 +234,7 @@ jobs:
           echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
         run: sudo lynis audit system --skip-plugins --tests-from-group file_integrity
-      - name: Run Ansible playbook for kernel
+      - name: Run Ansible playbook for aide
         run: ansible-playbook harden.yml --tags aide
       - name: Run Lynis
         run: sudo lynis audit system --skip-plugins --tests-from-group file_integrity
