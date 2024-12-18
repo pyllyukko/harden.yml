@@ -44,9 +44,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: authentication
-          path:
-            - /var/log/lynis.log
-            - /etc/pam.d/common-*
+          path: |
+            /var/log/lynis.log
+            /etc/pam.d/common-*
   accounting:
     runs-on: ubuntu-latest
     steps:
