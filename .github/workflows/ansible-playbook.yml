@@ -44,9 +44,13 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: authentication
+          # We can't use common-* here because "Error: The path for one of the files in artifact is not valid: etc/pam.d/common-auth.10050.2024-12-18@17:28:53~. Contains the following character:  Colon :"
           path: |
             /var/log/lynis.log
-            /etc/pam.d/common-*
+            /etc/pam.d/common-account
+            /etc/pam.d/common-auth
+            /etc/pam.d/common-password
+            /etc/pam.d/common-session
   accounting:
     runs-on: ubuntu-latest
     steps:
