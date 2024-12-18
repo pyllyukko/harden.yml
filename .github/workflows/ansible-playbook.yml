@@ -267,3 +267,25 @@ jobs:
         with:
           name: lynis-storage.log
           path: /var/log/lynis.log
+  firewalls:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Lynis
+        run: |
+          ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
+          echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
+      - name: Run Lynis (pre-harden)
+        run: sudo lynis audit system --skip-plugins --tests-from-group firewalls
+      - name: Run Ansible playbook for network
+        run: ansible-playbook harden.yml --tags firewall --skip-tags slackware
+      - name: Run Lynis
+        run: sudo lynis audit system --skip-plugins --tests-from-group firewalls
+      - name: chmod Lynis log
+        run: sudo chmod -c 644 /var/log/lynis.log
+      - name: Archive Lynis log
+        uses: actions/upload-artifact@v4
+        with:
+          name: lynis-firewalls.log
+          path: /var/log/lynis.log
