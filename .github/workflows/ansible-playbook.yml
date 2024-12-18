@@ -11,7 +11,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Lynis
-        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+        run: |
+          ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
+          echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Ansible playbook for banners
         run: ansible-playbook -v harden.yml --tags banners --extra-vars run_lynis_after_hardening=true
       - name: chmod Lynis log
@@ -27,7 +29,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Lynis
-        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+        run: |
+          ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
+          echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
         run: sudo lynis audit system --skip-plugins --tests-from-group authentication
       - name: Run Ansible playbook for passwords, pam & umask
@@ -47,7 +51,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Lynis
-        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+        run: |
+          ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
+          echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
         run: sudo lynis audit system --skip-plugins --tests-from-group accounting
       - name: Run Ansible playbook for accounting, audit & sysstat
@@ -67,7 +73,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Lynis
-        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+        run: |
+          ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
+          echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
         run: sudo lynis audit system --skip-plugins --tests-from-group scheduling
       - name: Run Ansible playbook for cron
@@ -87,7 +95,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Lynis
-        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+        run: |
+          ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
+          echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
         run: sudo lynis audit system --skip-plugins --tests-from-group shells
       - name: Run Ansible playbook for umask & shells
@@ -107,7 +117,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Lynis
-        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+        run: |
+          ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
+          echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
         run: sudo lynis audit system --skip-plugins --tests-from-group malware
       - name: Install jmespath
@@ -129,7 +141,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Lynis
-        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+        run: |
+          ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
+          echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
         run: sudo lynis audit system --skip-plugins --tests-from-group mac_frameworks
       - name: Run Ansible playbook for apparmor
@@ -149,7 +163,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Lynis
-        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+        run: |
+          ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
+          echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
         run: sudo lynis audit system --skip-plugins --tests-from-group file_permissions
       - name: Run Ansible playbook for cron & permissions
@@ -169,7 +185,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Lynis
-        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+        run: |
+          ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
+          echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
         run: sudo lynis audit system --skip-plugins --tests-from-group kernel_hardening
       - name: Run Ansible playbook for kernel
@@ -189,7 +207,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install Lynis
-        run: ansible-playbook -v harden.yml --tags lynis --skip-tags slackware,centos
+        run: |
+          ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
+          echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
         run: sudo lynis audit system --skip-plugins --tests-from-group file_integrity
       - name: Run Ansible playbook for kernel
