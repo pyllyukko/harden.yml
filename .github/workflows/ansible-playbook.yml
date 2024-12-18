@@ -43,8 +43,10 @@ jobs:
       - name: Archive Lynis log
         uses: actions/upload-artifact@v4
         with:
-          name: lynis-authentication.log
-          path: /var/log/lynis.log
+          name: authentication
+          path:
+            - /var/log/lynis.log
+            - /etc/pam.d/common-*
   accounting:
     runs-on: ubuntu-latest
     steps:
