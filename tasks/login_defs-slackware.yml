@@ -135,3 +135,6 @@
   register: result
   changed_when:
     - result.rc != 0
+  failed_when:
+    - result.failed == true
+    - '"grpck: the files have been updated" not in result.stdout'
