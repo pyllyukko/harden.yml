@@ -3,7 +3,7 @@ harden.yml
 
 Ansible playbook to harden your Linux system.
 
-![ansible-lint](https://github.com/pyllyukko/harden.yml/actions/workflows/ansible-lint.yml/badge.svg)
+[![lint](https://github.com/pyllyukko/harden.yml/actions/workflows/lint.yml/badge.svg)](https://github.com/pyllyukko/harden.yml/actions/workflows/lint.yml)
 
 [![asciicast of harden.yml 1294b6f](https://asciinema.org/a/spPzbjtEal2LiOKNQKFORQ1Ay.svg)](https://asciinema.org/a/spPzbjtEal2LiOKNQKFORQ1Ay)
 
