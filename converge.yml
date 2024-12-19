@@ -32,3 +32,5 @@
       ansible.builtin.import_tasks: tasks/pam.yml
     - name: SSH
       ansible.builtin.import_tasks: tasks/services-ssh.yml
+    - name: login_defs
+      ansible.builtin.import_tasks: tasks/login_defs.yml
