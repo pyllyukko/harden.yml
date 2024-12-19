@@ -30,3 +30,5 @@
       ansible.builtin.import_tasks: tasks/banners.yml
     - name: PAM
       ansible.builtin.import_tasks: tasks/pam.yml
+    - name: SSH
+      ansible.builtin.import_tasks: tasks/services-ssh.yml
