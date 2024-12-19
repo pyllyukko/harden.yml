@@ -21,3 +21,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y yamllint
           yamllint ./*.yml tasks/*.yml
+  syntax-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run yamllint
+        run: ansible-playbook --syntax-check harden.yml
