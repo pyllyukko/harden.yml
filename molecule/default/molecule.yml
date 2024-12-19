@@ -1,0 +1,12 @@
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+platforms:
+  - name: molecule-slackware
+    image: liveslak/slackware
+provisioner:
+  name: ansible
+  # This playbook needs to reside in the project root directory so that the all the files and templates are found properly
+  playbooks:
+    converge: ../../converge.yml
