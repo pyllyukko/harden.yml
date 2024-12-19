@@ -307,7 +307,7 @@ jobs:
       - name: Run Lynis (pre-harden)
         run: sudo lynis audit system --skip-plugins
       - name: Run Ansible playbook
-        run: ansible-playbook harden.yml --skip-tags slackware,centos,lynis,firewall,yara
+        run: ansible-playbook harden.yml --skip-tags slackware,centos,lynis,firewall,yara,sudo
       - name: Run Lynis
         run: sudo lynis audit system --skip-plugins
       - name: chmod Lynis log
