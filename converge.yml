@@ -30,15 +30,5 @@
       ansible.builtin.assert:
         that: result.stdout | regex_search("^Linux")
 
-    - name: Slackpkg update
-      ansible.builtin.raw: slackpkg update
-      # For the Idempotence tests
-      changed_when: false
-
-    - name: Install Python3
-      ansible.builtin.raw: '[ ! -h /usr/bin/python3 ] && yes | slackpkg install python3 || true'
-      # For the Idempotence tests
-      changed_when: false
-
     - name: Banners
       ansible.builtin.import_tasks: tasks/banners.yml
