@@ -51,6 +51,7 @@
   tags:
     - configuration
     - passwords
+# Required at least for getent
 - name: Install glibc package (Slackware)
   when: ansible_distribution == "Slackware"
   become: true
