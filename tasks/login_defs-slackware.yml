@@ -92,13 +92,15 @@
   when: ansible_distribution == "Slackware"
   become: true
   block:
+    # http://ftp.slackware.com/pub/slackware/slackware64-15.0/source/a/etc/group.new
+    # Didn't want to use replace here, as this is herecy.
+    # But this was the only way I could make this idempotent.
     - name: Remove all members from certain groups (Slackware)
-      ansible.builtin.command: gpasswd -M "" {{ item }}
-      register: result
-      changed_when: true
-      failed_when:
-        - result.failed == true
-        - '"is not a member of" not in result.stderr'
+      ansible.builtin.replace:
+        path: /etc/group
+        regexp: '^({{ item }}:x:[0-9]+:).*$'
+        replace: '\g<1>'
+        validate: '/bin/grep "^{{ item }}:x:[0-9]\+:$" %s'
       tags: accounts
       with_items:
         - root
