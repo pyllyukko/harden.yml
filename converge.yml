@@ -38,6 +38,8 @@
     #  ansible.builtin.import_tasks: tasks/filesystem.yml
     - name: CA certificates
       ansible.builtin.import_tasks: tasks/ca-certs.yml
+    - name: Misc
+      ansible.builtin.import_tasks: tasks/misc.yml
 
   handlers:
     - name: Handlers
