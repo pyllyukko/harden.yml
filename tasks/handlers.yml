@@ -97,6 +97,6 @@
   register: result
   failed_when:
     - result.failed
-    - '"dconf: not found" not in result.stderr'
+    - '"dconf: command not found" not in result.stderr'
   # dconf seems to always update the db files
   changed_when: true
