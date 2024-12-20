@@ -30,8 +30,8 @@
       ansible.builtin.import_tasks: tasks/banners.yml
     - name: PAM
       ansible.builtin.import_tasks: tasks/pam.yml
-    - name: SSH
-      ansible.builtin.import_tasks: tasks/services-ssh.yml
+    - name: Services
+      ansible.builtin.import_tasks: tasks/services.yml
     - name: login_defs
       ansible.builtin.import_tasks: tasks/login_defs.yml
     - name: CA certificates
