@@ -86,6 +86,10 @@
         content: |
           user-db:user
           system-db:local
+      register: result
+      failed_when:
+        - result.failed
+        - result.msg != "Destination directory /etc/dconf/profile does not exist"
     # CIS Debian Linux 11 Benchmark v1.0.0 - 09-22-2022
     #   1.8.6 Ensure GDM automatic mounting of removable media is disabled
     # https://access.redhat.com/solutions/20107
