@@ -6,7 +6,8 @@
   tags:
     - configuration
     - pki
-  changed_when: true
+  register: result
+  changed_when: '"0 added, 0 removed; done." not in result.stdout'
 # This will usually return 255 with "sysctl: cannot stat /proc/.+: No such file or directory"
 - name: Load sysctl settings
   become: true

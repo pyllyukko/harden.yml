@@ -34,3 +34,9 @@
       ansible.builtin.import_tasks: tasks/services-ssh.yml
     - name: login_defs
       ansible.builtin.import_tasks: tasks/login_defs.yml
+    - name: CA certificates
+      ansible.builtin.import_tasks: tasks/ca-certs.yml
+
+  handlers:
+    - name: Handlers
+      ansible.builtin.import_tasks: tasks/handlers.yml
