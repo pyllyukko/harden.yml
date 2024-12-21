@@ -42,9 +42,18 @@
 #    fstype: proc
 
 # fstab
+- name: Stat /etc/fstab.new
+  tags:
+    - fstab
+    - check
+  ansible.builtin.stat:
+    path: /etc/fstab.new
+  register: stat_result
 - name: Create /etc/fstab.new
   tags: fstab
   become: true
+  # For idempotence
+  when: not stat_result.stat.exists
   block:
     - name: Create temp file for fstab.awk
       ansible.builtin.tempfile:
@@ -135,7 +144,8 @@
             - name: Set CAP_NET_RAW capability to /bin/ping
               community.general.capabilities:
                 path: /bin/ping
-                capability: cap_net_raw+ep
+                # See https://github.com/ansible-collections/community.general/issues/4067
+                capability: cap_net_raw=ep
                 state: present
             - name: Remove SUID bit from /bin/ping
               tags: suid

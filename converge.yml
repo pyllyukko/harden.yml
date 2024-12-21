@@ -34,8 +34,8 @@
       ansible.builtin.import_tasks: tasks/services.yml
     - name: login_defs
       ansible.builtin.import_tasks: tasks/login_defs.yml
-    #- name: Permissions
-    #  ansible.builtin.import_tasks: tasks/filesystem.yml
+    - name: Permissions
+      ansible.builtin.import_tasks: tasks/filesystem.yml
     - name: CA certificates
       ansible.builtin.import_tasks: tasks/ca-certs.yml
     - name: Misc
