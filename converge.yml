@@ -26,6 +26,7 @@
       ansible.builtin.assert:
         that: result.stdout | regex_search("^Linux")
 
+    # TODO: We are not testing everything here, but it's a start
     - name: Banners
       ansible.builtin.import_tasks: tasks/banners.yml
     - name: PAM
