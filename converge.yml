@@ -46,6 +46,8 @@
       ansible.builtin.import_tasks: tasks/display_managers.yml
     - name: Kernel
       ansible.builtin.import_tasks: tasks/kernel.yml
+    - name: Logging
+      ansible.builtin.import_tasks: tasks/logging.yml
 
   handlers:
     - name: Handlers
