@@ -87,6 +87,8 @@
         owner: root
         group: daemon
         mode: '0640'
+        access_time: preserve
+        modification_time: preserve
     - name: Restrict at 2/2 (remove /etc/at.deny)
       ansible.builtin.file:
         path: /etc/at.deny

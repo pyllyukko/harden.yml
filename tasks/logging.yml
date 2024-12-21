@@ -1,4 +1,15 @@
 ---
+# For tests that might not have this installed
+- name: Install logrotate package (Slackware)
+  when: ansible_distribution == "Slackware"
+  become: true
+  community.general.slackpkg:
+    name: logrotate
+    state: present
+  tags:
+    - packages
+    - slackware
+  notify: chmod /etc/cron.daily
 - name: Configure generic log retention period to {{ log_retention_time_in_months }} months
   become: true
   ansible.builtin.replace:

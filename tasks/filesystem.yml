@@ -28,6 +28,10 @@
           sed -i 's:^\(\s\+mount -n devtmpfs /dev -t devtmpfs -o size=[0-9]\+M\)$:\1,noexec,nosuid:' "${SOURCE_TREE}/init"
           sed -i '/^mount -n tmpfs \/run -t tmpfs -o mode=0755,size=[0-9]\+M,nodev,nosuid,noexec$/amount --make-shared /run' "${SOURCE_TREE}/init"
       tags: configuration
+      register: result
+      failed_when:
+        - result.failed
+        - result.msg != "Path /sbin/mkinitrd does not exist !"
 #- name: Remount /proc with hidepid=2
 #  become: true
 #  mount:
@@ -38,9 +42,18 @@
 #    fstype: proc
 
 # fstab
+- name: Stat /etc/fstab.new
+  tags:
+    - fstab
+    - check
+  ansible.builtin.stat:
+    path: /etc/fstab.new
+  register: stat_result
 - name: Create /etc/fstab.new
   tags: fstab
   become: true
+  # For idempotence
+  when: not stat_result.stat.exists
   block:
     - name: Create temp file for fstab.awk
       ansible.builtin.tempfile:
@@ -123,10 +136,16 @@
       block:
         - name: Ping
           block:
+            - name: Install libcap package (Slackware)
+              community.general.slackpkg:
+                name: libcap
+                state: present
+              tags: packages
             - name: Set CAP_NET_RAW capability to /bin/ping
               community.general.capabilities:
                 path: /bin/ping
-                capability: cap_net_raw+ep
+                # See https://github.com/ansible-collections/community.general/issues/4067
+                capability: cap_net_raw=ep
                 state: present
             - name: Remove SUID bit from /bin/ping
               tags: suid
@@ -358,6 +377,11 @@
         owner: root
         group: root
       tags: permissions
+      register: result
+      # Might not exist in Docker containers etc.
+      failed_when:
+        - result.failed
+        - result.msg != "file (/etc/modprobe.d) is absent, cannot continue"
     # Slackware Linux Benchmark v1.1 - 4.1 Network Parameter Modifications, 4.2 Additional Network Parameter Modifications & SN.8 Additional Kernel Tunings
     - name: chmod sysctl configurations
       ansible.builtin.file:

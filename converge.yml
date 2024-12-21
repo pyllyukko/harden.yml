@@ -1,0 +1,55 @@
+- name: Fail if molecule group is missing
+  hosts: localhost
+  tasks:
+    - name: Print some info
+      ansible.builtin.debug:
+        msg: "{{ groups }}"
+
+    - name: Assert group existence
+      ansible.builtin.assert:
+        that: "'molecule' in groups"
+        fail_msg: |
+          molecule group was not found inside inventory groups: {{ groups }}
+
+- name: Converge
+  hosts: molecule
+  vars_files:
+    - vars.yml
+  gather_facts: true
+  tasks:
+    - name: Check uname
+      ansible.builtin.raw: uname -a
+      register: result
+      changed_when: false
+
+    - name: Print some info
+      ansible.builtin.assert:
+        that: result.stdout | regex_search("^Linux")
+
+    # TODO: We are not testing everything here, but it's a start
+    - name: Banners
+      ansible.builtin.import_tasks: tasks/banners.yml
+    - name: PAM
+      ansible.builtin.import_tasks: tasks/pam.yml
+    - name: Services
+      ansible.builtin.import_tasks: tasks/services.yml
+    - name: login_defs
+      ansible.builtin.import_tasks: tasks/login_defs.yml
+    - name: Permissions
+      ansible.builtin.import_tasks: tasks/filesystem.yml
+    - name: CA certificates
+      ansible.builtin.import_tasks: tasks/ca-certs.yml
+    - name: Misc
+      ansible.builtin.import_tasks: tasks/misc.yml
+    - name: Cgroup
+      ansible.builtin.import_tasks: tasks/cgroup.yml
+    - name: Display manager
+      ansible.builtin.import_tasks: tasks/display_managers.yml
+    - name: Kernel
+      ansible.builtin.import_tasks: tasks/kernel.yml
+    - name: Logging
+      ansible.builtin.import_tasks: tasks/logging.yml
+
+  handlers:
+    - name: Handlers
+      ansible.builtin.import_tasks: tasks/handlers.yml

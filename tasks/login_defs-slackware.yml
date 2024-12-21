@@ -92,13 +92,15 @@
   when: ansible_distribution == "Slackware"
   become: true
   block:
+    # http://ftp.slackware.com/pub/slackware/slackware64-15.0/source/a/etc/group.new
+    # Didn't want to use replace here, as this is herecy.
+    # But this was the only way I could make this idempotent.
     - name: Remove all members from certain groups (Slackware)
-      ansible.builtin.command: gpasswd -M "" {{ item }}
-      register: result
-      changed_when: true
-      failed_when:
-        - result.failed == true
-        - '"is not a member of" not in result.stderr'
+      ansible.builtin.replace:
+        path: /etc/group
+        regexp: '^({{ item }}:x:[0-9]+:).*$'
+        replace: '\g<1>'
+        validate: '/bin/grep "^{{ item }}:x:[0-9]\+:$" %s'
       tags: accounts
       with_items:
         - root
@@ -128,10 +130,24 @@
         - wheel
         - audio
 
-- name: Fix gshadow (Slackware)
+- name: Check if gshadow needs fixing (Slackware)
   when: ansible_distribution == "Slackware"
   become: true
+  ansible.builtin.command: grpck -r
+  tags: check
+  changed_when: false
+  failed_when: false
+  register: grpck
+- name: Fix gshadow (Slackware)
+  when:
+    - ansible_distribution == "Slackware"
+    - '"no matching group file entry in /etc/gshadow" in grpck.stdout'
+  become: true
+  # yes might return 141
   ansible.builtin.shell: set -o pipefail; yes | grpck
   register: result
   changed_when:
     - result.rc != 0
+  failed_when:
+    - result.failed == true
+    - '"grpck: the files have been updated" not in result.stdout'

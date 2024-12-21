@@ -1,4 +1,11 @@
 ---
+- name: mkdir /etc/sysctl.d
+  ansible.builtin.file:
+    path: /etc/sysctl.d
+    state: directory
+    owner: root
+    group: root
+    mode: '0750'
 - name: Create harden.conf sysctl settings file
   become: true
   ansible.builtin.copy:
