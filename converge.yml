@@ -44,6 +44,8 @@
       ansible.builtin.import_tasks: tasks/cgroup.yml
     - name: Display manager
       ansible.builtin.import_tasks: tasks/display_managers.yml
+    - name: Kernel
+      ansible.builtin.import_tasks: tasks/kernel.yml
 
   handlers:
     - name: Handlers

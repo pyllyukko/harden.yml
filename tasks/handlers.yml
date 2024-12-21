@@ -18,6 +18,8 @@
     - result.failed
     - result.rc != 255
     - "'sysctl: cannot stat' not in result.stderr"
+    # Might be a container that doesn't have procps-ng
+    - "'No such file or directory' not in result.msg"
   changed_when: true
 - name: Create rkhunter.dat
   ansible.builtin.command: /usr/bin/rkhunter --propupd
