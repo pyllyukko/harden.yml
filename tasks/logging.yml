@@ -9,6 +9,7 @@
   tags:
     - packages
     - slackware
+  notify: chmod /etc/cron.daily
 - name: Configure generic log retention period to {{ log_retention_time_in_months }} months
   become: true
   ansible.builtin.replace:

@@ -102,3 +102,10 @@
     - '"dconf: command not found" not in result.stderr'
   # dconf seems to always update the db files
   changed_when: true
+# For installation of logrotate package
+# If/when "permissions" is applied before "logging"
+- name: chmod /etc/cron.daily
+  become: true
+  ansible.builtin.file:
+    path: /etc/cron.daily
+    mode: g-rwx,o-rwx
