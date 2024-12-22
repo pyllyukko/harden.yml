@@ -48,9 +48,18 @@
 
 # Cron
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.1.8 Ensure at/cron is restricted to authorized users
+- name: Check if cron is installed (Debian)
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  tags:
+    - debian
+    - check
+  ansible.builtin.package_facts:
+    manager: auto
 - name: Debian cron
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when:
+    - ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+    - '"cron" in ansible_facts.packages'
   tags:
     - services
     - configuration
@@ -96,7 +105,9 @@
 
 - name: Create a job that checks systemd's state
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat"
+  when:
+    - ansible_distribution == "Debian" or ansible_distribution == "Kali"
+    - '"cron" in ansible_facts.packages'
   ansible.builtin.cron:
     name: "Check SystemState"
     job: "/bin/systemctl show --property=SystemState | /bin/grep -v '^SystemState=running$'"
