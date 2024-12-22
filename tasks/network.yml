@@ -66,6 +66,11 @@
         - nftables
         - jansson
         - libnftnl
+        - libmnl
+        - libpcap
+        - libnl3
+        - dbus
+        - elogind
       tags:
         - packages
         - slackware
