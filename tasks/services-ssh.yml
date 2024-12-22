@@ -1,12 +1,17 @@
 ---
-- name: Check SSH daemon service state
-  ansible.builtin.service_facts:
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+- name: Debian SSH checks
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
   tags:
-    - services
     - ssh
     - debian
     - check
+  block:
+    - name: Check SSH daemon service state
+      ansible.builtin.service_facts:
+      tags: services
+    - name: Check if SSH client is installed (Debian)
+      ansible.builtin.package_facts:
+        manager: auto
 - name: Check SSH daemon service state (Slackware)
   become: true
   when: ansible_distribution == "Slackware"
@@ -71,7 +76,9 @@
     - debian
     - ssh
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  when:
+    - ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+    - '"openssh-client" in ansible_facts.packages'
   ansible.builtin.template:
     src: "{{ playbook_dir }}/templates/ssh_config-Slackware.j2"
     dest: /etc/ssh/ssh_config.d/harden.conf

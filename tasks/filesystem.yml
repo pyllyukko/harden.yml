@@ -97,18 +97,27 @@
     replace: 'shopt -s dotglob; \g<1> /tmp{,-inst}/*; shopt -u dotglob'
     validate: '/bin/grep "^shopt -s dotglob; rm -rf /tmp{,-inst}/\*; shopt -u dotglob$" %s'
     backup: true
-- name: Clean up /tmp during boot (Debian)
+- name: Debian systemd-tmpfiles
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
   tags:
     - configuration
     - debian
-  ansible.builtin.copy:
-    src: "{{ playbook_dir }}/newconfs/tmp.conf.new"
-    dest: /etc/tmpfiles.d/tmp.conf
-    mode: '0644'
-    owner: root
-    group: root
+  block:
+    - name: mkdir /etc/tmpfiles.d
+      ansible.builtin.file:
+        path: /etc/tmpfiles.d
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+    - name: Clean up /tmp during boot (Debian)
+      ansible.builtin.copy:
+        src: "{{ playbook_dir }}/newconfs/tmp.conf.new"
+        dest: /etc/tmpfiles.d/tmp.conf
+        mode: '0644'
+        owner: root
+        group: root
 
 - name: Make Xorg rootless
   become: true
