@@ -134,3 +134,10 @@
     group: root
     mode: '0600'
   listen: "Update ftpusers"
+- name: Lock Debian-exim account
+  become: true
+  ansible.builtin.user:
+    name: Debian-exim
+    shell: /sbin/nologin
+    expires: '{{ 60 * 60 * 24 }}'
+    password_lock: true
