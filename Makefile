@@ -85,7 +85,7 @@ aircrack-apparmor-profiles: $(aircrack-apparmor-profiles)
 /etc/audit/audit.rules: FORCE
 	/sbin/augenrules
 
-/etc/audit/rules.d/31-privileged.rules: FORCE
+/etc/audit/rules.d/31-privileged.rules.new: FORCE
 	find /bin -type f \( -perm -04000 -o -perm -02000 \) 2>/dev/null | awk '{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$1 }' > $@
 	find /sbin -type f \( -perm -04000 -o -perm -02000 \) 2>/dev/null | awk '{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$1 }' >> $@
 	find /usr/bin -type f \( -perm -04000 -o -perm -02000 \) 2>/dev/null | awk '{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$1 }' >> $@
@@ -99,7 +99,7 @@ aircrack-apparmor-profiles: $(aircrack-apparmor-profiles)
 	filecap /usr/bin 2>/dev/null | awk 'NR>1{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$2 }' >> $@
 	filecap /usr/sbin 2>/dev/null | awk 'NR>1{ printf "-a always,exit -F path=%s -F perm=x -F auid>=1000 -F auid!=4294967295 -F key=privileged\n", $$2 }' >> $@
 
-/etc/audit/rules.d/40-authorized_keys.rules: FORCE
+/etc/audit/rules.d/40-authorized_keys.rules.new: FORCE
 	find /home -type d -maxdepth 1 -mindepth 1 \! -name lost+found | sed 's/\(.\+\)$$/-w \1\/.ssh\/authorized_keys -p wa -k authorized_keys/' 1>$@
 
 /etc/apparmor.d/usr.bin.irssi: | /etc/apparmor.d/

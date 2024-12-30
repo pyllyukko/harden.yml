@@ -99,7 +99,7 @@
             path: /etc/audit/rules.d/30-stig.rules
             regexp: '^#(-a\s+always,exit\s+-F\s+arch=b(32|64)\s+-F\s+path=/var/(run/faillock|log/lastlog)\s+-F\s+perm=wa\s+-F\s+key=logins)$'
             replace: '\g<1>'
-    - name: Create 31-privileged.rules
+    - name: Generated rules
       block:
         - name: Create temp dir
           ansible.builtin.tempfile:
@@ -111,14 +111,30 @@
             src: "{{ playbook_dir }}/Makefile"
             dest: "{{ tempdir_1.path }}/"
             mode: '0600'
-        - name: Generate 31-privileged.rules
+        - name: Generate {31-privileged,40-authorized_keys}.rules.new
           community.general.make:
             chdir: "{{ tempdir_1.path }}"
-            target: /etc/audit/rules.d/31-privileged.rules
-        - name: Generate 40-authorized_keys.rules
-          community.general.make:
-            chdir: "{{ tempdir_1.path }}"
-            target: /etc/audit/rules.d/40-authorized_keys.rules
+            target: /etc/audit/rules.d/{{ item }}.rules.new
+          with_items:
+            - 31-privileged
+            - 40-authorized_keys
+        - name: Copy generated rules into place
+          ansible.builtin.copy:
+            src: /etc/audit/rules.d/{{ item }}.rules.new
+            dest: /etc/audit/rules.d/{{ item }}.rules
+            mode: '0600'
+            remote_src: true
+            backup: true
+          with_items:
+            - 31-privileged
+            - 40-authorized_keys
+        - name: Remove {31-privileged,40-authorized_keys}.rules.new
+          ansible.builtin.file:
+            path: /etc/audit/rules.d/{{ item }}.rules.new
+            state: absent
+          with_items:
+            - 31-privileged
+            - 40-authorized_keys
         - name: Remove temp dir
           ansible.builtin.file:
             path: "{{ tempdir_1.path }}"
