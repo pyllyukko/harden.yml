@@ -98,8 +98,8 @@
   ansible.builtin.shell: umask 022 && dconf update
   register: result
   failed_when:
-    - result.failed
-    - '"dconf: command not found" not in result.stderr'
+    - result.rc != 127
+    - '"dconf: not found" not in result.stderr'
   # dconf seems to always update the db files
   changed_when: true
 # For installation of logrotate package
