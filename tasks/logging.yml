@@ -9,7 +9,19 @@
   tags:
     - packages
     - slackware
-  notify: chmod /etc/cron.daily
+  notify: chmod cron
+- name: Install logrotate package (Debian)
+  become: true
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  ansible.builtin.apt:
+    name: logrotate
+    update_cache: true
+  tags:
+    - packages
+    - debian
+  notify:
+    - chmod cron
+    - Update ftpusers
 - name: Configure generic log retention period to {{ log_retention_time_in_months }} months
   become: true
   ansible.builtin.replace:

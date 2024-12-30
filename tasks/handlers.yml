@@ -104,8 +104,17 @@
   changed_when: true
 # For installation of logrotate package
 # If/when "permissions" is applied before "logging"
-- name: chmod /etc/cron.daily
+- name: chmod cron
   become: true
   ansible.builtin.file:
-    path: /etc/cron.daily
+    path: /etc/{{ item }}
     mode: g-rwx,o-rwx
+  with_items:
+    - cron.d
+    - cron.hourly
+    - cron.daily
+    - cron.weekly
+    - cron.monthly
+    - crontab
+- name: Update ftpusers
+  ansible.builtin.import_tasks: tasks/handlers-ftpusers.yml
