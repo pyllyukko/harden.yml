@@ -98,10 +98,11 @@
   ansible.builtin.shell: umask 022 && dconf update
   register: result
   failed_when:
+    - result.failed
     - result.rc != 127
     - '"dconf: not found" not in result.stderr'
   # dconf seems to always update the db files
-  changed_when: true
+  changed_when: result.rc == 0
 # For installation of logrotate package
 # If/when "permissions" is applied before "logging"
 - name: chmod cron
