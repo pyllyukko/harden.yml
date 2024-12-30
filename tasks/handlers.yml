@@ -121,5 +121,16 @@
   failed_when:
     - result.failed
     - '"is absent, cannot continue" not in result.msg'
-- name: Update ftpusers
-  ansible.builtin.import_tasks: tasks/handlers-ftpusers.yml
+- name: getent passwd
+  ansible.builtin.getent:
+    database: passwd
+  listen: "Update ftpusers"
+- name: Create /etc/ftpusers
+  become: true
+  ansible.builtin.template:
+    src: "{{ playbook_dir }}/templates/ftpusers.j2"
+    dest: /etc/ftpusers
+    owner: root
+    group: root
+    mode: '0600'
+  listen: "Update ftpusers"
