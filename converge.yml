@@ -41,6 +41,8 @@
       ansible.builtin.import_tasks: tasks/ca-certs.yml
     - name: Misc
       ansible.builtin.import_tasks: tasks/misc.yml
+      # Debian Docker image does not have systemd (and systemctl)!
+      when: ansible_distribution != "Debian"
     - name: Cgroup
       ansible.builtin.import_tasks: tasks/cgroup.yml
     - name: Display manager
