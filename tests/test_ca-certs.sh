@@ -43,6 +43,7 @@ for host in \
   mx01.mail.icloud.com				\
   alt4.gmail-smtp-in.l.google.com		\
   outlook-com.olc.protection.outlook.com	\
+  hotmail-com.olc.protection.outlook.com	\
   mta7.am0.yahoodns.net				\
   mail.cwo.com					\
   mail.protonmail.ch				\
