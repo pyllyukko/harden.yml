@@ -51,6 +51,8 @@
       ansible.builtin.import_tasks: tasks/kernel.yml
     - name: Logging
       ansible.builtin.import_tasks: tasks/logging.yml
+      # TODO: Fix the "Update ftpusers" handler
+      when: ansible_distribution != "Debian"
 
   handlers:
     - name: Handlers
