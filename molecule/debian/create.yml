@@ -79,7 +79,7 @@
         msg: "{{ result.stdout }}"
 
     - name: Install Python
-      ansible.builtin.raw: apt-get update && apt-get install -y python3-minimal
+      ansible.builtin.raw: apt-get update && apt-get install -y python3-minimal python3-apt
 
     - name: Install Sudo
       ansible.builtin.raw: apt-get install -y sudo
