@@ -47,12 +47,13 @@
           ansible.builtin.user:
             name: clamav
             group: clamav
-            shell: /usr/sbin/nologin
+            shell: /sbin/nologin
             system: true
             create_home: false
             home: /var/lib/clamav
             password_lock: true
             state: present
+            expires: '{{ 60 * 60 * 24 }}'
         - name: Check latest ClamAV version
           ansible.builtin.uri:
             url: https://api.github.com/repos/Cisco-Talos/clamav/releases/latest
