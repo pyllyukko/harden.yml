@@ -22,7 +22,7 @@
         - name: Check current version of ClamAV
           tags: check
           ansible.builtin.package_facts:
-            manager: auto
+            manager: apt
         - name: Uninstall ClamAV (Debian) (x86_64)
           ansible.builtin.apt:
             name: ['clamav', 'clamav-daemon', 'clamav-base', 'clamav-freshclam', 'libclamav11']
