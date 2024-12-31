@@ -23,6 +23,7 @@
     - chmod cron
     - Update ftpusers
     - Lock Debian-exim account
+    - Restrict cron
 - name: Configure generic log retention period to {{ log_retention_time_in_months }} months
   become: true
   ansible.builtin.replace:

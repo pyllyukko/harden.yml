@@ -141,3 +141,21 @@
     shell: /sbin/nologin
     expires: '{{ 60 * 60 * 24 }}'
     password_lock: true
+- name: Restrict cron 1/2 (create /etc/cron.allow)
+  become: true
+  listen: "Restrict cron"
+  ansible.builtin.file:
+    path: /etc/cron.allow
+    state: touch
+    owner: root
+    # This group does not exist if package "cron" is not installed
+    group: crontab
+    mode: '0640'
+    access_time: preserve
+    modification_time: preserve
+- name: Restrict cron 2/2 (remove /etc/cron.deny)
+  become: true
+  listen: "Restrict cron"
+  ansible.builtin.file:
+    path: /etc/cron.deny
+    state: absent
