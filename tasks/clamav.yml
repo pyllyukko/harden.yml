@@ -19,6 +19,10 @@
         - packages
         - debian
       block:
+        - name: Check current version of ClamAV
+          tags: check
+          ansible.builtin.package_facts:
+            manager: auto
         - name: Uninstall ClamAV (Debian) (x86_64)
           ansible.builtin.apt:
             name: ['clamav', 'clamav-daemon', 'clamav-base', 'clamav-freshclam', 'libclamav11']
@@ -27,6 +31,9 @@
             - services
             # This is commented out so that accounts tag can be run on it's own
             #- accounts  # postrm removed the ClamAV user
+          when:
+            - '"clamav" in ansible_facts.packages'
+            - ansible_facts.packages['clamav'][0].origin == "Debian"
         - name: Create group for ClamAV
           # This is commented out so that accounts tag can be run on it's own
           #tags: accounts
@@ -67,11 +74,12 @@
             deb: "{{ clamav_download.dest }}"
 
     - name: Determine ClamAV sysconfdir
-      ansible.builtin.shell: set -o pipefail; {{ clamav_location }}/clamconf | awk '/^Checking configuration files in/{print$5}' # noqa no-changed-when
+      ansible.builtin.shell: set -o pipefail; {{ clamav_location }}/clamconf | awk '/^Checking configuration files in/{print$5}'
       register: clamav_sysconfdir
       tags: check
       args:
         executable: /bin/bash
+      changed_when: false
     - name: Verify ClamAV sysconfdir
       ansible.builtin.assert:
         that:
@@ -84,9 +92,9 @@
         - freshclam
         - clamd
       tags: configuration
-      changed_when: true
       args:
         executable: /bin/bash
+        creates: "{{ clamav_sysconfdir.stdout }}/{{ item }}.conf.new"
     - name: Comment out Example lines
       ansible.builtin.replace:
         path: '{{ clamav_sysconfdir.stdout }}/{{ item }}.conf.new'
@@ -188,6 +196,8 @@
       with_items:
         - clamd
         - freshclam
+      # Do not remove them for idempotence
+      tags: molecule-notest
     - name: mkdir /var/lib/clamav/
       ansible.builtin.file:
         path: /var/lib/clamav
@@ -345,7 +355,9 @@
     # LibClamAV Error: parse_yara_hex_string: Single byte subpatterns unsupported in ClamAV
     # LibClamAV Warning: load_oneyara[verify]: wide modifier [w] is not supported for regex subsigs
     - name: YARA
-      tags: yara
+      tags:
+        - yara
+        - molecule-notest
       block:
         - name: Download YARA rules
           ansible.builtin.get_url:
