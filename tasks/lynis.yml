@@ -135,7 +135,10 @@
       tags: slackware
     - name: Lynis systemd service
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat"
-      tags: services
+      tags:
+        - services
+        # This is not idempotent
+        - molecule-idempotence-notest
       block:
         - name: Download lynis.{service,timer}
           ansible.builtin.get_url:
