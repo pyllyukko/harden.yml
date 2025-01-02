@@ -48,6 +48,8 @@
       ansible.builtin.import_tasks: tasks/pam.yml
     - name: Services
       ansible.builtin.import_tasks: tasks/services.yml
+    - name: Accounting services
+      ansible.builtin.import_tasks: tasks/services-accounting.yml
     - name: login_defs
       ansible.builtin.import_tasks: tasks/login_defs.yml
     - name: Permissions
