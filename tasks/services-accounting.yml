@@ -180,6 +180,7 @@
     - services
     - accounting
     - slackware
+    - molecule-notest
 # </Process accounting>
 # systemd IP accounting
 # https://0pointer.net/blog/ip-accounting-and-access-lists-with-systemd.html
