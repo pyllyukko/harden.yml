@@ -48,6 +48,18 @@
 
 # Cron
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.1.8 Ensure at/cron is restricted to authorized users
+# Install cron for the Molecule Docker container
+- name: Install cron
+  become: true
+  when:
+    - ansible_distribution == "Debian"
+    - '"molecule-notest" in ansible_skip_tags'
+  ansible.builtin.apt:
+    name: cron
+    update_cache: true
+  tags:
+    - packages
+    - debian
 - name: Check if cron is installed (Debian)
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
   tags:
@@ -109,18 +121,6 @@
         path: /etc/at.deny
         state: absent
 
-# Install cron for the Molecule Docker container
-- name: Install cron
-  become: true
-  when:
-    - ansible_distribution == "Debian"
-    - '"molecule-notest" in ansible_skip_tags'
-  ansible.builtin.apt:
-    name: cron
-    update_cache: true
-  tags:
-    - packages
-    - debian
 - name: Create a job that checks systemd's state
   become: true
   when:
