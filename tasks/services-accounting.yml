@@ -131,6 +131,7 @@
     - accounting
     - configuration
     - debian
+    - molecule-notest
 - name: Install acct (Slackware)
   become: true
   when: ansible_distribution == "Slackware"
