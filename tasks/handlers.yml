@@ -89,6 +89,7 @@
   become: true
   ansible.builtin.systemd:
     daemon_reload: true
+  tags: molecule-notest
 - name: Run update-grub
   become: true
   ansible.builtin.command: /usr/sbin/update-grub
