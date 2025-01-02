@@ -37,6 +37,8 @@
     - name: rkhunter
       ansible.builtin.import_tasks: tasks/rkhunter.yml
       when: ansible_distribution == "Debian"
+    - name: Debian packages
+      ansible.builtin.import_tasks: tasks/debian_packages.yml
     - name: Banners
       ansible.builtin.import_tasks: tasks/banners.yml
     - name: PAM
