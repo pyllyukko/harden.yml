@@ -34,11 +34,12 @@
     - name: AIDE
       ansible.builtin.import_tasks: tasks/aide.yml
       when: ansible_distribution == "Debian"
+    - name: Debian packages
+      ansible.builtin.import_tasks: tasks/debian_packages.yml
+    # rkhunter needs to be ran after Debian packages, as it installs usbguard which affect rkhunter.conf
     - name: rkhunter
       ansible.builtin.import_tasks: tasks/rkhunter.yml
       when: ansible_distribution == "Debian"
-    - name: Debian packages
-      ansible.builtin.import_tasks: tasks/debian_packages.yml
     - name: Lynis
       ansible.builtin.import_tasks: tasks/lynis.yml
       when: ansible_distribution == "Debian"
