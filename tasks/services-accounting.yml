@@ -191,6 +191,7 @@
     - accounting
     - configuration
     - debian
+    - molecule-notest
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
   notify: Run systemctl daemon-reload
   community.general.ini_file:
