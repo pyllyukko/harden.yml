@@ -29,9 +29,17 @@ table ip filter {
 	chain FORWARD {
 		type filter hook forward priority 0; policy drop;
 	}
+	# https://docs.docker.com/engine/network/packet-filtering-firewalls/
+	# "By default, all external source IPs are allowed to connect to ports that have been published to the Docker host's addresses."
+	chain DOCKER-USER {
+		type filter hook forward priority 0; policy drop;
+	}
 }
 table ip6 filter {
 	chain FORWARD {
+		type filter hook forward priority 0; policy drop;
+	}
+	chain DOCKER-USER {
 		type filter hook forward priority 0; policy drop;
 	}
 }
