@@ -54,25 +54,31 @@
             password_lock: true
             state: present
             expires: '{{ 60 * 60 * 24 }}'
-        - name: Check latest ClamAV version
-          ansible.builtin.uri:
-            url: https://api.github.com/repos/Cisco-Talos/clamav/releases/latest
-            method: GET
-          register: clamav_latest
-        # TODO: Download PGP signature and verify it
-        - name: Download ClamAV
-          ansible.builtin.get_url:
-            url: "{{ clamav_latest.json | json_query(query) | first }}"
-            dest: /var/cache/apt/archives/
-            owner: root
-            group: root
-            mode: '0600'
-          vars:
-            query: "assets[?ends_with(name,'.linux.x86_64.deb')].browser_download_url"
-          register: clamav_download
-        - name: Install ClamAV (x86_64)
-          ansible.builtin.apt:
-            deb: "{{ clamav_download.dest }}"
+            append: false
+            move_home: false
+        - name: Download & install ClamAV
+          # TODO: The downloading is not idempotent in GH Actions for some reason. At least with /var/cache/apt/archives/ as dest dir.
+          tags: molecule-idempotence-notest
+          block:
+            - name: Check latest ClamAV version
+              ansible.builtin.uri:
+                url: https://api.github.com/repos/Cisco-Talos/clamav/releases/latest
+                method: GET
+              register: clamav_latest
+            # TODO: Download PGP signature and verify it
+            - name: Download ClamAV
+              ansible.builtin.get_url:
+                url: "{{ clamav_latest.json | json_query(query) | first }}"
+                dest: /var/cache/apt/archives/
+                owner: root
+                group: root
+                mode: '0600'
+              vars:
+                query: "assets[?ends_with(name,'.linux.x86_64.deb')].browser_download_url"
+              register: clamav_download
+            - name: Install ClamAV (x86_64)
+              ansible.builtin.apt:
+                deb: "{{ clamav_download.dest }}"
 
     - name: Determine ClamAV sysconfdir
       ansible.builtin.shell: set -o pipefail; {{ clamav_location }}/clamconf | awk '/^Checking configuration files in/{print$5}'
