@@ -1,10 +1,12 @@
 ---
 - name: Verify
-  hosts: molecule-slackware
+  hosts: molecule-debian
   tasks:
     - name: Verify checksums of some of the modified/creates files
       ansible.builtin.shell: 'set -o pipefail; echo "{{ item.value }}  {{ item.key }}" | sha512sum -c'
       register: result
+      args:
+        executable: /bin/bash
       changed_when:
         - '": OK" not in result.stdout'
       with_dict:
