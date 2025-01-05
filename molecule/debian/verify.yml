@@ -1,0 +1,33 @@
+---
+- name: Verify
+  hosts: molecule-debian
+  tasks:
+    - name: Verify checksums of some of the modified/creates files
+      ansible.builtin.shell: 'set -o pipefail; echo "{{ item.value }}  {{ item.key }}" | sha512sum -c'
+      register: result
+      args:
+        executable: /bin/bash
+      changed_when:
+        - '": OK" not in result.stdout'
+      with_dict:
+        /etc/pam.d/common-account: f8420cf213beac62bc5875c5268151672cd11d62440f57365ad6d99820146f8d2cf2a58bf4535ca40635801deea301321bb87195ff341d89f6bf7281c2cd8d50
+        /etc/pam.d/common-auth: 7a722b18319fa38bbb6b5373151271ea9bb174c8fd806037f268e705bb33173100b3576d457ad552e1af9ba341d714a85baa1a8527ea1ae0598a6ee8231e61b2
+        /etc/pam.d/common-password: f82e0e0b7a6570e573a5522e6b3895f24775210aee9603d85cccbfedb0195d5637917c5f3323458c64049ba92dadef515b484094ead37715fa0f2d22a466c370
+        /etc/pam.d/common-session: 97a2593bef6cc5c7741a5c6098d8d8d604ecab6bb1216fc4606c36f6272655746be5e58fb46172179af0cef12628a85e9be187623476af462ac8f63ba4aee4de
+        /etc/pam.d/common-session-noninteractive: 9a7e9494eef090ef3dee50222b6435bd6183cf413ce6660df61c1eaca7d29202b0607758d156444ea5d720d442cf2bcdaa9044543d36d9c6e490e7e937e29fea
+        /etc/security/limits.conf: 299a906992f61894be3ed2a4ef39ea3ad2dc25e76edb40cc915d7b0cf7626bac7d91c19e46031e92ddb2d5acfed6a4cf2bc83506dc6ca64f00bd6dea8524860c
+        /etc/security/namespace.conf: 89512d109d556324b68c7ebc3f01c5f5d6fcc5d1ab8b6fca7a443beba433cadebe3444897285d4d0ae272c056f467c61d9475434e4c8a19c7465aeab75cc4e77
+        /etc/security/faillock.conf: 135e0e8e4c8a35d6306df346ac7efa3c5579d713116f2ea7e97cb980de038494dd7d540fcfe1a151e43f2fece85bf1d128b3b64dccd6c770bd78a454d0eb2d12
+        /etc/security/access.conf: 1adf5442f4695e074077e50a44f4693ccb4eb78630b6e1121e907370c1a8f4f391efcdbc5fd970a068ca8d6adf6af4e32f01a179748ceae82b3480e5874b3558
+        /etc/logrotate.conf: 03e4f4229d8a4b51c9e7afbb2cb089b86cc9ae6f4baf8aba73049a82ba222c97b4b0f573b0f2b03ad3f71018e52430451e98e339a42b1dbcf449f6800cfe21a0
+        /etc/ca-certificates.conf: c7ea2365ff93b99f6b66715fe7c6aa785b5ff592277d43b6d9d75bf4503783db99eb44b49869cbec226dd46b550e901b822785a8531da5c0077dd60599dcfa3e
+        /etc/tmpfiles.d/tmp.conf: f0d790a93fed9e2c8d6ea1b230e8bd9b791a35f5ca53d5506a53e1dd0a981973f7fef2c2f7044843c2bbc8868a284b0beaee28888fae40a8b4db7f3fd44ce291
+        /etc/login.defs: 3195a8c05adf03d892273ec2abd48347f3f6382d502ef834d2f43afec45038ba229dd41cc0a5043093bd47882a030822d5cdea038d96cbc40aef605aa8efc8e3
+        /etc/ftpusers: 7f812b76770c51e32e2d204b9ebc852528e795d70da2519b63d855b711c332fe6f47658ce41484ffcf3e39d573b66c7df9a6bb73f1f8eb7d050ea9343d1553af
+        /etc/securetty: 59c89246507c3c6f61ed61ddb2558bb020ce23e5f4b8083b28c2bba487bd3c79382634fa5d936c08808a6558ac03e59fa09e29b578e7f8b5f1c0c1fef5564bdc
+        /etc/rkhunter.conf: 36c30c712423ae39d76ad964e992fd6ffe29b9f19d77cba819d220092ddbe4c45389a234b0892ae321d403e53a7a4b87679cf92d20323cd3ad7d2701c9202de7
+        /etc/default/sysstat: b34bbdd7aec422f5f9ac763938b7291e981f1110b8f1a623f643c387d7369a1011dd70ab4c6bddc95a3a907c15536dae812139be1c2dd7b8f99ccd95ddb41ccf
+        /etc/default/rkhunter: 8d1603fb5894d72ed80c49fe983b4b7a1d30f88d40348455c0c21c79cbc015e24f06882cb7242b535e27461d6060198007910e693f89e5877b6e6be73816771a
+        /etc/default/useradd: 90cb716a702d9c5955d13db2328b7fc31f82fbcf3e5addb02ff0f43472260ffe162c3f7bbf53630b8a81d90c34950d59c2d8aa43543e2640ccafa236b9aa4bde
+        /etc/default/debsums: 8264b7fbaf38963d8463dba850661eca8ff6d4ef684d159c95354a1080f0b5480a2ab125d6b503a9ec21e7d7d8509d718effb94047c3eb5d62669056a3c7ac50
+        /etc/default/aide: c3369fc5c53630b13e90328aa73bd7fa4b7b951fb70178c57a43d37fe029928bdeb34da01f20e41e059a115f25cab1e8f0026352b6318cee5230e4d7b8ec73c1
