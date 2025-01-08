@@ -152,6 +152,9 @@ jobs:
         with:
           name: lynis-malware.log
           path: /var/log/lynis.log
+      # MALW-3280
+      # 2025-01-08 21:22:22 Result: no commercial anti-virus tools found
+      # 2025-01-08 21:22:22 Hardening: assigned partial number of hardening points (0 of 3). Currently having 4 points (out of 7)
       - name: Check Lynis score
         run: sudo bash tests/check_lynis_score.sh 66
   mac_frameworks:
