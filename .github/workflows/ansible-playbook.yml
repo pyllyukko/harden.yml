@@ -5,6 +5,23 @@ env:
   ANSIBLE_FORCE_COLOR: '1'
 
 jobs:
+  # Performing test ID BANN-7126 (Check issue banner file contents)
+  # Test: Checking file /etc/issue contents for legal key words
+  # Result: found string 'authori'
+  # Result: found string 'monitor'
+  # Result: found string 'report'
+  # Result: Found only 3 key words (5 or more suggested), to warn unauthorized users and could be increased
+  # Suggestion: Add a legal banner to /etc/issue, to warn unauthorized users [test:BANN-7126] [details:-] [solution:-]
+  # Hardening: assigned partial number of hardening points (0 of 1). Currently having 0 points (out of 1)
+  #
+  # Performing test ID BANN-7130 (Check issue.net banner file contents)
+  # Test: Checking file /etc/issue.net contents for legal key words
+  # Result: found string 'authori'
+  # Result: found string 'monitor'
+  # Result: found string 'report'
+  # Result: Found only 3 key words, to warn unauthorized users and could be increased
+  # Suggestion: Add legal banner to /etc/issue.net, to warn unauthorized users [test:BANN-7130] [details:-] [solution:-]
+  # Hardening: assigned partial number of hardening points (0 of 1). Currently having 0 points (out of 2)
   banners:
     runs-on: ubuntu-latest
     steps:
@@ -82,6 +99,8 @@ jobs:
           path: /var/log/lynis.log
       - name: Check Lynis score
         run: sudo bash tests/check_lynis_score.sh 100
+  # The only test that would be (positively) scored in this category is SCHD-7720,
+  # but that test is skipped if/when atd is not running.
   scheduling:
     runs-on: ubuntu-latest
     steps:
@@ -181,6 +200,7 @@ jobs:
           path: /var/log/lynis.log
       - name: Check Lynis score
         run: sudo bash tests/check_lynis_score.sh 100
+  # Not scored
   file_permissions:
     runs-on: ubuntu-latest
     steps:
@@ -203,6 +223,7 @@ jobs:
         with:
           name: lynis-file_permissions.log
           path: /var/log/lynis.log
+  # Not scored
   homedirs:
     runs-on: ubuntu-latest
     steps:
