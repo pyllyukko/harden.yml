@@ -75,3 +75,8 @@ kernel.yama.ptrace_scope = 3
 # https://www.kernel.org/doc/html/latest/admin-guide/sysctl/kernel.html#unprivileged-bpf-disabled
 # https://www.debian.org/releases/bullseye/amd64/release-notes/ch-information.en.html#linux-unprivileged-bpf
 kernel.unprivileged_bpf_disabled = 1
+
+# https://lkml.org/lkml/2019/4/15/890
+# https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=7c0cca7c847e6e019d67b7d793efbbe3b947d004
+# https://gitlab.tails.boum.org/tails/tails/-/issues/18302
+dev.tty.ldisc_autoload = 0
