@@ -22,7 +22,9 @@
         validate: '/bin/grep "^ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a$" %s'
 
 - name: Set umask to 077 in /etc/profile (Slackware)
-  tags: configuration
+  tags:
+    - configuration
+    - umask
   become: true
   when: ansible_distribution == "Slackware"
   ansible.builtin.replace:
