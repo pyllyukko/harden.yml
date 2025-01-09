@@ -439,6 +439,17 @@
       tags:
         - permissions
         - cron
+    - name: chmod /opt/microsoft/msedge/cron/microsoft-edge
+      ansible.builtin.file:
+        path: /opt/microsoft/msedge/cron/microsoft-edge
+        mode: g-rwx,o-rwx
+      register: result
+      failed_when:
+        - result.failed == true
+        - result.state != "absent"
+      tags:
+        - permissions
+        - cron
     # CIS Slackware Linux Benchmark v1.1 - 3.3 Disable GUI Login If Possible
     - name: chmod inittab
       when: ansible_distribution == "Slackware"
