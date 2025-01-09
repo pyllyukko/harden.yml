@@ -461,6 +461,7 @@
       tags:
         - permissions
         - slackware
+        - inittab
     # CIS Slackware Linux Benchmark v1.1 - 7.8 Restrict Root Logins To System Console
     - name: chmod /etc/securetty
       ansible.builtin.file:

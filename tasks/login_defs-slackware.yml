@@ -15,6 +15,7 @@
         group: root
         mode: '0600'
     - name: Use shutdown -a in /etc/inittab
+      tags: inittab
       ansible.builtin.replace:
         path: /etc/inittab
         regexp: '^(ca::ctrlaltdel:/sbin/shutdown -t5 -r now)$'
@@ -55,6 +56,7 @@
   tags:
     - configuration
     - authentication
+    - inittab
   become: true
   when: ansible_distribution == "Slackware"
   block:

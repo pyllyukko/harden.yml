@@ -284,6 +284,7 @@ Tags that you can use with `ansible-playbook --tags`:
         * `limits`
 * `cgroup` (Slackware)
 * `hidepid` (Slackware)
+* `inittab` (Slackware)
 * `shells`
 * `umask`
 
