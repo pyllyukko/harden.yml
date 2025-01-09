@@ -248,7 +248,7 @@ jobs:
           name: lynis-kernel_hardening.log
           path: /var/log/lynis.log
       - name: Check Lynis score
-        run: sudo bash tests/check_lynis_score.sh 91
+        run: sudo bash tests/check_lynis_score.sh 94
   file_integrity:
     runs-on: ubuntu-latest
     steps:
