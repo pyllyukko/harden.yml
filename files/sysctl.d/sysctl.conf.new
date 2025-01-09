@@ -55,9 +55,12 @@ kernel.ctrl-alt-del = 0
 # https://www.kernel.org/doc/html/v5.7/admin-guide/sysctl/kernel.html#perf-event-paranoid
 kernel.perf_event_paranoid = 2
 
-# https://kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings#sysctls
+# https://kspp.github.io/Recommended_Settings#sysctls
+# https://www.kernel.org/doc/html/latest/admin-guide/sysctl/kernel.html#kexec-load-disabled
 # Turn off kexec, even if it's built in.
 kernel.kexec_load_disabled = 1
+# https://www.kernel.org/doc/html/latest/admin-guide/sysctl/kernel.html#modules-disabled
+#kernel.modules_disabled = 1
 
 # https://www.kernel.org/doc/Documentation/security/Yama.txt
 # 0 - classic ptrace permissions
