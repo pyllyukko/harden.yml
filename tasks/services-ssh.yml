@@ -64,7 +64,7 @@
   become: true
   when: ansible_distribution == "Slackware"
   ansible.builtin.template:
-    src: "{{ playbook_dir }}/templates/ssh_config-{{ ansible_distribution }}.j2"
+    src: "ssh_config-{{ ansible_distribution }}.j2"
     dest: /etc/ssh/ssh_config
     owner: root
     group: root
@@ -80,7 +80,7 @@
     - ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
     - '"openssh-client" in ansible_facts.packages'
   ansible.builtin.template:
-    src: "{{ playbook_dir }}/templates/ssh_config-Slackware.j2"
+    src: ssh_config-Slackware.j2
     dest: /etc/ssh/ssh_config.d/harden.conf
     owner: root
     group: root
