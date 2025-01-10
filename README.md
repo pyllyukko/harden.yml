@@ -10,9 +10,9 @@ Ansible playbook to harden your Linux system.
 Supported distros
 -----------------
 
-* Debian (Bookworm)
-    * Kali
-    * Raspberry Pi OS
+* :book::worm: Debian (Bookworm)
+    * :dragon: Kali
+    * π Raspberry Pi OS
 * Slackware (>= [15.0](http://www.slackware.com/announce/15.0.php))
 * Limited hardening for CentOS 7 (see CentOS specific tasks with `ansible-playbook --list-tasks --tags centos harden.yml`)
 
@@ -34,7 +34,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 
 * Enables [TCP wrappers](https://en.wikipedia.org/wiki/TCP_Wrapper)
     * :bulb: Some people consider TCP wrappers as obsolete and unnecessary, because nowadays firewall(s) take care of this kind of network level access. I disagree, because TCP wrappers still provide an additional layer of control in a case where the firewall(s) might fail for any number of reasons (usually misconfiguration). TCP wrappers also work as an network level ACL for the programs that utilize it and is a "native" control for those programs.
-* IP stack hardening via sysctl settings
+* IP stack hardening via [sysctl](https://en.wikipedia.org/wiki/Sysctl) settings
     * For the complete list, see [network.conf.new](newconfs/sysctl.d/network.conf.new)
 * Creates a basic firewall
 
@@ -48,7 +48,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 ### Accounting
 
 * Enables system accounting ([sysstat](http://sebastien.godard.pagesperso-orange.fr/))
-    * Sets it's log retention to 99999 days (the logs are really small, so it doesn't eat up disk space)
+    * :calendar: Sets it's log retention to 99999 days (the logs are really small, so it doesn't eat up disk space)
 * Enables process accounting
 * Run `ansible-playbook --list-tasks --tags accounting harden.yml` for a full list
 
@@ -63,10 +63,10 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * For the complete list, see [sysctl.conf.new](newconfs/sysctl.d/sysctl.conf.new)
 * Run `ansible-playbook --list-tasks --tags kernel harden.yml` for a full list
 
-### Filesystem
+### :file_folder: Filesystem
 
 * Hardens mount options (creates `/etc/fstab.new`) (see [fstab.awk](files/fstab.awk))
-* Sets strict permissions to users home directories
+* :house: Sets strict permissions to users home directories
 * Limits permissions to various configuration files and directories that might contain sensitive content (see `permissions` tag for a complete list)
 * Clean up `/tmp` during boot
 * Removes SUID and/or SGID bits from various binaries (see `ansible-playbook --list-tasks --tags suid,sgid harden.yml` for details)
@@ -80,7 +80,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * :warning: **WARNING**: If there are rules in `/etc/sudoers.d/` that match our `become: true` tasks that do not have explicit `EXEC`, it can "break" `sudo` as we define `Defaults noexec` in the main `sudoers` file. There is a "Fix NOPASSWD rules" task in `sudoers.yml` which tries to tackle this problem, but it's not guaranteed to work.
     * :wood: You can set the `sudo_iolog` in `vars.yml` to `true` to enable I/O logging
     * You can set the `sudo_ids` in `vars.yml` to `true` to enable "Intrusion Detection" as described in [Sudo Mastery](#other-docs) chapter 9 ([#59](https://github.com/pyllyukko/harden.yml/issues/59))
-* [ClamAV](https://www.clamav.net/) configuration (see [clamav.yml](tasks/clamav.yml))
+* :smiling_imp: [ClamAV](https://www.clamav.net/) configuration (see [clamav.yml](tasks/clamav.yml))
     * Configures `clamd` & `freshclam` by first generating fresh configurations with [clamconf](https://docs.clamav.net/manual/Usage/Configuration.html#clamconf)
     * Configured ClamAV to unarchive with password "infected" (see [Passwords for archive files](https://docs.clamav.net/manual/Signatures/EncryptedArchives.html) & [ClamAV and ZIP File Decryption](https://blog.didierstevens.com/2017/02/15/quickpost-clamav-and-zip-file-decryption/))
     * Downloads YARA rules from [Neo23x0](https://github.com/Neo23x0/signature-base), [GCTI](https://github.com/chronicle/GCTI), [Elastic](https://github.com/elastic/protections-artifacts), [YaraRules Project](https://yara-rules.github.io/blog/), [JPCERT/CC](https://github.com/JPCERTCC/jpcert-yara), [Malpedia](https://malpedia.caad.fkie.fraunhofer.de/), [Citizen Lab](https://github.com/citizenlab/malware-signatures), [GoDaddy](https://github.com/godaddy/yara-rules), [Didier Stevens](https://github.com/search?q=repo%3ADidierStevens%2FDidierStevensSuite+path%3A*.yara) & [Open-Source-YARA-rules](https://github.com/mikesxrs/Open-Source-YARA-rules) for [ClamAV to use](https://docs.clamav.net/manual/Signatures/YaraRules.html)
@@ -91,7 +91,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Display managers:
     * Disables user lists in GDM3 & LightDM
     * Disables guest sessions and VNC in LightDM
-* Minor Apache HTTP server hardening
+* :feather: Minor Apache HTTP server hardening
 * Minor PHP (`php.ini`) hardening
 
 ### User accounts / authentication / authorization
@@ -132,7 +132,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 
 ### Miscellaneous
 
-* Creates legal banners (see [banners.yml](tasks/banners.yml))
+* :placard: Creates legal banners (see [banners.yml](tasks/banners.yml))
 * Reduce the amount of trusted [CAs](https://en.wikipedia.org/wiki/Certificate_authority) (see [ca-certificates.conf.new](newconfs/ca-certificates.conf.new))
 * :shell: Restricts the number of available shells (`/etc/shells`)
 
@@ -263,19 +263,19 @@ Tags that you can use with `ansible-playbook --tags`:
     * `lynis` (to only configure Lynis you can use `--tags lynis --skip-tags packages`)
     * :sandwich: `sudo`
     * `kerberos`
-    * `clamav` (use `--skip-tags clamav` in Slackware if you don't have [clamav](https://slackbuilds.org/repository/14.2/system/clamav/) installed)
+    * :smiling_imp: `clamav` (use `--skip-tags clamav` in Slackware if you don't have [clamav](https://slackbuilds.org/repository/14.2/system/clamav/) installed)
         * `yara`
     * `apparmor`
     * `cron` (also includes tasks regarding `at`)
     * `php`
-    * `apache`
+    * :feather: `apache`
         * `hsts`
-    * `ntp`
+    * :clock10: `ntp`
     * `lightdm`
     * `gnome`
     * :tiger: `tiger`
     * `john`
-* `banners`
+* :placard: `banners`
 * [AAA](https://en.wikipedia.org/wiki/AAA_(computer_security)):
     * `accounting` (includes `sysstat`)
     * `authorization`
