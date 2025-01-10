@@ -234,6 +234,7 @@ Usage
     * [URLhaus](https://urlhaus.abuse.ch/downloads/urlhaus.ndb)
 * :warning: **WARNING**: There is a hazard with immutable `loginuid` enabled in auditing in non-systemd systems (Slackware). See longer description of this in the [wiki](https://github.com/pyllyukko/harden.yml/wiki/PAM#pam_loginuidso).
 * Review `/etc/fstab.new` manually and deploy applicable changes to `/etc/fstab`
+* :bulb: Consider running a hardened kernel. For Slackware you can check out my other project [kspp\_confnbuild](https://github.com/pyllyukko/kspp_confnbuild) that has been (mostly) configured according to [KSPP](https://kspp.github.io/)'s [recommendations](https://kspp.github.io/Recommended_Settings). You can use [kernel-hardening-checker](https://github.com/a13xp0p0v/kernel-hardening-checker) to check your kernel configs.
 
 ### Tags
 
