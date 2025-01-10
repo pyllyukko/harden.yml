@@ -38,7 +38,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * For the complete list, see [network.conf.new](newconfs/sysctl.d/network.conf.new)
 * Creates a basic firewall
 
-### Logging
+### :wood: Logging
 
 * :calendar: Configure log retention time to be 6 months
 * Configures `logrotate` to `shred` files
@@ -78,7 +78,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Configures `sshd_config` and `ssh_config` (see `ansible-playbook --list-tasks --tags ssh harden.yml` for details)
 * :sandwich: Configures [sudo](https://www.sudo.ws/) (see [sudoers.j2](templates/sudoers.j2))
     * :warning: **WARNING**: If there are rules in `/etc/sudoers.d/` that match our `become: true` tasks that do not have explicit `EXEC`, it can "break" `sudo` as we define `Defaults noexec` in the main `sudoers` file. There is a "Fix NOPASSWD rules" task in `sudoers.yml` which tries to tackle this problem, but it's not guaranteed to work.
-    * You can set the `sudo_iolog` in `vars.yml` to `true` to enable I/O logging
+    * :wood: You can set the `sudo_iolog` in `vars.yml` to `true` to enable I/O logging
     * You can set the `sudo_ids` in `vars.yml` to `true` to enable "Intrusion Detection" as described in [Sudo Mastery](#other-docs) chapter 9 ([#59](https://github.com/pyllyukko/harden.yml/issues/59))
 * [ClamAV](https://www.clamav.net/) configuration (see [clamav.yml](tasks/clamav.yml))
     * Configures `clamd` & `freshclam` by first generating fresh configurations with [clamconf](https://docs.clamav.net/manual/Usage/Configuration.html#clamconf)
