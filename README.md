@@ -1,4 +1,4 @@
-harden.yml
+harden.yml :lock:
 ==========
 
 Ansible playbook to harden your Linux system.
@@ -16,7 +16,7 @@ Supported distros
 * Slackware (>= [15.0](http://www.slackware.com/announce/15.0.php))
 * Limited hardening for CentOS 7 (see CentOS specific tasks with `ansible-playbook --list-tasks --tags centos harden.yml`)
 
-Why I made this
+:question: Why I made this
 ---------------
 
 * [Bastille](http://bastille-linux.sourceforge.net/) is obsolete
@@ -25,7 +25,7 @@ Why I made this
 * For minimizing the effort needed to tweak fresh installations
     * Also for consistency
 
-What does it do?
+:question: What does it do?
 ----------------
 
 For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
@@ -33,16 +33,16 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 ### Network
 
 * Enables [TCP wrappers](https://en.wikipedia.org/wiki/TCP_Wrapper)
-    * Some people consider TCP wrappers as obsolete and unnecessary, because nowadays firewall(s) take care of this kind of network level access. I disagree, because TCP wrappers still provide an additional layer of control in a case where the firewall(s) might fail for any number of reasons (usually misconfiguration). TCP wrappers also work as an network level ACL for the programs that utilize it and is a "native" control for those programs.
+    * :bulb: Some people consider TCP wrappers as obsolete and unnecessary, because nowadays firewall(s) take care of this kind of network level access. I disagree, because TCP wrappers still provide an additional layer of control in a case where the firewall(s) might fail for any number of reasons (usually misconfiguration). TCP wrappers also work as an network level ACL for the programs that utilize it and is a "native" control for those programs.
 * IP stack hardening via sysctl settings
     * For the complete list, see [network.conf.new](newconfs/sysctl.d/network.conf.new)
 * Creates a basic firewall
 
 ### Logging
 
-* Configure log retention time to be 6 months
+* :calendar: Configure log retention time to be 6 months
 * Configures `logrotate` to `shred` files
-    * **NOTE**: Read the fine print in [SHRED(1)](https://www.man7.org/linux/man-pages/man1/shred.1.html): "CAUTION: shred assumes the file system and hardware overwrite data in place.  Although this is common, many platforms operate otherwise."
+    * :information_source: **NOTE**: Read the fine print in [SHRED(1)](https://www.man7.org/linux/man-pages/man1/shred.1.html): "CAUTION: shred assumes the file system and hardware overwrite data in place.  Although this is common, many platforms operate otherwise."
 * Run `ansible-playbook --list-tasks --tags logging harden.yml` for a full list
 
 ### Accounting
@@ -57,7 +57,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Disables the use of certain kernel modules via `modprobe`
     * Disable [Firewire](http://www.hermann-uwe.de/blog/physical-memory-attacks-via-firewire-dma-part-1-overview-and-mitigation)
 * [sysctl](https://en.wikipedia.org/wiki/Sysctl) settings hardening
-    * Enables [SAK](https://en.wikipedia.org/wiki/Secure_attention_key) and disables the other [magic SysRq stuff](https://www.kernel.org/doc/Documentation/sysrq.txt)
+    * Enables [SAK](https://www.kernel.org/doc/Documentation/SAK.txt) and disables the other [magic SysRq stuff](https://www.kernel.org/doc/Documentation/sysrq.txt)
     * Restricts the use of `dmesg` by regular users
     * Enable [YAMA](https://www.kernel.org/doc/Documentation/security/Yama.txt)
     * For the complete list, see [sysctl.conf.new](newconfs/sysctl.d/sysctl.conf.new)
@@ -76,8 +76,8 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Configures basic auditing based on [stig.rules](https://fedorahosted.org/audit/browser/trunk/contrib/stig.rules) if audit is installed (see [audit.yml](tasks/audit.yml))
     * See also <https://github.com/pyllyukko/harden.yml/wiki/audit>
 * Configures `sshd_config` and `ssh_config` (see `ansible-playbook --list-tasks --tags ssh harden.yml` for details)
-* Configures [sudo](https://www.sudo.ws/) (see [sudoers.j2](templates/sudoers.j2))
-    * **WARNING**: If there are rules in `/etc/sudoers.d/` that match our `become: true` tasks that do not have explicit `EXEC`, it can "break" `sudo` as we define `Defaults noexec` in the main `sudoers` file. There is a "Fix NOPASSWD rules" task in `sudoers.yml` which tries to tackle this problem, but it's not guaranteed to work.
+* :sandwich: Configures [sudo](https://www.sudo.ws/) (see [sudoers.j2](templates/sudoers.j2))
+    * :warning: **WARNING**: If there are rules in `/etc/sudoers.d/` that match our `become: true` tasks that do not have explicit `EXEC`, it can "break" `sudo` as we define `Defaults noexec` in the main `sudoers` file. There is a "Fix NOPASSWD rules" task in `sudoers.yml` which tries to tackle this problem, but it's not guaranteed to work.
     * You can set the `sudo_iolog` in `vars.yml` to `true` to enable I/O logging
     * You can set the `sudo_ids` in `vars.yml` to `true` to enable "Intrusion Detection" as described in [Sudo Mastery](#other-docs) chapter 9 ([#59](https://github.com/pyllyukko/harden.yml/issues/59))
 * [ClamAV](https://www.clamav.net/) configuration (see [clamav.yml](tasks/clamav.yml))
@@ -85,7 +85,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * Configured ClamAV to unarchive with password "infected" (see [Passwords for archive files](https://docs.clamav.net/manual/Signatures/EncryptedArchives.html) & [ClamAV and ZIP File Decryption](https://blog.didierstevens.com/2017/02/15/quickpost-clamav-and-zip-file-decryption/))
     * Downloads YARA rules from [Neo23x0](https://github.com/Neo23x0/signature-base), [GCTI](https://github.com/chronicle/GCTI), [Elastic](https://github.com/elastic/protections-artifacts), [YaraRules Project](https://yara-rules.github.io/blog/), [JPCERT/CC](https://github.com/JPCERTCC/jpcert-yara), [Malpedia](https://malpedia.caad.fkie.fraunhofer.de/), [Citizen Lab](https://github.com/citizenlab/malware-signatures), [GoDaddy](https://github.com/godaddy/yara-rules), [Didier Stevens](https://github.com/search?q=repo%3ADidierStevens%2FDidierStevensSuite+path%3A*.yara) & [Open-Source-YARA-rules](https://github.com/mikesxrs/Open-Source-YARA-rules) for [ClamAV to use](https://docs.clamav.net/manual/Signatures/YaraRules.html)
 * [rkhunter](https://sourceforge.net/projects/rkhunter/) configuration (see [rkhunter.yml](tasks/rkhunter.yml))
-* [Tiger](https://www.nongnu.org/tiger/): Configures `tigerrc` & `tiger.ignore`
+* :tiger: [Tiger](https://www.nongnu.org/tiger/): Configures `tigerrc` & `tiger.ignore`
 * [Lynis](https://cisofy.com/lynis/) configuration (see [lynis.yml](tasks/lynis.yml))
 * Configures AIDE (see [aide.yml](tasks/aide.yml))
 * Display managers:
@@ -134,7 +134,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 
 * Creates legal banners (see [banners.yml](tasks/banners.yml))
 * Reduce the amount of trusted [CAs](https://en.wikipedia.org/wiki/Certificate_authority) (see [ca-certificates.conf.new](newconfs/ca-certificates.conf.new))
-* Restricts the number of available shells (`/etc/shells`)
+* :shell: Restricts the number of available shells (`/etc/shells`)
 
 ### Slackware specific
 
@@ -150,7 +150,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Reconfigured bunch of services (run `ansible-playbook --list-tasks --tags slackware harden.yml | grep '\bservices\b'` for a full list)
 * Configures cgroups ([v1](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v1/cgroups.html), because of too old `libcgroup`) into `/etc/cg{config,rules}.conf`
 * Enables `bootlogd`
-    * **NOTE**: Requires `CONFIG_LEGACY_PTYS` (which [KSPP recommends to disable](https://www.kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings))
+    * :information_source: **NOTE**: Requires `CONFIG_LEGACY_PTYS` (which [KSPP recommends to disable](https://www.kernsec.org/wiki/index.php/Kernel_Self_Protection_Project/Recommended_Settings))
 
 #### PAM
 
@@ -167,7 +167,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * `pam_keyinit`
 * Add `pam_namespace` to `/etc/pam.d/{login,sddm,sshd,xdm}`
 * Removes `auth include postlogin` from several files, as `postlogin` should (and has) only `session` module types
-* Creates `/etc/pam.d/sudo`, as that seemed to be missing
+* :sandwich: Creates `/etc/pam.d/sudo`, as that seemed to be missing
 * Disallows the use of `su` (see [su.new](newconfs/pam.d/su.new))
 * [Block](newconfs/pam.d/other.new) `/etc/pam.d/remote` (see [/etc/pam.d/remote](https://github.com/pyllyukko/harden.yml/wiki/PAM#etcpamdremote))
 
@@ -217,7 +217,7 @@ Usage
 * Harden your system by running `ansible-playbook harden.yml`
     * You might need to provide credentials with [-K](https://docs.ansible.com/ansible/latest/cli/ansible-playbook.html#common-options) or via [inventory](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html)
 
-### Notes
+### :information_source: Notes
 
 * Make sure regular users that should be able to login are members of the `allowed_group` group
 * Sudo hardening:
@@ -225,14 +225,14 @@ Usage
     * Interactive shells to `root` have timeout, so use `screen` for those longer administrative tasks
 * Rebooting the system after running this is highly recommended
 * The AIDE DB creation is made [asynchronously](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_async.html) and without polling, so let that finish before rebooting
-* You might want to get additional (unofficial) rules for ClamAV with [clamav-unofficial-sigs](https://github.com/extremeshok/clamav-unofficial-sigs) (although see [#425](https://github.com/extremeshok/clamav-unofficial-sigs/issues/425)). At least the following rulesets are freely available:
+* :bulb: You might want to get additional (unofficial) rules for ClamAV with [clamav-unofficial-sigs](https://github.com/extremeshok/clamav-unofficial-sigs) (although see [#425](https://github.com/extremeshok/clamav-unofficial-sigs/issues/425)). At least the following rulesets are freely available:
     * [Sanesecurity](https://sanesecurity.com/usage/signatures/)
         * Porcupine ("The following databases are distributed by Sanesecurity, but produced by Porcupine Signatures")
         * bofhland ("The following databases are distributed by Sanesecurity, but produced by bofhland")
     * [Linux Malware Detect](https://www.rfxn.com/projects/linux-malware-detect/)
     * [InterServer](https://sigs.interserver.net)
     * [URLhaus](https://urlhaus.abuse.ch/downloads/urlhaus.ndb)
-* **WARNING**: There is a hazard with immutable `loginuid` enabled in auditing in non-systemd systems (Slackware). See longer description of this in the [wiki](https://github.com/pyllyukko/harden.yml/wiki/PAM#pam_loginuidso).
+* :warning: **WARNING**: There is a hazard with immutable `loginuid` enabled in auditing in non-systemd systems (Slackware). See longer description of this in the [wiki](https://github.com/pyllyukko/harden.yml/wiki/PAM#pam_loginuidso).
 * Review `/etc/fstab.new` manually and deploy applicable changes to `/etc/fstab`
 
 ### Tags
@@ -245,7 +245,7 @@ Tags that you can use with `ansible-playbook --tags`:
 * `network`
     * `firewall`
     * `ipv6`
-* `logging`
+* :wood: `logging`
 * Filesystem related:
     * `permissions`
     * `fstab`
@@ -260,7 +260,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `debsecan`
     * `debsums`
     * `lynis` (to only configure Lynis you can use `--tags lynis --skip-tags packages`)
-    * `sudo`
+    * :sandwich: `sudo`
     * `kerberos`
     * `clamav` (use `--skip-tags clamav` in Slackware if you don't have [clamav](https://slackbuilds.org/repository/14.2/system/clamav/) installed)
         * `yara`
@@ -272,7 +272,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `ntp`
     * `lightdm`
     * `gnome`
-    * `tiger`
+    * :tiger: `tiger`
     * `john`
 * `banners`
 * [AAA](https://en.wikipedia.org/wiki/AAA_(computer_security)):
@@ -285,7 +285,7 @@ Tags that you can use with `ansible-playbook --tags`:
 * `cgroup` (Slackware)
 * `hidepid` (Slackware)
 * `inittab` (Slackware)
-* `shells`
+* :shell: `shells`
 * `umask`
 
 There are also operating system tags for tasks that only apply to specific OS.
