@@ -97,10 +97,10 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 ### User accounts / authentication / authorization
 
 * Sets default [umask](https://en.wikipedia.org/wiki/Umask) to a more stricter `077` (see <https://github.com/pyllyukko/harden.yml/wiki/umask>)
-* Sets console session timeout via `$TMOUT` (Bash)
+* :timer_clock: Sets console session timeout via `$TMOUT` (Bash)
 * Properly locks down system accounts (0 - `SYS_UID_MAX` && !`root`)
     * Lock the user's password
-    * Sets shell to `/sbin/nologin`
+    * :shell: Sets shell to `/sbin/nologin`
     * Expire the account
     * Set `RLIMIT_NPROC` to `0` in [pam\_limits](#pam) for those system accounts that don't need to run any processes
 * Configures the default password inactivity period
@@ -220,9 +220,9 @@ Usage
 ### :information_source: Notes
 
 * Make sure regular users that should be able to login are members of the `allowed_group` group
-* Sudo hardening:
+* :sandwich: Sudo hardening:
     * `noexec` is on by default, so you need to take this into account in your custom rules
-    * Interactive shells to `root` have timeout, so use `screen` for those longer administrative tasks
+    * :timer_clock: Interactive shells to `root` have timeout, so use `screen` for those longer administrative tasks
 * Rebooting the system after running this is highly recommended
 * The AIDE DB creation is made [asynchronously](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_async.html) and without polling, so let that finish before rebooting
 * :bulb: You might want to get additional (unofficial) rules for ClamAV with [clamav-unofficial-sigs](https://github.com/extremeshok/clamav-unofficial-sigs) (although see [#425](https://github.com/extremeshok/clamav-unofficial-sigs/issues/425)). At least the following rulesets are freely available:
