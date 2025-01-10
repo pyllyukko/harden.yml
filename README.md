@@ -247,7 +247,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `firewall`
     * `ipv6`
 * :wood: `logging`
-* Filesystem related:
+* :file_folder: Filesystem related:
     * `permissions`
     * `fstab`
     * `suid` & `sgid`
@@ -325,13 +325,13 @@ Some of these documents are quite old, but most of the stuff still applies.
 ### Other docs
 
 * [Linux Standard Base Core Specification 4.1](http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/book1.html)
-  * [Chapter 21. Users & Groups](http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/usernames.html)
+    * [Chapter 21. Users & Groups](http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/usernames.html)
 * [Filesystem Hierarchy Standard 2.3](http://refspecs.linuxfoundation.org/FHS_2.3/fhs-2.3.html)
 * <https://iase.disa.mil/stigs/os/unix-linux/Pages/index.aspx>
-* [PAM Mastery book](https://www.tiltedwindmillpress.com/?product=pam) by [Michael W Lucas](https://www.michaelwlucas.com/)
+* :book: [PAM Mastery book](https://www.tiltedwindmillpress.com/?product=pam) by [Michael W Lucas](https://www.michaelwlucas.com/)
 * [The Linux-PAM System Administrators' Guide](http://linux-pam.org/Linux-PAM-html/Linux-PAM_SAG.html)
-* [Sudo Mastery, 2nd Edition](https://www.tiltedwindmillpress.com/product/sudo-mastery-2nd-edition/)
-* [Linux Firewalls](https://nostarch.com/firewalls.htm)
+* :book: [Sudo Mastery, 2nd Edition](https://www.tiltedwindmillpress.com/product/sudo-mastery-2nd-edition/)
+* :book: [Linux Firewalls](https://nostarch.com/firewalls.htm)
 * [Secure Secure Shell](https://stribika.github.io/2015/01/04/secure-secure-shell.html)
 * [Securing Debian Manual](https://www.debian.org/doc/manuals/securing-debian-manual/index.en.html)
     * [AppArmor HowToUse](https://wiki.debian.org/AppArmor/HowToUse)
