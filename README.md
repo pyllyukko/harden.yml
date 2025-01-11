@@ -75,7 +75,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 
 * Configures basic auditing based on [stig.rules](https://fedorahosted.org/audit/browser/trunk/contrib/stig.rules) if audit is installed (see [audit.yml](tasks/audit.yml))
     * See also <https://github.com/pyllyukko/harden.yml/wiki/audit>
-* Configures `sshd_config` and `ssh_config` (see `ansible-playbook --list-tasks --tags ssh harden.yml` for details)
+* :blowfish: Configures `sshd_config` and `ssh_config` (see `ansible-playbook --list-tasks --tags ssh harden.yml` for details)
     * Removes 2048-bit moduli from `/etc/ssh/moduli`
 * :sandwich: Configures [sudo](https://www.sudo.ws/) (see [sudoers.j2](templates/sudoers.j2))
     * :warning: **WARNING**: If there are rules in `/etc/sudoers.d/` that match our `become: true` tasks that do not have explicit `EXEC`, it can "break" `sudo` as we define `Defaults noexec` in the main `sudoers` file. There is a "Fix NOPASSWD rules" task in `sudoers.yml` which tries to tackle this problem, but it's not guaranteed to work.
@@ -254,7 +254,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `suid` & `sgid`
 * Specific software:
     * `sysstat`
-    * `ssh`
+    * :blowfish: `ssh`
     * `rkhunter`
     * `chkrootkit`
     * `aide`
@@ -304,7 +304,7 @@ Other tags are just metadata for now. You can list all the tags with
 * Experimental feature: If you enable `sudo_ids` in `vars.yml`, it enables "Sudo Intrusion Detection" as seen in chapter 9 of [Sudo Mastery](https://mwl.io/nonfiction/tools#sudo2)
     * Only for `SHELLS` `Cmnd_Alias` for now
 * You can run `make pamcheck` to see how the hardening modifies your PAM configurations in Slackware
-* You can create a new SSH moduli with `make /etc/ssh/moduli.new`
+* :blowfish: You can create a new SSH moduli with `make /etc/ssh/moduli.new`
 
 References
 ----------
