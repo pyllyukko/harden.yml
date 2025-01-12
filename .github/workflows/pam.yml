@@ -39,4 +39,4 @@ jobs:
           pamtester su nobody authenticate && exit 1
           # Unknown services should be denied by /etc/pam.d/other
           # TODO: authenticate & chauthtok
-          for operation in acct_mgmt open_session; do echo "[*] Testing nonexistent service operation ${operation}"; pamtester nonexistent nobody "${operation}" && exit 1; done
+          for operation in acct_mgmt open_session; do echo "[*] Testing nonexistent service operation ${operation}"; pamtester nonexistent nobody "${operation}" && exit 1; done; true
