@@ -55,7 +55,7 @@ static void test_pam_authenticate(void **state)
 	ZERO_STRUCT(conv_data);
 	conv_data.in_echo_off = trinity_authtoks;
 
-	perr = run_pamtest("login", "root", &conv_data, tests);
+	perr = run_pamtest("login", "root", &conv_data, tests, NULL);
 	assert_int_equal(perr, testcase);
 }
 static void test_pam_authenticate_nobody(void **state)
@@ -75,7 +75,7 @@ static void test_pam_authenticate_nobody(void **state)
 	ZERO_STRUCT(conv_data);
 	conv_data.in_echo_off = trinity_authtoks;
 
-	perr = run_pamtest("login", "nobody", &conv_data, tests);
+	perr = run_pamtest("login", "nobody", &conv_data, tests, NULL);
 	assert_int_equal(perr, testcase);
 }
 static void test_pam_acct_invalid_user(void **state)
@@ -87,7 +87,7 @@ static void test_pam_acct_invalid_user(void **state)
 
 	(void) state;	/* unused */
 
-	perr = run_pamtest("login", "trinity", NULL, tests);
+	perr = run_pamtest("login", "trinity", NULL, tests, NULL);
 	assert_int_equal(perr, testcase);
 }
 static void test_pam_acct_root(void **state)
@@ -99,7 +99,7 @@ static void test_pam_acct_root(void **state)
 
 	(void) state;	/* unused */
 
-	perr = run_pamtest("login", "root", NULL, tests);
+	perr = run_pamtest("login", "root", NULL, tests, NULL);
 	assert_int_equal(perr, testcase);
 }
 static void test_pam_acct_cron_root(void **state)
@@ -111,7 +111,7 @@ static void test_pam_acct_cron_root(void **state)
 
 	(void) state;	/* unused */
 
-	perr = run_pamtest("cron", "root", NULL, tests);
+	perr = run_pamtest("cron", "root", NULL, tests, NULL);
 	assert_int_equal(perr, testcase);
 }
 static void test_pam_acct_cron_nobody(void **state)
@@ -123,7 +123,7 @@ static void test_pam_acct_cron_nobody(void **state)
 
 	(void) state;	/* unused */
 
-	perr = run_pamtest("cron", "nobody", NULL, tests);
+	perr = run_pamtest("cron", "nobody", NULL, tests, NULL);
 	assert_int_equal(perr, testcase);
 }
 void usage(void) {
