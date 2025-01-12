@@ -1,0 +1,41 @@
+---
+name: pam
+on: [push, pull_request]
+
+env:
+  ANSIBLE_FORCE_COLOR: '1'
+
+jobs:
+  pamtester:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install pamtester and test prerequisites
+        run: sudo apt-get install -y pamtester cron at
+      - name: Test pre-harden
+        run: |
+          # Everyone is allowed to use cron
+          pamtester cron nobody acct_mgmt || exit 1
+          # Everyone is allowed to use atd
+          pamtester atd nobody acct_mgmt || exit 1
+          # Everyone is allowed to use su
+          # TODO: Prompts for a password
+          #pamtester su nobody authenticate || exit 1
+          # Unknown services
+          # TODO: authenticate & chauthtok
+          for operation in acct_mgmt open_session; do pamtester nonexistent nobody "${operation}" || exit 1; done
+      - name: Run Ansible playbook for pam
+        run: ansible-playbook harden.yml --tags pam --skip-tags slackware,centos
+      - name: Test post-harden
+        run: |
+          # random users should not be able to use cron
+          # enforced with pam_access
+          pamtester cron nobody acct_mgmt && exit 1
+          # random users should not be able to use atd
+          # enforced with pam_access
+          pamtester atd nobody acct_mgmt && exit 1
+          # su shouldn't be allowed
+          pamtester su nobody authenticate && exit 1
+          # Unknown services should be denied by /etc/pam.d/other
+          for operation in authenticate acct_mgmt chauthtok open_session; do echo "[*] Testing nonexistent service operation ${operation}"; pamtester nonexistent nobody "${operation}" && exit 1; done; true
