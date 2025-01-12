@@ -1,9 +1,9 @@
 ---
-- hosts: 10.0.3.175
+- hosts: localhost
   tasks:
     # TODO: install packages (build-essential libcmocka-dev libpam-wrapper libpam0g-dev)
     - name: Backup PAM configurations
-      copy:
+      ansible.builtin.copy:
         src: /etc/pam.d/{{ item }}
         dest: /etc/pam.d/{{ item }}.bak
         remote_src: yes
@@ -13,27 +13,31 @@
         - login
         - common-auth
     - name: Create /etc/pam.d/common-auth-matrix
-      copy:
+      ansible.builtin.copy:
         src: /etc/pam.d/common-auth
         dest: /etc/pam.d/common-auth-matrix
         remote_src: yes
         force: yes
+        owner: root
+        group: root
+        mode: '0644'
       become: yes
     - name: Create /tmp/passdb
-      blockinfile:
+      ansible.builtin.blockinfile:
         dest: /tmp/passdb
         create: yes
+        mode: '0644'
         block: |
           root:rootsecret:login
           nobody:nobodysecret:login
       become: yes
     - name: Create temp dir
-      tempfile:
+      ansible.builtin.tempfile:
         state: directory
         suffix: temp
       register: tempdir_1
     - name: Copy Makefile & source
-      copy:
+      ansible.builtin.copy:
         src: "{{ playbook_dir }}/../{{ item }}"
         dest: "{{ tempdir_1.path }}/"
         mode: 0600
@@ -41,11 +45,11 @@
         - Makefile
         - tests/test.c
     - name: Build PAM test
-      make:
+      community.general.make:
         chdir: "{{ tempdir_1.path }}"
         target: test
     - name: Make sure pam_securetty is enabled for login
-      replace:
+      ansible.builtin.replace:
         path: /etc/pam.d/login
         regexp: '^#?\s*(auth\s+\[success=ok new_authtok_reqd=ok ignore=ignore user_unknown=bad default=die\]\s+pam_securetty\.so)$'
         replace: '\1'
@@ -53,16 +57,16 @@
       become: yes
     # authentication should fail as pam_matrix is not yet in use
     - name: Test login:auth root login against pam_unix
-      command: "{{ tempdir_1.path }}/test -t 1 -r 2"
+      ansible.builtin.command: "{{ tempdir_1.path }}/test -t 1 -r 2"
     - name: Switch pam_auth to pam_matrix in /etc/pam.d/common-auth-matrix
-      replace:
+      ansible.builtin.replace:
         path: /etc/pam.d/common-auth-matrix
         regexp: '^(auth\s+\[success=1 default=ignore\]\s+)pam_unix\.so.*$'
         replace: '\1/usr/lib/x86_64-linux-gnu/pam_wrapper/pam_matrix.so passdb=/tmp/passdb verbose'
         validate: '/bin/grep "^auth\s\+\[success=1 default=ignore\]\s\+.*pam_matrix\.so.*$" %s'
       become: yes
     - name: Make login use common-auth-matrix
-      replace:
+      ansible.builtin.replace:
         path: /etc/pam.d/login
         regexp: '^(@include common-auth).*$'
         replace: '\1-matrix'
@@ -70,9 +74,9 @@
       become: yes
     # should fail because of pam_securetty
     - name: Test login:auth root login blocked by pam_securetty
-      command: "{{ tempdir_1.path }}/test -t 1 -r 2"
+      ansible.builtin.command: "{{ tempdir_1.path }}/test -t 1 -r 2"
     - name: Disable pam_securetty in /etc/pam.d/login
-      replace:
+      ansible.builtin.replace:
         path: /etc/pam.d/login
         regexp: '^#?\s*(auth.+pam_securetty\.so)$'
         replace: '#\1'
@@ -81,18 +85,18 @@
     # successful authentication against pam_matrix
     - name: Tests
       block:
-      - name: Test login:auth root login against pam_matrix
-        command: "{{ tempdir_1.path }}/test -t 1"
-      - name: Test login:acct invalid user blocked by pam_unix
-        command: "{{ tempdir_1.path }}/test -t 2 -r 2"
-      - name: Test login:acct root user
-        command: "{{ tempdir_1.path }}/test -t 3 -r 0"
-      - name: Test cron:acct root user
-        command: "{{ tempdir_1.path }}/test -t 4 -r 0"
-      - name: Test cron:acct nobody user blocked by pam_access
-        command: "{{ tempdir_1.path }}/test -t 5 -r 2"
-      - name: Test login:auth nobody user (valid pass) blocked by pam_succeed_if
-        command: "{{ tempdir_1.path }}/test -t 6 -r 2"
+        - name: Test login:auth root login against pam_matrix
+          ansible.builtin.command: "{{ tempdir_1.path }}/test -t 1"
+        - name: Test login:acct invalid user blocked by pam_unix
+          ansible.builtin.command: "{{ tempdir_1.path }}/test -t 2 -r 2"
+        - name: Test login:acct root user
+          ansible.builtin.command: "{{ tempdir_1.path }}/test -t 3 -r 0"
+        - name: Test cron:acct root user
+          ansible.builtin.command: "{{ tempdir_1.path }}/test -t 4 -r 0"
+        - name: Test cron:acct nobody user blocked by pam_access
+          ansible.builtin.command: "{{ tempdir_1.path }}/test -t 5 -r 2"
+        - name: Test login:auth nobody user (valid pass) blocked by pam_succeed_if
+          ansible.builtin.command: "{{ tempdir_1.path }}/test -t 6 -r 2"
       become: yes
     #- name: Remove temp dir
     #  file:
