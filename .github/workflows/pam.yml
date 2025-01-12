@@ -39,3 +39,14 @@ jobs:
           pamtester su nobody authenticate && exit 1
           # Unknown services should be denied by /etc/pam.d/other
           for operation in authenticate acct_mgmt chauthtok open_session; do echo "[*] Testing nonexistent service operation ${operation}"; pamtester nonexistent nobody "${operation}" && exit 1; done; true
+  libpamtest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install testing prerequisites
+        run: sudo apt-get install -y libcmocka-dev libpam-wrapper libpam0g-dev libpamtest0-dev
+      - name: Compile test program
+        run: pushd tests && make -f ../Makefile test && popd
+      - name: Prepare environment for testing
+        run: ansible-playbook tests/pamtests.yml --tags setup
