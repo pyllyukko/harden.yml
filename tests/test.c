@@ -40,91 +40,91 @@ uint8_t testcase = PAMTEST_ERR_OK;
 
 static void test_pam_authenticate(void **state)
 {
-	enum pamtest_err perr;
-	struct pamtest_conv_data conv_data;
-	const char *trinity_authtoks[] = {
-		"rootsecret",
-		NULL,
-	};
-	struct pam_testcase tests[] = {
-		pam_test(PAMTEST_AUTHENTICATE, PAM_SUCCESS),
-	};
+  enum pamtest_err perr;
+  struct pamtest_conv_data conv_data;
+  const char *trinity_authtoks[] = {
+    "rootsecret",
+    NULL,
+  };
+  struct pam_testcase tests[] = {
+    pam_test(PAMTEST_AUTHENTICATE, PAM_SUCCESS),
+  };
 
-	(void) state;	/* unused */
+  (void) state;	/* unused */
 
-	ZERO_STRUCT(conv_data);
-	conv_data.in_echo_off = trinity_authtoks;
+  ZERO_STRUCT(conv_data);
+  conv_data.in_echo_off = trinity_authtoks;
 
-	perr = run_pamtest("login", "root", &conv_data, tests, NULL);
-	assert_int_equal(perr, testcase);
+  perr = run_pamtest("login", "root", &conv_data, tests, NULL);
+  assert_int_equal(perr, testcase);
 }
 static void test_pam_authenticate_nobody(void **state)
 {
-	enum pamtest_err perr;
-	struct pamtest_conv_data conv_data;
-	const char *trinity_authtoks[] = {
-		"nobodysecret",
-		NULL,
-	};
-	struct pam_testcase tests[] = {
-		pam_test(PAMTEST_AUTHENTICATE, PAM_SUCCESS),
-	};
+  enum pamtest_err perr;
+  struct pamtest_conv_data conv_data;
+  const char *trinity_authtoks[] = {
+    "nobodysecret",
+    NULL,
+  };
+  struct pam_testcase tests[] = {
+    pam_test(PAMTEST_AUTHENTICATE, PAM_SUCCESS),
+  };
 
-	(void) state;	/* unused */
+  (void) state;	/* unused */
 
-	ZERO_STRUCT(conv_data);
-	conv_data.in_echo_off = trinity_authtoks;
+  ZERO_STRUCT(conv_data);
+  conv_data.in_echo_off = trinity_authtoks;
 
-	perr = run_pamtest("login", "nobody", &conv_data, tests, NULL);
-	assert_int_equal(perr, testcase);
+  perr = run_pamtest("login", "nobody", &conv_data, tests, NULL);
+  assert_int_equal(perr, testcase);
 }
 static void test_pam_acct_invalid_user(void **state)
 {
-	enum pamtest_err perr;
-	struct pam_testcase tests[] = {
-		pam_test(PAMTEST_ACCOUNT, PAM_SUCCESS),
-	};
+  enum pamtest_err perr;
+  struct pam_testcase tests[] = {
+    pam_test(PAMTEST_ACCOUNT, PAM_SUCCESS),
+  };
 
-	(void) state;	/* unused */
+  (void) state;	/* unused */
 
-	perr = run_pamtest("login", "trinity", NULL, tests, NULL);
-	assert_int_equal(perr, testcase);
+  perr = run_pamtest("login", "trinity", NULL, tests, NULL);
+  assert_int_equal(perr, testcase);
 }
 static void test_pam_acct_root(void **state)
 {
-	enum pamtest_err perr;
-	struct pam_testcase tests[] = {
-		pam_test(PAMTEST_ACCOUNT, PAM_SUCCESS),
-	};
+  enum pamtest_err perr;
+  struct pam_testcase tests[] = {
+    pam_test(PAMTEST_ACCOUNT, PAM_SUCCESS),
+  };
 
-	(void) state;	/* unused */
+  (void) state;	/* unused */
 
-	perr = run_pamtest("login", "root", NULL, tests, NULL);
-	assert_int_equal(perr, testcase);
+  perr = run_pamtest("login", "root", NULL, tests, NULL);
+  assert_int_equal(perr, testcase);
 }
 static void test_pam_acct_cron_root(void **state)
 {
-	enum pamtest_err perr;
-	struct pam_testcase tests[] = {
-		pam_test(PAMTEST_ACCOUNT, PAM_SUCCESS),
-	};
+  enum pamtest_err perr;
+  struct pam_testcase tests[] = {
+    pam_test(PAMTEST_ACCOUNT, PAM_SUCCESS),
+  };
 
-	(void) state;	/* unused */
+  (void) state;	/* unused */
 
-	perr = run_pamtest("cron", "root", NULL, tests, NULL);
-	assert_int_equal(perr, testcase);
+  perr = run_pamtest("cron", "root", NULL, tests, NULL);
+  assert_int_equal(perr, testcase);
 }
 static void test_pam_acct_cron_nobody(void **state)
 {
-	enum pamtest_err perr;
-	struct pam_testcase tests[] = {
-		pam_test(PAMTEST_ACCOUNT, PAM_SUCCESS),
-	};
+  enum pamtest_err perr;
+  struct pam_testcase tests[] = {
+    pam_test(PAMTEST_ACCOUNT, PAM_SUCCESS),
+  };
 
-	(void) state;	/* unused */
+  (void) state;	/* unused */
 
-	perr = run_pamtest("cron", "nobody", NULL, tests, NULL);
-	assert_int_equal(perr, testcase);
+  perr = run_pamtest("cron", "nobody", NULL, tests, NULL);
+  assert_int_equal(perr, testcase);
 }
 void usage(void) {
   printf("\
@@ -149,59 +149,59 @@ options:\n\
 ");
 }
 int main(int argc, char *argv[]) {
-    int rc, c;
-    void *ptr = NULL;
+  int rc, c;
+  void *ptr = NULL;
 
-    while((c = getopt (argc, argv, "hr:t:")) != -1) {
-      switch(c) {
-	case 'h':
-	  usage();
-	  exit(0);
-	  break;
-	case 'r':
-	  testcase = atoi(optarg);
-	  if(testcase>PAMTEST_ERR_INTERNAL) {
-	    printf("invalid value\n");
-	    exit(0);
-	  }
-	  break;
-	case 't':
-	  switch(atoi(optarg)) {
-	    case 1:
-	      ptr = test_pam_authenticate;
-	      break;
-	    case 2:
-	      ptr = test_pam_acct_invalid_user;
-	      break;
-	    case 3:
-	      ptr = test_pam_acct_root;
-	      break;
-	    case 4:
-	      ptr = test_pam_acct_cron_root;
-	      break;
-	    case 5:
-	      ptr = test_pam_acct_cron_nobody;
-	      break;
-	    case 6:
-	      ptr = test_pam_authenticate_nobody;
-	      break;
-	    default:
-	      printf("invalid test case\n");
-	      exit (1);
-	      break;
-	  }
-	  break;
-      }
+  while((c = getopt (argc, argv, "hr:t:")) != -1) {
+    switch(c) {
+      case 'h':
+        usage();
+        exit(0);
+        break;
+      case 'r':
+        testcase = atoi(optarg);
+        if(testcase>PAMTEST_ERR_INTERNAL) {
+          printf("invalid value\n");
+          exit(0);
+        }
+        break;
+      case 't':
+        switch(atoi(optarg)) {
+          case 1:
+            ptr = test_pam_authenticate;
+            break;
+          case 2:
+            ptr = test_pam_acct_invalid_user;
+            break;
+          case 3:
+            ptr = test_pam_acct_root;
+            break;
+          case 4:
+            ptr = test_pam_acct_cron_root;
+            break;
+          case 5:
+            ptr = test_pam_acct_cron_nobody;
+            break;
+          case 6:
+            ptr = test_pam_authenticate_nobody;
+            break;
+          default:
+            printf("invalid test case\n");
+            exit (1);
+            break;
+        }
+        break;
     }
-    if(ptr==NULL) {
-      printf("please specify a test case\n");
-      exit(1);
-    }
-    const struct CMUnitTest init_tests[] = {
-		cmocka_unit_test(ptr),
-	};
+  }
+  if(ptr==NULL) {
+    printf("please specify a test case\n");
+    exit(1);
+  }
+  const struct CMUnitTest init_tests[] = {
+    cmocka_unit_test(ptr),
+  };
 
-    rc = cmocka_run_group_tests(init_tests, NULL, NULL);
+  rc = cmocka_run_group_tests(init_tests, NULL, NULL);
 
-    return rc;
+  return rc;
 }
