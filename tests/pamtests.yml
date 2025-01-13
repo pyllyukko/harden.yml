@@ -65,9 +65,9 @@
       tags: setup
       ansible.builtin.replace:
         path: /etc/pam.d/common-auth-matrix
-        regexp: '^(auth\s+\[success=1 default=ignore\]\s+)pam_unix\.so.*$'
-        replace: '\1/usr/lib/x86_64-linux-gnu/pam_wrapper/pam_matrix.so passdb=/tmp/passdb verbose'
-        validate: '/bin/grep "^auth\s\+\[success=1 default=ignore\]\s\+.*pam_matrix\.so.*$" %s'
+        regexp: '^(auth\s+\[success=[0-9]+ default=ignore\]\s+)pam_unix\.so.*$'
+        replace: '\1/usr/lib/{{ ansible_architecture }}-linux-gnu/pam_wrapper/pam_matrix.so passdb=/tmp/passdb verbose'
+        validate: '/bin/grep "^auth\s\+\[success=[0-9]\+ default=ignore\]\s\+.*pam_matrix\.so.*$" %s'
       become: yes
     - name: Make login use common-auth-matrix
       tags: setup

@@ -48,5 +48,41 @@ jobs:
         run: sudo apt-get install -y libcmocka-dev libpam-wrapper libpam0g-dev libpamtest0-dev
       - name: Compile test program
         run: pushd tests && make -f ../Makefile test && popd
+      # This should fail as pam_matrix is not in use yet
+      - name: Run tests - round 1
+        run: tests/test -t 1 -r 2
       - name: Prepare environment for testing
         run: ansible-playbook tests/pamtests.yml --tags setup
+      - name: Run tests - round 2
+        run: |
+          # Authentication should succeed against pam_matrix
+          echo '[*] Test 1'
+          tests/test -t 1 -r 0
+          # pam_unix(login:account) should block as invalid user
+          echo '[*] Test 2'
+          tests/test -t 2 -r 2
+          # These will fail as a regular user with "unix_chkpwd[1550490]: could not obtain user info (root)"
+          echo '[*] Test 3'
+          tests/test -t 3 -r 2
+          echo '[*] Test 4'
+          tests/test -t 4 -r 2
+          echo '[*] Test 5'
+          tests/test -t 5 -r 2
+          echo '[*] Test 6'
+          tests/test -t 6 -r 2
+          # Should work as root
+          echo '[*] Test 7'
+          sudo tests/test -t 3 -r 0
+          echo '[*] Test 8'
+          sudo tests/test -t 4 -r 0
+          echo '[*] Test 9'
+          sudo tests/test -t 5 -r 0
+          echo '[*] Test 10'
+          sudo tests/test -t 6 -r 0
+      - name: chmod /var/log/auth.log
+        run: sudo chmod -c 644 /var/log/auth.log
+      - name: Archive auth.log
+        uses: actions/upload-artifact@v4
+        with:
+          name: auth.log
+          path: /var/log/auth.log
