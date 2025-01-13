@@ -81,10 +81,27 @@ jobs:
           sudo tests/test -t 5 -r 0
           echo '[*] Test 10'
           sudo tests/test -t 6 -r 0
+      - name: Harden PAM
+        run: |
+          ansible-playbook harden.yml --tags pam --skip-tags slackware,centos
+          sudo pam-auth-update --enable access
+          # Re-create common-auth-matrix
+          sudo rm -v /etc/pam.d/common-auth-matrix
+          ansible-playbook tests/pamtests.yml --tags setup
+      - name: Run tests - post-harden
+        run: |
+          # Login for "nobody" should be blocked by hardened configuration even with a valid password
+          sudo tests/test -t 6 -r 2
       - name: chmod /var/log/auth.log
         run: sudo chmod -c 644 /var/log/auth.log
       - name: Archive auth.log
         uses: actions/upload-artifact@v4
         with:
           name: auth.log
-          path: /var/log/auth.log
+          path: |
+            /var/log/auth.log
+            /etc/pam.d/common-account
+            /etc/pam.d/common-auth
+            /etc/pam.d/common-auth-matrix
+            /etc/pam.d/common-password
+            /etc/pam.d/common-session
