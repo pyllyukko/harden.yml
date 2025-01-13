@@ -32,6 +32,8 @@ jobs:
           # random users should not be able to use cron
           # enforced with pam_access
           pamtester cron nobody acct_mgmt && exit 1
+          # root should still be able to use cron
+          pamtester cron root acct_mgmt || exit 1
           # random users should not be able to use atd
           # enforced with pam_access
           pamtester atd nobody acct_mgmt && exit 1
