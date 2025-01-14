@@ -103,7 +103,7 @@ jobs:
           tests/test -t 7 -r 2
           # Test failed login & pam_faillock
           sudo tests/test -t 8
-          ls -l /var/run/faillock/nobody
+          sudo ls -l /var/run/faillock/
           sudo faillock --user nobody
       - name: chmod /var/log/auth.log
         run: sudo chmod -c 644 /var/log/auth.log
