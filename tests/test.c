@@ -49,6 +49,26 @@ static void test_pam_authenticate(void **state)
   perr = run_pamtest("login", "root", &conv_data, tests, NULL);
   assert_int_equal(perr, testcase);
 }
+static void test_pam_authenticate_wrong_password(void **state)
+{
+  enum pamtest_err perr;
+  struct pamtest_conv_data conv_data;
+  const char *trinity_authtoks[] = {
+    "wrong_password",
+    NULL,
+  };
+  struct pam_testcase tests[] = {
+    pam_test(PAMTEST_AUTHENTICATE, PAM_AUTH_ERR),
+  };
+
+  (void) state;	/* unused */
+
+  ZERO_STRUCT(conv_data);
+  conv_data.in_echo_off = trinity_authtoks;
+
+  perr = run_pamtest("login", "nobody", &conv_data, tests, NULL);
+  assert_int_equal(perr, testcase);
+}
 static void test_pam_authenticate_nobody(void **state)
 {
   enum pamtest_err perr;
@@ -199,6 +219,9 @@ int main(int argc, char *argv[]) {
             break;
           case 7:
             ptr = test_pam_authenticate_nobody_su;
+            break;
+          case 8:
+            ptr = test_pam_authenticate_wrong_password;
             break;
           default:
             printf("invalid test case\n");

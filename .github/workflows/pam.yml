@@ -84,6 +84,9 @@ jobs:
           # Anyone can use su
           echo '[*] Test 11'
           tests/test -t 7 -r 0
+          echo '[*] Test 12'
+          # Wrong password
+          tests/test -t 8 -r 2
       - name: Harden PAM
         run: |
           ansible-playbook harden.yml --tags pam --skip-tags slackware
@@ -97,6 +100,10 @@ jobs:
           sudo tests/test -t 6 -r 2
           # Use of su should be denied
           tests/test -t 7 -r 2
+          # Test failed login & pam_faillock
+          sudo tests/test -t 8 -r 2
+          ls -l /var/run/faillock/nobody
+          sudo faillock --user nobody
       - name: chmod /var/log/auth.log
         run: sudo chmod -c 644 /var/log/auth.log
       - name: Archive auth.log
