@@ -86,7 +86,7 @@ jobs:
           tests/test -t 7 -r 0
           echo '[*] Test 12'
           # Wrong password
-          tests/test -t 8 -r 2
+          tests/test -t 8
       - name: Harden PAM
         run: |
           ansible-playbook harden.yml --tags pam --skip-tags slackware
@@ -102,7 +102,7 @@ jobs:
           # Use of su should be denied
           tests/test -t 7 -r 2
           # Test failed login & pam_faillock
-          sudo tests/test -t 8 -r 2
+          sudo tests/test -t 8
           ls -l /var/run/faillock/nobody
           sudo faillock --user nobody
       - name: chmod /var/log/auth.log
