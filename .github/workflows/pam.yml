@@ -81,9 +81,12 @@ jobs:
           sudo tests/test -t 5 -r 0
           echo '[*] Test 10'
           sudo tests/test -t 6 -r 0
+          # Anyone can use su
+          echo '[*] Test 11'
+          tests/test -t 7 -r 0
       - name: Harden PAM
         run: |
-          ansible-playbook harden.yml --tags pam --skip-tags slackware,centos
+          ansible-playbook harden.yml --tags pam --skip-tags slackware
           sudo pam-auth-update --enable access
           # Re-create common-auth-matrix
           sudo rm -v /etc/pam.d/common-auth-matrix
@@ -92,6 +95,8 @@ jobs:
         run: |
           # Login for "nobody" should be blocked by hardened configuration even with a valid password
           sudo tests/test -t 6 -r 2
+          # Use of su should be denied
+          tests/test -t 7 -r 2
       - name: chmod /var/log/auth.log
         run: sudo chmod -c 644 /var/log/auth.log
       - name: Archive auth.log

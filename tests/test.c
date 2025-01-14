@@ -2,16 +2,7 @@
 #include <stddef.h>
 #include <setjmp.h>
 #include <cmocka.h>
-
-/*
-#include <string.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <stddef.h>
-*/
 #include <libpamtest.h>
-
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -76,6 +67,26 @@ static void test_pam_authenticate_nobody(void **state)
   conv_data.in_echo_off = trinity_authtoks;
 
   perr = run_pamtest("login", "nobody", &conv_data, tests, NULL);
+  assert_int_equal(perr, testcase);
+}
+static void test_pam_authenticate_nobody_su(void **state)
+{
+  enum pamtest_err perr;
+  struct pamtest_conv_data conv_data;
+  const char *trinity_authtoks[] = {
+    "nobodysecret",
+    NULL,
+  };
+  struct pam_testcase tests[] = {
+    pam_test(PAMTEST_AUTHENTICATE, PAM_SUCCESS),
+  };
+
+  (void) state;	/* unused */
+
+  ZERO_STRUCT(conv_data);
+  conv_data.in_echo_off = trinity_authtoks;
+
+  perr = run_pamtest("su", "nobody", &conv_data, tests, NULL);
   assert_int_equal(perr, testcase);
 }
 static void test_pam_acct_invalid_user(void **state)
@@ -146,6 +157,7 @@ options:\n\
 		4	cron:acct root user\n\
 		5	cron:acct nobody user\n\
 		6	login:auth nobody user\n\
+		7	su:auth nobody user\n\
 ");
 }
 int main(int argc, char *argv[]) {
@@ -184,6 +196,9 @@ int main(int argc, char *argv[]) {
             break;
           case 6:
             ptr = test_pam_authenticate_nobody;
+            break;
+          case 7:
+            ptr = test_pam_authenticate_nobody_su;
             break;
           default:
             printf("invalid test case\n");

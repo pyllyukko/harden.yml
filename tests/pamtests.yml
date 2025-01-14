@@ -61,7 +61,7 @@
     # authentication should fail as pam_matrix is not yet in use
     - name: Test login:auth root login against pam_unix
       ansible.builtin.command: "{{ tempdir_1.path }}/test -t 1 -r 2"
-    - name: Switch pam_auth to pam_matrix in /etc/pam.d/common-auth-matrix
+    - name: Switch pam_unix to pam_matrix in /etc/pam.d/common-auth-matrix
       tags: setup
       ansible.builtin.replace:
         path: /etc/pam.d/common-auth-matrix
@@ -69,13 +69,16 @@
         replace: '\1/usr/lib/{{ ansible_architecture }}-linux-gnu/pam_wrapper/pam_matrix.so passdb=/tmp/passdb verbose'
         validate: '/bin/grep "^auth\s\+\[success=[0-9]\+ default=ignore\]\s\+.*pam_matrix\.so.*$" %s'
       become: yes
-    - name: Make login use common-auth-matrix
+    - name: Make login & su use common-auth-matrix
       tags: setup
       ansible.builtin.replace:
-        path: /etc/pam.d/login
+        path: '{{ item }}'
         regexp: '^(@include common-auth).*$'
         replace: '\1-matrix'
         validate: '/bin/grep "^@include common-auth-matrix$" %s'
+      with_items:
+        - /etc/pam.d/login
+        - /etc/pam.d/su
       become: yes
     # should fail because of pam_securetty
     - name: Test login:auth root login blocked by pam_securetty
