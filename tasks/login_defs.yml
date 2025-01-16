@@ -409,3 +409,19 @@
   with_dict:
     hash_rounds_min: "{{ crypt_rounds }}"
     crypt_style: sha512
+
+- name: Configure logind.conf
+  tags: configuration
+  become: true
+  community.general.ini_file:
+    path: '{{ logind_conf_location }}'
+    section: Login
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    owner: root
+    group: root
+    mode: '0644'
+    backup: true
+  with_dict:
+    IdleActionSec: '{{ session_timeout }}min'
+    IdleAction: "lock"

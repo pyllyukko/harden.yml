@@ -66,3 +66,4 @@ clamav: {
   'database': "/var/lib/clamav",
   'pid': "/run/clamav/clamd.pid"
 }
+logind_conf_location: '{% if ansible_distribution == "Slackware" %}/etc/elogind/logind.conf{% else %}/etc/systemd/logind.conf{% endif %}'
