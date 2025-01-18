@@ -130,11 +130,13 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * Sets `nproc` to 0 for system users that don't need to run any processes
 * Run `ansible-playbook --list-tasks --tags pam harden.yml` to list all PAM related tasks
 * You can also run `ansible-playbook --check --diff --tags pam harden.yml` to see details of the changes
+* [![pam](https://github.com/pyllyukko/harden.yml/actions/workflows/pam.yml/badge.svg)](https://github.com/pyllyukko/harden.yml/actions/workflows/pam.yml)
 
 ### Miscellaneous
 
 * :placard: Creates legal banners (see [banners.yml](tasks/banners.yml))
 * Reduce the amount of trusted [CAs](https://en.wikipedia.org/wiki/Certificate_authority) (see [ca-certificates.conf.new](newconfs/ca-certificates.conf.new))
+    * [![ca-certs](https://github.com/pyllyukko/harden.yml/actions/workflows/ca-certs.yml/badge.svg)](https://github.com/pyllyukko/harden.yml/actions/workflows/ca-certs.yml)
 * :shell: Restricts the number of available shells (`/etc/shells`)
 
 ### Slackware specific
