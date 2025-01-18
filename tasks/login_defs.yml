@@ -93,7 +93,7 @@
     - expiry
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.5 Ensure default user shell timeout is 900 seconds or less
 # Guide to the Secure Configuration of Red Hat Enterprise Linux 5 Revision 4.1 - 2.3.5.5 Implement Inactivity Time-out for Login Shells
-- name: Create /etc/profile.d/{tmout.sh,autologout.csh}
+- name: Create /etc/profile.d/{{tmout,awk_sandboxing}.sh,autologout.csh}
   become: true
   tags:
     - configuration
@@ -107,6 +107,7 @@
   with_items:
     - tmout.sh
     - autologout.csh
+    - awk_sandboxing.sh
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.4 Ensure default user umask is 027 or more restrictive
 # Slackware and CentOS have umask in /etc/profile
 - name: Create /etc/profile.d/umask.sh (Debian)
