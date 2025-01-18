@@ -3,7 +3,7 @@ name: shellcheck
 on: [push, pull_request]
 jobs:
   # TODO: tmout.sh.j2
-  profile.d:
+  profile_d:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
