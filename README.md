@@ -137,6 +137,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * :placard: Creates legal banners (see [banners.yml](tasks/banners.yml))
 * Reduce the amount of trusted [CAs](https://en.wikipedia.org/wiki/Certificate_authority) (see [ca-certificates.conf.new](newconfs/ca-certificates.conf.new))
     * [![ca-certs](https://github.com/pyllyukko/harden.yml/actions/workflows/ca-certs.yml/badge.svg)](https://github.com/pyllyukko/harden.yml/actions/workflows/ca-certs.yml)
+    * You can also run `make /etc/ssl/certs/ca-certificates.crt` to update the CAs
 * :shell: Restricts the number of available shells (`/etc/shells`)
 
 ### Slackware specific
