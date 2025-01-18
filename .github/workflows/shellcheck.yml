@@ -1,0 +1,16 @@
+---
+name: shellcheck
+on: [push, pull_request]
+jobs:
+  # TODO: tmout.sh.j2
+  profile.d:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install ShellCheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y shellcheck
+      - name: Run ShellCheck
+        run: shellcheck --shell=bash newconfs/profile.d/*
