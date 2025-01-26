@@ -45,11 +45,11 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * :information_source: **NOTE**: Read the fine print in [SHRED(1)](https://www.man7.org/linux/man-pages/man1/shred.1.html): "CAUTION: shred assumes the file system and hardware overwrite data in place.  Although this is common, many platforms operate otherwise."
 * Run `ansible-playbook --list-tasks --tags logging harden.yml` for a full list
 
-### Accounting
+### :bar_chart: Accounting
 
 * Enables system accounting ([sysstat](http://sebastien.godard.pagesperso-orange.fr/))
     * :calendar: Sets it's log retention to 99999 days (the logs are really small, so it doesn't eat up disk space)
-* Enables process accounting
+* Enables [process accounting](https://tldp.org/HOWTO/Process-Accounting/)
 * Run `ansible-playbook --list-tasks --tags accounting harden.yml` for a full list
 
 ### Kernel
@@ -257,7 +257,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `fstab`
     * `suid` & `sgid`
 * Specific software:
-    * `sysstat`
+    * :bar_chart: `sysstat`
     * :blowfish: `ssh`
     * `rkhunter`
     * `chkrootkit`
@@ -282,7 +282,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `john`
 * :placard: `banners`
 * [AAA](https://en.wikipedia.org/wiki/AAA_(computer_security)):
-    * `accounting` (includes `sysstat`)
+    * :bar_chart: `accounting` (includes `sysstat`)
     * `authorization`
     * `passwords`
     * `accounts`
@@ -332,13 +332,13 @@ Some of these documents are quite old, but most of the stuff still applies.
 
 * [Linux Standard Base Core Specification 4.1](http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/book1.html)
     * [Chapter 21. Users & Groups](http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/usernames.html)
-* [Filesystem Hierarchy Standard 2.3](http://refspecs.linuxfoundation.org/FHS_2.3/fhs-2.3.html)
+* :file_folder: [Filesystem Hierarchy Standard 2.3](http://refspecs.linuxfoundation.org/FHS_2.3/fhs-2.3.html)
 * <https://iase.disa.mil/stigs/os/unix-linux/Pages/index.aspx>
 * :book: [PAM Mastery book](https://www.tiltedwindmillpress.com/?product=pam) by [Michael W Lucas](https://www.michaelwlucas.com/)
 * [The Linux-PAM System Administrators' Guide](http://linux-pam.org/Linux-PAM-html/Linux-PAM_SAG.html)
 * :book: [Sudo Mastery, 2nd Edition](https://www.tiltedwindmillpress.com/product/sudo-mastery-2nd-edition/)
 * :book: [Linux Firewalls](https://nostarch.com/firewalls.htm)
-* [Secure Secure Shell](https://stribika.github.io/2015/01/04/secure-secure-shell.html)
+* :blowfish: [Secure Secure Shell](https://stribika.github.io/2015/01/04/secure-secure-shell.html)
 * [Securing Debian Manual](https://www.debian.org/doc/manuals/securing-debian-manual/index.en.html)
     * :shield: [AppArmor HowToUse](https://wiki.debian.org/AppArmor/HowToUse)
 * [ArchWiki: limits.conf](https://wiki.archlinux.org/title/Limits.conf)
