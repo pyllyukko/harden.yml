@@ -81,6 +81,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * :warning: **WARNING**: If there are rules in `/etc/sudoers.d/` that match our `become: true` tasks that do not have explicit `EXEC`, it can "break" `sudo` as we define `Defaults noexec` in the main `sudoers` file. There is a "Fix NOPASSWD rules" task in `sudoers.yml` which tries to tackle this problem, but it's not guaranteed to work.
     * :wood: You can set the `sudo_iolog` in `vars.yml` to `true` to enable I/O logging
     * You can set the `sudo_ids` in `vars.yml` to `true` to enable "Intrusion Detection" as described in [Sudo Mastery](#other-docs) chapter 9 ([#59](https://github.com/pyllyukko/harden.yml/issues/59))
+    * See also [notes](#information_source-notes)
 * :smiling_imp: [ClamAV](https://www.clamav.net/) configuration (see [clamav.yml](tasks/clamav.yml))
     * Configures `clamd` & `freshclam` by first generating fresh configurations with [clamconf](https://docs.clamav.net/manual/Usage/Configuration.html#clamconf)
     * Configured ClamAV to unarchive with password "infected" (see [Passwords for archive files](https://docs.clamav.net/manual/Signatures/EncryptedArchives.html) & [ClamAV and ZIP File Decryption](https://blog.didierstevens.com/2017/02/15/quickpost-clamav-and-zip-file-decryption/))
@@ -227,7 +228,7 @@ Usage
 * :sandwich: Sudo hardening:
     * `noexec` is on by default, so you need to take this into account in your custom rules
     * :timer_clock: Interactive shells to `root` have timeout, so use `screen` for those longer administrative tasks
-* Rebooting the system after running this is highly recommended
+* :arrows_counterclockwise: Rebooting the system after running this is highly recommended
 * The AIDE DB creation is made [asynchronously](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_async.html) and without polling, so let that finish before rebooting
 * :bulb: You might want to get additional (unofficial) rules for ClamAV with [clamav-unofficial-sigs](https://github.com/extremeshok/clamav-unofficial-sigs) (although see [#425](https://github.com/extremeshok/clamav-unofficial-sigs/issues/425)). At least the following rulesets are freely available:
     * [Sanesecurity](https://sanesecurity.com/usage/signatures/)
@@ -237,7 +238,7 @@ Usage
     * [InterServer](https://sigs.interserver.net)
     * [URLhaus](https://urlhaus.abuse.ch/downloads/urlhaus.ndb)
 * :warning: **WARNING**: There is a hazard with immutable `loginuid` enabled in auditing in non-systemd systems (Slackware). See longer description of this in the [wiki](https://github.com/pyllyukko/harden.yml/wiki/PAM#pam_loginuidso).
-* Review `/etc/fstab.new` manually and deploy applicable changes to `/etc/fstab`
+* :file_folder: Review `/etc/fstab.new` manually and deploy applicable changes to `/etc/fstab`
 * :bulb: Consider running a hardened kernel. For Slackware you can check out my other project [kspp\_confnbuild](https://github.com/pyllyukko/kspp_confnbuild) that has been (mostly) configured according to [KSPP](https://kspp.github.io/)'s [recommendations](https://kspp.github.io/Recommended_Settings). You can use [kernel-hardening-checker](https://github.com/a13xp0p0v/kernel-hardening-checker) to check your kernel configs.
 
 ### Tags
@@ -304,7 +305,7 @@ Other tags are just metadata for now. You can list all the tags with
 
 * There is a `lock_account.yml` playbook that you can use to lock user accounts. Just modify the `hosts` & `user`.
 * Limited hardening for FreeBSD (see [freebsd.yml](tasks/freebsd.yml))
-* Experimental feature: If you enable `sudo_ids` in `vars.yml`, it enables "Sudo Intrusion Detection" as seen in chapter 9 of [Sudo Mastery](https://mwl.io/nonfiction/tools#sudo2)
+* :sandwich: Experimental feature: If you enable `sudo_ids` in `vars.yml`, it enables "Sudo Intrusion Detection" as seen in chapter 9 of [Sudo Mastery](https://mwl.io/nonfiction/tools#sudo2)
     * Only for `SHELLS` `Cmnd_Alias` for now
 * You can run `make pamcheck` to see how the hardening modifies your PAM configurations in Slackware
 * :blowfish: You can create a new SSH moduli with `make /etc/ssh/moduli.new`
@@ -323,9 +324,9 @@ Some of these documents are quite old, but most of the stuff still applies.
     * [CIS CentOS Linux 7 Benchmark](https://www.cisecurity.org/benchmark/centos_linux/)
     * [CIS Distribution Independent Linux](https://www.cisecurity.org/benchmark/distribution_independent_linux)
 * [SlackDocs: Security HOWTOs](http://docs.slackware.com/howtos:security:start)
-* [Alien's Wiki: Security issues](http://alien.slackbook.org/dokuwiki/doku.php?id=linux:admin#security_issues)
+* :alien: [Alien's Wiki: Security issues](http://alien.slackbook.org/dokuwiki/doku.php?id=linux:admin#security_issues)
 * [SlackWiki: Basic Security Fixes](http://slackwiki.com/Basic_Security_Fixes)
-* [Wikipedia: Fork bomb Prevention](https://en.wikipedia.org/wiki/Fork_bomb#Prevention)
+* :bomb: [Wikipedia: Fork bomb Prevention](https://en.wikipedia.org/wiki/Fork_bomb#Prevention)
 
 ### Other docs
 
