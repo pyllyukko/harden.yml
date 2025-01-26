@@ -179,7 +179,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 ### Debian specific
 
 * Disables unnecessary systemd services
-* Enables AppArmor
+* :shield: Enables AppArmor
 * Configure `SUITE` in `debsecan`
 * Install `debsums` and enable weekly cron job
 * Installs a bunch of security related packages (see [debian\_packages.yml](tasks/debian_packages.yml))
@@ -270,7 +270,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `kerberos`
     * :smiling_imp: `clamav` (use `--skip-tags clamav` in Slackware if you don't have [clamav](https://slackbuilds.org/repository/14.2/system/clamav/) installed)
         * `yara`
-    * `apparmor`
+    * :shield: `apparmor`
     * `cron` (also includes tasks regarding `at`)
     * `php`
     * :feather: `apache`
@@ -340,7 +340,7 @@ Some of these documents are quite old, but most of the stuff still applies.
 * :book: [Linux Firewalls](https://nostarch.com/firewalls.htm)
 * [Secure Secure Shell](https://stribika.github.io/2015/01/04/secure-secure-shell.html)
 * [Securing Debian Manual](https://www.debian.org/doc/manuals/securing-debian-manual/index.en.html)
-    * [AppArmor HowToUse](https://wiki.debian.org/AppArmor/HowToUse)
+    * :shield: [AppArmor HowToUse](https://wiki.debian.org/AppArmor/HowToUse)
 * [ArchWiki: limits.conf](https://wiki.archlinux.org/title/Limits.conf)
 * [Effectiveness of Linux Rootkit Detection Tools](http://jultika.oulu.fi/files/nbnfioulu-202004201485.pdf)
 * [How to keep a detailed audit trail of what’s being done on your Linux systems](https://www.cyberciti.biz/tips/howto-log-user-activity-using-process-accounting.html)
