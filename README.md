@@ -14,7 +14,6 @@ Supported distros
     * :dragon: Kali
     * π Raspberry Pi OS
 * Slackware (>= [15.0](http://www.slackware.com/announce/15.0.php))
-* Limited hardening for CentOS 7 (see CentOS specific tasks with `ansible-playbook --list-tasks --tags centos harden.yml`)
 
 :question: Why I made this
 ---------------
@@ -296,7 +295,7 @@ Tags that you can use with `ansible-playbook --tags`:
 
 There are also operating system tags for tasks that only apply to specific OS.
 You can speed up the hardening by skipping OSs that don't apply. E.g. if you're
-hardening a Slackware system you can use `--skip-tags debian,centos`.
+hardening a Slackware system you can use `--skip-tags debian`.
 
 Other tags are just metadata for now. You can list all the tags with
 `ansible-playbook --list-tags harden.yml`.
@@ -321,7 +320,6 @@ Some of these documents are quite old, but most of the stuff still applies.
 * [Center for Internet Security](https://www.cisecurity.org/):
     * [CIS Slackware Linux 10.2 Benchmark v1.1.0][1]
     * [CIS Debian Linux Benchmark](https://www.cisecurity.org/benchmark/debian_linux/)
-    * [CIS CentOS Linux 7 Benchmark](https://www.cisecurity.org/benchmark/centos_linux/)
     * [CIS Distribution Independent Linux](https://www.cisecurity.org/benchmark/distribution_independent_linux)
 * [SlackDocs: Security HOWTOs](http://docs.slackware.com/howtos:security:start)
 * :alien: [Alien's Wiki: Security issues](http://alien.slackbook.org/dokuwiki/doku.php?id=linux:admin#security_issues)

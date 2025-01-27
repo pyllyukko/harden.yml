@@ -34,27 +34,27 @@
         owner: root
         group: root
         mode: '0600'
-- name: Install Lynis into CentOS
-  when: ansible_distribution == "CentOS"
-  become: true
-  tags:
-    - packages
-    - lynis
-    - centos
-  block:
-    - name: Add Lynis repository (RH)
-      ansible.builtin.yum_repository:
-        name: lynis
-        description: CISOfy Software - Lynis package
-        baseurl: https://packages.cisofy.com/community/lynis/rpm/
-        gpgkey: https://packages.cisofy.com/keys/cisofy-software-rpms-public.key
-        gpgcheck: true
-        priority: 2
-        enabled: true
-    - name: Install Lynis (RH)
-      ansible.builtin.yum:
-        name: lynis
-        update_cache: true
+#- name: Install Lynis into CentOS
+#  when: ansible_distribution == "CentOS"
+#  become: true
+#  tags:
+#    - packages
+#    - lynis
+#    - centos
+#  block:
+#    - name: Add Lynis repository (RH)
+#      ansible.builtin.yum_repository:
+#        name: lynis
+#        description: CISOfy Software - Lynis package
+#        baseurl: https://packages.cisofy.com/community/lynis/rpm/
+#        gpgkey: https://packages.cisofy.com/keys/cisofy-software-rpms-public.key
+#        gpgcheck: true
+#        priority: 2
+#        enabled: true
+#    - name: Install Lynis (RH)
+#      ansible.builtin.yum:
+#        name: lynis
+#        update_cache: true
 - name: Configure Lynis
   tags:
     - configuration

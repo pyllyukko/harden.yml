@@ -48,17 +48,17 @@
     - firewire
     - usb-storage
 # https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/sect-security-enhanced_linux-working_with_selinux-disable_ptrace
-- name: Disable ptrace() with SELinux
-  become: true
-  when: ansible_os_family == "RedHat"
-  ansible.posix.seboolean:
-    name: deny_ptrace
-    state: true
-    persistent: true
-  tags:
-    - configuration
-    - kernel
-    - centos
+#- name: Disable ptrace() with SELinux
+#  become: true
+#  when: ansible_os_family == "RedHat"
+#  ansible.posix.seboolean:
+#    name: deny_ptrace
+#    state: true
+#    persistent: true
+#  tags:
+#    - configuration
+#    - kernel
+#    - centos
 
 - name: Print Lynis score for kernel hardening
   become: true

@@ -270,7 +270,7 @@
 # https://wiki.debian.org/WHEEL/PAM
 # This is not enabled in Slackware because it has a separate "Deny use of su" task
 - name: Enable pam_wheel.so in /etc/pam.d/su
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat" or ansible_distribution == "Ubuntu"
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
   become: true
   ansible.builtin.replace:
     path: /etc/pam.d/su
@@ -282,7 +282,6 @@
     - configuration
     - pam
     - debian
-    - centos
     - authorization
 
 - name: Copy namespace.conf
@@ -367,25 +366,25 @@
         - faildelay
       notify: "Run pam-auth-update"
 
-- name: authconfig
-  when: ansible_os_family == "RedHat"
-  become: true
-  tags:
-    - configuration
-    - pam
-    - centos
-  block:
-    - name: Enable additional PAM modules with authconfig (RH)
-      ansible.builtin.command: /sbin/authconfig --enable{{ item }} --update
-      with_items:
-        #- pamaccess
-        - faillock
-      changed_when: true
-      tags: authorization
-    - name: Configure password policy via authconfig
-      ansible.builtin.command: /sbin/authconfig --passalgo=sha512 --passminlen=14 --enablereqlower --enablerequpper --enablereqdigit --enablereqother --update
-      changed_when: true
-      tags: passwords
+#- name: authconfig
+#  when: ansible_os_family == "RedHat"
+#  become: true
+#  tags:
+#    - configuration
+#    - pam
+#    - centos
+#  block:
+#    - name: Enable additional PAM modules with authconfig (RH)
+#      ansible.builtin.command: /sbin/authconfig --enable{{ item }} --update
+#      with_items:
+#        #- pamaccess
+#        - faillock
+#      changed_when: true
+#      tags: authorization
+#    - name: Configure password policy via authconfig
+#      ansible.builtin.command: /sbin/authconfig --passalgo=sha512 --passminlen=14 --enablereqlower --enablerequpper --enablereqdigit --enablereqother --update
+#      changed_when: true
+#      tags: passwords
 
 - name: Password related
   become: true
@@ -431,7 +430,7 @@
         replace: '\g<2>= {{ item.value }}'
         validate: '/bin/grep "^{{ item.key }}\s\+= {{ item.value }}$" %s'
         backup: true
-      when: ansible_os_family == "RedHat" or ansible_distribution == "Slackware"
+      when: ansible_distribution == "Slackware"
       with_dict:
         retry: 3
         minlen: 14
@@ -440,9 +439,7 @@
         ucredit: -1
         ocredit: -1
         lcredit: -1
-      tags:
-        - slackware
-        - centos
+      tags: slackware
 
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#user-limits
 - name: pam_limits

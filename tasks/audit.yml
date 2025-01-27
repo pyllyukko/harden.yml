@@ -37,13 +37,13 @@
         # These are covered in modules.rules.new
         #- 43-module-load.rules
         - 99-finalize.rules
-    - name: Fix 10-base-config.rules for CentOS 7
-      ansible.builtin.replace:
-        path: /etc/audit/rules.d/10-base-config.rules
-        regexp: "^(--backlog_wait_time [0-9]+)$"
-        replace: '#\1'
-      when: (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7") or (ansible_distribution == "Slackware" and ansible_distribution_version == "14.2") # noqa yaml[line-length]
-      tags: centos
+    #- name: Fix 10-base-config.rules for CentOS 7
+    #  ansible.builtin.replace:
+    #    path: /etc/audit/rules.d/10-base-config.rules
+    #    regexp: "^(--backlog_wait_time [0-9]+)$"
+    #    replace: '#\1'
+    #  when: (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7") or (ansible_distribution == "Slackware" and ansible_distribution_version == "14.2") # noqa yaml[line-length]
+    #  tags: centos
     #- name: Remove 11-loginuid.rules for Slackware 14.2
     #  ansible.builtin.file:
     #    path: /etc/audit/rules.d/11-loginuid.rules

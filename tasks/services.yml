@@ -131,9 +131,7 @@
     job: "/bin/systemctl show --property=SystemState | /bin/grep -v '^SystemState=running$'"
     minute: "*/5"
     state: present
-  tags:
-    - debian
-    - centos
+  tags: debian
 
 - name: Slackware's cron
   tags:

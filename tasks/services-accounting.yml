@@ -93,18 +93,18 @@
       tags:
         - services
         - configuration
-    - name: Configure sysstat (RH)
-      become: true
-      when: ansible_os_family == "RedHat"
-      ansible.builtin.replace:
-        path: /etc/sysconfig/sysstat
-        regexp: '^HISTORY=[0-9]+$'
-        replace: 'HISTORY=99999'
-        validate: '/bin/grep "^HISTORY=99999$" %s'
-      tags:
-        - services
-        - configuration
-        - centos
+    #- name: Configure sysstat (RH)
+    #  become: true
+    #  when: ansible_os_family == "RedHat"
+    #  ansible.builtin.replace:
+    #    path: /etc/sysconfig/sysstat
+    #    regexp: '^HISTORY=[0-9]+$'
+    #    replace: 'HISTORY=99999'
+    #    validate: '/bin/grep "^HISTORY=99999$" %s'
+    #  tags:
+    #    - services
+    #    - configuration
+    #    - centos
 # </System accounting>
 
 # Process accounting

@@ -401,23 +401,23 @@
             - getent_group["spi"][2] | length > 0
 
 # Unfortunately the hash_rounds_min doesn't seem to work
-- name: Configure libuser.conf
-  become: true
-  when: ansible_os_family == "RedHat"
-  tags:
-    - centos
-    - configuration
-  community.general.ini_file:
-    path: /etc/libuser.conf
-    section: defaults
-    option: "{{ item.key }}"
-    value: "{{ item.value }}"
-    owner: root
-    group: root
-    mode: '0644'
-  with_dict:
-    hash_rounds_min: "{{ crypt_rounds }}"
-    crypt_style: sha512
+#- name: Configure libuser.conf
+#  become: true
+#  when: ansible_os_family == "RedHat"
+#  tags:
+#    - centos
+#    - configuration
+#  community.general.ini_file:
+#    path: /etc/libuser.conf
+#    section: defaults
+#    option: "{{ item.key }}"
+#    value: "{{ item.value }}"
+#    owner: root
+#    group: root
+#    mode: '0644'
+#  with_dict:
+#    hash_rounds_min: "{{ crypt_rounds }}"
+#    crypt_style: sha512
 
 - name: Configure logind.conf
   tags: configuration
