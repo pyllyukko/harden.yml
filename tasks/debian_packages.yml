@@ -17,13 +17,18 @@
           - arpwatch
           - usbguard
           - unattended-upgrades
-          - checksecurity
           - checksec
           - hardening-runtime
           - apt-show-versions
       tags:
         - packages
         - services
+    # This does not exist in Kali
+    - name: Install checksecurity
+      when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+      ansible.builtin.apt:
+        name: checksecurity
+      tags: packages
     - name: Install chkrootkit
       tags:
         - chkrootkit
