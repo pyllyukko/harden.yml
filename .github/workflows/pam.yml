@@ -121,3 +121,4 @@ jobs:
             /etc/pam.d/common-auth-matrix
             /etc/pam.d/common-password
             /etc/pam.d/common-session
+            /etc/pam.d/login
