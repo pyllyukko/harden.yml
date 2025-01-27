@@ -92,6 +92,7 @@ jobs:
           ansible-playbook harden.yml --tags pam --skip-tags slackware
           sudo pam-auth-update --enable access
           sudo pam-auth-update --disable polyinstation
+          sudo pam-auth-update --disable lastlog
           # Re-create common-auth-matrix
           sudo rm -v /etc/pam.d/common-auth-matrix
           ansible-playbook tests/pamtests.yml --tags setup
