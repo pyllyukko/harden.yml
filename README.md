@@ -55,12 +55,12 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 
 ### Kernel
 
-* Disables the use of certain kernel modules via `modprobe`
+* :no_entry: Disables the use of certain kernel modules via `modprobe`
     * Disable [Firewire](http://www.hermann-uwe.de/blog/physical-memory-attacks-via-firewire-dma-part-1-overview-and-mitigation)
 * [sysctl](https://en.wikipedia.org/wiki/Sysctl) settings hardening
-    * Enables [SAK](https://www.kernel.org/doc/Documentation/SAK.txt) and disables the other [magic SysRq stuff](https://www.kernel.org/doc/Documentation/sysrq.txt)
-    * Restricts the use of `dmesg` by regular users
-    * Enable [YAMA](https://www.kernel.org/doc/Documentation/security/Yama.txt)
+    * :keyboard: Enables [SAK](https://www.kernel.org/doc/Documentation/SAK.txt) and disables the other [magic SysRq stuff](https://www.kernel.org/doc/Documentation/sysrq.txt)
+    * :no_entry: Restricts the use of `dmesg` by regular users
+    * :no_entry: Enable [YAMA](https://www.kernel.org/doc/Documentation/security/Yama.txt) (disallow `ptrace`)
     * For the complete list, see [sysctl.conf.new](newconfs/sysctl.d/sysctl.conf.new)
 * Run `ansible-playbook --list-tasks --tags kernel harden.yml` for a full list
 
@@ -68,8 +68,8 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 
 * Hardens mount options (creates `/etc/fstab.new`) (see [fstab.awk](files/fstab.awk))
 * :house: Sets strict permissions to users home directories
-* Limits permissions to various configuration files and directories that might contain sensitive content (see `permissions` tag for a complete list)
-* :recycle: Clean up `/tmp` during boot (see [tmp.conf.new](newconfs/tmp.conf.new))
+* :no_entry: Limits permissions to various configuration files and directories that might contain sensitive content (see `permissions` tag for a complete list)
+* :do_not_litter: Clean up `/tmp` during boot (see [tmp.conf.new](newconfs/tmp.conf.new))
 * Removes SUID and/or SGID bits from various binaries (see `ansible-playbook --list-tasks --tags suid,sgid harden.yml` for details)
 
 ### Application specific
@@ -93,7 +93,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Configures AIDE (see [aide.yml](tasks/aide.yml))
 * Display managers:
     * Disables user lists in GDM3 & LightDM
-    * Disables guest sessions and VNC in LightDM
+    * :no_entry: Disables guest sessions and VNC in LightDM
 * :feather: Minor Apache HTTP server hardening
 * Minor PHP (`php.ini`) hardening
 
@@ -124,12 +124,12 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * 🎟️ Configures `/etc/security/access.conf` for `pam_access` (authorization) (see [access.conf.j2](templates/access.conf.j2))
 * Configures `/etc/security/pwquality.conf` if available
 * 🛞 Require [pam\_wheel](http://linux-pam.org/Linux-PAM-html/sag-pam_wheel.html) in `/etc/pam.d/su`
-* Creates a secure [/etc/pam.d/other](http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html)
+* :no_entry: Creates a secure [/etc/pam.d/other](http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html)
     * See also [A strong /etc/pam.d/other](https://tldp.org/HOWTO/html_single/User-Authentication-HOWTO/#AEN266)
 * Configures `/etc/security/limits.conf` as follows:
     * Disable [core dumps](https://en.wikipedia.org/wiki/Core_dump)
     * Sets maximum amount of processes (or threads, see [setrlimit(2)](https://man7.org/linux/man-pages/man2/setrlimit.2.html))
-    * Sets `nproc` to 0 for system users that don't need to run any processes
+    * :no_entry: Sets `nproc` to 0 for system users that don't need to run any processes
 * Run `ansible-playbook --list-tasks --tags pam harden.yml` to list all PAM related tasks
 * You can also run `ansible-playbook --check --diff --tags pam harden.yml` to see details of the changes
 * [![pam](https://github.com/pyllyukko/harden.yml/actions/workflows/pam.yml/badge.svg)](https://github.com/pyllyukko/harden.yml/actions/workflows/pam.yml)
@@ -164,7 +164,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * Use `pam_faildelay`
     * 🎟️ Use `pam_faillock`
     * 🎟️ Use `pam_access`
-    * Removes `nullok` from `pam_unix`
+    * :no_entry: Removes `nullok` from `pam_unix`
     * Sets crypt rounds for `pam_unix`
     * Change password `minlen` from 6 to 14
 * The following PAM modules are added to `/etc/pam.d/postlogin`:
@@ -175,7 +175,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Removes `auth include postlogin` from several files, as `postlogin` should (and has) only `session` module types
 * :sandwich: Creates `/etc/pam.d/sudo`, as that seemed to be missing
 * 🎟️ Disallows the use of `su` (see [su.new](newconfs/pam.d/su.new))
-* [Block](newconfs/pam.d/other.new) `/etc/pam.d/remote` (see [/etc/pam.d/remote](https://github.com/pyllyukko/harden.yml/wiki/PAM#etcpamdremote))
+* :no_entry: [Block](newconfs/pam.d/other.new) `/etc/pam.d/remote` (see [/etc/pam.d/remote](https://github.com/pyllyukko/harden.yml/wiki/PAM#etcpamdremote))
 
 ### Debian specific
 
@@ -191,21 +191,21 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 
 Creates bunch of `pam-config`s that are toggleable with `pam-auth-update`:
 
-| PAM module                                                                                      | Type           | Description                                                                             |
-| ----------------------------------------------------------------------------------------------- | -------------- | --------------------------------------------------------------------------------------- |
-| 🛞 [pam\_wheel](http://www.linux-pam.org/Linux-PAM-html/sag-pam_wheel.html)[<sup>1</sup>](#fn1) | auth           | Require `wheel` group membership (`su`)                                                 |
-| 🎟️ [pam\_succeed\_if](http://www.linux-pam.org/Linux-PAM-html/sag-pam_succeed_if.html)          | auth & account | Require UID >= 1000 && UID <= 60000 (or 0 & `login`)                                    |
-| [pam\_unix](http://www.linux-pam.org/Linux-PAM-html/sag-pam_unix.html)[<sup>1</sup>](#fn1)      | auth           | Remove `nullok`                                                                         |
-| [pam\_faildelay](http://www.linux-pam.org/Linux-PAM-html/sag-pam_faildelay.html)                | auth           | Delay on authentication failure                                                         |
-| [pam\_ssh\_agent\_auth](https://pamsshagentauth.sourceforge.net/)                               | auth           | SSH agent authentication for sudo[<sup>3</sup>](#fn3)                                   |
-| 🎟️ `pam_faillock`                                                                               | auth & account | Deter brute-force attacks                                                               |
-| 🎟️ [pam\_access](http://linux-pam.org/Linux-PAM-html/sag-pam_access.html)                       | account        | Use login ACL (`/etc/security/access.conf`)                                             |
-| 🎟️ [pam\_time](http://www.linux-pam.org/Linux-PAM-html/sag-pam_time.html)                       | account        | `/etc/security/time.conf`                                                               |
-| 🎟️ [pam\_lastlog](http://www.linux-pam.org/Linux-PAM-html/sag-pam_lastlog.html)                 | account        | Lock out inactive users (no login in 90 days)                                           |
-| [pam\_namespace](http://www.linux-pam.org/Linux-PAM-html/sag-pam_namespace.html)                | session        | Polyinstantiated temp directories                                                       |
-| [pam\_umask](http://www.linux-pam.org/Linux-PAM-html/sag-pam_umask.html)                        | session        | Set file mode creation mask                                                             |
-| [pam\_lastlog](http://www.linux-pam.org/Linux-PAM-html/sag-pam_lastlog.html)                    | session        | Display info about last login and update the lastlog and wtmp files[<sup>2</sup>](#fn2) |
-| [pam\_pwhistory](http://www.linux-pam.org/Linux-PAM-html/sag-pam_pwhistory.html)                | password       | Limit password reuse                                                                    |
+| PAM module                                                                                            | Type           | Description                                                                             |
+| ----------------------------------------------------------------------------------------------------- | -------------- | --------------------------------------------------------------------------------------- |
+| 🛞 [pam\_wheel](http://www.linux-pam.org/Linux-PAM-html/sag-pam_wheel.html)[<sup>1</sup>](#fn1)       | auth           | Require `wheel` group membership (`su`)                                                 |
+| 🎟️ [pam\_succeed\_if](http://www.linux-pam.org/Linux-PAM-html/sag-pam_succeed_if.html)                | auth & account | Require UID >= 1000 && UID <= 60000 (or 0 & `login`)                                    |
+| :no_entry: [pam\_unix](http://www.linux-pam.org/Linux-PAM-html/sag-pam_unix.html)[<sup>1</sup>](#fn1) | auth           | Remove `nullok`                                                                         |
+| [pam\_faildelay](http://www.linux-pam.org/Linux-PAM-html/sag-pam_faildelay.html)                      | auth           | Delay on authentication failure                                                         |
+| [pam\_ssh\_agent\_auth](https://pamsshagentauth.sourceforge.net/)                                     | auth           | SSH agent authentication for sudo[<sup>3</sup>](#fn3)                                   |
+| 🎟️ `pam_faillock`                                                                                     | auth & account | Deter brute-force attacks                                                               |
+| 🎟️ [pam\_access](http://linux-pam.org/Linux-PAM-html/sag-pam_access.html)                             | account        | Use login ACL (`/etc/security/access.conf`)                                             |
+| 🎟️ [pam\_time](http://www.linux-pam.org/Linux-PAM-html/sag-pam_time.html)                             | account        | `/etc/security/time.conf`                                                               |
+| 🎟️ [pam\_lastlog](http://www.linux-pam.org/Linux-PAM-html/sag-pam_lastlog.html)                       | account        | Lock out inactive users (no login in 90 days)                                           |
+| [pam\_namespace](http://www.linux-pam.org/Linux-PAM-html/sag-pam_namespace.html)                      | session        | Polyinstantiated temp directories                                                       |
+| [pam\_umask](http://www.linux-pam.org/Linux-PAM-html/sag-pam_umask.html)                              | session        | Set file mode creation mask                                                             |
+| [pam\_lastlog](http://www.linux-pam.org/Linux-PAM-html/sag-pam_lastlog.html)                          | session        | Display info about last login and update the lastlog and wtmp files[<sup>2</sup>](#fn2) |
+| [pam\_pwhistory](http://www.linux-pam.org/Linux-PAM-html/sag-pam_pwhistory.html)                      | password       | Limit password reuse                                                                    |
 
 1. <span id="fn1"/>Not a `pam-config`, but a modification to existing `/etc/pam.d/` files
 2. <span id="fn2"/>For all login methods and not just the console login
@@ -254,7 +254,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `ipv6`
 * :wood: `logging`
 * :file_folder: Filesystem related:
-    * `permissions`
+    * :no_entry: `permissions`
     * `fstab`
     * `suid` & `sgid`
 * Specific software:
@@ -304,7 +304,7 @@ Other tags are just metadata for now. You can list all the tags with
 
 ### Other features
 
-* There is a `lock_account.yml` playbook that you can use to lock user accounts. Just modify the `hosts` & `user`.
+* :no_entry: There is a `lock_account.yml` playbook that you can use to lock user accounts. Just modify the `hosts` & `user`.
 * Limited hardening for FreeBSD (see [freebsd.yml](tasks/freebsd.yml))
 * :sandwich: Experimental feature: If you enable `sudo_ids` in `vars.yml`, it enables "Sudo Intrusion Detection" as seen in chapter 9 of [Sudo Mastery](https://mwl.io/nonfiction/tools#sudo2)
     * Only for `SHELLS` `Cmnd_Alias` for now
