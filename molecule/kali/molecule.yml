@@ -1,0 +1,13 @@
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+platforms:
+  # https://www.kali.org/docs/containers/official-kalilinux-docker-images/
+  - name: molecule-kali
+    image: kalilinux/kali-rolling
+provisioner:
+  name: ansible
+  # This playbook needs to reside in the project root directory so that the all the files and templates are found properly
+  playbooks:
+    converge: ../../converge.yml

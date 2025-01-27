@@ -1,0 +1,7 @@
+---
+- name: Prepare
+  hosts: molecule
+  gather_facts: false
+  tasks:
+    - name: Install Python, python3-apt & Sudo
+      ansible.builtin.raw: apt-get update && apt-get install -y python3-minimal python3-apt sudo
