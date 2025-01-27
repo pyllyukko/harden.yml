@@ -161,7 +161,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 #### PAM
 
 * Creates a custom `/etc/pam.d/system-auth`, which has the following changes:
-    * Use `pam_faildelay`
+    * :timer_clock: Use `pam_faildelay`
     * 🎟️ Use `pam_faillock`
     * 🎟️ Use `pam_access`
     * :no_entry: Removes `nullok` from `pam_unix`
@@ -196,7 +196,7 @@ Creates bunch of `pam-config`s that are toggleable with `pam-auth-update`:
 | 🛞 [pam\_wheel](http://www.linux-pam.org/Linux-PAM-html/sag-pam_wheel.html)[<sup>1</sup>](#fn1)       | auth           | Require `wheel` group membership (`su`)                                                 |
 | 🎟️ [pam\_succeed\_if](http://www.linux-pam.org/Linux-PAM-html/sag-pam_succeed_if.html)                | auth & account | Require UID >= 1000 && UID <= 60000 (or 0 & `login`)                                    |
 | :no_entry: [pam\_unix](http://www.linux-pam.org/Linux-PAM-html/sag-pam_unix.html)[<sup>1</sup>](#fn1) | auth           | Remove `nullok`                                                                         |
-| [pam\_faildelay](http://www.linux-pam.org/Linux-PAM-html/sag-pam_faildelay.html)                      | auth           | Delay on authentication failure                                                         |
+| :timer_clock: [pam\_faildelay](http://www.linux-pam.org/Linux-PAM-html/sag-pam_faildelay.html)        | auth           | Delay on authentication failure                                                         |
 | [pam\_ssh\_agent\_auth](https://pamsshagentauth.sourceforge.net/)                                     | auth           | SSH agent authentication for sudo[<sup>3</sup>](#fn3)                                   |
 | 🎟️ `pam_faillock`                                                                                     | auth & account | Deter brute-force attacks                                                               |
 | 🎟️ [pam\_access](http://linux-pam.org/Linux-PAM-html/sag-pam_access.html)                             | account        | Use login ACL (`/etc/security/access.conf`)                                             |
