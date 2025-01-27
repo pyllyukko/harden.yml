@@ -146,11 +146,11 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 
 * Run `ansible-playbook --list-tasks --tags slackware harden.yml` for a full list
 * Make Xorg rootless
-* Makes default log files group `adm` readable ([as in Debian](http://www.debian.org/doc/manuals/debian-reference/ch01.en.html#listofnotablesysupsforfileaccess))
+* :wood: Makes default log files group `adm` readable ([as in Debian](http://www.debian.org/doc/manuals/debian-reference/ch01.en.html#listofnotablesysupsforfileaccess))
 * 🛞 Restricts the use of `cron` so that only users in the [wheel](https://en.wikipedia.org/wiki/Wheel_(computing)) group are able to create cronjobs (as described in [/usr/doc/dcron-4.5/README](http://www.jimpryor.net/linux/dcron-README))
 * Mount [/proc](https://www.kernel.org/doc/Documentation/filesystems/proc.txt) with `hidepid=2`
-* Make `installpkg` store the MD5 checksums
-* Enable [process accounting](https://tldp.org/HOWTO/Process-Accounting/) (`acct`)
+* :wood: Make `installpkg` store the MD5 checksums
+* :bar_chart: Enable [process accounting](https://tldp.org/HOWTO/Process-Accounting/) (`acct`)
 * Does some housekeeping regarding group memberships (see [login\_defs-slackware.yml](tasks/login_defs-slackware.yml))
 * 🎟️ Configures `inittab` to use `shutdown -a` (and `/etc/shutdown.allow`)
 * Reconfigured bunch of services (run `ansible-playbook --list-tasks --tags slackware harden.yml | grep '\bservices\b'` for a full list)
