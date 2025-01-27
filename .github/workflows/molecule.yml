@@ -25,3 +25,13 @@ jobs:
           pip install --user molecule[docker] molecule-plugins[docker]
       - name: Run Molecule
         run: molecule test --scenario-name debian
+  molecule-kali:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install dependencies
+        run: |
+          pip install --user molecule[docker] molecule-plugins[docker]
+      - name: Run Molecule
+        run: molecule test --scenario-name kali
