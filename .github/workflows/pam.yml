@@ -122,3 +122,4 @@ jobs:
             /etc/pam.d/common-password
             /etc/pam.d/common-session
             /etc/pam.d/login
+            /etc/security/faillock.conf
