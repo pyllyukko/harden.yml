@@ -1,0 +1,39 @@
+---
+- name: OpenSCAP
+  hosts: localhost
+  tasks:
+    - name: Check OS
+      ansible.builtin.assert:
+        that: ansible_distribution == "Debian" and ansible_distribution_major_version | int == 12
+        msg: "Unsupported operating system"
+    - name: Check latest definition release
+      uri:
+        url: https://api.github.com/repos/ComplianceAsCode/content/releases/latest
+        method: GET
+      register: latest
+    - name: Download latest release
+      get_url:
+        url: "{{ item }}"
+        dest: ./
+      vars:
+        query: "assets[?ends_with(name,'.zip')].browser_download_url"
+      with_items: "{{ latest.json | json_query(query) }}"
+      register: download
+    - name: Debug
+      ansible.builtin.debug:
+        msg: "{{ latest.json.tag_name | regex_replace('^v', '') }}"
+    - name: Unzip
+      ansible.builtin.unarchive:
+        src: '{{ download.results[0].dest }}'
+        dest: ./
+        remote_src: true
+    - name: Install OpenSCAP scanner
+      become: true
+      ansible.builtin.apt:
+        name: openscap-scanner
+        update_cache: yes
+    - name: Run OpenSCAP scanner
+      ansible.builtin.command: oscap xccdf eval --fetch-remote-resources --profile xccdf_org.ssgproject.content_profile_anssi_bp28_minimal --results-arf results.xml --report report.html scap-security-guide-0.1.75/ssg-debian12-ds.xml
+      become: true
+      args:
+        creates: ./report.html
