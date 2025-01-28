@@ -66,9 +66,8 @@ static void test_pam_authenticate_wrong_password(void **state)
   ZERO_STRUCT(conv_data);
   conv_data.in_echo_off = trinity_authtoks;
 
-  perr = run_pamtest("login", "nobody", &conv_data, tests, NULL);
-  // tests specify PAM_AUTH_ERR as the expected result
-  assert_int_equal(perr, PAMTEST_ERR_OK);
+  perr = run_pamtest("login", "root", &conv_data, tests, NULL);
+  assert_int_equal(perr, testcase);
 }
 static void test_pam_authenticate_nobody(void **state)
 {
