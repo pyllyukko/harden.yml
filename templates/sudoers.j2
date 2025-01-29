@@ -56,6 +56,7 @@ Defaults	ignore_dot
 Defaults	env_file=/etc/sudo_env
 Defaults	use_pty
 Defaults	timestamp_type=tty
+Defaults	umask=0077
 Defaults!NOIOLOG !log_output
 {% if sudo_iolog %}
 Defaults	log_output
@@ -75,7 +76,7 @@ root {{ ansible_hostname }}=(ALL:ALL) EXEC: ALL
 %wheel {{ ansible_hostname }}=(root) TIMEOUT={{ session_timeout }}m PASSWD:EXEC: SHELLS
 {% endif %}
 %wheel {{ ansible_hostname }}=(root) TIMEOUT={{ session_timeout }}m PASSWD:NOEXEC: sudoedit
-%wheel {{ ansible_hostname }}=(root) TIMEOUT=1m PASSWD:NOEXEC: /bin/dmesg
+%wheel {{ ansible_hostname }}=(root) TIMEOUT=1m PASSWD:NOEXEC: /bin/dmesg ""
 %wheel {{ ansible_hostname }}=(:adm) PASSWD:NOEXEC: READ_FILES
 %wheel {{ ansible_hostname }}=(:adm) PASSWD:NOEXEC: LOGIN_RECORD_VIEWERS
 {% if ansible_os_family == "RedHat" %}
@@ -92,7 +93,7 @@ root {{ ansible_hostname }}=(ALL:ALL) EXEC: ALL
 %sudo	{{ ansible_hostname }}=(root) TIMEOUT={{ session_timeout }}m PASSWD:EXEC: SHELLS
 {% endif %}
 %sudo	{{ ansible_hostname }}=(:systemd-journal) PASSWD:EXEC: /bin/journalctl
-%sudo	{{ ansible_hostname }}=(root) TIMEOUT=1m PASSWD:NOEXEC: /bin/dmesg
+%sudo	{{ ansible_hostname }}=(root) TIMEOUT=1m PASSWD:NOEXEC: /bin/dmesg ""
 %sudo	{{ ansible_hostname }}=(:adm) PASSWD:NOEXEC: READ_FILES
 %sudo	{{ ansible_hostname }}=(root) PASSWD:EXEC: APT_GET
 %sudo	{{ ansible_hostname }}=(root) TIMEOUT={{ session_timeout }}m PASSWD:NOEXEC: sudoedit

@@ -51,6 +51,7 @@ crypt_rounds: 500000
 run_lynis_after_hardening: false
 sudo_ids: false
 sudo_iolog: false
+sudo_group: '{% if ansible_distribution == "Slackware" %}wheel{% else %}sudo{% endif %}'
 aide_conf: '{% if ansible_distribution == "Slackware" %}/etc/aide.conf{% else %}/etc/aide/aide.conf{% endif %}'
 pass_max_days: 365
 pass_min_days: 7

@@ -326,6 +326,20 @@
       tags:
         - permissions
         - logging
+    # ANSSI-BP-028 R29 - Access restrictions on /boot
+    - name: chmod /boot
+      ansible.builtin.file:
+        path: /boot
+        mode: '0700'
+        owner: root
+        group: root
+      register: result
+      tags:
+        - permissions
+        - test
+      failed_when:
+        - result.failed
+        - result.msg != "file (/boot) is absent, cannot continue"
     # Home directories
     - name: chmod /root
       ansible.builtin.file:
