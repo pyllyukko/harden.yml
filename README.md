@@ -167,6 +167,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * :no_entry: Removes `nullok` from `pam_unix`
     * Sets crypt rounds for `pam_unix`
     * Change password `minlen` from 6 to 14
+    * See [system-auth.j2](templates/system-auth.j2)
 * The following PAM modules are added to `/etc/pam.d/postlogin`:
     * `pam_umask`
     * `pam_cgroup`
