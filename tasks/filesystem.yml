@@ -220,6 +220,7 @@
         - result.failed == true
         - result.state != "absent"
 
+# ANSSI-BP-028 R50 - Limiting the rights to access sensitive files and directories
 - name: Chmod sensitive files
   become: true
   block:

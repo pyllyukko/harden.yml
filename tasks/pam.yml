@@ -68,6 +68,7 @@
     - slackware
     - umask
 
+# ANSSI-BP-028 R55 - Dedicating temporary directories to users
 - name: Add pam_namespace to /etc/pam.d/{login,sddm,sshd,xdm} (Slackware)
   when: ansible_distribution == "Slackware"
   become: true
@@ -284,6 +285,7 @@
     - debian
     - authorization
 
+# ANSSI-BP-028 R55 - Dedicating temporary directories to users
 - name: Copy namespace.conf
   become: true
   ansible.builtin.copy:
@@ -335,6 +337,7 @@
         mode: '0644'
       with_items:
         - lastlog
+        # ANSSI-BP-028 R55 - Dedicating temporary directories to users
         - polyinstation
         - pwhistory
         - umask

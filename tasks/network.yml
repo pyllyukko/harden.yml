@@ -135,6 +135,7 @@
         enabled: true
 # </Debian firewall>
 
+# ANSSI-BP-028 R13 - Disabling IPv6
 - name: IPv6
   become: true
   tags:

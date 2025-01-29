@@ -22,6 +22,7 @@
         replace: '\g<1> -a'
         validate: '/bin/grep "^ca::ctrlaltdel:/sbin/shutdown -t5 -r now -a$" %s'
 
+# ANSSI-BP-028 R36 - Changing the default value of UMASK
 - name: Set umask to 077 in /etc/profile (Slackware)
   tags:
     - configuration

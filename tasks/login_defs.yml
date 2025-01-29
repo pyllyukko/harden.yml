@@ -1,6 +1,7 @@
 ---
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.10
 # Regarding SHA_CRYPT_MIN_ROUNDS: https://github.com/linux-pam/linux-pam/issues/352
+# ANSSI-BP-028 R36 - Changing the default value of UMASK
 - name: Configure shadow password suite (generic)
   become: true
   ansible.builtin.replace:
@@ -32,6 +33,7 @@
 #   5.4.1.1 Ensure password expiration is 365 days or less
 #   5.4.1.2 Ensure minimum days between password changes is configured
 #   5.4.1.3 Ensure password expiration warning days is 7 or more
+# ANSSI-BP-028 R68 - Protecting the stored passwords
 - name: Configure shadow password suite (password related)
   become: true
   ansible.builtin.replace:
@@ -93,6 +95,7 @@
     - expiry
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.5 Ensure default user shell timeout is 900 seconds or less
 # Guide to the Secure Configuration of Red Hat Enterprise Linux 5 Revision 4.1 - 2.3.5.5 Implement Inactivity Time-out for Login Shells
+# ANSSI-BP-028 R32 - Configuring a timeout on local user sessions
 - name: Create /etc/profile.d/{tmout.sh,autologout.csh}
   become: true
   tags:
@@ -109,6 +112,7 @@
     - autologout.csh
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.4 Ensure default user umask is 027 or more restrictive
 # Slackware and CentOS have umask in /etc/profile
+# ANSSI-BP-028 R36 - Changing the default value of UMASK
 - name: Create /etc/profile.d/umask.sh (Debian)
   become: true
   ansible.builtin.copy:
@@ -419,6 +423,7 @@
 #    hash_rounds_min: "{{ crypt_rounds }}"
 #    crypt_style: sha512
 
+# ANSSI-BP-028 R32 - Configuring a timeout on local user sessions
 - name: Configure logind.conf
   tags: configuration
   become: true

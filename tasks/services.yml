@@ -1,5 +1,6 @@
 ---
 # Unwanted services
+# ANSSI-BP-028 R62 - Disabling the non-necessary services
 - name: Stop & disable unwanted services (Debian)
   become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali"

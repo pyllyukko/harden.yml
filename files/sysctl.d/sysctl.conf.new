@@ -68,6 +68,7 @@ kernel.kexec_load_disabled = 1
 # 2 - admin-only attach
 # 3 - no attach
 # Avoid non-ancestor ptrace access to running processes and their credentials.
+# ANSSI-BP-028 R11 - Configuration option of the Yama LSM
 kernel.yama.ptrace_scope = 3
 
 # Disable User Namespaces, as it opens up a large attack surface to unprivileged users.

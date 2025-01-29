@@ -327,6 +327,7 @@ Some of these documents are quite old, but most of the stuff still applies.
 * :alien: [Alien's Wiki: Security issues](http://alien.slackbook.org/dokuwiki/doku.php?id=linux:admin#security_issues)
 * [SlackWiki: Basic Security Fixes](http://slackwiki.com/Basic_Security_Fixes)
 * :bomb: [Wikipedia: Fork bomb Prevention](https://en.wikipedia.org/wiki/Fork_bomb#Prevention)
+* [Configuration recommendations of a gnu/linux system](https://cyber.gouv.fr/en/publications/configuration-recommendations-gnulinux-system) (ANSSI-BP-028)
 
 ### Other docs
 

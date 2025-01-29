@@ -19,6 +19,10 @@
     - packages
     - debian
 
+# ANSSI-BP-028 R39 - Sudo configuration guidelines
+# ANSSI-BP-028 R40 - Using unprivileged users as target for sudo commands
+# ANSSI-BP-028 R41 - Limiting the number of commands requiring the use of the EXEC directive
+# ANSSI-BP-028 R44 - Editing files securely with sudo
 - name: 'Configure /etc/sudoers'
   when: >
     ansible_distribution == "Slackware" or
