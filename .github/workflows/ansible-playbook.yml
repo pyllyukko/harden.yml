@@ -168,8 +168,8 @@ jobs:
       #  run: sudo grep '\[ Warning \]$' /var/log/rkhunter.log
       - name: Run Lynis
         run: sudo lynis audit system --skip-plugins --tests-from-group malware
-      - name: chmod Lynis log
-        run: sudo chmod -c 644 /var/log/lynis.log
+      - name: chmod Lynis & rkhunter logs
+        run: sudo chmod -c 644 /var/log/lynis.log /var/log/rkhunter.log
       - name: Archive Lynis log
         uses: actions/upload-artifact@v4
         with:
