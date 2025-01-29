@@ -6,6 +6,9 @@
     owner: root
     group: root
     mode: '0750'
+# ANSSI-BP-028 R9  - Configuring the kernel options
+# ANSSI-BP-028 R12 - IPv4 configuration options
+# ANSSI-BP-028 R14 - File system configuration options
 - name: Create harden.conf sysctl settings file
   become: true
   ansible.builtin.copy:
@@ -14,6 +17,7 @@
     owner: root
     group: root
     mode: '0600'
+    backup: true
   with_items:
     - sysctl
     - network

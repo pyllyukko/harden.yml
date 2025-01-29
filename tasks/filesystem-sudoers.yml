@@ -12,7 +12,7 @@
   with_items:
     - sudoers.d
     - sudoers
-# ANSSI BP-028 R38 - Creating a group dedicated to the use of sudo
+# ANSSI-BP-028 R38 - Creating a group dedicated to the use of sudo
 - name: Set file permissions/ownership for sudo
   ansible.builtin.file:
     path: /usr/bin/sudo
