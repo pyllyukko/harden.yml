@@ -662,12 +662,6 @@ ALLOWHIDDENDIR=/etc/.java
 {% if getent_passwd.pihole is defined %}
 ALLOWHIDDENDIR=/etc/.pihole
 {% endif %}
-{% if ansible_distribution == "Debian" or ansible_distribution == "Ubuntu" %}
-# https://www.man7.org/linux/man-pages/man8/systemd-update-done.service.8.html
-/etc/.updated
-# golang-github-containers-common
-/usr/share/man/man5/.containerignore.5.gz
-{% endif %}
 
 #
 # Allow the specified hidden file to be whitelisted.
@@ -693,9 +687,15 @@ ALLOWHIDDENFILE=/usr/man/man5/.k5identity.5.gz
 ALLOWHIDDENFILE=/usr/man/man5/.k5login.5.gz
 {% endif %}
 {% endif %}
+{% if ansible_distribution == "Debian" or ansible_distribution == "Ubuntu" %}
 {% if ansible_distribution == "Debian" %}
 # dphys-swapfile does this
 ALLOWHIDDENFILE=/etc/.fstab
+{% endif %}
+# https://www.man7.org/linux/man-pages/man8/systemd-update-done.service.8.html
+ALLOWHIDDENFILE=/etc/.updated
+# golang-github-containers-common
+ALLOWHIDDENFILE=/usr/share/man/man5/.containerignore.5.gz
 {% endif %}
 
 #
