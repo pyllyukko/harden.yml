@@ -33,6 +33,9 @@ table ip filter {
 	# "By default, all external source IPs are allowed to connect to ports that have been published to the Docker host's addresses."
 	chain DOCKER-USER {
 		type filter hook forward priority 0; policy drop;
+		# Add something like the following to allow Docker containers to communicate to the internet
+		#iifname "docker0" oifname "<ext>" counter accept
+		#iifname "<ext>" oifname "docker0" ct state established,related counter accept
 	}
 }
 table ip6 filter {
