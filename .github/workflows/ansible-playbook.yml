@@ -162,6 +162,10 @@ jobs:
         run: sudo pipx inject ansible-core jmespath
       - name: Run Ansible playbook for clamav, rkhunter & chkrootkit
         run: ansible-playbook harden.yml --tags clamav,rkhunter,chkrootkit --skip-tags slackware,yara
+      - name: Run rkhunter
+        run: sudo rkhunter --check
+      - name: Check rkhunter.log for warnings
+        run: sudo grep '\[ Warning \]$' /var/log/rkhunter.log || exit 1
       - name: Run Lynis
         run: sudo lynis audit system --skip-plugins --tests-from-group malware
       - name: chmod Lynis log
@@ -170,7 +174,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: lynis-malware.log
-          path: /var/log/lynis.log
+          path: |
+            /var/log/lynis.log
+            /var/log/rkhunter.log
       # MALW-3280
       # 2025-01-08 21:22:22 Result: no commercial anti-virus tools found
       # 2025-01-08 21:22:22 Hardening: assigned partial number of hardening points (0 of 3). Currently having 4 points (out of 7)
