@@ -593,7 +593,7 @@ USER_FILEPROP_FILES_DIRS=/etc/rkhunter.conf
 # The default value is the null string.
 #
 #SCRIPTWHITELIST=/usr/bin/groups
-{% if ansible_distribution == "Debian" %}
+{% if ansible_distribution == "Debian" or ansible_distribution == "Ubuntu" %}
 SCRIPTWHITELIST=/usr/sbin/adduser
 SCRIPTWHITELIST=/usr/bin/ldd
 SCRIPTWHITELIST=/usr/bin/which
