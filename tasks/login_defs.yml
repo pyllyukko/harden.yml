@@ -101,6 +101,7 @@
   tags:
     - configuration
     - shells
+    - timeout
   ansible.builtin.template:
     src: "{{ playbook_dir }}/templates/{{ item }}.j2"
     dest: /etc/profile.d/{{ item }}
@@ -425,7 +426,9 @@
 
 # ANSSI-BP-028 R32 - Configuring a timeout on local user sessions
 - name: Configure logind.conf
-  tags: configuration
+  tags:
+    - configuration
+    - timeout
   become: true
   community.general.ini_file:
     path: '{{ logind_conf_location }}'

@@ -294,6 +294,7 @@ Tags that you can use with `ansible-playbook --tags`:
 * `inittab` (Slackware)
 * :shell: `shells`
 * `umask`
+* :timer_clock: `timeout`
 
 There are also operating system tags for tasks that only apply to specific OS.
 You can speed up the hardening by skipping OSs that don't apply. E.g. if you're
