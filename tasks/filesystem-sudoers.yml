@@ -21,6 +21,7 @@
     group: '{{ sudo_group }}'
   become: true
   tags:
-    - permissions
+    # These are commented out, to not to shoot yourself in the foot when applying "permissions" and not "sudo"
+    #- permissions
+    #- suid
     - sudo
-    - suid
