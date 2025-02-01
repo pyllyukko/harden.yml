@@ -221,13 +221,20 @@
       failed_when:
         - result.failed == true
         - result.state != "absent"
-    - name: Remove SUID bit from /usr/bin/su
+    - name: Remove SUID bit from /{,usr/}bin/su
       tags: suid
       ansible.builtin.file:
-        path: /usr/bin/su
+        path: '{{ item }}'
         mode: u-s
         owner: root
         group: root
+      with_items:
+        - /usr/bin/su # Debian
+        - /bin/su # Slackware
+      register: result
+      failed_when:
+        - result.failed == true
+        - result.state != "absent"
     - name: Remove SUID bits from /usr/bin/{gpasswd,newgrp}
       tags: suid
       ansible.builtin.file:
