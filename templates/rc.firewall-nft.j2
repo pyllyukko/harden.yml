@@ -2,7 +2,12 @@
 
 function start() {
   echo "[*] Starting nftables firewall"
-  /usr/sbin/nft -f - 0<<-EOF
+  if [ -f /etc/nftables.conf ]
+  then
+    echo "[*] Using /etc/nftables.conf"
+    /usr/sbin/nft -f /etc/nftables.conf
+  else
+    /usr/sbin/nft -f - 0<<-EOF
 	flush ruleset
 
 	add table inet filter
@@ -34,6 +39,7 @@ function start() {
 	# syslogd
 	add rule inet filter OUTPUT meta cgroup 0x7379736c udp dport 514 counter accept
 EOF
+  fi
 }
 function usage() {
   cat 0<<-EOF
