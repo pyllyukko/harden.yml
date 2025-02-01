@@ -206,7 +206,9 @@
         owner: root
         group: root
     - name: Remove SUID bit from ssh-keysign
-      tags: suid
+      tags:
+        - suid
+        - ssh
       ansible.builtin.file:
         path: '{{ item }}'
         mode: u-s

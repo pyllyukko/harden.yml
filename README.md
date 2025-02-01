@@ -78,6 +78,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * See also <https://github.com/pyllyukko/harden.yml/wiki/audit>
 * :blowfish: Configures `sshd_config` and `ssh_config` (see `ansible-playbook --list-tasks --tags ssh harden.yml` for details)
     * Removes 2048-bit moduli from `/etc/ssh/moduli`
+    * :information_source: Removes SUID bit from `ssh-keysign`, so host-based authentication will stop working. Host-based authentication shouldn't be used anyway.
 * :sandwich: Configures [sudo](https://www.sudo.ws/) (see [sudoers.j2](templates/sudoers.j2))
     * :warning: **WARNING**: If there are rules in `/etc/sudoers.d/` that match our `become: true` tasks that do not have explicit `EXEC`, it can "break" `sudo` as we define `Defaults noexec` in the main `sudoers` file. There is a "Fix NOPASSWD rules" task in `sudoers.yml` which tries to tackle this problem, but it's not guaranteed to work.
     * :wood: You can set the `sudo_iolog` in `vars.yml` to `true` to enable I/O logging
