@@ -219,6 +219,13 @@
       failed_when:
         - result.failed == true
         - result.state != "absent"
+    - name: Remove SUID bit from /usr/bin/su
+      tags: suid
+      ansible.builtin.file:
+        path: /usr/bin/su
+        mode: u-s
+        owner: root
+        group: root
 
 # ANSSI-BP-028 R50 - Limiting the rights to access sensitive files and directories
 - name: Chmod sensitive files
