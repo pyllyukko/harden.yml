@@ -11,8 +11,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install dependencies
+        # Molecule was previously failing to run requirements.yml with permission denied. Hence we chown the lib dir.
         run: |
           pip install --user molecule[docker] molecule-plugins[docker]
+          sudo chown -cR runner /usr/local/lib/python3.*
       - name: Run Molecule
         run: molecule test
   molecule-debian:
@@ -23,6 +25,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --user molecule[docker] molecule-plugins[docker]
+          sudo chown -cR runner /usr/local/lib/python3.*
       - name: Run Molecule
         run: molecule test --scenario-name debian
   molecule-kali:
@@ -33,5 +36,6 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --user molecule[docker] molecule-plugins[docker]
+          sudo chown -cR runner /usr/local/lib/python3.*
       - name: Run Molecule
         run: molecule test --scenario-name kali
