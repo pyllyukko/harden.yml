@@ -228,6 +228,16 @@
         mode: u-s
         owner: root
         group: root
+    - name: Remove SUID bits from /usr/bin/{gpasswd,newgrp}
+      tags: suid
+      ansible.builtin.file:
+        path: '{{ item }}'
+        mode: u-s
+        owner: root
+        group: root
+      with_items:
+        - /usr/bin/gpasswd
+        - /usr/bin/newgrp
 
 # ANSSI-BP-028 R50 - Limiting the rights to access sensitive files and directories
 - name: Chmod sensitive files
