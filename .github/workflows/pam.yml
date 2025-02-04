@@ -41,3 +41,107 @@ jobs:
           pamtester su nobody authenticate && exit 1
           # Unknown services should be denied by /etc/pam.d/other
           for operation in authenticate acct_mgmt chauthtok open_session; do echo "[*] Testing nonexistent service operation ${operation}"; pamtester nonexistent nobody "${operation}" && exit 1; done; true
+  libpamtest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install testing prerequisites
+        run: sudo apt-get install -y libcmocka-dev libpam-wrapper libpam0g-dev libpamtest0-dev
+      - name: Show PAM version
+        run: apt-cache show libpam-modules
+      - name: Compile test program
+        run: pushd tests && make -f ../Makefile test && popd
+      # This should fail as pam_matrix is not in use yet
+      - name: Run tests - round 1
+        run: tests/test -t 1 -r 2
+      - name: Prepare environment for testing
+        run: ansible-playbook tests/pamtests.yml --tags setup
+      - name: Run tests - round 2
+        run: |
+          # Show user
+          id
+          # Authentication should succeed against pam_matrix
+          echo '[*] Test 1 - root login:auth'
+          tests/test -t 1 -r 0
+          # pam_unix(login:account) should block as invalid user
+          # This test should always succeed
+          echo '[*] Test 2 - invalid account'
+          tests/test -t 2
+          # These will fail as a regular user with "unix_chkpwd[1550490]: could not obtain user info (root)"
+          #echo '[*] Test 3'
+          #tests/test -t 3 -r 2
+          #echo '[*] Test 4'
+          #tests/test -t 4 -r 2
+          #echo '[*] Test 5'
+          #tests/test -t 5 -r 2
+          #echo '[*] Test 6'
+          #tests/test -t 6 -r 2
+          # Should work as root
+          echo '[*] Test 3 - root login:account'
+          sudo tests/test -t 3 -r 0
+          echo '[*] Test 4 - root cron:account'
+          sudo tests/test -t 4 -r 0
+          # Nothing's preventing user nobody from using cron
+          echo '[*] Test 5 - nobody cron:account'
+          sudo tests/test -t 5 -r 0
+          # Nothing's preventing user nobody from authenticating
+          echo '[*] Test 6 - nobody login:auth'
+          sudo tests/test -t 6 -r 0
+          # Test pam_nologin
+          sudo touch /etc/nologin
+          echo '[*] Test 6 - nobody login:auth (nologin)'
+          sudo tests/test -t 6 -r 2
+          sudo rm -v /etc/nologin
+          # Anyone can use su
+          echo '[*] Test 7 - nobody su:auth'
+          tests/test -t 7 -r 0
+          echo '[*] Test 8 - root login:auth (wrong password)'
+          # Wrong password
+          time tests/test -t 8 -r 0
+      - name: Harden PAM
+        run: |
+          ansible-playbook harden.yml --tags pam --skip-tags slackware
+          sudo pam-auth-update --enable access
+          sudo pam-auth-update --disable polyinstation
+          sudo pam-auth-update --disable lastlog
+          # Re-create common-auth-matrix
+          sudo rm -v /etc/pam.d/common-auth-matrix
+          ansible-playbook tests/pamtests.yml --tags setup
+      - name: Run tests - post-harden
+        run: |
+          echo '[*] Test 2 - invalid account'
+          tests/test -t 2
+          # Login for "nobody" should be blocked by hardened configuration even with a valid password
+          echo '[*] Test 6 - nobody login:auth'
+          sudo tests/test -t 6 -r 2
+          # Use of su should be denied
+          echo '[*] Test 7 - nobody su:auth'
+          tests/test -t 7 -r 2
+          # Test failed login & pam_faillock
+          # The test fails (returns PAMTEST_ERR_CASE) because "auth [default=die] pam_faillock.so authfail"
+          # We need Sudo to be able to write to faillock
+          echo '[*] Test 8 - root login:auth (wrong password)'
+          time sudo tests/test -t 8 -r 2
+          sudo tests/test -t 8 -r 2
+          sudo tests/test -t 8 -r 2
+          sudo tests/test -t 8 -r 2
+          sudo tests/test -t 8 -r 2
+          sudo ls -l /var/run/faillock/
+          sudo faillock --user root
+      - name: chmod /var/log/auth.log
+        run: sudo chmod -c 644 /var/log/auth.log
+      - name: Archive auth.log
+        uses: actions/upload-artifact@v4
+        with:
+          name: auth.log
+          path: |
+            /var/log/auth.log
+            /etc/pam.d/common-account
+            /etc/pam.d/common-auth
+            /etc/pam.d/common-auth-matrix
+            /etc/pam.d/common-password
+            /etc/pam.d/common-session
+            /etc/pam.d/login
+            /etc/pam.d/su
+            /etc/security/faillock.conf
