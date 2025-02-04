@@ -69,6 +69,7 @@
 #   * samba
 #   * httpd & php
 #   * mariadb
+# ANSSI-BP-028 R58 - Installing only strictly necessary packages
 - name: Remove stuff
   become: true
   tags: slackware
@@ -258,6 +259,7 @@
   become: true
   tags: ntp
   block:
+    # ANSSI-BP-028 R51 - Changing the secrets and access rights as soon as possible
     - name: Comment out default keys from /etc/ntp.keys
       register: result
       failed_when:

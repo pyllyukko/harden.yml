@@ -207,6 +207,7 @@
         insertbefore: '^# here are the per-package modules \(the "Primary" block\)$'
         backup: true
 
+# ANSSI-BP-028 R31 - User password strength
 - name: Slackware system-auth
   become: true
   when: ansible_distribution == "Slackware"
@@ -396,6 +397,7 @@
     - pam
     - passwords
   block:
+    # ANSSI-BP-028 R31 - User password strength
     - name: Install passwdqc (Debian)
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
       ansible.builtin.apt:
@@ -405,7 +407,7 @@
         - debian
         - passwords
         - packages
-    # TODO: Verify that pwquality is used by pam configs
+    # ANSSI-BP-028 R31 - User password strength
     - name: Install libpwquality (Slackware)
       when: ansible_distribution == "Slackware"
       community.general.slackpkg:
@@ -415,6 +417,7 @@
         - slackware
         - passwords
         - packages
+    # ANSSI-BP-028 R68 - Protecting the stored passwords
     # https://github.com/linux-pam/linux-pam/issues/352
     - name: Add rounds={{ crypt_rounds }} to pam_unix in /etc/pam.d/common-password
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
@@ -426,6 +429,7 @@
         backup: true
     # CIS CentOS Linux 7 Benchmark v3.0.0 - 5.3.1 Ensure password creation requirements are configured
     # https://www.redhat.com/sysadmin/more-lockdown-controls
+    # ANSSI-BP-028 R31 - User password strength
     - name: Configure pwquality
       ansible.builtin.replace:
         path: /etc/security/pwquality.conf
@@ -466,6 +470,7 @@
       with_dict:
         core: 0
         nproc: '{{ nproc_limit }}'
+    # ANSSI-BP-028 R34 - Disabling the service accounts
     - name: Set nproc to 0 in limits.conf for system users that don't need to run any processes
       tags: accounts
       community.general.pam_limits:

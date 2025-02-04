@@ -1,4 +1,6 @@
 ---
+# ANSSI-BP-028 R37 - Using Mandatory Access Control features
+# ANSSI-BP-028 R45 - Activating AppArmor security profiles
 - name: Install AppArmor
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
   become: true

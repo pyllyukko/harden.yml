@@ -1,4 +1,5 @@
 ---
+# ANSSI-BP-028 R71 - Implementing a logging system
 # For tests that might not have this installed
 - name: Install logrotate package (Slackware)
   when: ansible_distribution == "Slackware"

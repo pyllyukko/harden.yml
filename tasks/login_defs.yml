@@ -254,6 +254,7 @@
 
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.2 Ensure system accounts are secured
 # Slackware Linux Benchmark v1.1 - 8.1 Block System Accounts
+# ANSSI-BP-028 R34 - Disabling the service accounts
 - name: Lock system accounts
   ansible.builtin.user:
     name: '{{ item.key }}'

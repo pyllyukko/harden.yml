@@ -42,6 +42,7 @@
 #    fstype: proc
 
 # fstab
+# ANSSI-BP-028 R28 - Typical partitioning
 - name: Stat /etc/fstab.new
   tags:
     - fstab
@@ -135,6 +136,8 @@
     - result.failed == true
     - result.state != "absent"
 
+# ANSSI-BP-028 R56 - Avoiding using executables with setuid and setgid rights
+# ANSSI-BP-028 R57 - Avoiding using executables with setuid root and setgid root rights
 - name: SUID bits
   become: true
   tags: permissions
