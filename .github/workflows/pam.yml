@@ -86,6 +86,11 @@ jobs:
           # Nothing's preventing user nobody from authenticating
           echo '[*] Test 6 - nobody login:auth'
           sudo tests/test -t 6 -r 0
+          # Test pam_nologin
+          sudo touch /etc/nologin
+          echo '[*] Test 6 - nobody login:auth (nologin)'
+          sudo tests/test -t 6 -r 2
+          sudo rm -v /etc/nologin
           # Anyone can use su
           echo '[*] Test 7 - nobody su:auth'
           tests/test -t 7 -r 0
