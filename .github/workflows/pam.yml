@@ -60,7 +60,7 @@ jobs:
           # Show user
           id
           # Authentication should succeed against pam_matrix
-          echo '[*] Test 1'
+          echo '[*] Test 1 - root login:auth'
           tests/test -t 1 -r 0
           # pam_unix(login:account) should block as invalid user
           # This test should always succeed
@@ -76,18 +76,20 @@ jobs:
           #echo '[*] Test 6'
           #tests/test -t 6 -r 2
           # Should work as root
-          echo '[*] Test 7'
+          echo '[*] Test 3 - root login:account'
           sudo tests/test -t 3 -r 0
-          echo '[*] Test 8'
+          echo '[*] Test 4 - root cron:account'
           sudo tests/test -t 4 -r 0
-          echo '[*] Test 9'
+          # Nothing's preventing user nobody from using cron
+          echo '[*] Test 5 - nobody cron:account'
           sudo tests/test -t 5 -r 0
-          echo '[*] Test 10'
+          # Nothing's preventing user nobody from authenticating
+          echo '[*] Test 6 - nobody login:auth'
           sudo tests/test -t 6 -r 0
           # Anyone can use su
-          echo '[*] Test 11'
+          echo '[*] Test 7 - nobody su:auth'
           tests/test -t 7 -r 0
-          echo '[*] Test 12'
+          echo '[*] Test 8 - root login:auth (wrong password)'
           # Wrong password
           tests/test -t 8 -r 0
       - name: Harden PAM
