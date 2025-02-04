@@ -63,8 +63,9 @@ jobs:
           echo '[*] Test 1'
           tests/test -t 1 -r 0
           # pam_unix(login:account) should block as invalid user
-          echo '[*] Test 2'
-          tests/test -t 2 -r 2
+          # This test should always succeed
+          echo '[*] Test 2 - invalid account'
+          tests/test -t 2
           # These will fail as a regular user with "unix_chkpwd[1550490]: could not obtain user info (root)"
           #echo '[*] Test 3'
           #tests/test -t 3 -r 2
@@ -100,6 +101,8 @@ jobs:
           ansible-playbook tests/pamtests.yml --tags setup
       - name: Run tests - post-harden
         run: |
+          echo '[*] Test 2 - invalid account'
+          tests/test -t 2
           # Login for "nobody" should be blocked by hardened configuration even with a valid password
           sudo tests/test -t 6 -r 2
           # Use of su should be denied
