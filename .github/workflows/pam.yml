@@ -91,7 +91,7 @@ jobs:
           tests/test -t 7 -r 0
           echo '[*] Test 8 - root login:auth (wrong password)'
           # Wrong password
-          tests/test -t 8 -r 0
+          time tests/test -t 8 -r 0
       - name: Harden PAM
         run: |
           ansible-playbook harden.yml --tags pam --skip-tags slackware
