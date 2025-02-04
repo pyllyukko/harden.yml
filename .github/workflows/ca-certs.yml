@@ -7,6 +7,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Show ca-certificates version
+        run: apt-cache show ca-certificates
       - name: Run test_ca-certs.sh
         run: bash tests/test_ca-certs.sh
   crls:
@@ -14,5 +16,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Show ca-certificates version
+        run: apt-cache show ca-certificates
       - name: Fetch CRLs
         run: sudo make crls
