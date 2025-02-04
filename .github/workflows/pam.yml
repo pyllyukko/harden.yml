@@ -141,4 +141,5 @@ jobs:
             /etc/pam.d/common-password
             /etc/pam.d/common-session
             /etc/pam.d/login
+            /etc/pam.d/su
             /etc/security/faillock.conf
