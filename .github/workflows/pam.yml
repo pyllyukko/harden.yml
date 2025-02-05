@@ -141,6 +141,8 @@ jobs:
           sudo tests/test -t 8 -r 6
           sudo tests/test -t 8 -r 6
           # Should be locked after 3 attempts
+          # Return value will change from PAM_PERM_DENIED to PAM_AUTH_ERR from faillock preauth
+          sudo tests/test -t 8 -r 7
           sudo ls -l /var/run/faillock/
           sudo faillock --user root
           # Test that root account is locked
