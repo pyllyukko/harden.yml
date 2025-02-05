@@ -50,8 +50,7 @@ static void test_pam_authenticate(void **state)
   perr = run_pamtest("login", "root", &conv_data, tests, NULL);
   assert_int_equal(perr, PAMTEST_ERR_OK);
 }
-/* Test 8: root login:auth (wrong password)
- * This test should always succeed		*/
+/* Test 8: root login:auth (wrong password)	*/
 static void test_pam_authenticate_wrong_password(void **state)
 {
   enum pamtest_err perr;
@@ -61,7 +60,7 @@ static void test_pam_authenticate_wrong_password(void **state)
     NULL,
   };
   struct pam_testcase tests[] = {
-    pam_test(PAMTEST_AUTHENTICATE, PAM_PERM_DENIED),
+    pam_test(PAMTEST_AUTHENTICATE, testcase),
   };
 
   (void) state;	/* unused */

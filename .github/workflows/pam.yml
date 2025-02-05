@@ -100,7 +100,8 @@ jobs:
           tests/test -t 7 -r 0
           echo '[*] Test 8 - root login:auth (wrong password)'
           # Wrong password
-          time tests/test -t 8
+          # PAM_AUTH_ERR
+          time tests/test -t 8 -r 7
       - name: Harden PAM
         run: |
           ansible-playbook harden.yml --tags pam --skip-tags slackware
@@ -130,14 +131,14 @@ jobs:
           echo '[*] Test 7 - nobody su:auth (as root)'
           sudo tests/test -t 7 -r 0
           # Test failed login & pam_faillock
-          # The test fails (returns PAMTEST_ERR_CASE) because "auth [default=die] pam_faillock.so authfail"
           # We need Sudo to be able to write to faillock
+          # PAM_PERM_DENIED
           echo '[*] Test 8 - root login:auth (wrong password)'
-          time sudo tests/test -t 8
-          sudo tests/test -t 8
-          sudo tests/test -t 8
-          sudo tests/test -t 8
-          sudo tests/test -t 8
+          time sudo tests/test -t 8 -r 6
+          sudo tests/test -t 8 -r 6
+          sudo tests/test -t 8 -r 6
+          sudo tests/test -t 8 -r 6
+          sudo tests/test -t 8 -r 6
           sudo ls -l /var/run/faillock/
           sudo faillock --user root
       - name: chmod /var/log/auth.log
