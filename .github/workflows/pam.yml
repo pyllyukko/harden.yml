@@ -54,8 +54,8 @@ jobs:
         run: pushd tests && make -f ../Makefile test && popd
       # This should fail as pam_matrix is not in use yet
       - name: Run tests - round 1
-        # PAM_PERM_DENIED
-        run: tests/test -t 1 -r 6
+        # PAM_AUTH_ERR
+        run: tests/test -t 1 -r 7
       - name: Prepare environment for testing
         run: ansible-playbook tests/pamtests.yml --tags setup
       - name: Run tests - round 2
