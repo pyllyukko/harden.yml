@@ -130,8 +130,11 @@ jobs:
           # This should succeed because of pam_rootok
           echo '[*] Test 7 - nobody su:auth (as root)'
           sudo tests/test -t 7 -r 0
+
           # Test failed login & pam_faillock
           # We need Sudo to be able to write to faillock
+          # Test that the login is initially working before faillock kicks in
+          sudo tests/test -t 1 -r 0
           # PAM_PERM_DENIED
           echo '[*] Test 8 - root login:auth (wrong password)'
           time sudo tests/test -t 8 -r 6
