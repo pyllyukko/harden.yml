@@ -27,8 +27,9 @@
 #define ZERO_STRUCT(x) memset((char *)&(x), 0, sizeof(x))
 #endif
 
-uint8_t testcase = PAMTEST_ERR_OK;
+uint8_t testcase = PAM_SUCCESS;
 
+/* Test 1: root login:auth	*/
 static void test_pam_authenticate(void **state)
 {
   enum pamtest_err perr;
@@ -38,7 +39,7 @@ static void test_pam_authenticate(void **state)
     NULL,
   };
   struct pam_testcase tests[] = {
-    pam_test(PAMTEST_AUTHENTICATE, PAM_SUCCESS),
+    pam_test(PAMTEST_AUTHENTICATE, testcase),
   };
 
   (void) state;	/* unused */
@@ -47,8 +48,9 @@ static void test_pam_authenticate(void **state)
   conv_data.in_echo_off = trinity_authtoks;
 
   perr = run_pamtest("login", "root", &conv_data, tests, NULL);
-  assert_int_equal(perr, testcase);
+  assert_int_equal(perr, PAMTEST_ERR_OK);
 }
+/* Test 8: root login:auth (wrong password)	*/
 static void test_pam_authenticate_wrong_password(void **state)
 {
   enum pamtest_err perr;
@@ -58,7 +60,7 @@ static void test_pam_authenticate_wrong_password(void **state)
     NULL,
   };
   struct pam_testcase tests[] = {
-    pam_test(PAMTEST_AUTHENTICATE, PAM_AUTH_ERR),
+    pam_test(PAMTEST_AUTHENTICATE, testcase),
   };
 
   (void) state;	/* unused */
@@ -67,8 +69,10 @@ static void test_pam_authenticate_wrong_password(void **state)
   conv_data.in_echo_off = trinity_authtoks;
 
   perr = run_pamtest("login", "root", &conv_data, tests, NULL);
-  assert_int_equal(perr, testcase);
+  assert_int_equal(perr, PAMTEST_ERR_OK);
 }
+/* Test 6: nobody login:auth
+ * Depends on PAM configuration		*/
 static void test_pam_authenticate_nobody(void **state)
 {
   enum pamtest_err perr;
@@ -78,7 +82,7 @@ static void test_pam_authenticate_nobody(void **state)
     NULL,
   };
   struct pam_testcase tests[] = {
-    pam_test(PAMTEST_AUTHENTICATE, PAM_SUCCESS),
+    pam_test(PAMTEST_AUTHENTICATE, testcase),
   };
 
   (void) state;	/* unused */
@@ -87,8 +91,10 @@ static void test_pam_authenticate_nobody(void **state)
   conv_data.in_echo_off = trinity_authtoks;
 
   perr = run_pamtest("login", "nobody", &conv_data, tests, NULL);
-  assert_int_equal(perr, testcase);
+  assert_int_equal(perr, PAMTEST_ERR_OK);
 }
+/* Test 7: nobody su:auth
+ * Depends on PAM configuration		*/
 static void test_pam_authenticate_nobody_su(void **state)
 {
   enum pamtest_err perr;
@@ -98,7 +104,7 @@ static void test_pam_authenticate_nobody_su(void **state)
     NULL,
   };
   struct pam_testcase tests[] = {
-    pam_test(PAMTEST_AUTHENTICATE, PAM_SUCCESS),
+    pam_test(PAMTEST_AUTHENTICATE, testcase),
   };
 
   (void) state;	/* unused */
@@ -107,9 +113,10 @@ static void test_pam_authenticate_nobody_su(void **state)
   conv_data.in_echo_off = trinity_authtoks;
 
   perr = run_pamtest("su", "nobody", &conv_data, tests, NULL);
-  assert_int_equal(perr, testcase);
+  assert_int_equal(perr, PAMTEST_ERR_OK);
 }
-// This test should always succeed
+/* Test 2: Invalid user login:account
+ * This test should always succeed	*/
 static void test_pam_acct_invalid_user(void **state)
 {
   enum pamtest_err perr;
@@ -122,6 +129,8 @@ static void test_pam_acct_invalid_user(void **state)
   perr = run_pamtest("login", "trinity", NULL, tests, NULL);
   assert_int_equal(perr, PAMTEST_ERR_OK);
 }
+/* Test 3: root login:account
+ * This test should always succeed	*/
 static void test_pam_acct_root(void **state)
 {
   enum pamtest_err perr;
@@ -132,8 +141,10 @@ static void test_pam_acct_root(void **state)
   (void) state;	/* unused */
 
   perr = run_pamtest("login", "root", NULL, tests, NULL);
-  assert_int_equal(perr, testcase);
+  assert_int_equal(perr, PAMTEST_ERR_OK);
 }
+/* Test 4: root cron:account
+ * This test should always succeed	*/
 static void test_pam_acct_cron_root(void **state)
 {
   enum pamtest_err perr;
@@ -144,33 +155,27 @@ static void test_pam_acct_cron_root(void **state)
   (void) state;	/* unused */
 
   perr = run_pamtest("cron", "root", NULL, tests, NULL);
-  assert_int_equal(perr, testcase);
+  assert_int_equal(perr, PAMTEST_ERR_OK);
 }
+/* Test 5: nobody cron:account
+ * Depends on PAM configuration		*/
 static void test_pam_acct_cron_nobody(void **state)
 {
   enum pamtest_err perr;
   struct pam_testcase tests[] = {
-    pam_test(PAMTEST_ACCOUNT, PAM_SUCCESS),
+    pam_test(PAMTEST_ACCOUNT, testcase),
   };
 
   (void) state;	/* unused */
 
   perr = run_pamtest("cron", "nobody", NULL, tests, NULL);
-  assert_int_equal(perr, testcase);
+  assert_int_equal(perr, PAMTEST_ERR_OK);
 }
 void usage(void) {
   printf("\
 options:\n\
 	-h	this help\n\
 	-r int	expected return code\n\
-		return codes:\n\
-		0	PAMTEST_ERR_OK\n\
-		1	PAMTEST_ERR_START\n\
-		2	PAMTEST_ERR_CASE\n\
-		3	PAMTEST_ERR_OP\n\
-		4	PAMTEST_ERR_END\n\
-		5	PAMTEST_ERR_KEEPHANDLE\n\
-		6	PAMTEST_ERR_INTERNAL\n\
 	-t int	test #\n\
 		1	authenticate\n\
 		2	login:acct invalid user\n\
@@ -193,7 +198,7 @@ int main(int argc, char *argv[]) {
         break;
       case 'r':
         testcase = atoi(optarg);
-        if(testcase>PAMTEST_ERR_INTERNAL) {
+        if(testcase>=_PAM_RETURN_VALUES) {
           printf("invalid value\n");
           exit(0);
         }
