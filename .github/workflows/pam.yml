@@ -54,7 +54,8 @@ jobs:
         run: pushd tests && make -f ../Makefile test && popd
       # This should fail as pam_matrix is not in use yet
       - name: Run tests - round 1
-        run: tests/test -t 1 -r 2
+        # PAM_PERM_DENIED
+        run: tests/test -t 1 -r 6
       - name: Prepare environment for testing
         run: ansible-playbook tests/pamtests.yml --tags setup
       - name: Run tests - round 2
@@ -79,9 +80,9 @@ jobs:
           #tests/test -t 6 -r 2
           # Should work as root
           echo '[*] Test 3 - root login:account'
-          sudo tests/test -t 3 -r 0
+          sudo tests/test -t 3
           echo '[*] Test 4 - root cron:account'
-          sudo tests/test -t 4 -r 0
+          sudo tests/test -t 4
           # Nothing's preventing user nobody from using cron
           echo '[*] Test 5 - nobody cron:account'
           sudo tests/test -t 5 -r 0
@@ -89,16 +90,17 @@ jobs:
           echo '[*] Test 6 - nobody login:auth'
           sudo tests/test -t 6 -r 0
           # Test pam_nologin
+          # https://github.com/linux-pam/linux-pam/blob/master/modules/pam_nologin/pam_nologin.c
           sudo touch /etc/nologin
           echo '[*] Test 6 - nobody login:auth (nologin)'
-          sudo tests/test -t 6 -r 2
+          sudo tests/test -t 6 -r 7
           sudo rm -v /etc/nologin
           # Anyone can use su
           echo '[*] Test 7 - nobody su:auth'
           tests/test -t 7 -r 0
           echo '[*] Test 8 - root login:auth (wrong password)'
           # Wrong password
-          time tests/test -t 8 -r 0
+          time tests/test -t 8
       - name: Harden PAM
         run: |
           ansible-playbook harden.yml --tags pam --skip-tags slackware
@@ -112,21 +114,30 @@ jobs:
         run: |
           echo '[*] Test 2 - invalid account'
           tests/test -t 2
+          # Should be denied by pam_access
+          # PAM_AUTH_ERR
+          echo '[*] Test 5 - nobody cron:account'
+          sudo tests/test -t 5 -r 7
           # Login for "nobody" should be blocked by hardened configuration even with a valid password
+          # PAM_AUTH_ERR
           echo '[*] Test 6 - nobody login:auth'
-          sudo tests/test -t 6 -r 2
+          sudo tests/test -t 6 -r 7
           # Use of su should be denied
+          # PAM_PERM_DENIED
           echo '[*] Test 7 - nobody su:auth'
-          tests/test -t 7 -r 2
+          tests/test -t 7 -r 6
+          # This should succeed because of pam_rootok
+          echo '[*] Test 7 - nobody su:auth (as root)'
+          sudo tests/test -t 7 -r 0
           # Test failed login & pam_faillock
           # The test fails (returns PAMTEST_ERR_CASE) because "auth [default=die] pam_faillock.so authfail"
           # We need Sudo to be able to write to faillock
           echo '[*] Test 8 - root login:auth (wrong password)'
-          time sudo tests/test -t 8 -r 2
-          sudo tests/test -t 8 -r 2
-          sudo tests/test -t 8 -r 2
-          sudo tests/test -t 8 -r 2
-          sudo tests/test -t 8 -r 2
+          time sudo tests/test -t 8
+          sudo tests/test -t 8
+          sudo tests/test -t 8
+          sudo tests/test -t 8
+          sudo tests/test -t 8
           sudo ls -l /var/run/faillock/
           sudo faillock --user root
       - name: chmod /var/log/auth.log
