@@ -137,10 +137,13 @@ jobs:
           time sudo tests/test -t 8 -r 6
           sudo tests/test -t 8 -r 6
           sudo tests/test -t 8 -r 6
-          sudo tests/test -t 8 -r 6
-          sudo tests/test -t 8 -r 6
+          # Should be locked after 3 attempts
           sudo ls -l /var/run/faillock/
           sudo faillock --user root
+          # Test that root account is locked
+          # PAM_AUTH_ERR
+          echo '[*] Test 1 - root login:auth (with temporary lockout)'
+          sudo tests/test -t 1 -r 7
       - name: chmod /var/log/auth.log
         run: sudo chmod -c 644 /var/log/auth.log
       - name: Archive auth.log

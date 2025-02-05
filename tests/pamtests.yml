@@ -111,3 +111,11 @@
     #    path: "{{ tempdir_1.path }}"
     #    state: absent
     #  when: tempdir_1.path is defined
+    - name: Enable even_deny_root in /etc/security/faillock.conf
+      become: yes
+      tags: setup
+      ansible.builtin.replace:
+        path: /etc/security/faillock.conf
+        regexp: '^#?\s*(even_deny_root)$'
+        replace: '\1'
+        validate: '/bin/grep "^even_deny_root$" %s'
