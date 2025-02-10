@@ -57,6 +57,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 
 * :no_entry: Disables the use of certain kernel modules via `modprobe` (see [newconfs/modprobe.d/](newconfs/modprobe.d/))
     * Disable [Firewire](http://www.hermann-uwe.de/blog/physical-memory-attacks-via-firewire-dma-part-1-overview-and-mitigation)
+    * :warning: **WARNING**: Also disables `usb-storage`, which will disable support for USB mass medias
 * [sysctl](https://en.wikipedia.org/wiki/Sysctl) settings hardening
     * :keyboard: Enables [SAK](https://www.kernel.org/doc/Documentation/SAK.txt) and disables the other [magic SysRq stuff](https://www.kernel.org/doc/Documentation/sysrq.txt)
     * :no_entry: Restricts the use of `dmesg` by regular users
