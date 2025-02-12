@@ -113,6 +113,9 @@
 # This is risky business
 # PAM_ENV(8): "user supplied environment variables in the PAM environment could affect behavior of
 #              subsequent modules in the stack without the consent of the system administrator."
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1018260
+# https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=1095800
+# https://www.debian.org/releases/trixie/release-notes/issues.en.html#openssh-server-no-longer-reads-pam-environment
 - name: Remove user_readenv=1 (deprecated reading of user environment) from /etc/pam.d/sshd
   become: true
   tags:
