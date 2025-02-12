@@ -109,6 +109,25 @@
     - result.failed
     - '"does not exist !" not in result.msg'
 
+# Debian has deprecated reading of user environment enabled
+# This is risky business
+# PAM_ENV(8): "user supplied environment variables in the PAM environment could affect behavior of
+#              subsequent modules in the stack without the consent of the system administrator."
+- name: Remove user_readenv=1 (deprecated reading of user environment) from /etc/pam.d/sshd
+  become: true
+  tags:
+    - configuration
+    - pam
+  ansible.builtin.replace:
+    path: /etc/pam.d/sshd
+    regexp: '\s+user_readenv=1'
+    replace: ''
+    backup: true
+  register: result
+  failed_when:
+    - result.failed
+    - '"does not exist !" not in result.msg'
+
 # http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html
 # https://tldp.org/HOWTO/User-Authentication-HOWTO/x263.html#AEN266
 - name: /etc/pam.d/other
