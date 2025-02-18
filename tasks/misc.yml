@@ -327,6 +327,10 @@
         /usr/bin/sleep: sleep
         /usr/bin/chmod: chmod
         /usr/bin/rm: rm
+      register: result
+      failed_when:
+        - result.failed
+        - '"src file does not exist" not in result.msg'
     - name: Set PATH in /etc/environment
       tags: pam
       ansible.builtin.lineinfile:
