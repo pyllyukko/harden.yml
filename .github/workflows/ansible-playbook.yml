@@ -143,8 +143,11 @@ jobs:
       - name: Archive Lynis log
         uses: actions/upload-artifact@v4
         with:
-          name: lynis-shells.log
-          path: /var/log/lynis.log
+          name: shells
+          path: |
+            /var/log/lynis.log
+            /etc/shells
+            /etc/profile
       - name: Check Lynis score
         run: sudo bash tests/check_lynis_score.sh 100
   malware:
