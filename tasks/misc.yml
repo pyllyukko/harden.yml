@@ -279,3 +279,94 @@
       failed_when:
         - result.failed
         - result.msg != "Destination /etc/ntp.conf does not exist !"
+
+# https://github.com/pyllyukko/harden.yml/wiki/Restricted-shell
+- name: rbash
+  become: true
+  tags: shells
+  block:
+    - name: Create a rbash symbolic link
+      ansible.builtin.file:
+        src: /bin/bash
+        dest: /usr/local/bin/rbash
+        owner: root
+        group: root
+        state: link
+    - name: mkdir /usr/local/rbin
+      ansible.builtin.file:
+        path: /usr/local/rbin
+        state: directory
+        mode: '0755'
+        owner: root
+        group: root
+    - name: Create symbolic links to /usr/local/rbin/
+      ansible.builtin.file:
+        src: '{{ item.key }}'
+        dest: '/usr/local/rbin/{{ item.value }}'
+        owner: root
+        group: root
+        state: link
+      # Basic set of tools
+      with_dict:
+        /bin/cat: cat
+        /usr/bin/chage: chage
+        /bin/cp: cp
+        /bin/df: df
+        /bin/du: du
+        /bin/id: id
+        /bin/ls: ls
+        /bin/mkdir: mkdir
+        /bin/mv: mv
+        /usr/bin/passwd: passwd
+        /bin/printenv: printenv
+        /usr/bin/view: rview
+        /usr/bin/vim: rvim
+        /bin/uname: uname
+        /usr/bin/uptime: uptime
+        /bin/who: who
+        /usr/bin/sleep: sleep
+        /usr/bin/chmod: chmod
+        /usr/bin/rm: rm
+    - name: Set PATH in /etc/environment
+      tags: pam
+      ansible.builtin.lineinfile:
+        path: /etc/environment
+        regexp: '^PATH=/usr/local/rbin$'
+        line: PATH=/usr/local/rbin
+        owner: root
+        group: root
+        mode: '0644'
+    - name: Make sure rbash is not in the /etc/shells configuration
+      ansible.builtin.lineinfile:
+        path: /etc/shells
+        state: absent
+        regexp: '^.+/rbash$'
+    - name: Configure rbash stuff into /etc/profile
+      ansible.builtin.blockinfile:
+        path: /etc/profile
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - rbash"
+        block: |
+          # This needs to come after the /etc/profile.d stuff to properly restrict PATH
+          # and to avoid unnecessary error messages.
+          if [ "$SHELL" = "/bin/rbash" ]
+          then
+            export PATH="/usr/local/rbin"
+            typeset -r HISTFILE
+            typeset -r LESSSECURE
+            # Not entirely sure if these kind of IFS hacks still exists, but better safe than sorry.
+            # See http://linuxshellaccount.blogspot.fi/2008/05/restricted-accounts-and-vim-tricks-in.html
+            # Also http://www.securityfocus.com/bid/454/exploit/ - old school =)
+            #
+            # Also http://www.tldp.org/HOWTO/Secure-Programs-HOWTO/environment-variables.html#ENV-VARS-DANGEROUS
+            typeset -r IFS
+            # rbash takes care of SHELL, PATH, ENV, and BASH_ENV
+
+            # Override the one set at /etc/profile.d/coreutils-dircolors.sh, since that
+            # uses /bin/ls.
+            alias ls='ls $LS_OPTIONS'
+
+            # Activate the restrictions before user's configuration is being read.
+            set -r
+            # Let the user know this is a restricted environment.
+            shopt restricted_shell
+          fi
