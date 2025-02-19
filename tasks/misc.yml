@@ -355,6 +355,8 @@
           if [ "$SHELL" = "/bin/rbash" ]
           then
             export PATH="/usr/local/rbin"
+            # This is to prevent user's startup files from modifying PATH
+            typeset -r PATH
             typeset -r HISTFILE
             export LESSSECURE=1
             typeset -r LESSSECURE
@@ -364,7 +366,6 @@
             #
             # Also http://www.tldp.org/HOWTO/Secure-Programs-HOWTO/environment-variables.html#ENV-VARS-DANGEROUS
             typeset -r IFS
-            # rbash takes care of SHELL, PATH, ENV, and BASH_ENV
 
             # Override the one set at /etc/profile.d/coreutils-dircolors.sh, since that
             # uses /bin/ls.
