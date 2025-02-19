@@ -356,6 +356,7 @@
           then
             export PATH="/usr/local/rbin"
             typeset -r HISTFILE
+            export LESSSECURE=1
             typeset -r LESSSECURE
             # Not entirely sure if these kind of IFS hacks still exists, but better safe than sorry.
             # See http://linuxshellaccount.blogspot.fi/2008/05/restricted-accounts-and-vim-tricks-in.html
