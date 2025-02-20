@@ -284,11 +284,13 @@
 - name: rbash
   become: true
   tags: shells
+  # Currently we have PAM configs only for Slackware & Debian
+  when: ansible_distribution == "Slackware" or ansible_distribution == "Debian"
   block:
     - name: Create a rbash symbolic link
       ansible.builtin.file:
         src: /bin/bash
-        dest: /usr/local/bin/rbash
+        dest: /bin/rbash
         owner: root
         group: root
         state: link
@@ -331,10 +333,10 @@
       failed_when:
         - result.failed
         - '"src file does not exist" not in result.msg'
-    - name: Set PATH in /etc/environment
+    - name: Set PATH in /etc/restricted_env
       tags: pam
       ansible.builtin.lineinfile:
-        path: /etc/environment
+        path: /etc/restricted_env
         regexp: '^PATH=/usr/local/rbin$'
         line: PATH=/usr/local/rbin
         owner: root
@@ -344,7 +346,7 @@
       ansible.builtin.lineinfile:
         path: /etc/shells
         state: absent
-        regexp: '^.+/rbash$'
+        regexp: '^(/usr)?/bin/rbash$'
     - name: Configure rbash stuff into /etc/profile
       ansible.builtin.blockinfile:
         path: /etc/profile
