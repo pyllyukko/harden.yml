@@ -199,6 +199,7 @@
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
       tags:
         - debian
+        - molecule-notest
     - name: Mask tracker-miner-fs-3 & tracker-extract-3 systemd units
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
       become: true
@@ -213,6 +214,9 @@
       with_items:
         - tracker-miner-fs-3
         - tracker-extract-3
+      tags:
+        - debian
+        - molecule-notest
 
 # SHLL-6211
 - name: Remove extraneous shells from /etc/shells
