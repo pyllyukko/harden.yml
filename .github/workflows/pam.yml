@@ -178,8 +178,16 @@ jobs:
           cat 0<<EOF | sha512sum -c
           0285899c74c51a968eddd920281972ce4c432f487fc19a4db94a4093621282d2059eeb276b00bdfecc2cd645c6a70f2d1da74d89277fd6186d3639a28e102c5e  pam-files/sshd
           1ee952e39eee796af335cfa69fbed69b51f76faf3a279a2526c9fdd89fb34216c19ad323e7ff97048c80567fd1bb625f384183c22bf0ea04041a25b365cef8a2  pam-files/xscreensaver
+          25af00fb379de78d2807e1f291fcf6a44a097dc4bbbe4f5ef8cc54deccba69428e72ad32cae65fd2e2b0d29a0233513fecc033b99a207890e6fb9cd7d98f87c2  pam-files/chfn
+          25af00fb379de78d2807e1f291fcf6a44a097dc4bbbe4f5ef8cc54deccba69428e72ad32cae65fd2e2b0d29a0233513fecc033b99a207890e6fb9cd7d98f87c2  pam-files/chsh
           7750b5480178346bdf856d83e3aecf637f9888380657d2fe863096959ebc02a5e52fbab08bad9c4ae9e1c4f257dbe1d155eef8dd8dc1b9ac178b90e0ada5b6cb  pam-files/runuser
           9b39d1238b4686cb17e04051e0b5f9a5bd264e7789c6cf5409d7ed5114de781d28fbc8a7457f1ea67664ec595313e2c49710ac1a2480dbc49ed3d6ccf91bb3e6  pam-files/runuser-l
           c4468029c85cf3346bb34c1ba6682e185b681569beefe2fa6bd6233b15cf9d4f37e916791f5b2d1385ba97f7d0287116b9f6e2a3e458ff2abcc68224c9e597f9  pam-files/login
           c4468029c85cf3346bb34c1ba6682e185b681569beefe2fa6bd6233b15cf9d4f37e916791f5b2d1385ba97f7d0287116b9f6e2a3e458ff2abcc68224c9e597f9  pam-files/remote
           EOF
+      - name: Archive pam-files
+        uses: actions/upload-artifact@v4
+        with:
+          name: pam-files
+          path: |
+            pam-files/*
