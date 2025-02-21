@@ -294,13 +294,16 @@
         owner: root
         group: root
         state: link
-    - name: mkdir /usr/local/rbin
+    - name: Create directories for restricted shell
       ansible.builtin.file:
-        path: /usr/local/rbin
+        path: '{{ item }}'
         state: directory
         mode: '0755'
         owner: root
         group: root
+      with_items:
+        - /usr/local/rbin
+        - /var/empty
     - name: Create symbolic links to /usr/local/rbin/
       ansible.builtin.file:
         src: '{{ item.key }}'
@@ -370,6 +373,8 @@
             # Override the one set at /etc/profile.d/coreutils-dircolors.sh, since that
             # uses /bin/ls.
             alias ls='ls $LS_OPTIONS'
+            # Before activating the restrictions, jump to a non-writable directory
+            cd /var/empty
             # Activate the restrictions before user's configuration is being read.
             set -r
             # Let the user know this is a restricted environment.
