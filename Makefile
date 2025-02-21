@@ -168,20 +168,20 @@ pam-files/su pam-files/su-l: | $(CWD)/pam-files/
 	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/a/shadow/pam.d-su/$(notdir $@)
 
 pam-files/sshd: | $(CWD)/pam-files/
-	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/n/openssh/sshd.pam
+	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/patches/source/openssh/sshd.pam
 
 # See https://github.com/pyllyukko/harden.yml/wiki/PAM#etcpamdremote
 pam-files/login pam-files/remote: | $(CWD)/pam-files/
-	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/a/util-linux/pam.d/login
+	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/patches/source/util-linux/pam.d/login
 
 pam-files/chfn pam-files/chsh pam-files/runuser pam-files/runuser-l: | $(CWD)/pam-files/
-	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/a/util-linux/pam.d/$(notdir $@)
+	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/patches/source/util-linux/pam.d/$(notdir $@)
 
 pam-files/sddm pam-files/sddm-autologin pam-files/sddm-greeter: | $(CWD)/pam-files/
 	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/kde/kde/post-install/sddm/pam.d/$(notdir $@)
 
 pam-files/xscreensaver: | $(CWD)/pam-files/
-	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/xap/xscreensaver/xscreensaver.pam
+	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/patches/source/xscreensaver/xscreensaver.pam
 
 pam-files/screen: | $(CWD)/pam-files/
 	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/ap/screen/screen.pam
