@@ -93,6 +93,7 @@
     - '"does not exist !" not in result.msg'
 
 # This also relates to restricted shells
+# Debian's config from https://salsa.debian.org/ssh-team/openssh/-/blob/master/debian/openssh-server.sshd.pam.in
 - name: Copy /etc/pam.d/sshd
   when: ansible_distribution == "Slackware" or ansible_distribution == "Debian"
   become: true
