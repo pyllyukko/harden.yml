@@ -681,6 +681,10 @@ ALLOWHIDDENDIR=/etc/.pihole
 {% if ansible_distribution_version == "15.0" %}
 ALLOWHIDDENFILE=/usr/man/man5/.k5identity.5
 ALLOWHIDDENFILE=/usr/man/man5/.k5login.5
+# Linode Network Helper
+# https://www.linode.com/docs/guides/network-helper/
+ALLOWHIDDENFILE=/etc/.resolv.conf.linode-last
+ALLOWHIDDENFILE=/etc/.resolv.conf.linode-orig
 {% endif %}
 {% if ansible_distribution_version == "14.2" %}
 ALLOWHIDDENFILE=/usr/man/man5/.k5identity.5.gz
