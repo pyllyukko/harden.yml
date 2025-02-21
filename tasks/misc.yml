@@ -334,14 +334,16 @@
         - result.failed
         - '"src file does not exist" not in result.msg'
     - name: Set PATH in /etc/restricted_env
-      tags: pam
-      ansible.builtin.lineinfile:
-        path: /etc/restricted_env
-        regexp: '^PATH=/usr/local/rbin$'
-        line: PATH=/usr/local/rbin
+      tags:
+        - pam
+        - configuration
+      ansible.builtin.copy:
+        dest: /etc/restricted_env
         owner: root
         group: root
         mode: '0644'
+        content: |
+          PATH=/usr/local/rbin
     - name: Make sure rbash is not in the /etc/shells configuration
       ansible.builtin.lineinfile:
         path: /etc/shells
