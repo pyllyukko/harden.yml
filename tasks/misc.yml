@@ -369,7 +369,7 @@
             export SYSTEMD_PAGER=/usr/bin/less
             export VISUAL=/usr/local/rbin/rvim
             # These need to be set read-only here to prevent user's startup files from modifying them later
-            typeset -r PATH HISTFILE LESSSECURE IFS PAGER MANPAGER SYSTEMD_PAGER SHELL VISUAL
+            typeset -r PATH HISTFILE LESSSECURE IFS PAGER MANPAGER SYSTEMD_PAGER SHELL VISUAL ENV BASH_ENV
             # Override the one set at /etc/profile.d/coreutils-dircolors.sh, since that
             # uses /bin/ls.
             alias ls='ls $LS_OPTIONS'
