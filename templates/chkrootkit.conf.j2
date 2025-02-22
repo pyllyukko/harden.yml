@@ -63,7 +63,7 @@ IGNORE_FILE="/etc/chkrootkit/chkrootkit.ignore"
 ## Email address to which output is sent.
 #  If empty, no email is sent by chkrootkit-daily: output is left on stdout
 #  (if running under cron stdout may be emailed)
-MAILTO="root"
+MAILTO="{{ alert_email }}"
 
 
 ### The remaining options are commented out as the defaults are likely

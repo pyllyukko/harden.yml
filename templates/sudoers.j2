@@ -34,6 +34,7 @@ Cmnd_Alias	NOIOLOG = /usr/bin/sudoreplay
 ##
 Defaults	secure_path="/usr/sbin:/usr/bin:/sbin:/bin"
 Defaults	mail_badpass, mail_no_host, mail_no_perms, mail_no_user
+Defaults	mailto="{{ alert_email }}"
 Defaults	env_reset
 {% if ansible_distribution == "Slackware" %}
 Defaults	syslog=auth, syslog_pid
