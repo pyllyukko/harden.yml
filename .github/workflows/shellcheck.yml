@@ -1,6 +1,8 @@
 ---
 name: shellcheck
 on: [push, pull_request]
+env:
+  ANSIBLE_FORCE_COLOR: '1'
 jobs:
   profile_d:
     runs-on: ubuntu-latest

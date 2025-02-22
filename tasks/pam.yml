@@ -69,7 +69,8 @@
     - umask
 
 # ANSSI-BP-028 R55 - Dedicating temporary directories to users
-- name: Add pam_namespace to /etc/pam.d/{login,sddm,sshd,xdm} (Slackware)
+# sshd is handled by the task below
+- name: Add pam_namespace to /etc/pam.d/{login,sddm,xdm} (Slackware)
   when: ansible_distribution == "Slackware"
   become: true
   ansible.builtin.lineinfile:
@@ -79,7 +80,6 @@
     backup: true
     insertafter: EOF
   with_items:
-    - sshd
     - login
     - sddm
     - xdm
@@ -91,6 +91,25 @@
   failed_when:
     - result.failed
     - '"does not exist !" not in result.msg'
+
+# This also relates to restricted shells
+# Debian's config from https://salsa.debian.org/ssh-team/openssh/-/blob/master/debian/openssh-server.sshd.pam.in
+- name: Copy /etc/pam.d/sshd
+  when: ansible_distribution == "Slackware" or ansible_distribution == "Debian"
+  become: true
+  tags:
+    - pam
+    - configuration
+    - shells
+    - ssh
+    - services
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/newconfs/pam.d/sshd.{{ ansible_distribution }}"
+    dest: /etc/pam.d/sshd
+    owner: root
+    group: root
+    mode: '0644'
+    backup: true
 
 - name: Remove nullok from /etc/pam.d/vsftpd (Slackware)
   when: ansible_distribution == "Slackware"

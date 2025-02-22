@@ -283,3 +283,104 @@
       failed_when:
         - result.failed
         - result.msg != "Destination /etc/ntp.conf does not exist !"
+
+# https://github.com/pyllyukko/harden.yml/wiki/Restricted-shell
+- name: rbash
+  become: true
+  tags: shells
+  # Currently we have PAM configs only for Slackware & Debian
+  when: ansible_distribution == "Slackware" or ansible_distribution == "Debian"
+  block:
+    - name: Create a rbash symbolic link
+      ansible.builtin.file:
+        src: /bin/bash
+        dest: /bin/rbash
+        owner: root
+        group: root
+        state: link
+    - name: Create directories for restricted shell
+      ansible.builtin.file:
+        path: '{{ item }}'
+        state: directory
+        mode: '0755'
+        owner: root
+        group: root
+      with_items:
+        - /usr/local/rbin
+        - /var/empty
+    - name: Create symbolic links to /usr/local/rbin/
+      ansible.builtin.file:
+        src: '{{ item.key }}'
+        dest: '/usr/local/rbin/{{ item.value }}'
+        owner: root
+        group: root
+        state: link
+      # Basic set of tools
+      with_dict:
+        /bin/cat: cat
+        /usr/bin/chage: chage
+        /bin/cp: cp
+        /bin/df: df
+        /bin/du: du
+        /bin/id: id
+        /bin/ls: ls
+        /bin/mkdir: mkdir
+        /bin/mv: mv
+        /usr/bin/passwd: passwd
+        /bin/printenv: printenv
+        /usr/bin/view: rview
+        /usr/bin/vim: rvim
+        /bin/uname: uname
+        /usr/bin/uptime: uptime
+        /bin/who: who
+        /usr/bin/sleep: sleep
+        /usr/bin/chmod: chmod
+        /usr/bin/rm: rm
+      register: result
+      failed_when:
+        - result.failed
+        - '"src file does not exist" not in result.msg'
+    - name: Set PATH in /etc/restricted_env
+      tags:
+        - pam
+        - configuration
+      ansible.builtin.copy:
+        dest: /etc/restricted_env
+        owner: root
+        group: root
+        mode: '0644'
+        content: |
+          PATH=/usr/local/rbin
+    - name: Make sure rbash is not in the /etc/shells configuration
+      ansible.builtin.lineinfile:
+        path: /etc/shells
+        state: absent
+        regexp: '^(/usr)?/bin/rbash$'
+    - name: Configure rbash stuff into /etc/profile
+      ansible.builtin.blockinfile:
+        path: /etc/profile
+        marker: "# {mark} ANSIBLE MANAGED BLOCK - rbash"
+        block: |
+          # This needs to come after the /etc/profile.d stuff to properly restrict PATH
+          # and to avoid unnecessary error messages.
+          if [ "$SHELL" = "/bin/rbash" -o "$SHELL" = "/usr/local/bin/rbash" ]
+          then
+            export PATH="/usr/local/rbin"
+            export LESSSECURE=1
+            # Pagers & VISUAL
+            export PAGER=/usr/bin/less
+            export MANPAGER=/usr/bin/less
+            export SYSTEMD_PAGER=/usr/bin/less
+            export VISUAL=/usr/local/rbin/rvim
+            # These need to be set read-only here to prevent user's startup files from modifying them later
+            typeset -r PATH HISTFILE LESSSECURE IFS PAGER MANPAGER SYSTEMD_PAGER SHELL VISUAL ENV BASH_ENV
+            # Override the one set at /etc/profile.d/coreutils-dircolors.sh, since that
+            # uses /bin/ls.
+            alias ls='ls $LS_OPTIONS'
+            # Before activating the restrictions, jump to a non-writable directory
+            cd /var/empty
+            # Activate the restrictions before user's configuration is being read.
+            set -r
+            # Let the user know this is a restricted environment.
+            shopt restricted_shell
+          fi
