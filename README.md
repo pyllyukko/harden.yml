@@ -319,6 +319,11 @@ Other tags are just metadata for now. You can list all the tags with
 * You can run `make pamcheck` to see how the hardening modifies your PAM configurations in Slackware
 * :blowfish: You can create a new SSH moduli with `make /etc/ssh/moduli.new`
 
+Tests
+-----
+
+See [tests README](tests/README.md)
+
 References
 ----------
 
