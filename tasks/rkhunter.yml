@@ -22,6 +22,11 @@
       ansible.builtin.getent:
         database: passwd
       tags: check
+    - name: Stat /etc/polkit-1/rules.d
+      ansible.builtin.stat:
+        path: /etc/polkit-1/rules.d
+      register: stat_polkit_etc
+      tags: check
     - name: 'Create /etc/rkhunter.conf'
       ansible.builtin.template:
         src: "{{ playbook_dir }}/templates/rkhunter.conf.j2"
