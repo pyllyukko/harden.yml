@@ -549,7 +549,7 @@ USER_FILEPROP_FILES_DIRS=/lib/{{ ansible_architecture }}-linux-gnu/security/*.so
 USER_FILEPROP_FILES_DIRS=/etc/sudoers
 USER_FILEPROP_FILES_DIRS=/etc/sudoers.d
 {% if stat_polkit_etc.stat.exists %}
-USER_FILEPROP_FILES_DIRS=/etc/polkit-1/rules.d/*.rules
+USER_FILEPROP_FILES_DIRS=/etc/polkit-1/rules.d
 USER_FILEPROP_FILES_DIRS=/usr/share/polkit-1/rules.d/*.rules
 USER_FILEPROP_FILES_DIRS=/usr/share/polkit-1/actions/*.policy
 {% endif %}
