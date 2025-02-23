@@ -298,6 +298,22 @@
         - result.failed
         - result.msg != "Destination /etc/apt/listchanges.conf does not exist!"
 
+- name: Configure SENDMAILTO in /etc/logcheck/logcheck.conf
+  become: true
+  tags:
+    - debian
+    - configuration
+  ansible.builtin.replace:
+    path: /etc/logcheck/logcheck.conf
+    regexp: '^(SENDMAILTO=).+$'
+    replace: '\g<1>"{{ alert_email }}"'
+    validate: '/bin/grep "^SENDMAILTO=\"{{ alert_email }}\"$" %s'
+    backup: true
+  register: result
+  failed_when:
+    - result.failed
+    - result.msg != "Path /etc/logcheck/logcheck.conf does not exist !"
+
 # https://www.whonix.org/wiki/Packages_for_Debian_Hosts
 # https://www.kicksecure.com/wiki/Packages_for_Debian_Hosts#Supported_Packages
 # https://www.kicksecure.com/wiki/Linux_Kernel_Runtime_Guard_LKRG
