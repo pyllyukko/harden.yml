@@ -172,7 +172,7 @@
         replace: '\1 = {{ item.value }}'
       with_dict:
         space_left_action: email
-        action_mail_acct: root
+        action_mail_acct: '{{ alert_email }}'
         max_log_file_action: keep_logs
       tags: configuration
     - name: Start & enable auditing
