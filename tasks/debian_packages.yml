@@ -167,6 +167,18 @@
         vtype: select
         value: "{{ ansible_distribution_release }}"
       tags: configuration
+    - name: Configure debsecan MAILTO
+      tags:
+        - configuration
+      ansible.builtin.replace:
+        path: '{{ item }}'
+        regexp: '^(MAILTO)=.*$'
+        replace: '\g<1>={{ alert_email }}'
+        validate: '/bin/grep "^MAILTO={{ alert_email }}$" %s'
+        backup: true
+      with_items:
+        - /etc/default/debsecan
+        - /etc/cron.d/debsecan
 
 # debsums
 - name: debsums
@@ -215,9 +227,9 @@
         replace: '\g<1>{{ chkrootkit_conf_dir }}/chkrootkit.ignore'
     - name: Configure chkrootkit.conf
       tags: configuration
-      ansible.builtin.copy:
+      ansible.builtin.template:
         dest: "{{ chkrootkit_conf_dir }}/chkrootkit.conf"
-        src: chkrootkit.conf
+        src: chkrootkit.conf.j2
         owner: root
         group: root
         mode: '0600'
@@ -271,6 +283,36 @@
         group: root
         mode: '0644'
         force: false
+    - name: Configure email_address in /etc/apt/listchanges.conf
+      community.general.ini_file:
+        path: /etc/apt/listchanges.conf
+        section: apt
+        option: email_address
+        value: "{{ alert_email }}"
+        owner: root
+        group: root
+        mode: '0644'
+        create: false
+      register: result
+      failed_when:
+        - result.failed
+        - result.msg != "Destination /etc/apt/listchanges.conf does not exist!"
+
+- name: Configure SENDMAILTO in /etc/logcheck/logcheck.conf
+  become: true
+  tags:
+    - debian
+    - configuration
+  ansible.builtin.replace:
+    path: /etc/logcheck/logcheck.conf
+    regexp: '^(SENDMAILTO=).+$'
+    replace: '\g<1>"{{ alert_email }}"'
+    validate: '/bin/grep "^SENDMAILTO=\"{{ alert_email }}\"$" %s'
+    backup: true
+  register: result
+  failed_when:
+    - result.failed
+    - result.msg != "Path /etc/logcheck/logcheck.conf does not exist !"
 
 # https://www.whonix.org/wiki/Packages_for_Debian_Hosts
 # https://www.kicksecure.com/wiki/Packages_for_Debian_Hosts#Supported_Packages

@@ -384,3 +384,36 @@
             # Let the user know this is a restricted environment.
             shopt restricted_shell
           fi
+  # </rbash>
+
+- name: Configure MAILADDR in /etc/cron.daily/certwatch
+  become: true
+  when: ansible_distribution == "Slackware"
+  tags:
+    - slackware
+    - configuration
+    - pki
+  ansible.builtin.replace:
+    path: /etc/cron.daily/certwatch
+    regexp: '^(MAILADDR)=.+$'
+    replace: '\g<1>={{ alert_email }}'
+    validate: '/bin/grep "^MAILADDR={{ alert_email }}$" %s'
+    backup: true
+  register: result
+  failed_when:
+    - result.failed == true
+    - result.msg != "Path /etc/cron.daily/certwatch does not exist !"
+- name: Configure MAILADDR in /etc/mdadm.conf
+  become: true
+  tags:
+    - configuration
+  ansible.builtin.replace:
+    path: /etc/mdadm.conf
+    regexp: '^#?(MAILADDR\s+).*$'
+    replace: '\g<1>{{ alert_email }}'
+    validate: '/bin/grep "^MAILADDR\s\+{{ alert_email }}$" %s'
+    backup: true
+  register: result
+  failed_when:
+    - result.failed == true
+    - result.msg != "Path /etc/mdadm.conf does not exist !"

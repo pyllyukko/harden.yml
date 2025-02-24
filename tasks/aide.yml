@@ -25,10 +25,11 @@
     - name: Configure AIDE (/etc/default/aide)
       ansible.builtin.replace:
         path: /etc/default/aide
-        regexp: '^({{ item.key }}=).*$'
+        regexp: '^#?({{ item.key }}=).*$'
         replace: '\g<1>{{ item.value }}'
       with_dict:
         COPYNEWDB: ifnochange
+        MAILTO: '{{ alert_email }}'
       tags: configuration
       notify: "Create aide.db"
     - name: Exclude /net
