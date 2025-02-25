@@ -55,3 +55,21 @@
       ansible.builtin.assert:
         that: >
           - rkhunter.stat.exists
+    - name: Check that rounds is configured for pam_unix in /etc/pam.d/common-password
+      ansible.builtin.lineinfile:
+        path: /etc/pam.d/common-password
+        line: "password\t[success=1 default=ignore]\tpam_unix.so obscure use_authtok try_first_pass yescrypt rounds=500000"
+        state: present
+        regexp: '^password\s+.+\s+pam_unix\.so(?!.*\brounds=[0-9]+\b).*$'
+      check_mode: yes
+      register: conf
+      failed_when: (conf is changed) or (conf is failed)
+    - name: Check that config is configured for pam_passwdqc in /etc/pam.d/common-password
+      ansible.builtin.lineinfile:
+        path: /etc/pam.d/common-password
+        line: "password\trequisite\t\t\tpam_passwdqc.so config=/etc/passwdqc.conf"
+        state: present
+        regexp: '^password\s+requisite\s+pam_passwdqc\.so\s+config=/etc/passwdqc.conf'
+      check_mode: yes
+      register: conf
+      failed_when: (conf is changed) or (conf is failed)
