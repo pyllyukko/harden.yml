@@ -148,3 +148,13 @@
         - postfix-virtual
         - usr.lib.dovecot.dovecot-lda
         - usr.sbin.postqueue
+    - name: 'AppArmor: Copy local override for passwd'
+      tags:
+        - passwords
+        - pam
+      ansible.builtin.copy:
+        src: apparmor/usr.bin.passwd
+        dest: /etc/apparmor.d/local/usr.bin.passwd
+        owner: root
+        group: root
+        mode: '0600'

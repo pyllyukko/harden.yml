@@ -51,7 +51,7 @@ account     required      pam_permit.so
 # password quality checking, comment out these two lines and uncomment the
 # traditional password handling line below.
 {% if passwdqc_stat.stat.exists %}
-password    requisite     pam_passwdqc.so
+password    requisite     pam_passwdqc.so config=/etc/passwdqc.conf
 {% else %}
 password    requisite     pam_pwquality.so minlen=14 retry=3
 {% endif %}

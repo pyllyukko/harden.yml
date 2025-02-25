@@ -1,0 +1,5 @@
+# https://www.openwall.com/passwdqc/
+/etc/passwdqc.conf r,
+/opt/passwdqc/common-passwords-v7-100plus.pwq r,
+/opt/passwdqc/common-passwords-v7-20plus.pwq r,
+/opt/passwdqc/common-passwords-v7-20plus-rockyou.pwq r,
