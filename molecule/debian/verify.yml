@@ -69,7 +69,7 @@
         path: /etc/pam.d/common-password
         line: "password\trequisite\t\t\tpam_passwdqc.so config=/etc/passwdqc.conf"
         state: present
-        regexp: '^password\s+requisite\s+pam_passwdqc\.so\s+config=/etc/passwdqc.conf'
+        regexp: '^password\s+requisite\s+pam_passwdqc\.so\s+config=/etc/passwdqc\.conf'
       check_mode: yes
       register: conf
       failed_when: (conf is changed) or (conf is failed)
