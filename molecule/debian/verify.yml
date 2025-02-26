@@ -73,3 +73,30 @@
       check_mode: yes
       register: conf
       failed_when: (conf is changed) or (conf is failed)
+    - name: Check that pam_faillock.so preauth is configured to /etc/pam.d/common-auth
+      ansible.builtin.lineinfile:
+        path: /etc/pam.d/common-auth
+        line: "auth\trequired\t\t\tpam_faillock.so\tpreauth"
+        state: present
+        regexp: '^auth\s+required\s+pam_faillock\.so\s+preauth$'
+      check_mode: yes
+      register: conf
+      failed_when: (conf is changed) or (conf is failed)
+    - name: Check that pam_faillock.so authfail is configured to /etc/pam.d/common-auth
+      ansible.builtin.lineinfile:
+        path: /etc/pam.d/common-auth
+        line: "auth\t[default=die]                   pam_faillock.so authfail"
+        state: present
+        regexp: '^auth\s+\[default=die\]\s+pam_faillock\.so\s+authfail$'
+      check_mode: yes
+      register: conf
+      failed_when: (conf is changed) or (conf is failed)
+    - name: Check that pam_faildelay.so is present in /etc/pam.d/common-auth
+      ansible.builtin.lineinfile:
+        path: /etc/pam.d/common-auth
+        line: "auth\toptional\t\t\tpam_faildelay.so delay=20000000"
+        state: present
+        regexp: '^auth\s+optional\s+pam_faildelay\.so\s+delay=[0-9]+$'
+      check_mode: yes
+      register: conf
+      failed_when: (conf is changed) or (conf is failed)
