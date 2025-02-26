@@ -462,7 +462,7 @@
             replace: '\g<1>/opt/passwdqc/common-passwords-v7-20plus-rockyou.pwq'
             backup: true
           when: ((ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu") and stat_passwdqc_pwq.stat.exists) or
-                (ansible_distribution == "Slackware" and stat_passwdqc.stat.exists and stat_passwdqc_pwq.stat.exists)
+                (ansible_distribution == "Slackware" and passwdqc_stat.stat.exists and stat_passwdqc_pwq.stat.exists)
         - name: Configure pam_passwdqc to use passwdqc.conf (Debian)
           ansible.builtin.replace:
             path: /usr/share/pam-configs/passwdqc
