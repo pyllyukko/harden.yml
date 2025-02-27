@@ -554,6 +554,11 @@ USER_FILEPROP_FILES_DIRS=/usr/share/polkit-1/rules.d/*.rules
 USER_FILEPROP_FILES_DIRS=/usr/share/polkit-1/actions/*.policy
 {% endif %}
 USER_FILEPROP_FILES_DIRS=/var/spool/cron/crontabs
+USER_FILEPROP_FILES_DIRS=/etc/ld.so.conf
+USER_FILEPROP_FILES_DIRS=/etc/ld.so.conf.d
+{% if stat_ld_preload.stat.exists %}
+USER_FILEPROP_FILES_DIRS=/etc/ld.so.preload
+{% endif %}
 #EXCLUDE_USER_FILEPROP_FILES_DIRS=/opt/ps*
 
 #

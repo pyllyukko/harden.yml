@@ -27,6 +27,11 @@
         path: /etc/polkit-1/rules.d
       register: stat_polkit_etc
       tags: check
+    - name: Stat /etc/ld.so.preload
+      ansible.builtin.stat:
+        path: /etc/ld.so.preload
+      register: stat_ld_preload
+      tags: check
     - name: 'Create /etc/rkhunter.conf'
       ansible.builtin.template:
         src: "{{ playbook_dir }}/templates/rkhunter.conf.j2"
