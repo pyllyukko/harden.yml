@@ -31,7 +31,8 @@ for host in \
   zerossl.com			\
   github.com			\
   www.gandi.net			\
-  deb.debian.org
+  deb.debian.org		\
+  downloads.openwrt.org
 do
   echo "[*] Testing HTTPS for \`${host}'"
   openssl s_client -connect "${host}":443 -verify_return_error -CAfile "${ca_file}" -showcerts 0</dev/null || exit 1
