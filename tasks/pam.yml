@@ -220,7 +220,7 @@
     - authorization
   block:
     - name: Configure /etc/security/faillock.conf
-      ansible.builtin.template:
+      ansible.builtin.copy:
         src: security/faillock.conf.new
         dest: /etc/security/faillock.conf
         owner: root
