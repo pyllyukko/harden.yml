@@ -237,6 +237,10 @@
     - /bin/mksh
     - /bin/mksh-static
     - /usr/lib/klibc/bin/mksh-static
+    # Debian & Ubuntu
+    - /usr/bin/sh
+    - /usr/bin/bash
+    - /usr/bin/dash
 
 # https://www.freedesktop.org/software/systemd/man/coredump.conf.html
 # https://cisofy.com/lynis/controls/KRNL-5820/
