@@ -289,7 +289,7 @@
   become: true
   tags: shells
   # Currently we have PAM configs only for Slackware & Debian
-  when: ansible_distribution == "Slackware" or ansible_distribution == "Debian"
+  when: ansible_distribution == "Slackware" or ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
   block:
     - name: Create a rbash symbolic link
       ansible.builtin.file:
