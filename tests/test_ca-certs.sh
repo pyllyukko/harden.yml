@@ -10,7 +10,7 @@ do
     exit 1
   fi
   cat "/usr/share/ca-certificates/${REPLY}"
-done 0<newconfs/ca-certificates.conf.new 1>"${ca_file}"
+done 0<files/ca-certificates.conf.new 1>"${ca_file}"
 
 # HTTPS
 for host in \
