@@ -16,7 +16,7 @@ fi
 
 if [ ${#} -eq 1 ] && [[ ${1} =~ ^[0-9]+$ ]]
 then
-  if [ ${hardening_index} -lt ${1} ]
+  if [ "${hardening_index}" -lt "${1}" ]
   then
     echo "[-] Hardening index too low" 1>&2
     exit 1

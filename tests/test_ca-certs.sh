@@ -2,7 +2,7 @@
 
 ca_file=./ca-certificates.crt
 
-while read
+while read -r
 do
   if [ ! -f "/usr/share/ca-certificates/${REPLY}" ]
   then
