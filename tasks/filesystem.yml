@@ -513,7 +513,7 @@
         mode: '0400'
         owner: root
         group: root
-      # https://github.com/pyllyukko/harden.sh/issues/47
+      # https://github.com/pyllyukko/harden.yml/issues/47
       register: result
       failed_when:
         - result.failed == true

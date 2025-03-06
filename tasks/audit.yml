@@ -1,5 +1,5 @@
 ---
-# Some documentation available at https://github.com/pyllyukko/harden.sh/wiki/audit
+# Some documentation available at https://github.com/pyllyukko/harden.yml/wiki/audit
 # ANSSI-BP-028 R73 - Logging the system activity with auditd
 - name: Install auditing
   become: true

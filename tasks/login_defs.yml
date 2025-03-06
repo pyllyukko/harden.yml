@@ -66,7 +66,7 @@
 # Slackware Linux Benchmark v1.1 - 7.8 Restrict Root Logins To System Console
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.5 Ensure root login is restricted to system console
 # https://www.debian.org/doc/manuals/securing-debian-manual/restrict-console-login.en.html
-# https://github.com/pyllyukko/harden.sh/issues/47
+# https://github.com/pyllyukko/harden.yml/issues/47
 - name: Limit the list of terminals from which root can log in (securetty)
   become: true
   ansible.builtin.copy:
