@@ -56,7 +56,7 @@
   when: ansible_distribution == "Slackware"
   become: true
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/newconfs/pam.d/postlogin.new"
+    src: pam.d/postlogin.new
     dest: /etc/pam.d/postlogin
     owner: root
     group: root
@@ -104,7 +104,7 @@
     - ssh
     - services
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/newconfs/pam.d/sshd.{{ ansible_distribution }}"
+    src: pam.d/sshd.{{ ansible_distribution }}
     dest: /etc/pam.d/sshd
     owner: root
     group: root
@@ -157,7 +157,7 @@
   block:
     - name: Create secure default /etc/pam.d/other
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/newconfs/pam.d/other.new"
+        src: pam.d/other.new
         dest: /etc/pam.d/other
         owner: root
         group: root
@@ -178,7 +178,7 @@
             state: absent
         - name: Create secure default /etc/pam.d/remote (Slackware)
           ansible.builtin.copy:
-            src: "{{ playbook_dir }}/newconfs/pam.d/other.new"
+            src: pam.d/other.new
             dest: /etc/pam.d/remote
             owner: root
             group: root
@@ -221,7 +221,7 @@
   block:
     - name: Configure /etc/security/faillock.conf
       ansible.builtin.template:
-        src: "{{ playbook_dir }}/newconfs/faillock.conf.new"
+        src: security/faillock.conf.new
         dest: /etc/security/faillock.conf
         owner: root
         group: root
@@ -331,7 +331,7 @@
 - name: Copy namespace.conf
   become: true
   ansible.builtin.copy:
-    src: namespace.conf.new
+    src: security/namespace.conf.new
     dest: /etc/security/namespace.conf
     owner: root
     group: root
@@ -372,7 +372,7 @@
     - name: Copying new pam-configs
       tags: umask
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/newconfs/pam-configs/{{ item }}.new"
+        src: pam-configs/{{ item }}.new
         dest: /usr/share/pam-configs/{{ item }}
         owner: root
         group: root
@@ -388,7 +388,7 @@
     - name: Copying new pam-configs related to authorization
       tags: authorization
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/newconfs/pam-configs/{{ item }}.new"
+        src: pam-configs/{{ item }}.new
         dest: /usr/share/pam-configs/{{ item }}
         owner: root
         group: root
@@ -567,7 +567,7 @@
 
 - name: Deny use of su (Slackware)
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/newconfs/pam.d/su.new"
+    src: pam.d/su.new
     dest: /etc/pam.d/su
     owner: root
     group: root

@@ -70,7 +70,7 @@
 - name: Limit the list of terminals from which root can log in (securetty)
   become: true
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/newconfs/securetty.new"
+    src: securetty.new
     dest: /etc/securetty
     owner: root
     group: root

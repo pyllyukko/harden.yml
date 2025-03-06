@@ -22,7 +22,7 @@
     - name: Copy ca-certificates.conf
       when: ansible_os_family != "RedHat"
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/newconfs/ca-certificates.conf.new"
+        src: ca-certificates.conf.new
         dest: /etc/ca-certificates.conf
         owner: root
         group: root
