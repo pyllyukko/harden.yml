@@ -360,6 +360,9 @@
         path: /etc/shells
         state: absent
         regexp: '^(/usr)?/bin/rbash$'
+    # https://tldp.org/HOWTO/Program-Library-HOWTO/shared-libraries.html
+    # https://amir.rachum.com/shared-libraries/#runtime-search-path
+    # LD.SO(8)
     - name: Configure rbash stuff into /etc/profile
       ansible.builtin.blockinfile:
         path: /etc/profile
@@ -377,7 +380,7 @@
             export SYSTEMD_PAGER=/usr/bin/less
             export VISUAL=/usr/local/rbin/rvim
             # These need to be set read-only here to prevent user's startup files from modifying them later
-            typeset -r PATH HISTFILE LESSSECURE IFS PAGER MANPAGER SYSTEMD_PAGER SHELL VISUAL ENV BASH_ENV LD_PRELOAD LD_AUDIT LD_LIBRARY_PATH DT_RPATH
+            typeset -r PATH HISTFILE LESSSECURE IFS PAGER MANPAGER SYSTEMD_PAGER SHELL VISUAL ENV BASH_ENV LD_PRELOAD LD_AUDIT LD_LIBRARY_PATH LD_DEBUG LD_DEBUG_OUTPUT LD_DYNAMIC_WEAK LD_ORIGIN_PATH LD_PROFILE LD_PROFILE_OUTPUT LD_SHOW_AUXV LD_USE_LOAD_BIAS LD_PREFER_MAP_32BIT_EXEC
             # Override the one set at /etc/profile.d/coreutils-dircolors.sh, since that
             # uses /bin/ls.
             alias ls='ls $LS_OPTIONS'
