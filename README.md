@@ -105,13 +105,13 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Sets default [umask](https://en.wikipedia.org/wiki/Umask) to a more stricter `077` (see <https://github.com/pyllyukko/harden.yml/wiki/umask>)
 * :timer_clock: Sets console session timeout via `$TMOUT` (Bash)
 * 🎟️ Properly locks down system accounts (0 - `SYS_UID_MAX` && !`root`)
-    * Lock the user's password
+    * :no_entry: Lock the user's password
     * :shell: Sets shell to `/sbin/nologin`
     * Expire the account
-    * Set `RLIMIT_NPROC` to `0` in [pam\_limits](#pam) for those system accounts that don't need to run any processes
+    * :no_entry: Set `RLIMIT_NPROC` to `0` in [pam\_limits](#pam) for those system accounts that don't need to run any processes
 * 🎟️ Configures the default password inactivity period
     * Run `ansible-playbook --list-tasks --tags passwords harden.yml` to list all password related tasks
-* Makes minor modifications to existing accounts. See `ansible-playbook --list-tasks --tags accounts harden.yml` for details.
+* :busts_in_silhouette: Makes minor modifications to existing accounts. See `ansible-playbook --list-tasks --tags accounts harden.yml` for details.
 
 #### 🎟️ Authorization
 
@@ -158,7 +158,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Mount [/proc](https://www.kernel.org/doc/Documentation/filesystems/proc.txt) with `hidepid=2`
 * :wood: Make `installpkg` store the MD5 checksums
 * :bar_chart: Enable [process accounting](https://tldp.org/HOWTO/Process-Accounting/) (`acct`)
-* Does some housekeeping regarding group memberships (see [login\_defs-slackware.yml](tasks/login_defs-slackware.yml))
+* :busts_in_silhouette: Does some housekeeping regarding group memberships (see [login\_defs-slackware.yml](tasks/login_defs-slackware.yml))
 * 🎟️ Configures `inittab` to use `shutdown -a` (and `/etc/shutdown.allow`)
 * Reconfigured bunch of services (run `ansible-playbook --list-tasks --tags slackware harden.yml | grep '\bservices\b'` for a full list)
 * Configures cgroups ([v1](https://www.kernel.org/doc/html/latest/admin-guide/cgroup-v1/cgroups.html), because of too old `libcgroup`) into `/etc/cg{config,rules}.conf`
@@ -297,7 +297,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * :bar_chart: `accounting` (includes `sysstat`)
     * 🎟️ `authorization`
     * `passwords`
-    * `accounts`
+    * :busts_in_silhouette: `accounts`
     * `pam`
         * `limits`
 * `cgroup` (Slackware)
