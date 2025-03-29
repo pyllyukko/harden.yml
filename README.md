@@ -233,7 +233,7 @@ Usage
 
 ### :information_source: Notes
 
-* Make sure regular users that should be able to login are members of the `allowed_group` group
+* :busts_in_silhouette: Make sure regular users that should be able to login are members of the `allowed_group` group
 * :sandwich: Sudo hardening:
     * `noexec` is on by default, so you need to take this into account in your custom rules
     * :timer_clock: Interactive shells to `root` have timeout, so use `screen` for those longer administrative tasks
@@ -349,7 +349,7 @@ Some of these documents are quite old, but most of the stuff still applies.
 ### Other docs
 
 * [Linux Standard Base Core Specification 4.1](http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/book1.html)
-    * [Chapter 21. Users & Groups](http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/usernames.html)
+    * :busts_in_silhouette: [Chapter 21. Users & Groups](http://refspecs.linuxfoundation.org/LSB_4.1.0/LSB-Core-generic/LSB-Core-generic/usernames.html)
 * :file_folder: [Filesystem Hierarchy Standard 2.3](http://refspecs.linuxfoundation.org/FHS_2.3/fhs-2.3.html)
 * <https://iase.disa.mil/stigs/os/unix-linux/Pages/index.aspx>
 * :book: [PAM Mastery book](https://www.tiltedwindmillpress.com/?product=pam) by [Michael W Lucas](https://www.michaelwlucas.com/)
