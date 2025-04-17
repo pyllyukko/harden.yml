@@ -40,6 +40,10 @@ jobs:
         with:
           name: lynis-banner.log
           path: /var/log/lynis.log
+      - name: Show changed files with debsums
+        run: |
+          sudo apt-get install debsums
+          sudo debsums -ec
   authentication:
     runs-on: ubuntu-latest
     steps:
@@ -75,6 +79,10 @@ jobs:
       # 2025-01-08 20:44:29 Hardening: assigned partial number of hardening points (0 of 2). Currently having 2 points (out of 4)
       - name: Check Lynis score
         run: sudo bash tests/check_lynis_score.sh 93
+      - name: Show changed files with debsums
+        run: |
+          sudo apt-get install debsums
+          sudo debsums -ec
   accounting:
     runs-on: ubuntu-latest
     steps:
@@ -99,6 +107,10 @@ jobs:
           path: /var/log/lynis.log
       - name: Check Lynis score
         run: sudo bash tests/check_lynis_score.sh 100
+      - name: Show changed files with debsums
+        run: |
+          sudo apt-get install debsums
+          sudo debsums -ec
   # The only test that would be (positively) scored in this category is SCHD-7720,
   # but that test is skipped if/when atd is not running.
   scheduling:
@@ -123,6 +135,10 @@ jobs:
         with:
           name: lynis-scheduling.log
           path: /var/log/lynis.log
+      - name: Show changed files with debsums
+        run: |
+          sudo apt-get install debsums
+          sudo debsums -ec
   shells:
     runs-on: ubuntu-latest
     steps:
@@ -150,6 +166,10 @@ jobs:
             /etc/profile
       - name: Check Lynis score
         run: sudo bash tests/check_lynis_score.sh 100
+      - name: Show changed files with debsums
+        run: |
+          sudo apt-get install debsums
+          sudo debsums -ec
   malware:
     runs-on: ubuntu-latest
     steps:
@@ -188,6 +208,10 @@ jobs:
       # 2025-01-08 21:22:22 Hardening: assigned partial number of hardening points (0 of 3). Currently having 4 points (out of 7)
       - name: Check Lynis score
         run: sudo bash tests/check_lynis_score.sh 66
+      - name: Show changed files with debsums
+        run: |
+          sudo apt-get install debsums
+          sudo debsums -ec
   mac_frameworks:
     runs-on: ubuntu-latest
     steps:
@@ -212,6 +236,10 @@ jobs:
           path: /var/log/lynis.log
       - name: Check Lynis score
         run: sudo bash tests/check_lynis_score.sh 100
+      - name: Show changed files with debsums
+        run: |
+          sudo apt-get install debsums
+          sudo debsums -ec
   # Not scored
   file_permissions:
     runs-on: ubuntu-latest
@@ -235,6 +263,10 @@ jobs:
         with:
           name: lynis-file_permissions.log
           path: /var/log/lynis.log
+      - name: Show changed files with debsums
+        run: |
+          sudo apt-get install debsums
+          sudo debsums -ec
   # Not scored
   homedirs:
     runs-on: ubuntu-latest
@@ -258,6 +290,10 @@ jobs:
         with:
           name: lynis-homedirs.log
           path: /var/log/lynis.log
+      - name: Show changed files with debsums
+        run: |
+          sudo apt-get install debsums
+          sudo debsums -ec
   kernel_hardening:
     runs-on: ubuntu-latest
     steps:
@@ -282,6 +318,10 @@ jobs:
           path: /var/log/lynis.log
       - name: Check Lynis score
         run: sudo bash tests/check_lynis_score.sh 94
+      - name: Show changed files with debsums
+        run: |
+          sudo apt-get install debsums
+          sudo debsums -ec
   file_integrity:
     runs-on: ubuntu-latest
     steps:
@@ -309,6 +349,10 @@ jobs:
             /etc/aide/aide.conf
       - name: Check Lynis score
         run: sudo bash tests/check_lynis_score.sh 100
+      - name: Show changed files with debsums
+        run: |
+          sudo apt-get install debsums
+          sudo debsums -ec
   storage:
     runs-on: ubuntu-latest
     steps:
@@ -333,6 +377,10 @@ jobs:
           path: /var/log/lynis.log
       - name: Check Lynis score
         run: sudo bash tests/check_lynis_score.sh 100
+      - name: Show changed files with debsums
+        run: |
+          sudo apt-get install debsums
+          sudo debsums -ec
   #firewalls:
   #  runs-on: ubuntu-latest
   #  steps:
@@ -399,3 +447,7 @@ jobs:
         with:
           name: lynis-ssh.log
           path: /var/log/lynis.log
+      - name: Show changed files with debsums
+        run: |
+          sudo apt-get install debsums
+          sudo debsums -ec
