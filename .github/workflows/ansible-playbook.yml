@@ -43,8 +43,7 @@ jobs:
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
-          sudo debsums -ec
-          true
+          sudo debsums -ec || true
   authentication:
     runs-on: ubuntu-latest
     steps:
@@ -83,8 +82,7 @@ jobs:
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
-          sudo debsums -ec
-          true
+          sudo debsums -ec || true
   accounting:
     runs-on: ubuntu-latest
     steps:
@@ -112,8 +110,7 @@ jobs:
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
-          sudo debsums -ec
-          true
+          sudo debsums -ec || true
   # The only test that would be (positively) scored in this category is SCHD-7720,
   # but that test is skipped if/when atd is not running.
   scheduling:
@@ -141,8 +138,7 @@ jobs:
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
-          sudo debsums -ec
-          true
+          sudo debsums -ec || true
   shells:
     runs-on: ubuntu-latest
     steps:
@@ -173,8 +169,7 @@ jobs:
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
-          sudo debsums -ec
-          true
+          sudo debsums -ec || true
   malware:
     runs-on: ubuntu-latest
     steps:
@@ -216,8 +211,7 @@ jobs:
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
-          sudo debsums -ec
-          true
+          sudo debsums -ec || true
   mac_frameworks:
     runs-on: ubuntu-latest
     steps:
@@ -245,8 +239,7 @@ jobs:
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
-          sudo debsums -ec
-          true
+          sudo debsums -ec || true
   # Not scored
   file_permissions:
     runs-on: ubuntu-latest
@@ -273,8 +266,7 @@ jobs:
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
-          sudo debsums -ec
-          true
+          sudo debsums -ec || true
   # Not scored
   homedirs:
     runs-on: ubuntu-latest
@@ -301,8 +293,7 @@ jobs:
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
-          sudo debsums -ec
-          true
+          sudo debsums -ec || true
   kernel_hardening:
     runs-on: ubuntu-latest
     steps:
@@ -330,8 +321,7 @@ jobs:
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
-          sudo debsums -ec
-          true
+          sudo debsums -ec || true
   file_integrity:
     runs-on: ubuntu-latest
     steps:
@@ -362,8 +352,7 @@ jobs:
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
-          sudo debsums -ec
-          true
+          sudo debsums -ec || true
   storage:
     runs-on: ubuntu-latest
     steps:
@@ -391,8 +380,7 @@ jobs:
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
-          sudo debsums -ec
-          true
+          sudo debsums -ec || true
   #firewalls:
   #  runs-on: ubuntu-latest
   #  steps:
@@ -462,5 +450,4 @@ jobs:
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
-          sudo debsums -ec
-          true
+          sudo debsums -ec || true
