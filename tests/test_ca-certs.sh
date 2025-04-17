@@ -16,7 +16,6 @@ done 0<files/ca-certificates.conf.new 1>"${ca_file}"
 for host in \
   media.defcon.org		\
   download.docker.com		\
-  download.qt.io		\
   www.offsec.com		\
   www.unicorn-engine.org	\
   www.eff.org			\
