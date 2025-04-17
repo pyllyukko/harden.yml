@@ -61,7 +61,7 @@ jobs:
         run: sudo lynis audit system --skip-plugins --tests-from-group authentication
       - name: chmod Lynis log
         run: sudo chmod -c 644 /var/log/lynis.log
-      - name: Archive Lynis log
+      - name: Archive Lynis log and configurations
         uses: actions/upload-artifact@v4
         with:
           name: authentication
@@ -72,6 +72,12 @@ jobs:
             /etc/pam.d/common-auth
             /etc/pam.d/common-password
             /etc/pam.d/common-session
+            /etc/pam.d/other
+            /etc/pam.d/sshd
+            /etc/security/limits.conf
+            /etc/security/access.conf
+            /etc/security/faillock.conf
+            /etc/security/namespace.conf
       # 2025-01-08 20:44:29 Performing test ID AUTH-9229 (Check password hashing methods)
       # 2025-01-08 20:44:29 Test: Checking password hashing methods
       # 2025-01-08 20:44:29 Result: poor password hashing methods found: sha256crypt/sha512crypt(default=5000rounds) 
