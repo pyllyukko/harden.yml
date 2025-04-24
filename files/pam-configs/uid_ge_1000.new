@@ -8,7 +8,7 @@ Auth:
 	requisite			pam_usertype.so isregular audit
 Account-Type: Additional
 Account:
-	[success=9 default=ignore]	pam_succeed_if.so uid eq 0 service = chfn quiet
+	[success=9 default=ignore]	pam_succeed_if.so uid eq 0 service in chfn:chpasswd:chsh quiet
 	[success=8 default=ignore]	pam_succeed_if.so user = lightdm service = systemd-user quiet
 	[success=7 default=ignore]	pam_succeed_if.so user = Debian-gdm service = gdm-launch-environment quiet
 	[success=6 default=ignore]	pam_succeed_if.so user = Debian-gdm service = systemd-user quiet
