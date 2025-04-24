@@ -161,7 +161,7 @@ $(CWD)/manifests/$(slackware)-$(slackware_version)/MANIFEST.bz2: $(CWD)/manifest
 $(CWD)/pam-files/:
 	mkdir -pv $@
 
-pam-files/other pam-files/passwd pam-files/postlogin pam-files/system-auth: | $(CWD)/pam-files/
+pam-files/other pam-files/passwd pam-files/postlogin pam-files/system-auth pam-files/chage pam-files/chgpasswd pam-files/chpasswd pam-files/groupadd pam-files/groupdel pam-files/groupmems pam-files/groupmod pam-files/newusers pam-files/useradd pam-files/userdel pam-files/usermod: | $(CWD)/pam-files/
 	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/a/shadow/pam.d/$(notdir $@)
 
 pam-files/su pam-files/su-l: | $(CWD)/pam-files/
@@ -193,7 +193,7 @@ pam-files/dovecot: | $(CWD)/pam-files/
 	wget -nv -nc -O $@ ftp://ftp.slackware.com/pub/slackware/$(slackware)-$(slackware_version)/source/n/dovecot/dovecot.pam
 
 .PHONY: pam-files
-pam-files: pam-files/other pam-files/passwd pam-files/postlogin pam-files/system-auth pam-files/su pam-files/su-l pam-files/sshd pam-files/login pam-files/remote pam-files/sddm pam-files/sddm-autologin pam-files/sddm-greeter pam-files/xscreensaver pam-files/screen pam-files/xdm pam-files/dovecot pam-files/chfn pam-files/chsh pam-files/runuser pam-files/runuser-l
+pam-files: pam-files/other pam-files/passwd pam-files/postlogin pam-files/system-auth pam-files/su pam-files/su-l pam-files/sshd pam-files/login pam-files/remote pam-files/sddm pam-files/sddm-autologin pam-files/sddm-greeter pam-files/xscreensaver pam-files/screen pam-files/xdm pam-files/dovecot pam-files/chfn pam-files/chsh pam-files/runuser pam-files/runuser-l pam-files/chage pam-files/chgpasswd pam-files/chpasswd pam-files/groupadd pam-files/groupdel pam-files/groupmems pam-files/groupmod pam-files/newusers pam-files/useradd pam-files/userdel pam-files/usermod
 
 .PHONY: pamcheck
 pamcheck: pam-files
