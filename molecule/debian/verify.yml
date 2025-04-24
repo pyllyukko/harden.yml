@@ -10,7 +10,7 @@
       changed_when:
         - '": OK" not in result.stdout'
       with_dict:
-        /etc/pam.d/common-account: f8420cf213beac62bc5875c5268151672cd11d62440f57365ad6d99820146f8d2cf2a58bf4535ca40635801deea301321bb87195ff341d89f6bf7281c2cd8d50
+        #/etc/pam.d/common-account: f8420cf213beac62bc5875c5268151672cd11d62440f57365ad6d99820146f8d2cf2a58bf4535ca40635801deea301321bb87195ff341d89f6bf7281c2cd8d50
         /etc/pam.d/common-auth: 7a722b18319fa38bbb6b5373151271ea9bb174c8fd806037f268e705bb33173100b3576d457ad552e1af9ba341d714a85baa1a8527ea1ae0598a6ee8231e61b2
         /etc/pam.d/common-password: bd8e26085c22fabb5e0277fb0dcfced17bc404c53781cf3b9b7083da018599c9e98adcee0b07d7b3b30cc834a4b503a0f3681c8b72a2f320e56c5f21628ba320
         /etc/pam.d/common-session: 97a2593bef6cc5c7741a5c6098d8d8d604ecab6bb1216fc4606c36f6272655746be5e58fb46172179af0cef12628a85e9be187623476af462ac8f63ba4aee4de
@@ -97,6 +97,16 @@
         line: "auth\toptional\t\t\tpam_faildelay.so delay=20000000"
         state: present
         regexp: '^auth\s+optional\s+pam_faildelay\.so\s+delay=[0-9]+$'
+      check_mode: yes
+      register: conf
+      failed_when: (conf is changed) or (conf is failed)
+    # No idea where the extra space at the end comes from
+    - name: Check that pam_faillock.so is present in /etc/pam.d/common-account
+      ansible.builtin.lineinfile:
+        path: /etc/pam.d/common-auth
+        line: "account\trequired\t\t\tpam_faillock.so "
+        state: present
+        regexp: '^account\s+required\s+pam_faillock\.so\s?$'
       check_mode: yes
       register: conf
       failed_when: (conf is changed) or (conf is failed)
