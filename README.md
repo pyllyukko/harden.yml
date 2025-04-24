@@ -252,6 +252,8 @@ Usage
 * :bulb: Consider running a hardened kernel. For Slackware you can check out my other project [kspp\_confnbuild](https://github.com/pyllyukko/kspp_confnbuild) that has been (mostly) configured according to [KSPP](https://kspp.github.io/)'s [recommendations](https://kspp.github.io/Recommended_Settings). You can use [kernel-hardening-checker](https://github.com/a13xp0p0v/kernel-hardening-checker) to check your kernel configs.
 * :envelope: Make sure your system is able to send e-mails somehow. Many of the tools will be sending alerts about various anomalies.
 * :wood::eyes: Consider installing and configuring Logwatch
+* Customize the firewall to suit your needs
+    * :globe_with_meridians: You can use [Nftables geoip script](https://github.com/pvxe/nftables-geoip) to block certain parts of the world (see also [GeoIP matching](https://wiki.nftables.org/wiki-nftables/index.php/GeoIP_matching))
 
 ### Tags
 
@@ -320,8 +322,16 @@ Other tags are just metadata for now. You can list all the tags with
 * Limited hardening for FreeBSD (see [freebsd.yml](tasks/freebsd.yml))
 * :sandwich: Experimental feature: If you enable `sudo_ids` in `vars.yml`, it enables "Sudo Intrusion Detection" as seen in chapter 9 of [Sudo Mastery](https://mwl.io/nonfiction/tools#sudo2)
     * Only for `SHELLS` `Cmnd_Alias` for now
-* You can run `make pamcheck` to see how the hardening modifies your PAM configurations in Slackware
-* :blowfish: You can create a new SSH moduli with `make /etc/ssh/moduli.new`
+
+#### Makefile
+
+| Target                                            | Description                                              |
+| ------------------------------------------------- | -------------------------------------------------------- |
+| `pamcheck`                                        | Check (and `diff`) your Slackware's PAM configs          |
+| :blowfish: `/etc/ssh/moduli.new`                  | Create a new SSH moduli                                  |
+| `/etc/audit/rules.d/31-privileged.rules.new`      | Find privileged binaries to be `audit`ed                 |
+| `/etc/audit/rules.d/40-authorized_keys.rules.new` | Find SSH `authorized_keys` from `/home/` to be `audit`ed |
+| `crls`                                            | Download CRLs                                            |
 
 Tests
 -----
