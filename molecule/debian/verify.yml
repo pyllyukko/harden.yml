@@ -82,12 +82,13 @@
       check_mode: yes
       register: conf
       failed_when: (conf is changed) or (conf is failed)
+    # pam-auth-update has some bug that appends a whitespace after the line
     - name: Check that pam_faillock.so authfail is configured to /etc/pam.d/common-auth
       ansible.builtin.lineinfile:
         path: /etc/pam.d/common-auth
-        line: "auth\t[default=die]\t\t\tpam_faillock.so authfail"
+        line: "auth\t[default=die]\t\t\tpam_faillock.so authfail "
         state: present
-        regexp: '^auth\s+\[default=die\]\s+pam_faillock\.so\s+authfail$'
+        regexp: '^auth\s+\[default=die\]\s+pam_faillock\.so\s+authfail\s?$'
       check_mode: yes
       register: conf
       failed_when: (conf is changed) or (conf is failed)
