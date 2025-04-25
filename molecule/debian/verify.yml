@@ -103,7 +103,7 @@
     # No idea where the extra space at the end comes from
     - name: Check that pam_faillock.so is present in /etc/pam.d/common-account
       ansible.builtin.lineinfile:
-        path: /etc/pam.d/common-auth
+        path: /etc/pam.d/common-account
         line: "account\trequired\t\t\tpam_faillock.so "
         state: present
         regexp: '^account\s+required\s+pam_faillock\.so\s?$'
