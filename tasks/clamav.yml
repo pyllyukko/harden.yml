@@ -261,6 +261,7 @@
         mode: '0644'
         content: |
           sigs.InterServer.net.HEX.Topline.malware.string.11334.179
+          sigs.InterServer.net.HEX.Topline.blacklisted.ip.controller.176.223.165.12.366
           PoetRat_Python
           php_uname
           php_malfunctions
