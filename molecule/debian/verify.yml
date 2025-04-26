@@ -114,7 +114,7 @@
     - name: Check that pam-auth-update has not broken common-account
       ansible.builtin.lineinfile:
         path: /etc/pam.d/common-account
-        line: "account\t[success=9 default=ignore]\tpam_succeed_if.so uid eq 0 service in chfn:chpasswd:chsh quiet"
+        line: "account\t[success=5 default=ignore]\tpam_succeed_if.so uid eq 0 service in chfn:chpasswd:chsh quiet"
         state: present
         regexp: '^account\s+\[success=[0-9]\s+default=ignore\]\s+pam_succeed_if\.so\s+uid\s+eq\s+0\s+service\s+in\s+chfn:chpasswd:chsh\s+quiet$'
       check_mode: yes

@@ -8,13 +8,9 @@ Auth:
 	requisite			pam_usertype.so isregular audit
 Account-Type: Additional
 Account:
-	[success=9 default=ignore]	pam_succeed_if.so uid eq 0 service in chfn:chpasswd:chsh quiet
-	[success=8 default=ignore]	pam_succeed_if.so user = lightdm service = systemd-user quiet
-	[success=7 default=ignore]	pam_succeed_if.so user = Debian-gdm service = gdm-launch-environment quiet
-	[success=6 default=ignore]	pam_succeed_if.so user = Debian-gdm service = systemd-user quiet
-	[success=5 default=ignore]	pam_succeed_if.so user = daemon service = cron quiet
-	[success=4 default=ignore]	pam_succeed_if.so user = logcheck service = cron quiet
-	[success=3 default=ignore]	pam_succeed_if.so uid eq 0 service =~ su* quiet
-	[success=2 default=ignore]	pam_succeed_if.so uid eq 0 service = cron quiet
-	[success=1 default=ignore]	pam_succeed_if.so uid eq 0 service = login quiet
+	[success=5 default=ignore]	pam_succeed_if.so uid eq 0 service in chfn:chpasswd:chsh:cron:login quiet
+	[success=4 default=ignore]	pam_succeed_if.so user = lightdm service = systemd-user quiet
+	[success=3 default=ignore]	pam_succeed_if.so user = Debian-gdm service in gdm-launch-environment:systemd-user quiet
+	[success=2 default=ignore]	pam_succeed_if.so user in daemon:logcheck service = cron quiet
+	[success=1 default=ignore]	pam_succeed_if.so uid eq 0 service =~ su* quiet
 	required			pam_usertype.so isregular audit
