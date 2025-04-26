@@ -1,4 +1,4 @@
-Name: Disallow logins from UIDs less than 1000 and above 60000
+Name: Disallow logins from UIDs less than 1000 and above 60000 (DANGER! See #89)
 Default: no
 Priority: 706
 Auth-Type: Primary
