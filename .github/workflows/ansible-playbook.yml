@@ -57,7 +57,8 @@ jobs:
         run: sudo lynis audit system --skip-plugins --tests-from-group authentication
       # See https://github.com/pyllyukko/harden.yml/issues/89
       - name: Enable uid_ge_1000 PAM profile
-        run: sed -i 's/^\(Default: \).\+$/\1yes/' files/pam-configs/uid_ge_1000.new
+        run: |
+          sed -i 's/^\(Default: \).\+$/\1yes/' files/pam-configs/uid_ge_1000.new
       - name: Run Ansible playbook for passwords, pam & umask
         run: ansible-playbook harden.yml --tags passwords,pam,umask,accounts --skip-tags slackware,centos
       - name: Run Lynis
