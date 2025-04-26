@@ -116,9 +116,9 @@ jobs:
           echo '[*] Test 2 - invalid account'
           tests/test -t 2
           # Should be denied by pam_access
-          # PAM_AUTH_ERR
+          # PAM_PERM_DENIED
           echo '[*] Test 5 - nobody cron:account'
-          sudo tests/test -t 5 -r 7
+          sudo tests/test -t 5 -r 6
           # Login for "nobody" should be blocked by hardened configuration even with a valid password
           # PAM_AUTH_ERR
           echo '[*] Test 6 - nobody login:auth'
