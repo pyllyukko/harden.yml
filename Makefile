@@ -7,7 +7,7 @@ SHELL=/bin/bash
 /etc/ssl/certs/ca-certificates.crt: /etc/ca-certificates.conf
 	/usr/sbin/update-ca-certificates --verbose --fresh
 
-/etc/ca-certificates.conf: $(CWD)/newconfs/ca-certificates.conf.new FORCE
+/etc/ca-certificates.conf: $(CWD)/files/ca-certificates.conf.new FORCE
 	/usr/bin/install -m 644 $< $@
 
 /etc/motd: $(CWD)/newconfs/motd.new FORCE

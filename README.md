@@ -332,6 +332,7 @@ Other tags are just metadata for now. You can list all the tags with
 | `/etc/audit/rules.d/31-privileged.rules.new`      | Find privileged binaries to be `audit`ed                 |
 | `/etc/audit/rules.d/40-authorized_keys.rules.new` | Find SSH `authorized_keys` from `/home/` to be `audit`ed |
 | `crls`                                            | Download CRLs                                            |
+| `/etc/ssl/certs/ca-certificates.crt`              | Create limited/reduced CA list                           |
 
 Tests
 -----
