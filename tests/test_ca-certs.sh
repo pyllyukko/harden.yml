@@ -6,7 +6,7 @@ while read -r
 do
   if [ ! -f "/usr/share/ca-certificates/${REPLY}" ]
   then
-    echo "[-] CA \`${REPLY}' does not exist" 1>&2
+    echo -e "[\033[1;31m-\033[0m] CA \`${REPLY}' does not exist" 1>&2
     exit 1
   fi
   cat "/usr/share/ca-certificates/${REPLY}"
