@@ -224,7 +224,8 @@
       failed_when:
         - result.failed == true
         - result.state != "absent"
-    - name: Remove SUID bit from /{,usr/}bin/su
+    # ksu = Kerberized super-user
+    - name: Remove SUID bit from /{,usr/}bin/su & /usr/bin/ksu
       tags: suid
       ansible.builtin.file:
         path: '{{ item }}'
@@ -234,6 +235,7 @@
       with_items:
         - /usr/bin/su # Debian
         - /bin/su # Slackware
+        - /usr/bin/ksu
       register: result
       failed_when:
         - result.failed == true
