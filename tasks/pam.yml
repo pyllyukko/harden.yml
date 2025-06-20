@@ -185,6 +185,18 @@
             mode: '0644'
             backup: true
 
+# https://github.com/elogind/elogind/issues/294
+- name: Remove /etc/pam.d/elogind-user (Slackware)
+  become: true
+  when: ansible_distribution == "Slackware"
+  tags:
+    - configuration
+    - pam
+    - slackware
+  ansible.builtin.file:
+    path: /etc/pam.d/elogind-user
+    state: absent
+
 - name: Check some Slackware's PAM files
   become: true
   when: ansible_distribution == "Slackware"
