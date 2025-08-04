@@ -68,13 +68,13 @@
             # TODO: Download PGP signature and verify it
             - name: Download ClamAV
               ansible.builtin.get_url:
-                url: "{{ clamav_latest.json | json_query(query) | first }}"
+                url: "{{ clamav_latest.json | json_query(latest_package) | first }}"
                 dest: /var/cache/apt/archives/
                 owner: root
                 group: root
                 mode: '0600'
               vars:
-                query: "assets[?ends_with(name,'.linux.x86_64.deb')].browser_download_url"
+                latest_package: "assets[?ends_with(name,'.linux.x86_64.deb')].browser_download_url"
               register: clamav_download
             - name: Install ClamAV (x86_64)
               ansible.builtin.apt:
