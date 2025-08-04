@@ -10,7 +10,7 @@ jobs:
       - name: Run ansible-lint
         uses: ansible/ansible-lint@main
         with:
-          path: ./harden.yml
+          args: "./harden.yml"
   yamllint:
     runs-on: ubuntu-latest
     steps:
