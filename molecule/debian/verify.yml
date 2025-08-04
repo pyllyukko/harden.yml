@@ -54,7 +54,7 @@
     - name: Verify that /etc/rkhunter.conf exists
       ansible.builtin.assert:
         that: >
-          - rkhunter.stat.exists
+          - rkhunter.stat.exists is true
     - name: Check that rounds is configured for pam_unix in /etc/pam.d/common-password
       ansible.builtin.lineinfile:
         path: /etc/pam.d/common-password
