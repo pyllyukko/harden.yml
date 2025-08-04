@@ -10,7 +10,9 @@ jobs:
       - name: Run ansible-lint
         uses: ansible/ansible-lint@main
         with:
-          path: ./harden.yml
+          target: ./harden.yml
+          required_collections: 'community.general'
+          python_dependency: 'jmespath'
   yamllint:
     runs-on: ubuntu-latest
     steps:
