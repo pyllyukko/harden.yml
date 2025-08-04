@@ -91,7 +91,7 @@
       ansible.builtin.assert:
         that:
           - clamav_sysconfdir.stdout | length > 0
-          - clamav_sysconfdir.stdout | regex_search('/etc')
+          - clamav_sysconfdir.stdout | regex_search('/etc') | length > 0
       tags: check
     - name: Generate fresh configs
       ansible.builtin.shell: "{{ clamav_location }}/clamconf -g {{ item }}.conf 1>{{ clamav_sysconfdir.stdout }}/{{ item }}.conf.new"
