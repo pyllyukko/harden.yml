@@ -325,7 +325,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: lynis-kernel_hardening.log
-          path: /var/log/lynis.log
+          path: |
+            /var/log/lynis.log
+            /etc/sysctl.conf
       - name: Check Lynis score
         run: sudo bash tests/check_lynis_score.sh 94
       - name: Show changed files with debsums
