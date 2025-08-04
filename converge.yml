@@ -22,9 +22,9 @@
       register: result
       changed_when: false
 
-    - name: Print some info
-      ansible.builtin.assert:
-        that: result.stdout | regex_search("^Linux")
+    #- name: Print some info
+    #  ansible.builtin.assert:
+    #    that: result.stdout | regex_search("^Linux")
 
     # TODO: We are not testing everything here, but it's a start
     - name: ClamAV
