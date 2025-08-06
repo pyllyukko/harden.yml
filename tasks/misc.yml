@@ -79,6 +79,7 @@
       community.general.slackpkg:
         name: '{{ item }}'
         state: absent
+        update_cache: true
       with_items:
         - netkit-rsh
         - uucp

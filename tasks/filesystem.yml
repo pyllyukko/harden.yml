@@ -152,6 +152,7 @@
               community.general.slackpkg:
                 name: libcap
                 state: present
+                update_cache: true
               tags: packages
             - name: Set CAP_NET_RAW capability to /bin/ping
               community.general.capabilities:

@@ -7,6 +7,7 @@
   community.general.slackpkg:
     name: logrotate
     state: present
+    update_cache: true
   tags:
     - packages
     - slackware

@@ -37,6 +37,7 @@
       community.general.slackpkg:
         name: openssl
         state: present
+        update_cache: true
       tags:
         - packages
         - slackware

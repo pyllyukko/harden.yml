@@ -489,6 +489,7 @@
       community.general.slackpkg:
         name: libpwquality
         state: present
+        update_cache: true
       tags:
         - slackware
         - packages

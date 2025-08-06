@@ -44,6 +44,7 @@
       community.general.slackpkg:
         name: sysstat
         state: present
+        update_cache: true
       tags:
         - packages
         - services

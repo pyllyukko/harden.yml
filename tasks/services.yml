@@ -217,6 +217,7 @@
   community.general.slackpkg:
     name: icmpinfo
     state: present
+    update_cache: true
   tags:
     - packages
     - services

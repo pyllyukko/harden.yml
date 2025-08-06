@@ -5,6 +5,7 @@
   community.general.slackpkg:
     name: glibc
     state: present
+    update_cache: true
   tags:
     - packages
     - slackware
