@@ -201,9 +201,9 @@
       failed_when:
         - result.failed == true
         - '"does not exist !" not in result.msg'
-    - name: Add audit=1 to /boot/cmdline.txt (Raspberry Pi OS)
+    - name: Add audit=1 to /boot/firmware/cmdline.txt (Raspberry Pi OS)
       ansible.builtin.replace:
-        path: /boot/cmdline.txt
+        path: /boot/firmware/cmdline.txt
         regexp: '^(.(?!.*\baudit=1\b).*)$'
         replace: '\1 audit=1'
       when: ansible_distribution == "Debian"
