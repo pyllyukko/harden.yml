@@ -148,6 +148,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * Only available for Debian & Slackware and for the `sshd` service because of the required PAM configuration changes (regarding `pam_env` & enforcing `PATH`)
     * :information_source: See [Restricted shell](https://github.com/pyllyukko/harden.yml/wiki/Restricted-shell)
     * :warning: **WARNING**: Contains plenty of caveats, details and hazards. Make sure you read and understand (at least) everything in the aforementioned [wiki page](https://github.com/pyllyukko/harden.yml/wiki/Restricted-shell), test it thoroughly and accept the risk that it may contain escapes.
+* Disable core dumps via `/etc/systemd/coredump.conf`
 
 ### Slackware specific
 
