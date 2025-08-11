@@ -202,3 +202,19 @@
     path: /etc/logrotate.conf
     regexp: '^shred$'
     line: 'shred'
+
+- name: Configure journald.conf
+  become: true
+  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  tags:
+    - logging
+    - configuration
+    - audit
+  community.general.ini_file:
+    path: /etc/systemd/journald.conf
+    section: Journal
+    option: '{{ item.key }}'
+    value: '{{ item.value }}'
+  with_dict:
+    Seal: "yes"
+    Audit: "yes"

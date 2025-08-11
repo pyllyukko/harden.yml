@@ -44,6 +44,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * :calendar: Configure log retention time to be 6 months
 * Configures `logrotate` to `shred` files
     * :information_source: **NOTE**: Read the fine print in [SHRED(1)](https://www.man7.org/linux/man-pages/man1/shred.1.html): "CAUTION: shred assumes the file system and hardware overwrite data in place.  Although this is common, many platforms operate otherwise."
+* Configure `journald` to use [Forward Secure Sealing (FSS)](https://lwn.net/Articles/512895/) and enable auditing (see [notes](#information_source-notes) on how to create keys for FSS)
 * Run `ansible-playbook --list-tasks --tags logging harden.yml` for a full list
 
 ### :bar_chart: Accounting
@@ -255,6 +256,7 @@ Usage
 * :wood::eyes: Consider installing and configuring Logwatch
 * Customize the firewall to suit your needs
     * :globe_with_meridians: You can use [Nftables geoip script](https://github.com/pvxe/nftables-geoip) to block certain parts of the world (see also [GeoIP matching](https://wiki.nftables.org/wiki-nftables/index.php/GeoIP_matching))
+* Run `journalctl --setup-keys` to generate a new key pair for Forward Secure Sealing (FSS)
 
 ### Tags
 
