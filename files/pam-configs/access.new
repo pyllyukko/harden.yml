@@ -1,5 +1,5 @@
 Name: /etc/security/access.conf access control
-Default: no
+Default: yes
 Priority: 0
 Account-Type: Additional
 Account:
