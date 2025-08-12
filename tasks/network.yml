@@ -28,7 +28,7 @@
 - name: 'TCP wrappers: create /etc/hosts.deny'
   become: true
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/newconfs/hosts.deny.new"
+    src: hosts.deny.new
     dest: /etc/hosts.deny
     owner: root
     group: root
@@ -147,7 +147,7 @@
   block:
     - name: Blacklist IPv6 kernel module
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/newconfs/modprobe.d/ipv6.conf.new"
+        src: modprobe.d/ipv6.conf.new
         dest: /etc/modprobe.d/ipv6.conf
         owner: root
         group: root

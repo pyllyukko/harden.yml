@@ -38,7 +38,7 @@
 - name: Blacklist certain kernel modules
   become: true
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/newconfs/modprobe.d/{{ item }}.conf.new"
+    src: "modprobe.d/{{ item }}.conf.new"
     dest: /etc/modprobe.d/{{ item }}.conf
     owner: root
     group: root

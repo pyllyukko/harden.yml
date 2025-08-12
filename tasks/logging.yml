@@ -132,7 +132,7 @@
     # https://seifried.org/lasg/logging/ - "General log security"
     - name: Make some log files append only (Slackware)
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/newconfs/logrotate.d/syslog.new"
+        src: logrotate.d/syslog.new
         dest: /etc/logrotate.d/syslog
         owner: root
         group: root

@@ -1,7 +1,0 @@
-# sudo.log is a separate log file that is configured with the logfile options
-# in sudoers.
-/var/log/sudo.log {
-    monthly
-    notifempty
-    create 0640 root adm
-}

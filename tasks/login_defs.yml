@@ -84,16 +84,14 @@
 - name: Create /etc/profile.d/expiry.sh
   become: true
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/newconfs/profile.d/{{ item }}.sh.new"
-    dest: /etc/profile.d/{{ item }}.sh
+    src: profile.d/expiry.sh.new
+    dest: /etc/profile.d/expiry.sh
     owner: root
     group: root
     mode: '0755'
   tags:
     - configuration
     - passwords
-  with_items:
-    - expiry
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.5 Ensure default user shell timeout is 900 seconds or less
 # Guide to the Secure Configuration of Red Hat Enterprise Linux 5 Revision 4.1 - 2.3.5.5 Implement Inactivity Time-out for Login Shells
 # ANSSI-BP-028 R32 - Configuring a timeout on local user sessions
@@ -125,7 +123,7 @@
   block:
     - name: Create /etc/profile.d/umask.sh (Debian)
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/newconfs/profile.d/umask.sh.new"
+        src: profile.d/umask.sh.new
         dest: /etc/profile.d/umask.sh
         owner: root
         group: root
@@ -139,7 +137,7 @@
 - name: Create /etc/profile.d/awk_sandboxing.sh
   become: true
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/newconfs/profile.d/awk_sandboxing.sh"
+    src: profile.d/awk_sandboxing.sh
     dest: /etc/profile.d/awk_sandboxing.sh
     owner: root
     group: root

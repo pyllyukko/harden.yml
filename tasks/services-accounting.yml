@@ -162,7 +162,7 @@
   become: true
   when: ansible_distribution == "Slackware"
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/newconfs/logrotate.d/pacct.new"
+    src: logrotate.d/pacct.new
     dest: /etc/logrotate.d/pacct
     owner: root
     group: root

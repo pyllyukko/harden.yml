@@ -230,7 +230,7 @@
   block:
     - name: Create /etc/rc.d/rc.local (Slackware)
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/newconfs/rc.d/rc.local.new"
+        src: rc.d/rc.local.new
         dest: /etc/rc.d/rc.local
         owner: root
         group: root

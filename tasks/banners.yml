@@ -21,7 +21,7 @@
 - name: Create /etc/motd
   become: true
   ansible.builtin.copy:
-    src: "{{ playbook_dir }}/newconfs/motd.new"
+    src: motd.new
     dest: /etc/motd
     owner: root
     group: root

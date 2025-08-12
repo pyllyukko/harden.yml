@@ -148,7 +148,7 @@
     - name: Create few custom audit rules
       ansible.builtin.assemble:
         remote_src: false
-        src: "{{ playbook_dir }}/newconfs/rules.d"
+        src: rules.d
         dest: /etc/audit/rules.d/40-local.rules
         owner: root
         group: root

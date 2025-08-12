@@ -114,7 +114,7 @@
         mode: '0755'
     - name: Clean up /tmp during boot (Debian)
       ansible.builtin.copy:
-        src: "{{ playbook_dir }}/newconfs/tmp.conf.new"
+        src: tmp.conf.new
         dest: /etc/tmpfiles.d/tmp.conf
         mode: '0644'
         owner: root
