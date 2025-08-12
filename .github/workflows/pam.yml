@@ -44,7 +44,7 @@ jobs:
           # Unknown services should be denied by /etc/pam.d/other
           for operation in authenticate acct_mgmt chauthtok open_session; do echo "[*] Testing nonexistent service operation ${operation}"; pamtester nonexistent nobody "${operation}" && exit 1; done; true
           # Random users should not be able to login
-          pamtester login nobody acct_mgmt && { echo -e '[\033[1;31m-\033[0m] Test 5 failed' 1>&2; exit 1; }
+          pamtester login nobody acct_mgmt && { echo -e '[\033[1;31m-\033[0m] Test 5 failed' 1>&2; exit 1; } || true
   libpamtest:
     runs-on: ubuntu-latest
     steps:
