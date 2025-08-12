@@ -135,24 +135,26 @@
         - wheel
         - audio
 
-- name: Check if gshadow needs fixing (Slackware)
-  when: ansible_distribution == "Slackware"
+- name: Slackwate grpck
   become: true
-  ansible.builtin.command: grpck -r
-  tags: check
-  changed_when: false
-  failed_when: false
-  register: grpck
-- name: Fix gshadow (Slackware)
-  when:
-    - ansible_distribution == "Slackware"
-    - '"no matching group file entry in /etc/gshadow" in grpck.stdout'
-  become: true
-  # yes might return 141
-  ansible.builtin.shell: set -o pipefail; yes | grpck
-  register: result
-  changed_when:
-    - result.rc != 0
-  failed_when:
-    - result.failed == true
-    - '"grpck: the files have been updated" not in result.stdout'
+  tags: accounts
+  block:
+    - name: Check if gshadow needs fixing (Slackware)
+      when: ansible_distribution == "Slackware"
+      ansible.builtin.command: grpck -r
+      tags: check
+      changed_when: false
+      failed_when: false
+      register: grpck
+    - name: Fix gshadow (Slackware)
+      when:
+        - ansible_distribution == "Slackware"
+        - '"no matching group file entry in /etc/gshadow" in grpck.stdout'
+      # yes might return 141
+      ansible.builtin.shell: set -o pipefail; yes | grpck
+      register: result
+      changed_when:
+        - result.rc != 0
+      failed_when:
+        - result.failed == true
+        - '"grpck: the files have been updated" not in result.stdout'
