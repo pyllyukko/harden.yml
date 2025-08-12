@@ -3,6 +3,7 @@ on: [push, pull_request]
 
 env:
   ANSIBLE_FORCE_COLOR: '1'
+  ANSIBLE_ALLOW_BROKEN_CONDITIONALS: '1'
 
 jobs:
   molecule-slackware:
