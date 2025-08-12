@@ -120,9 +120,9 @@ jobs:
           echo '[*] Test 5 - nobody cron:account'
           sudo tests/test -t 5 -r 6
           # Login for "nobody" should be blocked by hardened configuration even with a valid password
-          # PAM_PERM_DENIED
+          # PAM_AUTH_ERR
           echo '[*] Test 6 - nobody login:auth'
-          sudo tests/test -t 6 -r 6
+          sudo tests/test -t 6 -r 7
           # Use of su should be denied
           # PAM_PERM_DENIED
           echo '[*] Test 7 - nobody su:auth'
