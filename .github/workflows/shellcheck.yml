@@ -16,4 +16,4 @@ jobs:
       - name: Run Ansible playbook for shells
         run: ansible-playbook harden.yml --tags shells
       - name: Run ShellCheck
-        run: shellcheck --shell=bash newconfs/profile.d/* /etc/profile.d/tmout.sh tests/*.sh ./conf_file_differ.sh
+        run: shellcheck --shell=bash files/profile.d/* /etc/profile.d/tmout.sh tests/*.sh ./conf_file_differ.sh
