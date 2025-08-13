@@ -215,6 +215,9 @@
     section: Journal
     option: '{{ item.key }}'
     value: '{{ item.value }}'
+    owner: root
+    group: root
+    mode: '0644'
   with_dict:
     Seal: "yes"
     Audit: "yes"
