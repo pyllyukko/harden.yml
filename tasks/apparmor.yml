@@ -107,12 +107,18 @@
         mode: '0600'
         remote_src: true
       with_items: '{{ apparmor_profiles }}'
+    - name: Get AppArmor status
+      ansible.builtin.command: /usr/bin/aa-enabled
+      tags: check
+      register: aastatus
+      failed_when: false
     - name: Enable extra profiles
       ansible.builtin.command: /usr/sbin/aa-enforce /etc/apparmor.d/{{ item }}
       with_items: '{{ apparmor_profiles }}'
       tags: configuration
       register: result
       changed_when: result.stdout | regex_search('^Setting .+ to enforce mode\.$')
+      when: aastatus.rc == 0
     - name: Fix Postfix profiles
       ansible.builtin.replace:
         path: /etc/apparmor.d/{{ item }}
