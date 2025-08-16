@@ -111,6 +111,7 @@
       ansible.builtin.command: /usr/bin/aa-enabled
       tags: check
       register: aastatus
+      changed_when: false
       failed_when: false
     - name: Enable extra profiles
       ansible.builtin.command: /usr/sbin/aa-enforce /etc/apparmor.d/{{ item }}
