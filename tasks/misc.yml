@@ -46,10 +46,15 @@
   become: true
   with_dict:
     verify_ap_req_nofail: "true"
+    # CIS MIT Kerberos 1.10 Benchmark 3.1.7 Disallow weak encryption types (allow_weak_crypto)
     allow_weak_crypto: "false"
+    # CIS MIT Kerberos 1.10 Benchmark 3.1.2 Ensure AES256 is the preferred encryption type for TGS (default_tgs_enctypes)
     default_tgs_enctypes: aes256-cts-hmac-sha384-192 aes256-cts-hmac-sha1-96
+    # CIS MIT Kerberos 1.10 Benchmark 3.1.4 Ensure AES256 is the preferred encryption type for TKT (default_tkt_enctypes)
     default_tkt_enctypes: aes256-cts-hmac-sha384-192 aes256-cts-hmac-sha1-96
+    # CIS MIT Kerberos 1.10 Benchmark 3.1.9 Ensure ignore_acceptor_hostname is not set to true
     ignore_acceptor_hostname: "false"
+    # CIS MIT Kerberos 1.10 Benchmark 3.1.8 Ensure clockskew tolerance is minimized (clockskew)
     clockskew: 300
     # https://web.mit.edu/kerberos/krb5-current/doc/admin/spake.html#spake
     spake_preauth_groups: edwards25519
