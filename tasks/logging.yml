@@ -203,6 +203,7 @@
     regexp: '^shred$'
     line: 'shred'
 
+# https://www.freedesktop.org/software/systemd/man/latest/journald.conf.html
 - name: Configure journald.conf
   become: true
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
@@ -221,3 +222,4 @@
   with_dict:
     Seal: "yes"
     Audit: "yes"
+    Storage: "persistent"
