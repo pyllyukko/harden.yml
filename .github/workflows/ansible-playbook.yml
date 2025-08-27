@@ -94,7 +94,7 @@ jobs:
       # 2025-01-08 20:44:29 Suggestion: Check PAM configuration, add rounds if applicable and expire passwords to encrypt with new values [test:AUTH-9229] [details:-] [solution:-]
       # 2025-01-08 20:44:29 Hardening: assigned partial number of hardening points (0 of 2). Currently having 2 points (out of 4)
       - name: Check Lynis score
-        run: sudo bash tests/check_lynis_score.sh 93
+        run: sudo bash tests/check_lynis_score.sh 100
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums

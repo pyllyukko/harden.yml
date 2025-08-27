@@ -22,6 +22,7 @@ The tests are split based on [Lynis](https://cisofy.com/lynis/) test categories.
 The following Lynis test groups should produce a score of :100::
 
 * accounting
+* authentication
 * shells
 * hardening (this is tested together with malware)
 * mac\_frameworks
