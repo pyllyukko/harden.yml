@@ -487,6 +487,7 @@ jobs:
           path: |
             /var/log/lynis.log
             /etc/systemd/journald.conf
+            /etc/logrotate.conf
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
