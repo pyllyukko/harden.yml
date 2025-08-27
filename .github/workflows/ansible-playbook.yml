@@ -463,3 +463,33 @@ jobs:
         run: |
           sudo apt-get install debsums
           sudo debsums -ec | grep -v '^/etc/\(cloud/templates/sources\.list\.ubuntu\.deb822\.tmpl\|firefox/syspref\.js\|containers/registries\.conf\|default/motd-news\|needrestart/needrestart\.conf\|waagent\.conf\)$'
+  logging:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Lynis
+        run: |
+          ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
+          echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
+      - name: Run Lynis (pre-harden)
+        run: sudo lynis audit system --skip-plugins --tests-from-group logging
+      - name: Run Ansible playbook for logging
+        run: ansible-playbook harden.yml --tags logging
+      - name: Run Lynis
+        run: sudo lynis audit system --skip-plugins --tests-from-group logging
+      - name: chmod Lynis log
+        run: sudo chmod -c 644 /var/log/lynis.log
+      - name: Archive Lynis log
+        uses: actions/upload-artifact@v4
+        with:
+          name: logging.log
+          path: |
+            /var/log/lynis.log
+            /etc/systemd/journald.conf
+      - name: Show changed files with debsums
+        run: |
+          sudo apt-get install debsums
+          sudo debsums -ec | grep -v '^/etc/\(cloud/templates/sources\.list\.ubuntu\.deb822\.tmpl\|firefox/syspref\.js\|containers/registries\.conf\|default/motd-news\|needrestart/needrestart\.conf\|waagent\.conf\)$'
+      - name: Check Lynis score
+        run: sudo bash tests/check_lynis_score.sh 66
