@@ -33,6 +33,10 @@ jobs:
           echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Ansible playbook for banners
         run: ansible-playbook -v harden.yml --tags banners --extra-vars run_lynis_after_hardening=true
+      - name: Show Lynis details
+        run: |
+          sudo lynis show details BANN-7126
+          sudo lynis show details BANN-7130
       - name: chmod Lynis log
         run: sudo chmod -c 644 /var/log/lynis.log
       - name: Archive Lynis log
@@ -62,7 +66,9 @@ jobs:
       - name: Run Ansible playbook for passwords, pam & umask
         run: ansible-playbook harden.yml --tags passwords,pam,umask,accounts --skip-tags slackware,centos
       - name: Run Lynis
-        run: sudo lynis audit system --skip-plugins --tests-from-group authentication
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group authentication
+          sudo lynis show details AUTH-9229
       - name: chmod Lynis log
         run: sudo chmod -c 644 /var/log/lynis.log
       - name: Archive Lynis log and configurations
@@ -204,6 +210,7 @@ jobs:
       - name: Run Lynis (malware)
         run: |
           sudo lynis audit system --skip-plugins --tests-from-group malware
+          sudo lynis show details MALW-3280
           sudo cp -v /var/log/lynis.log /var/log/lynis-malware.log
       # MALW-3280
       # 2025-01-08 21:22:22 Result: no commercial anti-virus tools found
@@ -521,7 +528,9 @@ jobs:
         run: ansible-playbook harden.yml --tags limits,kernel
       # KRNL-5820 doesn't properly detect configuration in coredump.conf. See https://github.com/CISOfy/lynis/pull/1656
       - name: Run Lynis
-        run: sudo lynis audit system --skip-plugins --tests-from-group kernel
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group kernel
+          sudo lynis show details KRNL-5820
       - name: chmod Lynis log
         run: sudo chmod -c 644 /var/log/lynis.log
       - name: Archive Lynis log
