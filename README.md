@@ -60,7 +60,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * Disable [Firewire](http://www.hermann-uwe.de/blog/physical-memory-attacks-via-firewire-dma-part-1-overview-and-mitigation)
     * :warning: **WARNING**: Also disables `usb-storage`, which will disable support for USB mass medias
 * [sysctl](https://en.wikipedia.org/wiki/Sysctl) settings hardening
-    * :keyboard: Enables [SAK](https://www.kernel.org/doc/Documentation/SAK.txt) and disables the other [magic SysRq stuff](https://www.kernel.org/doc/Documentation/sysrq.txt)
+    * :keyboard: Enables [Secure Attention Key (SAK)](https://www.kernel.org/doc/Documentation/SAK.txt) and disables the other [magic SysRq stuff](https://www.kernel.org/doc/Documentation/sysrq.txt)
     * :no_entry: Restricts the use of `dmesg` by regular users
     * :no_entry: Enable [YAMA](https://www.kernel.org/doc/Documentation/security/Yama.txt) (disallow `ptrace`)
     * For the complete list, see [sysctl.conf.new](newconfs/sysctl.d/sysctl.conf.new)
@@ -253,10 +253,12 @@ Usage
 * :file_folder: Review `/etc/fstab.new` manually and deploy applicable changes to `/etc/fstab`
 * :bulb: Consider running a hardened kernel. For Slackware you can check out my other project [kspp\_confnbuild](https://github.com/pyllyukko/kspp_confnbuild) that has been (mostly) configured according to [KSPP](https://kspp.github.io/)'s [recommendations](https://kspp.github.io/Recommended_Settings). You can use [kernel-hardening-checker](https://github.com/a13xp0p0v/kernel-hardening-checker) to check your kernel configs.
 * :envelope: Make sure your system is able to send e-mails somehow. Many of the tools will be sending alerts about various anomalies.
-* :wood::eyes: Consider installing and configuring Logwatch
 * Customize the firewall to suit your needs
     * :globe_with_meridians: You can use [Nftables geoip script](https://github.com/pvxe/nftables-geoip) to block certain parts of the world (see also [GeoIP matching](https://wiki.nftables.org/wiki-nftables/index.php/GeoIP_matching))
-* Run `journalctl --setup-keys` to generate a new key pair for Forward Secure Sealing (FSS)
+* :wood: Logging:
+    * :eyes: Consider installing and configuring Logwatch
+    * :key: Run `journalctl --setup-keys` to generate a new key pair for Forward Secure Sealing (FSS)
+    * Configure remote logging
 
 ### Tags
 
@@ -376,6 +378,9 @@ Some of these documents are quite old, but most of the stuff still applies.
 * [ArchWiki: limits.conf](https://wiki.archlinux.org/title/Limits.conf)
 * [Effectiveness of Linux Rootkit Detection Tools](http://jultika.oulu.fi/files/nbnfioulu-202004201485.pdf)
 * [How to keep a detailed audit trail of what’s being done on your Linux systems](https://www.cyberciti.biz/tips/howto-log-user-activity-using-process-accounting.html)
+* [Announcing systemd v257](https://0pointer.net/blog/announcing-systemd-v257.html):
+    * [Fully Locked Accounts with systemd-sysusers](https://mastodon.social/@pid_eins/113395418561365864)
+    * [Secure Attention Key Logic in systemd-logind](https://mastodon.social/@pid_eins/113441330932924520)
 
 [1]: http://benchmarks.cisecurity.org/downloads/browse/index.cfm?category=benchmarks.os.linux.slackware
 [2]: http://dentonj.freeshell.org/system-hardening-10.2.txt
