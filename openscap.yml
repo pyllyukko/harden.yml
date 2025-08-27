@@ -33,7 +33,7 @@
         name: openscap-scanner
         update_cache: yes
     - name: Run OpenSCAP scanner
-      ansible.builtin.command: oscap xccdf eval --fetch-remote-resources --profile xccdf_org.ssgproject.content_profile_anssi_bp28_minimal --results-arf results.xml --report report.html scap-security-guide-0.1.75/ssg-debian12-ds.xml
+      ansible.builtin.command: oscap xccdf eval --fetch-remote-resources --profile xccdf_org.ssgproject.content_profile_anssi_bp28_minimal --results-arf results.xml --report report.html scap-security-guide-{{ latest.json.tag_name | regex_replace('^v', '') }}/ssg-debian12-ds.xml
       become: true
       args:
         creates: ./report.html
