@@ -237,6 +237,7 @@ jobs:
             /var/log/lynis-hardening.log
             /var/log/rkhunter.log
             /var/lib/rkhunter/db/rkhunter.dat
+            /etc/rkhunter.conf
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
