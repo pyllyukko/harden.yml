@@ -950,7 +950,11 @@ IPC_SEG_SIZE=68157440
 #
 # This option has no default value.
 #
+{% if ansible_distribution == "Slackware" %}
+STARTUP_PATHS=/etc/rc.d /etc/inittab
+{% else %}
 #STARTUP_PATHS=/etc/rc.d /etc/rc.local
+{% endif %}
 
 #
 # This option tells rkhunter the pathname to the file containing the user
