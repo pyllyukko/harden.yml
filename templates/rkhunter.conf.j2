@@ -272,7 +272,7 @@ LOGFILE=/var/log/rkhunter.log
 #
 # The default value is not to use syslog.
 #
-#USE_SYSLOG=authpriv.notice
+USE_SYSLOG=authpriv.notice
 
 #
 # Set the following option to '1' if the second colour set is to be used. This
@@ -439,7 +439,11 @@ HASH_CMD=SHA256
 #
 # Also see the PKGMGR_NO_VRFY and USE_SUNSUM options.
 #
-#PKGMGR=NONE
+{% if ansible_distribution == "Debian" or ansible_distribution == "Ubuntu" or ansible_distribution == "Kali" %}
+PKGMGR=DPKG
+{% else %}
+PKGMGR=NONE
+{% endif %}
 
 #
 # It is possible that a file, which is part of a package, may have been
@@ -1139,7 +1143,13 @@ ALLOW_SYSLOG_REMOTE_LOGGING=1
 #
 # Also see the WARN_ON_OS_CHANGE and UPDT_ON_OS_CHANGE options.
 #
+{% if ansible_distribution == "Debian" %}
+OS_VERSION_FILE=/etc/debian_version
+{% elif ansible_distribution == "Slackware" %}
+OS_VERSION_FILE=/etc/slackware-version
+{% else %}
 #OS_VERSION_FILE=/etc/release
+{% endif %}
 
 #
 # Set the following option to '0' if you do not want to receive a warning if any
@@ -1149,7 +1159,7 @@ ALLOW_SYSLOG_REMOTE_LOGGING=1
 #
 # The default value is '1'.
 #
-#WARN_ON_OS_CHANGE=1
+WARN_ON_OS_CHANGE=1
 
 #
 # Set the following option to '1' if you want rkhunter to automatically run a
