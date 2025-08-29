@@ -545,6 +545,8 @@ USER_FILEPROP_FILES_DIRS=/lib64/security/*.so
 {% endif %}
 {% if ansible_distribution == "Debian" or ansible_distribution == "Ubuntu" or ansible_distribution == "Kali" %}
 USER_FILEPROP_FILES_DIRS=/lib/{{ ansible_architecture }}-linux-gnu/security/*.so
+USER_FILEPROP_FILES_DIRS=/etc/crontab
+USER_FILEPROP_FILES_DIRS=/etc/cron.yearly
 {% endif %}
 USER_FILEPROP_FILES_DIRS=/etc/sudoers
 USER_FILEPROP_FILES_DIRS=/etc/sudoers.d
@@ -554,6 +556,11 @@ USER_FILEPROP_FILES_DIRS=/usr/share/polkit-1/rules.d/*.rules
 USER_FILEPROP_FILES_DIRS=/usr/share/polkit-1/actions/*.policy
 {% endif %}
 USER_FILEPROP_FILES_DIRS=/var/spool/cron/crontabs
+USER_FILEPROP_FILES_DIRS=/etc/cron.d
+USER_FILEPROP_FILES_DIRS=/etc/cron.daily
+USER_FILEPROP_FILES_DIRS=/etc/cron.hourly
+USER_FILEPROP_FILES_DIRS=/etc/cron.monthly
+USER_FILEPROP_FILES_DIRS=/etc/cron.weekly
 USER_FILEPROP_FILES_DIRS=/etc/ld.so.conf
 USER_FILEPROP_FILES_DIRS=/etc/ld.so.conf.d
 {% if stat_ld_preload.stat.exists %}
