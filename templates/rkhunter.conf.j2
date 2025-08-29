@@ -628,6 +628,7 @@ SCRIPTWHITELIST=/usr/bin/egrep
 SCRIPTWHITELIST=/bin/fgrep
 SCRIPTWHITELIST=/usr/bin/fgrep
 SCRIPTWHITELIST=/usr/bin/which.debianutils
+SCRIPTWHITELIST=/etc/cron.daily/dpkg
 {% if 'libwww-perl' in ansible_facts.packages %}
 SCRIPTWHITELIST=/usr/bin/lwp-request
 {% endif %}
