@@ -228,7 +228,7 @@ jobs:
         run: sudo bash tests/check_lynis_score.sh 100
       - name: chmod Lynis & rkhunter files
         run: |
-          sudo chmod -c 644 /var/log/lynis-malware.log /var/log/lynis-hardening.log /var/log/rkhunter.log /var/lib/rkhunter/db/rkhunter.dat
+          sudo chmod -c 644 /var/log/lynis-malware.log /var/log/lynis-hardening.log /var/log/rkhunter.log /var/lib/rkhunter/db/rkhunter.dat /etc/rkhunter.conf
           sudo chmod -c 755 /var/lib/rkhunter{,/db}
       - name: Archive Lynis logs
         uses: actions/upload-artifact@v4
