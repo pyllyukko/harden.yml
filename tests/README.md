@@ -59,6 +59,7 @@ The following PAM tests are executed:
 * Various tests with [libpamtest](https://cwrap.org/pam_wrapper.html) (cwrap)
     * See [#61](https://github.com/pyllyukko/harden.yml/issues/61)
 * Tracking few upstream PAM configurations for changes in case we need to adapt/react to some change
+* Test `pam_limits` `RLIMIT_NPROC` restriction
 
 ### Limitations
 

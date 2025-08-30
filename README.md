@@ -110,6 +110,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * :shell: Sets shell to `/sbin/nologin`
     * Expire the account
     * :no_entry: Set `RLIMIT_NPROC` to `0` in [pam\_limits](#pam) for those system accounts that don't need to run any processes
+        * :information_source: You can see this in action in the [PAM limits test](https://github.com/pyllyukko/harden.yml/actions/workflows/pam.yml)
 * 🎟️ Configures the default password inactivity period
     * Run `ansible-playbook --list-tasks --tags passwords harden.yml` to list all password related tasks
 * :busts_in_silhouette: Makes minor modifications to existing accounts. See `ansible-playbook --list-tasks --tags accounts harden.yml` for details.
@@ -381,6 +382,7 @@ Some of these documents are quite old, but most of the stuff still applies.
 * [Announcing systemd v257](https://0pointer.net/blog/announcing-systemd-v257.html):
     * [Fully Locked Accounts with systemd-sysusers](https://mastodon.social/@pid_eins/113395418561365864)
     * [Secure Attention Key Logic in systemd-logind](https://mastodon.social/@pid_eins/113441330932924520)
+* [The GNU C Library (glibc): Limiting Resource Usage](https://sourceware.org/glibc/manual/latest/html_node/Limits-on-Resources.html)
 
 [1]: http://benchmarks.cisecurity.org/downloads/browse/index.cfm?category=benchmarks.os.linux.slackware
 [2]: http://dentonj.freeshell.org/system-hardening-10.2.txt
