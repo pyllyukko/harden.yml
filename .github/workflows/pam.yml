@@ -202,3 +202,22 @@ jobs:
           name: pam-files
           path: |
             pam-files/*
+  limits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: getent passwd
+        run: getent passwd
+      - name: Run Ansible playbook for pam
+        run: ansible-playbook harden.yml --tags pam --skip-tags slackware,centos
+      - name: Test pam_limits
+        run: |
+          echo -e '#!/bin/bash\n/usr/bin/id' 1>/tmp/test.sh
+          sudo -u bin /bin/bash /tmp/test.sh && false || true
+      - name: Archive limits.conf
+        uses: actions/upload-artifact@v4
+        with:
+          name: limits.conf
+          path: |
+            /etc/security/limits.conf
