@@ -213,8 +213,9 @@ jobs:
         run: ansible-playbook harden.yml --tags pam --skip-tags slackware,centos
       - name: Test pam_limits
         run: |
-          echo -e '#!/bin/bash\n/usr/bin/id' 1>/tmp/test.sh
-          sudo -u bin /bin/bash /tmp/test.sh && false || true
+          echo -e '#!/bin/bash\n/usr/bin/id' 1>test.sh
+          ls -l test.sh
+          sudo -u bin /bin/bash ./test.sh && false || true
       - name: Archive limits.conf
         uses: actions/upload-artifact@v4
         with:
