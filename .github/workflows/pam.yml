@@ -209,11 +209,15 @@ jobs:
         uses: actions/checkout@v3
       - name: getent passwd
         run: getent passwd
+      - name: Test pam_limits pre-harden
+        run: |
+          echo -e '#!/bin/bash\n/usr/bin/id' 1>test.sh
+          ls -l test.sh
+          sudo -u bin /bin/bash ./test.sh
       - name: Run Ansible playbook for pam
         run: ansible-playbook harden.yml --tags pam --skip-tags slackware,centos
       - name: Test pam_limits
         run: |
-          echo -e '#!/bin/bash\n/usr/bin/id' 1>test.sh
           ls -l test.sh
           sudo -u bin /bin/bash ./test.sh && false || true
       - name: Archive limits.conf
