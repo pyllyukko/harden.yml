@@ -554,7 +554,10 @@
         limit_type: hard
         limit_item: nproc
         value: 0
-      # sys, man, list, irc & gnats are from Debian
+      # sys, man, list, irc, proxy, backup & gnats are from Debian
+      # See:
+      #   - /usr/share/base-passwd/passwd.master
+      #   - /usr/share/doc/base-passwd/users-and-groups.txt.gz
       with_items:
         - bin
         - adm
@@ -577,6 +580,8 @@
         - gdm
         - oprofile
         - pop
+        #- proxy
+        - backup
 
 - name: Deny use of su (Slackware)
   ansible.builtin.copy:
