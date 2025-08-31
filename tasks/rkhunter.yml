@@ -61,6 +61,7 @@
       with_dict:
         CRON_DAILY_RUN: "yes"
         APT_AUTOGEN: "yes"
+        REPORT_EMAIL: "{{ alert_email }}"
       tags:
         - configuration
         - debian
