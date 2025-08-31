@@ -1,6 +1,5 @@
 #!/bin/bash
-echo "[*] Current ulimit:"
-ulimit -c
+echo "[*] Current ulimit: $(ulimit -c)"
 ulimit -c unlimited
 echo "[*] \`ulimit -c unlimited' returned ${?}"
 echo "[*] core_pattern: $(cat /proc/sys/kernel/core_pattern)"
