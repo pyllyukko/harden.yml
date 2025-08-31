@@ -560,13 +560,19 @@ jobs:
         run: |
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
           echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
+      - name: Check /sys/bus/usb/devices/usb*/authorized_default
+        run: more /sys/bus/usb/devices/usb*/authorized_default | cat
       - name: Run Lynis (pre-harden)
         run: sudo lynis audit system --skip-plugins --tests-from-group usb
       - name: Run Ansible playbook for usb
         run: ansible-playbook harden.yml --tags services --skip-tags lynis,slackware,clamav,audit,accounting,firewall,rng,ssh,cron,gnome
+      # There's only few checks so show results for all the tests
       - name: Run Lynis
         run: |
           sudo lynis audit system --skip-plugins --tests-from-group usb
+          sudo lynis show details USB-1000
+          sudo lynis show details USB-2000
+          sudo lynis show details USB-3000
       - name: chmod Lynis log
         run: sudo chmod -c 644 /var/log/lynis.log
       - name: Archive Lynis log
@@ -579,3 +585,5 @@ jobs:
         run: |
           sudo apt-get install debsums
           sudo debsums -ec | grep -v '^/etc/\(cloud/templates/sources\.list\.ubuntu\.deb822\.tmpl\|firefox/syspref\.js\|containers/registries\.conf\|default/motd-news\|needrestart/needrestart\.conf\|waagent\.conf\)$'
+      - name: Check Lynis score
+        run: sudo bash tests/check_lynis_score.sh 85
