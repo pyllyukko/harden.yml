@@ -11,7 +11,7 @@
       vars:
         # checksecurity also brings logcheck
         packages:
-          - bootlogd
+          #- bootlogd
           - autolog
           - needrestart
           - arpwatch
