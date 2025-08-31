@@ -209,17 +209,31 @@ jobs:
         uses: actions/checkout@v3
       - name: getent passwd
         run: getent passwd
-      - name: Test pam_limits pre-harden
+      - name: Test pam_limits R_LIMIT pre-harden
         run: |
           echo -e '#!/bin/bash\n/usr/bin/id' 1>test.sh
           ls -l test.sh
           sudo -u bin /bin/bash ./test.sh
+      - name: Test pam_limits core dump pre-harden
+        run: |
+          cat /proc/sys/kernel/core_pattern
+          sudo sysctl -w kernel.core_pattern=core
+          make tests/segfault
+          ulimit -c
+          ulimit -c unlimited
+          tests/segfault || true
+          ls -l core
+          rm -v core
       - name: Run Ansible playbook for pam
         run: ansible-playbook harden.yml --tags pam --skip-tags slackware,centos
-      - name: Test pam_limits
+      - name: Test pam_limits R_LIMIT
         run: |
           ls -l test.sh
           sudo -u bin /bin/bash ./test.sh && false || true
+      # We need to start new PAM session in order for the controls to take effect
+      - name: Test pam_limits core dump
+        run: |
+          sudo -u runner bash tests/segfault.sh
       - name: Archive limits.conf
         uses: actions/upload-artifact@v4
         with:

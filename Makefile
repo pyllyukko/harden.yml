@@ -223,6 +223,9 @@ pamcheck: pam-files
 test: test.c
 	gcc -o $@ $< -lpamtest -lcmocka
 
+tests/segfault: tests/segfault.c
+	gcc -o $@ $<
+
 .PHONY: manifest
 manifest: $(manifest_files)
 
