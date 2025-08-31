@@ -392,7 +392,7 @@
       with_items:
         - lastlog
         # ANSSI-BP-028 R55 - Dedicating temporary directories to users
-        - polyinstation
+        - polyinstantiation
         - pwhistory
         - umask
         - ssh_agent
