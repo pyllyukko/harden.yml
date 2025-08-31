@@ -229,7 +229,7 @@ jobs:
       - name: Test pam_limits R_LIMIT
         run: |
           ls -l test.sh
-          sudo -u bin /bin/bash ./test.sh && false || true
+          bash tests/limits.sh
       # We need to start new PAM session in order for the controls to take effect
       - name: Test pam_limits core dump
         run: |
