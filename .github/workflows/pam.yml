@@ -240,3 +240,16 @@ jobs:
           name: limits.conf
           path: |
             /etc/security/limits.conf
+  polyinstantiation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run Ansible playbook for pam
+        run: ansible-playbook harden.yml --tags pam --skip-tags slackware,centos
+      - name: Make sure polyinstantiation is enabled
+        run: sudo pam-auth-update --enable polyinstation
+      - name: Test polyinstantiation
+        run: |
+          sudo -u runner bash tests/polyinstantiation.sh
+          sudo ls -l /tmp-inst/runner/test_file.txt
