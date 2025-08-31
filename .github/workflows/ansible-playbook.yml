@@ -240,6 +240,7 @@ jobs:
             /var/log/rkhunter.log
             /var/lib/rkhunter/db/rkhunter.dat
             /etc/rkhunter.conf
+            /etc/default/rkhunter
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
