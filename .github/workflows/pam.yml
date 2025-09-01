@@ -17,18 +17,25 @@ jobs:
       - name: Test pre-harden
         run: |
           # Everyone is allowed to use cron
+          echo '[*] Test cron:account'
           pamtester cron nobody acct_mgmt || exit 1
+          echo -n $'\n'
           # Everyone is allowed to use atd
+          echo '[*] Test atd:account'
           pamtester atd nobody acct_mgmt || exit 1
+          echo -n $'\n'
           # Everyone is allowed to use su
           # TODO: Prompts for a password
           #pamtester su nobody authenticate || exit 1
           # Unknown services
           # TODO: authenticate & chauthtok
+          echo '[*] Test nonexistent service'
           for operation in acct_mgmt open_session; do pamtester nonexistent nobody "${operation}" || exit 1; done
           echo "[*] grep '\bpam_unix(nonexistent:session):' /var/log/auth.log:"
           sudo grep '\bpam_unix(nonexistent:session):' /var/log/auth.log
+          echo -n $'\n'
           # Login for random users
+          echo '[*] Test login:account as nobody'
           pamtester login nobody acct_mgmt || exit 1
       - name: Run Ansible playbook for pam
         run: ansible-playbook harden.yml --tags pam --skip-tags slackware,centos
@@ -36,25 +43,36 @@ jobs:
         run: |
           # random users should not be able to use cron
           # enforced with pam_access
+          echo '[*] Test cron:account as nobody'
           pamtester cron nobody acct_mgmt && { echo -e '[\033[1;31m-\033[0m] Test 1 failed' 1>&2; exit 1; }
           echo "[*] grep '\bpam_access(cron:account):' /var/log/auth.log:"
           sudo grep '\bpam_access(cron:account):' /var/log/auth.log
+          echo -n $'\n'
           # root should still be able to use cron
+          echo '[*] Test cron:account as root'
           pamtester cron root acct_mgmt || { echo -e '[\033[1;31m-\033[0m] Test 2 failed' 1>&2; exit 1; }
+          echo -n $'\n'
           # random users should not be able to use atd
           # enforced with pam_access
+          echo '[*] Test atd:account as nobody'
           pamtester atd nobody acct_mgmt && { echo -e '[\033[1;31m-\033[0m] Test 3 failed' 1>&2; exit 1; }
           echo "[*] grep '\bpam_access(atd:account):' /var/log/auth.log:"
           sudo grep '\bpam_access(atd:account):' /var/log/auth.log
+          echo -n $'\n'
           # su shouldn't be allowed
+          echo '[*] Test su:auth as nobody'
           pamtester su nobody authenticate && { echo -e '[\033[1;31m-\033[0m] Test 4 failed' 1>&2; exit 1; }
           echo "[*] grep '\bpam_unix(su:auth):' /var/log/auth.log:"
           sudo grep '\bpam_unix(su:auth):' /var/log/auth.log
+          echo -n $'\n'
           # Unknown services should be denied by /etc/pam.d/other
+          echo '[*] Test nonexistent service'
           for operation in authenticate acct_mgmt chauthtok open_session; do echo "[*] Testing nonexistent service operation ${operation}"; pamtester nonexistent nobody "${operation}" && exit 1; done; true
           echo "[*] grep '\bpam_warn(nonexistent:' /var/log/auth.log:"
           sudo grep '\bpam_warn(nonexistent:' /var/log/auth.log
+          echo -n $'\n'
           # Random users should not be able to login
+          echo '[*] Test login:account as nobody'
           pamtester login nobody acct_mgmt && { echo -e '[\033[1;31m-\033[0m] Test 5 failed' 1>&2; exit 1; } || true
           echo "[*] grep '\bpam_access(login:account):' /var/log/auth.log:"
           sudo grep '\bpam_access(login:account):' /var/log/auth.log
