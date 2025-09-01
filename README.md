@@ -22,6 +22,12 @@ Supported distros
 
 * [Bastille](http://bastille-linux.sourceforge.net/) is obsolete
 * Not a member of [CIS](http://www.cisecurity.org/), so no downloading of the ready made scripts
+    * Also to go "beyond CIS" with things like:
+        * Reducing CA certs
+        * Hardening PAM
+        * Making smart audit rules that don't spam your logs with unnecessary and useless information
+        * Properly locking down system accounts
+        * Other stuff that is not covered by CIS benchmarks
 * For learning
 * For minimizing the effort needed to tweak fresh installations
     * Also for consistency
@@ -36,7 +42,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Enables [TCP wrappers](https://en.wikipedia.org/wiki/TCP_Wrapper)
     * :bulb: Some people consider TCP wrappers as obsolete and unnecessary, because nowadays firewall(s) take care of this kind of network level access. I disagree, because TCP wrappers still provide an additional layer of control in a case where the firewall(s) might fail for any number of reasons (usually misconfiguration). TCP wrappers also work as an network level ACL for the programs that utilize it and is a "native" control for those programs.
 * IP stack hardening via [sysctl](https://en.wikipedia.org/wiki/Sysctl) settings
-    * For the complete list, see [network.conf.new](newconfs/sysctl.d/network.conf.new)
+    * For the complete list, see [network.conf.new](files/sysctl.d/network.conf.new)
 * Creates a basic firewall
 
 ### :wood: Logging
@@ -45,6 +51,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Configures `logrotate` to `shred` files
     * :information_source: **NOTE**: Read the fine print in [SHRED(1)](https://www.man7.org/linux/man-pages/man1/shred.1.html): "CAUTION: shred assumes the file system and hardware overwrite data in place.  Although this is common, many platforms operate otherwise."
 * Configure `journald` to use [Forward Secure Sealing (FSS)](https://lwn.net/Articles/512895/) and enable auditing (see [notes](#information_source-notes) on how to create keys for FSS)
+* Enables [auditing](https://people.redhat.com/sgrubb/audit/)
 * Run `ansible-playbook --list-tasks --tags logging harden.yml` for a full list
 
 ### :bar_chart: Accounting
@@ -54,16 +61,16 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Enables [process accounting](https://tldp.org/HOWTO/Process-Accounting/)
 * Run `ansible-playbook --list-tasks --tags accounting harden.yml` for a full list
 
-### Kernel
+### :peanuts: Kernel
 
-* :no_entry: Disables the use of certain kernel modules via `modprobe` (see [newconfs/modprobe.d/](newconfs/modprobe.d/))
+* :no_entry: Disables the use of certain kernel modules via `modprobe` (see [files/modprobe.d/](files/modprobe.d/))
     * Disable [Firewire](http://www.hermann-uwe.de/blog/physical-memory-attacks-via-firewire-dma-part-1-overview-and-mitigation)
     * :warning: **WARNING**: Also disables `usb-storage`, which will disable support for USB mass medias
 * [sysctl](https://en.wikipedia.org/wiki/Sysctl) settings hardening
     * :keyboard: Enables [Secure Attention Key (SAK)](https://www.kernel.org/doc/Documentation/SAK.txt) and disables the other [magic SysRq stuff](https://www.kernel.org/doc/Documentation/sysrq.txt)
     * :no_entry: Restricts the use of `dmesg` by regular users
     * :no_entry: Enable [YAMA](https://www.kernel.org/doc/Documentation/security/Yama.txt) (disallow `ptrace`)
-    * For the complete list, see [sysctl.conf.new](newconfs/sysctl.d/sysctl.conf.new)
+    * For the complete list, see [sysctl.conf.new](files/sysctl.d/sysctl.conf.new)
 * Run `ansible-playbook --list-tasks --tags kernel harden.yml` for a full list
 
 ### :file_folder: Filesystem
@@ -71,7 +78,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Hardens mount options (creates `/etc/fstab.new`) (see [fstab.awk](files/fstab.awk))
 * :house: Sets strict permissions to users home directories
 * :no_entry: Limits permissions to various configuration files and directories that might contain sensitive content (see `permissions` tag for a complete list)
-* :do_not_litter: Clean up `/tmp` during boot (see [tmp.conf.new](newconfs/tmp.conf.new))
+* :do_not_litter: Clean up `/tmp` during boot (see [tmp.conf.new](files/tmp.conf.new))
 * Removes SUID and/or SGID bits from various binaries (see `ansible-playbook --list-tasks --tags suid,sgid harden.yml` for details)
 
 ### Application specific
@@ -142,7 +149,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 ### Miscellaneous
 
 * :placard: Creates legal banners (see [banners.yml](tasks/banners.yml))
-* Reduce the amount of trusted [CAs](https://en.wikipedia.org/wiki/Certificate_authority) (see [ca-certificates.conf.new](newconfs/ca-certificates.conf.new))
+* Reduce the amount of trusted [CAs](https://en.wikipedia.org/wiki/Certificate_authority) (see [ca-certificates.conf.new](files/ca-certificates.conf.new))
     * [![ca-certs](https://github.com/pyllyukko/harden.yml/actions/workflows/ca-certs.yml/badge.svg)](https://github.com/pyllyukko/harden.yml/actions/workflows/ca-certs.yml)
     * You can also run `make /etc/ssl/certs/ca-certificates.crt` to update the CAs
 * :shell: Restricts the number of available shells (`/etc/shells`)
@@ -185,8 +192,8 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Add `pam_namespace` to `/etc/pam.d/{login,sddm,sshd,xdm}`
 * Removes `auth include postlogin` from several files, as `postlogin` should (and has) only `session` module types
 * :sandwich: Creates `/etc/pam.d/sudo`, as that seemed to be missing
-* 🎟️ Disallows the use of `su` (see [su.new](newconfs/pam.d/su.new))
-* :no_entry: [Block](newconfs/pam.d/other.new) `/etc/pam.d/remote` (see [/etc/pam.d/remote](https://github.com/pyllyukko/harden.yml/wiki/PAM#etcpamdremote))
+* 🎟️ Disallows the use of `su` (see [su.new](files/pam.d/su.new))
+* :no_entry: [Block](files/pam.d/other.new) `/etc/pam.d/remote` (see [/etc/pam.d/remote](https://github.com/pyllyukko/harden.yml/wiki/PAM#etcpamdremote))
 
 ### Debian specific
 
