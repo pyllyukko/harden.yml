@@ -21,13 +21,13 @@ then
     echo "[-] Hardening index too low" 1>&2
     exit 1
   fi
-  echo -e "[[\033[1;32m+\033[0m] Lynis score sufficient"
+  echo -e "[\033[1;32m+\033[0m] Lynis score sufficient"
   if [ -f /var/log/lynis.log.old ]
   then
     old_index="$(sed -n 's/^[0-9]\{4\}-[0-9]\{2\}-[0-9]\{2\} [0-9]\{2\}:[0-9]\{2\}:[0-9]\{2\} Hardening index : \[\([0-9]\+\)\] \[[# ]\+\]$/\1/p' /var/log/lynis.log.old)"
     if [[ ${old_index} =~ ^[0-9]+$ ]] && [ ${hardening_index} -gt ${old_index} ]
     then
-      echo -e "[[\033[1;32m+\033[0m] Score increase = $((hardening_index - old_index))"
+      echo -e "[\033[1;32m+\033[0m] Score increase = $((hardening_index - old_index))"
     fi
   fi
 fi
