@@ -55,13 +55,34 @@ PAM
 
 The following PAM tests are executed:
 
-* Various tests with [pamtester](https://pamtester.sourceforge.net/)
 * Various tests with [libpamtest](https://cwrap.org/pam_wrapper.html) (cwrap)
     * See [#61](https://github.com/pyllyukko/harden.yml/issues/61)
 * Tracking few upstream PAM configurations for changes in case we need to adapt/react to some change
 * Test `pam_limits` `RLIMIT_NPROC` restriction
 
-### Limitations
+### pamtester
+
+#### Pre-harden
+
+Before hardening, test that some actions are allowed in default configuration:
+
+* All users are allowed to use `cron`
+* All users are allowed to use `at`
+* Nonexistent services are not properly restricted
+* System accounts are able to login
+    * Of course there is still authentication, but for defence in depth it should also be prohibited PAM's `account` (authorization) and `session` types
+
+#### Post-harden
+
+* Test 1: Verify that use of `cron` is restricted via PAM's `account` (authorization) (with `pam_access`)
+    * Test 2: Check that `root` can still use `cron`
+* Test 3: Verify that use of `at` is restricted
+* Test 4: Verify that use of `su` is restricted
+    * This can't be tested pre-harden as it prompts for password. `su` is usually allowed in default configuration.
+* Test 5: Verify that nonexistent services are properly restricted via `/etc/pam.d/other`
+* Test 5: Verify that login is properly restricted for system users and other random accounts
+
+#### Limitations
 
 Anything `auth` can't be tested with `pamtester`, because there's no way to enter password with `pamtester` (hence the additional tests with [libpamtest](https://cwrap.org/pam_wrapper.html)).
 

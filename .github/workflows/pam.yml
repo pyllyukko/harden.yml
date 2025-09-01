@@ -6,6 +6,7 @@ env:
   ANSIBLE_FORCE_COLOR: '1'
 
 jobs:
+  # See https://github.com/pyllyukko/harden.yml/blob/master/tests/README.md#pamtester
   pamtester:
     runs-on: ubuntu-latest
     steps:
