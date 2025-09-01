@@ -55,10 +55,8 @@ PAM
 
 The following PAM tests are executed:
 
-* Various tests with [libpamtest](https://cwrap.org/pam_wrapper.html) (cwrap)
-    * See [#61](https://github.com/pyllyukko/harden.yml/issues/61)
 * Tracking few upstream PAM configurations for changes in case we need to adapt/react to some change
-* Test `pam_limits` `RLIMIT_NPROC` restriction
+* Test polyinstantiation
 
 ### pamtester
 
@@ -85,6 +83,47 @@ Before hardening, test that some actions are allowed in default configuration:
 #### Limitations
 
 Anything `auth` can't be tested with `pamtester`, because there's no way to enter password with `pamtester` (hence the additional tests with [libpamtest](https://cwrap.org/pam_wrapper.html)).
+
+### libpamtest
+
+Various tests with [libpamtest](https://cwrap.org/pam_wrapper.html) (cwrap). See [#61](https://github.com/pyllyukko/harden.yml/issues/61).
+
+#### Setup and testing the baseline/defaults
+
+* Round 1: Test that authentication with `root` fails as `pam_matrix` is not yet in use
+* Prepare the test environment with [pamtests.yml](pamtests.yml)
+
+Round 2:
+
+| Test # | Service | Facility/type | User account    | Description                                            | Expected result |
+| ------ | ------- | ------------- | --------------- | ------------------------------------------------------ | --------------- |
+| 1      | `login` | `auth`        | `root`          | Regular login                                          | `PAM_SUCCESS`   |
+| 2      | `login` | `account`     | Invalid account | Regular login with invalid account                     | `PAM_AUTH_ERR`  |
+| 3      | `login` | `account`     | `root`          | Regular login                                          | `PAM_SUCCESS`   |
+| 4      | `cron`  | `account`     | `root`          | Using `cron`                                           | `PAM_SUCCESS`   |
+| 5      | `cron`  | `account`     | `nobody`        | Using `cron` as other user                             | `PAM_SUCCESS`   |
+| 6-1    | `login` | `auth`        | `nobody`        | Regular login as other user                            | `PAM_SUCCESS`   |
+| 6-2    | `login` | `auth`        | `nobody`        | Regular login as other user when `/etc/nologin` exists | `PAM_AUTH_ERR`  |
+| 7      | `su`    | `auth`        | `nobody`        | Using `su`                                             | `PAM_SUCCESS`   |
+| 8      | `login` | `auth`        | `root`          | Login with invalid password                            | `PAM_AUTH_ERR`  |
+
+#### Post-harden
+
+| Test #  | Service | Facility/type | User account    | Description                                                        | Expected result   |
+| ------- | ------- | ------------- | --------------- | ------------------------------------------------------------------ | ----------------- |
+| 2       | `login` | `account`     | Invalid account | Regular login with invalid account                                 | `PAM_AUTH_ERR`    |
+| 5       | `cron`  | `account`     | `nobody`        | Using `cron` as other user                                         | `PAM_PERM_DENIED` |
+| 7-1     | `su`    | `auth`        | `nobody`        | Using `su`                                                         | `PAM_AUTH_ERR`    |
+| 7-2     | `su`    | `auth`        | `root`          | Using `su` as `root`                                               | `PAM_SUCCESS`     |
+| 1       | `login` | `auth`        | `root`          | Regular login                                                      | `PAM_SUCCESS`     |
+| 8-[123] | `login` | `auth`        | `root`          | Login with invalid password 3 times                                | `PAM_PERM_DENIED` |
+| 8-4     | `login` | `auth`        | `root`          | Login with invalid password. Temporarily locked by `pam_faillock`. | `PAM_AUTH_ERR`    |
+| 1       | `login` | `auth`        | `root`          | Login with valid password. Temporarily locked by `pam_faillock`.   | `PAM_AUTH_ERR`    |
+
+### Limits
+
+* Test `pam_limits` `RLIMIT_NPROC` restriction
+* Test `pam_limits` [core dump](https://en.wikipedia.org/wiki/Core_dump) limitation
 
 ca-certs
 --------

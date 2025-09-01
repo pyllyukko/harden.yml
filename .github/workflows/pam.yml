@@ -92,12 +92,12 @@ jobs:
           echo '[*] Test 5 - nobody cron:account'
           sudo tests/test -t 5 -r 0
           # Nothing's preventing user nobody from authenticating
-          echo '[*] Test 6 - nobody login:auth'
+          echo '[*] Test 6-1 - nobody login:auth'
           sudo tests/test -t 6 -r 0
           # Test pam_nologin
           # https://github.com/linux-pam/linux-pam/blob/master/modules/pam_nologin/pam_nologin.c
           sudo touch /etc/nologin
-          echo '[*] Test 6 - nobody login:auth (nologin)'
+          echo '[*] Test 6-2 - nobody login:auth (nologin)'
           sudo tests/test -t 6 -r 7
           sudo rm -v /etc/nologin
           # Anyone can use su
@@ -130,16 +130,16 @@ jobs:
           #sudo tests/test -t 6 -r 7
           # Use of su should be denied
           # PAM_PERM_DENIED
-          echo '[*] Test 7 - nobody su:auth'
+          echo '[*] Test 7-1 - nobody su:auth'
           tests/test -t 7 -r 6
           # This should succeed because of pam_rootok
-          echo '[*] Test 7 - nobody su:auth (as root)'
+          echo '[*] Test 7-2 - nobody su:auth (as root)'
           sudo tests/test -t 7 -r 0
 
           # Test failed login & pam_faillock
           # We need Sudo to be able to write to faillock
           # Test that the login is initially working before faillock kicks in
-          echo "[*] root login:auth with valid password before pam_faillock kicks in"
+          echo "[*] Test 1 - root login:auth with valid password before pam_faillock kicks in"
           sudo tests/test -t 1 -r 0
           # PAM_PERM_DENIED
           echo '[*] Test 8-1 - root login:auth (wrong password)'
