@@ -150,7 +150,7 @@ jobs:
           echo '[*] faillock --user root:'
           sudo faillock --user root
           echo '[*] grep pam_faillock /var/log/auth.log:'
-          sudo grep 'pam_faillock' /var/log/auth.log | grep -v 'sudo:'
+          sudo gawk '/pam_faillock/ && $3!="sudo:"{print}' /var/log/auth.log
           # Should be locked after 3 attempts
           # Return value will change from PAM_PERM_DENIED to PAM_AUTH_ERR from faillock preauth
           sudo tests/test -t 8 -r 7
