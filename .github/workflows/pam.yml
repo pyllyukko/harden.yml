@@ -139,11 +139,14 @@ jobs:
           # Test failed login & pam_faillock
           # We need Sudo to be able to write to faillock
           # Test that the login is initially working before faillock kicks in
+          echo "[*] root login:auth with valid password before pam_faillock kicks in"
           sudo tests/test -t 1 -r 0
           # PAM_PERM_DENIED
-          echo '[*] Test 8 - root login:auth (wrong password)'
+          echo '[*] Test 8-1 - root login:auth (wrong password)'
           time sudo tests/test -t 8 -r 6
+          echo '[*] Test 8-2 - root login:auth (wrong password)'
           sudo tests/test -t 8 -r 6
+          echo '[*] Test 8-3 - root login:auth (wrong password)'
           sudo tests/test -t 8 -r 6
           echo '[*] Content of /var/run/faillock/:'
           sudo ls -l /var/run/faillock/
@@ -153,6 +156,7 @@ jobs:
           sudo gawk '/pam_faillock/ && $3!="sudo:"{print}' /var/log/auth.log
           # Should be locked after 3 attempts
           # Return value will change from PAM_PERM_DENIED to PAM_AUTH_ERR from faillock preauth
+          echo '[*] Test 8-4 - root login:auth (wrong password) - root account should be temporarily locked at this point'
           sudo tests/test -t 8 -r 7
           echo '[*] Content of /var/run/faillock/:'
           sudo ls -l /var/run/faillock/
@@ -160,7 +164,7 @@ jobs:
           sudo faillock --user root
           # Test that root account is locked
           # PAM_AUTH_ERR
-          echo '[*] Test 1 - root login:auth (with temporary lockout)'
+          echo '[*] Test 1 - root login:auth (with valid password and temporary lockout)'
           sudo tests/test -t 1 -r 7
       - name: chmod /var/log/auth.log
         run: sudo chmod -c 644 /var/log/auth.log
