@@ -58,7 +58,9 @@ jobs:
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
           echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
-        run: sudo lynis audit system --skip-plugins --tests-from-group authentication
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group authentication
+          sudo cp -v /var/log/lynis.log /var/log/lynis.log.old
       # See https://github.com/pyllyukko/harden.yml/issues/89
       - name: Enable uid_ge_1000 PAM profile
         run: |
@@ -109,7 +111,9 @@ jobs:
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
           echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
-        run: sudo lynis audit system --skip-plugins --tests-from-group accounting
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group accounting
+          sudo cp -v /var/log/lynis.log /var/log/lynis.log.old
       - name: Run Ansible playbook for accounting, audit & sysstat
         run: ansible-playbook harden.yml --tags accounting,audit,sysstat --skip-tags slackware,centos
       - name: Run Lynis
@@ -139,7 +143,9 @@ jobs:
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
           echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
-        run: sudo lynis audit system --skip-plugins --tests-from-group scheduling
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group scheduling
+          sudo cp -v /var/log/lynis.log /var/log/lynis.log.old
       - name: Run Ansible playbook for cron
         run: ansible-playbook harden.yml --tags cron --skip-tags slackware
       - name: Run Lynis
@@ -165,7 +171,9 @@ jobs:
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
           echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
-        run: sudo lynis audit system --skip-plugins --tests-from-group shells
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group shells
+          sudo cp -v /var/log/lynis.log /var/log/lynis.log.old
       - name: Run Ansible playbook for umask & shells
         run: ansible-playbook harden.yml --tags umask,shells --skip-tags slackware
       - name: Run Lynis
@@ -196,9 +204,13 @@ jobs:
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
           echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden) (malware)
-        run: sudo lynis audit system --skip-plugins --tests-from-group malware
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group malware
+          sudo cp -v /var/log/lynis.log /var/log/lynis.log.old
       - name: Run Lynis (pre-harden) (hardening)
-        run: sudo lynis audit system --skip-plugins --tests-from-group hardening
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group hardening
+          sudo cp -v /var/log/lynis.log /var/log/lynis-hardening.log.old
       - name: Install jmespath
         run: sudo pipx inject ansible-core jmespath
       - name: Run Ansible playbook for clamav, rkhunter & chkrootkit
@@ -218,14 +230,17 @@ jobs:
       # 2025-01-08 21:22:22 Result: no commercial anti-virus tools found
       # 2025-01-08 21:22:22 Hardening: assigned partial number of hardening points (0 of 3). Currently having 4 points (out of 7)
       - name: Check Lynis score (malware)
-        run: sudo bash tests/check_lynis_score.sh 66
+        run: |
+          sudo bash tests/check_lynis_score.sh 66
       # Basically just https://cisofy.com/lynis/controls/HRDN-7230/
       - name: Run Lynis (hardening)
         run: |
           sudo lynis audit system --skip-plugins --tests-from-group hardening
           sudo cp -v /var/log/lynis.log /var/log/lynis-hardening.log
       - name: Check Lynis score (hardening)
-        run: sudo bash tests/check_lynis_score.sh 100
+        run: |
+          sudo cp -vf /var/log/lynis-hardening.log.old /var/log/lynis.log.old
+          sudo bash tests/check_lynis_score.sh 100
       - name: chmod Lynis & rkhunter files
         run: |
           sudo chmod -c 644 /var/log/lynis-malware.log /var/log/lynis-hardening.log /var/log/rkhunter.log /var/lib/rkhunter/db/rkhunter.dat /etc/rkhunter.conf
@@ -255,7 +270,9 @@ jobs:
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
           echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
-        run: sudo lynis audit system --skip-plugins --tests-from-group mac_frameworks
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group mac_frameworks
+          sudo cp -v /var/log/lynis.log /var/log/lynis.log.old
       - name: Run Ansible playbook for apparmor
         run: ansible-playbook harden.yml --tags apparmor
       - name: Run Lynis
@@ -284,7 +301,9 @@ jobs:
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
           echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
-        run: sudo lynis audit system --skip-plugins --tests-from-group file_permissions
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group file_permissions
+          sudo cp -v /var/log/lynis.log /var/log/lynis.log.old
       - name: Run Ansible playbook for cron & permissions
         run: ansible-playbook harden.yml --tags cron,permissions --skip-tags slackware
       - name: Run Lynis
@@ -311,7 +330,9 @@ jobs:
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
           echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
-        run: sudo lynis audit system --skip-plugins --tests-from-group homedirs
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group homedirs
+          sudo cp -v /var/log/lynis.log /var/log/lynis.log.old
       - name: Run Ansible playbook for permissions
         run: ansible-playbook harden.yml --tags permissions --skip-tags slackware
       - name: Run Lynis
@@ -337,7 +358,9 @@ jobs:
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
           echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
-        run: sudo lynis audit system --skip-plugins --tests-from-group kernel_hardening
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group kernel_hardening
+          sudo cp -v /var/log/lynis.log /var/log/lynis.log.old
       - name: Run Ansible playbook for kernel
         run: ansible-playbook harden.yml --tags kernel
       - name: Run Lynis
@@ -367,7 +390,9 @@ jobs:
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
           echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
-        run: sudo lynis audit system --skip-plugins --tests-from-group file_integrity
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group file_integrity
+          sudo cp -v /var/log/lynis.log /var/log/lynis.log.old
       - name: Run Ansible playbook for aide
         run: ansible-playbook harden.yml --tags aide
       - name: Run Lynis
@@ -398,7 +423,9 @@ jobs:
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
           echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
-        run: sudo lynis audit system --skip-plugins --tests-from-group storage
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group storage
+          sudo cp -v /var/log/lynis.log /var/log/lynis.log.old
       - name: Run Ansible playbook for kernel
         run: ansible-playbook harden.yml --tags kernel
       - name: Run Lynis
@@ -470,7 +497,9 @@ jobs:
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
           echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
-        run: sudo lynis audit system --skip-plugins --tests-from-group ssh
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group ssh
+          sudo cp -v /var/log/lynis.log /var/log/lynis.log.old
       - name: Run Ansible playbook for SSH
         run: ansible-playbook harden.yml --tags ssh
       - name: Run Lynis
@@ -496,7 +525,9 @@ jobs:
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
           echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
-        run: sudo lynis audit system --skip-plugins --tests-from-group logging
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group logging
+          sudo cp -v /var/log/lynis.log /var/log/lynis.log.old
       - name: Run Ansible playbook for logging
         run: ansible-playbook harden.yml --tags logging
       - name: Run Lynis
@@ -527,7 +558,9 @@ jobs:
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
           echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
       - name: Run Lynis (pre-harden)
-        run: sudo lynis audit system --skip-plugins --tests-from-group kernel
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group kernel
+          sudo cp -v /var/log/lynis.log /var/log/lynis.log.old
       - name: Run Ansible playbook for limits and kernel
         run: ansible-playbook harden.yml --tags limits,kernel
       # KRNL-5820 doesn't properly detect configuration in coredump.conf. See https://github.com/CISOfy/lynis/pull/1656
@@ -563,7 +596,9 @@ jobs:
       - name: Check /sys/bus/usb/devices/usb*/authorized_default
         run: more /sys/bus/usb/devices/usb*/authorized_default | cat
       - name: Run Lynis (pre-harden)
-        run: sudo lynis audit system --skip-plugins --tests-from-group usb
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group usb
+          sudo cp -v /var/log/lynis.log /var/log/lynis.log.old
       - name: Run Ansible playbook for usb
         run: ansible-playbook harden.yml --tags services --skip-tags lynis,slackware,clamav,audit,accounting,firewall,rng,ssh,cron,gnome
       # There's only few checks so show results for all the tests
