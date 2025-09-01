@@ -137,8 +137,8 @@ jobs:
           # PAM_PERM_DENIED
           echo '[*] Test 5 - nobody cron:account'
           sudo tests/test -t 5 -r 6
-          echo "[*] fgrep 'pam_access(cron:account)' var/log/auth.log:"
-          sudo fgrep 'pam_access(cron:account)' var/log/auth.log
+          echo "[*] fgrep 'pam_access(cron:account)' /var/log/auth.log:"
+          sudo fgrep 'pam_access(cron:account)' /var/log/auth.log
           # Login for "nobody" was previously blocked by https://github.com/pyllyukko/harden.yml/blob/master/files/pam-configs/uid_ge_1000.new
           # Now it is handled in account phase by pam_access. So the authentication itself will succeed, but access is denied.
           #echo '[*] Test 6 - nobody login:auth'
