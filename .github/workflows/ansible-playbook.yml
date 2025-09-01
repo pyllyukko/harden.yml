@@ -131,6 +131,16 @@ jobs:
         run: |
           sudo apt-get install debsums
           sudo debsums -ec | grep -v '^/etc/\(cloud/templates/sources\.list\.ubuntu\.deb822\.tmpl\|firefox/syspref\.js\|containers/registries\.conf\|default/motd-news\|needrestart/needrestart\.conf\|waagent\.conf\)$'
+      - name: Check systemd units
+        run: for i in acct sysstat; do systemctl status ${i}; systemctl is-enabled ${i}; done
+      - name: Check for log dirs
+        run: |
+          test -d /var/log/account
+          ls -l /var/log/account
+          test -d /var/log/sysstat
+          ls -l /var/log/sysstat
+      - name: Run lastcomm
+        run: sudo lastcomm runner
   # The only test that would be (positively) scored in this category is SCHD-7720,
   # but that test is skipped if/when atd is not running.
   scheduling:
