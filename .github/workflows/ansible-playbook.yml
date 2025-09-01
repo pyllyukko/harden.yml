@@ -151,7 +151,7 @@ jobs:
       - name: List audit rules
         run: sudo auditctl -l
       - name: Run aureport
-        run: sudo aureport -ts today --summary
+        run: sudo aureport --summary
   # The only test that would be (positively) scored in this category is SCHD-7720,
   # but that test is skipped if/when atd is not running.
   scheduling:
