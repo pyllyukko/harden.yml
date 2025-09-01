@@ -26,8 +26,8 @@ jobs:
           # Unknown services
           # TODO: authenticate & chauthtok
           for operation in acct_mgmt open_session; do pamtester nonexistent nobody "${operation}" || exit 1; done
-          echo "[*] fgrep 'pam_unix(nonexistent:session):' /var/log/auth.log:"
-          sudo fgrep 'pam_unix(nonexistent:session):' /var/log/auth.log
+          echo "[*] grep '\bpam_unix(nonexistent:session):' /var/log/auth.log:"
+          sudo grep '\bpam_unix(nonexistent:session):' /var/log/auth.log
           # Login for random users
           pamtester login nobody acct_mgmt || exit 1
       - name: Run Ansible playbook for pam
@@ -37,27 +37,27 @@ jobs:
           # random users should not be able to use cron
           # enforced with pam_access
           pamtester cron nobody acct_mgmt && { echo -e '[\033[1;31m-\033[0m] Test 1 failed' 1>&2; exit 1; }
-          echo "[*] fgrep 'pam_access(cron:account):' /var/log/auth.log:"
-          sudo fgrep 'pam_access(cron:account):' /var/log/auth.log
+          echo "[*] grep '\bpam_access(cron:account):' /var/log/auth.log:"
+          sudo grep '\bpam_access(cron:account):' /var/log/auth.log
           # root should still be able to use cron
           pamtester cron root acct_mgmt || { echo -e '[\033[1;31m-\033[0m] Test 2 failed' 1>&2; exit 1; }
           # random users should not be able to use atd
           # enforced with pam_access
           pamtester atd nobody acct_mgmt && { echo -e '[\033[1;31m-\033[0m] Test 3 failed' 1>&2; exit 1; }
-          echo "[*] fgrep 'pam_access(atd:account):' /var/log/auth.log:"
-          sudo fgrep 'pam_access(atd:account):' /var/log/auth.log
+          echo "[*] grep '\bpam_access(atd:account):' /var/log/auth.log:"
+          sudo grep '\bpam_access(atd:account):' /var/log/auth.log
           # su shouldn't be allowed
           pamtester su nobody authenticate && { echo -e '[\033[1;31m-\033[0m] Test 4 failed' 1>&2; exit 1; }
-          echo "[*] fgrep 'pam_unix(su:auth):' /var/log/auth.log:"
-          sudo fgrep 'pam_unix(su:auth):' /var/log/auth.log
+          echo "[*] grep '\bpam_unix(su:auth):' /var/log/auth.log:"
+          sudo grep '\bpam_unix(su:auth):' /var/log/auth.log
           # Unknown services should be denied by /etc/pam.d/other
           for operation in authenticate acct_mgmt chauthtok open_session; do echo "[*] Testing nonexistent service operation ${operation}"; pamtester nonexistent nobody "${operation}" && exit 1; done; true
-          echo "[*] fgrep 'pam_warn(nonexistent:' /var/log/auth.log:"
-          sudo fgrep 'pam_warn(nonexistent:' /var/log/auth.log
+          echo "[*] grep '\bpam_warn(nonexistent:' /var/log/auth.log:"
+          sudo grep '\bpam_warn(nonexistent:' /var/log/auth.log
           # Random users should not be able to login
           pamtester login nobody acct_mgmt && { echo -e '[\033[1;31m-\033[0m] Test 5 failed' 1>&2; exit 1; } || true
-          echo "[*] fgrep 'pam_access(login:account):' /var/log/auth.log:"
-          sudo fgrep 'pam_access(login:account):' /var/log/auth.log
+          echo "[*] grep '\bpam_access(login:account):' /var/log/auth.log:"
+          sudo grep '\bpam_access(login:account):' /var/log/auth.log
       - name: chmod /var/log/auth.log
         run: sudo chmod -c 644 /var/log/auth.log
       - name: Archive auth.log
@@ -82,8 +82,8 @@ jobs:
         # PAM_AUTH_ERR
         run: |
           tests/test -t 1 -r 7
-          echo "[*] fgrep 'authentication failure' /var/log/auth.log:"
-          sudo fgrep 'authentication failure' /var/log/auth.log
+          echo "[*] grep '\bauthentication failure' /var/log/auth.log:"
+          sudo grep '\bauthentication failure' /var/log/auth.log
       - name: Prepare environment for testing
         run: ansible-playbook tests/pamtests.yml --tags setup
       - name: Run tests - round 2
@@ -97,8 +97,8 @@ jobs:
           # This test should always succeed
           echo '[*] Test 2 - invalid account'
           tests/test -t 2
-          echo "[*] fgrep 'could not identify user' /var/log/auth.log:"
-          sudo fgrep 'could not identify user' /var/log/auth.log
+          echo "[*] grep '\bcould not identify user\b' /var/log/auth.log:"
+          sudo grep '\bcould not identify user\b' /var/log/auth.log
           # These will fail as a regular user with "unix_chkpwd[1550490]: could not obtain user info (root)"
           #echo '[*] Test 3'
           #tests/test -t 3 -r 2
@@ -149,8 +149,8 @@ jobs:
           # PAM_PERM_DENIED
           echo '[*] Test 5 - nobody cron:account'
           sudo tests/test -t 5 -r 6
-          echo "[*] fgrep 'pam_access(cron:account)' /var/log/auth.log:"
-          sudo fgrep 'pam_access(cron:account)' /var/log/auth.log
+          echo "[*] grep '\bpam_access(cron:account)' /var/log/auth.log:"
+          sudo grep '\bpam_access(cron:account)' /var/log/auth.log
           # Login for "nobody" was previously blocked by https://github.com/pyllyukko/harden.yml/blob/master/files/pam-configs/uid_ge_1000.new
           # Now it is handled in account phase by pam_access. So the authentication itself will succeed, but access is denied.
           #echo '[*] Test 6 - nobody login:auth'
