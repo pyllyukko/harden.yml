@@ -46,6 +46,14 @@ jobs:
           for operation in authenticate acct_mgmt chauthtok open_session; do echo "[*] Testing nonexistent service operation ${operation}"; pamtester nonexistent nobody "${operation}" && exit 1; done; true
           # Random users should not be able to login
           pamtester login nobody acct_mgmt && { echo -e '[\033[1;31m-\033[0m] Test 5 failed' 1>&2; exit 1; } || true
+      - name: chmod /var/log/auth.log
+        run: sudo chmod -c 644 /var/log/auth.log
+      - name: Archive auth.log
+        uses: actions/upload-artifact@v4
+        with:
+          name: auth.log
+          path: |
+            /var/log/auth.log
   libpamtest:
     runs-on: ubuntu-latest
     steps:
@@ -60,7 +68,10 @@ jobs:
       # This should fail as pam_matrix is not in use yet
       - name: Run tests - round 1
         # PAM_AUTH_ERR
-        run: tests/test -t 1 -r 7
+        run: |
+          tests/test -t 1 -r 7
+          echo "[*] fgrep 'authentication failure' /var/log/auth.log:"
+          sudo fgrep 'authentication failure' /var/log/auth.log
       - name: Prepare environment for testing
         run: ansible-playbook tests/pamtests.yml --tags setup
       - name: Run tests - round 2
@@ -74,6 +85,8 @@ jobs:
           # This test should always succeed
           echo '[*] Test 2 - invalid account'
           tests/test -t 2
+          echo "[*] fgrep 'could not identify user' /var/log/auth.log:"
+          sudo fgrep 'could not identify user' /var/log/auth.log
           # These will fail as a regular user with "unix_chkpwd[1550490]: could not obtain user info (root)"
           #echo '[*] Test 3'
           #tests/test -t 3 -r 2
@@ -124,6 +137,8 @@ jobs:
           # PAM_PERM_DENIED
           echo '[*] Test 5 - nobody cron:account'
           sudo tests/test -t 5 -r 6
+          echo "[*] fgrep 'pam_access(cron:account)' var/log/auth.log:"
+          sudo fgrep 'pam_access(cron:account)' var/log/auth.log
           # Login for "nobody" was previously blocked by https://github.com/pyllyukko/harden.yml/blob/master/files/pam-configs/uid_ge_1000.new
           # Now it is handled in account phase by pam_access. So the authentication itself will succeed, but access is denied.
           #echo '[*] Test 6 - nobody login:auth'

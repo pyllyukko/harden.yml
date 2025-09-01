@@ -68,7 +68,7 @@ Before hardening, test that some actions are allowed in default configuration:
 * All users are allowed to use `at`
 * Nonexistent services are not properly restricted
 * System accounts are able to login
-    * Of course there is still authentication, but for defence in depth it should also be prohibited PAM's `account` (authorization) and `session` types
+    * Of course there is still authentication, but for defence in depth it should also be prohibited within PAM's `account` (authorization) and `session` types
 
 #### Post-harden
 
@@ -103,7 +103,7 @@ Round 2:
 | 4      | `cron`  | `account`     | `root`          | Using `cron`                                           | `PAM_SUCCESS`   |
 | 5      | `cron`  | `account`     | `nobody`        | Using `cron` as other user                             | `PAM_SUCCESS`   |
 | 6-1    | `login` | `auth`        | `nobody`        | Regular login as other user                            | `PAM_SUCCESS`   |
-| 6-2    | `login` | `auth`        | `nobody`        | Regular login as other user when `/etc/nologin` exists | `PAM_AUTH_ERR`  |
+| 6-2    | `login` | `auth`        | `nobody`        | Regular login as other user when `/etc/nologin` exists | [PAM\_AUTH\_ERR](https://github.com/linux-pam/linux-pam/blob/cfe667baa301ffa136a713b0ae22ba0ef493aa48/modules/pam_nologin/pam_nologin.c#L93) |
 | 7      | `su`    | `auth`        | `nobody`        | Using `su`                                             | `PAM_SUCCESS`   |
 | 8      | `login` | `auth`        | `root`          | Login with invalid password                            | `PAM_AUTH_ERR`  |
 
@@ -112,12 +112,12 @@ Round 2:
 | Test #  | Service | Facility/type | User account    | Description                                                        | Expected result   |
 | ------- | ------- | ------------- | --------------- | ------------------------------------------------------------------ | ----------------- |
 | 2       | `login` | `account`     | Invalid account | Regular login with invalid account                                 | `PAM_AUTH_ERR`    |
-| 5       | `cron`  | `account`     | `nobody`        | Using `cron` as other user                                         | `PAM_PERM_DENIED` |
+| 5       | `cron`  | `account`     | `nobody`        | Using `cron` as other user                                         | [PAM\_PERM\_DENIED](https://github.com/linux-pam/linux-pam/blob/cfe667baa301ffa136a713b0ae22ba0ef493aa48/modules/pam_access/pam_access.c#L1261) |
 | 7-1     | `su`    | `auth`        | `nobody`        | Using `su`                                                         | `PAM_AUTH_ERR`    |
 | 7-2     | `su`    | `auth`        | `root`          | Using `su` as `root`                                               | `PAM_SUCCESS`     |
 | 1       | `login` | `auth`        | `root`          | Regular login                                                      | `PAM_SUCCESS`     |
 | 8-[123] | `login` | `auth`        | `root`          | Login with invalid password 3 times                                | `PAM_PERM_DENIED` |
-| 8-4     | `login` | `auth`        | `root`          | Login with invalid password. Temporarily locked by `pam_faillock`. | `PAM_AUTH_ERR`    |
+| 8-4     | `login` | `auth`        | `root`          | Login with invalid password. Temporarily locked by `pam_faillock`. | [PAM\_AUTH\_ERR](https://github.com/linux-pam/linux-pam/blob/cfe667baa301ffa136a713b0ae22ba0ef493aa48/modules/pam_faillock/pam_faillock.c#L269) |
 | 1       | `login` | `auth`        | `root`          | Login with valid password. Temporarily locked by `pam_faillock`.   | `PAM_AUTH_ERR`    |
 
 ### Limits
