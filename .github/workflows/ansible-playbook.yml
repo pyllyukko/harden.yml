@@ -132,7 +132,9 @@ jobs:
           sudo apt-get install debsums
           sudo debsums -ec | grep -v '^/etc/\(cloud/templates/sources\.list\.ubuntu\.deb822\.tmpl\|firefox/syspref\.js\|containers/registries\.conf\|default/motd-news\|needrestart/needrestart\.conf\|waagent\.conf\)$'
       - name: Check systemd units
-        run: for i in acct sysstat sysstat-collect sysstat-summary auditd; do systemctl status ${i}; systemctl is-enabled ${i}; done
+        run: |
+          for i in acct sysstat auditd; do systemctl status ${i}.service; systemctl is-enabled ${i}.service; done
+          for i in sysstat-collect sysstat-summary; do systemctl status ${i}.timer; done
       - name: Check for log dirs
         run: |
           test -d /var/log/account
