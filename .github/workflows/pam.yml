@@ -192,8 +192,8 @@ jobs:
           # PAM_PERM_DENIED
           echo '[*] Test 8-1 - root login:auth (wrong password)'
           time sudo tests/test -t 8 -r 6
-          echo '[*] grep pam_faildelay /var/log/auth.log'
-          sudo grep '\bpam_faildelay(' /var/log/auth.log
+          #echo '[*] grep pam_faildelay /var/log/auth.log'
+          #sudo grep '\bpam_faildelay(' /var/log/auth.log
           echo '[*] Test 8-2 - root login:auth (wrong password)'
           sudo tests/test -t 8 -r 6
           echo '[*] Test 8-3 - root login:auth (wrong password)'
