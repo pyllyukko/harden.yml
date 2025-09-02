@@ -183,12 +183,17 @@ jobs:
 
           # Test failed login & pam_faillock
           # We need Sudo to be able to write to faillock
+          #
+          # Enable debug in pam_faillock so we can see the log entries
+          sudo sed -i 's/^\(auth\s\+optional\s\+pam_faildelay\.so\s\+delay=[0-9]\+\)$/\1 debug/' /etc/pam.d/common-auth
           # Test that the login is initially working before faillock kicks in
           echo "[*] Test 1 - root login:auth with valid password before pam_faillock kicks in"
           sudo tests/test -t 1 -r 0
           # PAM_PERM_DENIED
           echo '[*] Test 8-1 - root login:auth (wrong password)'
           time sudo tests/test -t 8 -r 6
+          echo '[*] grep pam_faildelay /var/log/auth.log'
+          sudo grep '\bpam_faildelay(' /var/log/auth.log
           echo '[*] Test 8-2 - root login:auth (wrong password)'
           sudo tests/test -t 8 -r 6
           echo '[*] Test 8-3 - root login:auth (wrong password)'
