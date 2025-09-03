@@ -184,38 +184,41 @@ jobs:
           # Test failed login & pam_faillock
           # We need Sudo to be able to write to faillock
           #
-          # Enable debug in pam_faillock so we can see the log entries
-          sudo sed -i 's/^\(auth\s\+optional\s\+pam_faildelay\.so\s\+delay=[0-9]\+\)$/\1 debug/' /etc/pam.d/common-auth-matrix
           # Test that the login is initially working before faillock kicks in
           echo "[*] Test 1 - root login:auth with valid password before pam_faillock kicks in"
           sudo tests/test -t 1 -r 0
+          # Disable faildelay so this test goes faster
+          sudo pam-auth-update --disable faildelay
           # PAM_PERM_DENIED
           echo '[*] Test 8-1 - root login:auth (wrong password)'
-          time sudo tests/test -t 8 -r 6
-          echo '[*] grep pam_faildelay /var/log/auth.log'
-          sudo grep '\bpam_faildelay(' /var/log/auth.log
+          sudo tests/test -t 8 -r 6
           echo '[*] Test 8-2 - root login:auth (wrong password)'
           sudo tests/test -t 8 -r 6
           echo '[*] Test 8-3 - root login:auth (wrong password)'
           sudo tests/test -t 8 -r 6
+          # Should be locked after 3 attempts
+          # Return value will change from PAM_PERM_DENIED to PAM_AUTH_ERR from faillock preauth
           echo '[*] Content of /var/run/faillock/:'
           sudo ls -l /var/run/faillock/
           echo '[*] faillock --user root:'
           sudo faillock --user root
           echo '[*] grep pam_faillock /var/log/auth.log:'
           sudo gawk '/pam_faillock/ && $3!="sudo:"{print}' /var/log/auth.log
-          # Should be locked after 3 attempts
-          # Return value will change from PAM_PERM_DENIED to PAM_AUTH_ERR from faillock preauth
-          echo '[*] Test 8-4 - root login:auth (wrong password) - root account should be temporarily locked at this point'
-          sudo tests/test -t 8 -r 7
-          echo '[*] Content of /var/run/faillock/:'
-          sudo ls -l /var/run/faillock/
-          echo '[*] faillock --user root:'
-          sudo faillock --user root
           # Test that root account is locked
           # PAM_AUTH_ERR
           echo '[*] Test 1 - root login:auth (with valid password and temporary lockout)'
           sudo tests/test -t 1 -r 7
+          # Reset faillock
+          sudo faillock --user root --reset
+
+          # Test pam_faildelay
+          sudo pam-auth-update --enable faildelay
+          # Enable debug in pam_faildelay so we can see the log entries
+          sudo sed -i 's/^\(auth\s\+optional\s\+pam_faildelay\.so\s\+delay=[0-9]\+\)$/\1 debug/' /etc/pam.d/common-auth-matrix
+          echo '[*] Test 9 - faildelay - root login:auth (wrong password)'
+          time sudo tests/test -t 8 -r 6
+          echo '[*] grep pam_faildelay /var/log/auth.log'
+          sudo grep '\bpam_faildelay(' /var/log/auth.log
       - name: chmod /var/log/auth.log
         run: sudo chmod -c 644 /var/log/auth.log
       - name: Archive auth.log

@@ -117,8 +117,8 @@ Round 2:
 | 7-2     | `su`    | `auth`        | `root`          | Using `su` as `root`                                               | `PAM_SUCCESS`     |
 | 1       | `login` | `auth`        | `root`          | Regular login                                                      | `PAM_SUCCESS`     |
 | 8-[123] | `login` | `auth`        | `root`          | Login with invalid password 3 times                                | `PAM_PERM_DENIED` |
-| 8-4     | `login` | `auth`        | `root`          | Login with invalid password. Temporarily locked by `pam_faillock`. | [PAM\_AUTH\_ERR](https://github.com/linux-pam/linux-pam/blob/cfe667baa301ffa136a713b0ae22ba0ef493aa48/modules/pam_faillock/pam_faillock.c#L269) |
-| 1       | `login` | `auth`        | `root`          | Login with valid password. Temporarily locked by `pam_faillock`.   | `PAM_AUTH_ERR`    |
+| 1       | `login` | `auth`        | `root`          | Login with valid password. Temporarily locked by `pam_faillock`.   | [PAM\_AUTH\_ERR](https://github.com/linux-pam/linux-pam/blob/cfe667baa301ffa136a713b0ae22ba0ef493aa48/modules/pam_faillock/pam_faillock.c#L269) |
+| 9       | `login` | `auth`        | `root`          | Login with invalid password. Test `pam_faildelay`.               . | `PAM_PERM_DENIED` |
 
 ### Limits
 
