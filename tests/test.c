@@ -171,6 +171,26 @@ static void test_pam_acct_cron_nobody(void **state)
   perr = run_pamtest("cron", "nobody", NULL, tests, NULL);
   assert_int_equal(perr, PAMTEST_ERR_OK);
 }
+// Test 9: Login with empty password
+static void test_pam_authenticate_null_password(void **state)
+{
+  enum pamtest_err perr;
+  struct pamtest_conv_data conv_data;
+  const char *empty_authtoks[] = {
+    NULL,
+  };
+  struct pam_testcase tests[] = {
+    pam_test(PAMTEST_AUTHENTICATE, testcase),
+  };
+
+  (void) state;	/* unused */
+
+  ZERO_STRUCT(conv_data);
+  conv_data.in_echo_off = empty_authtoks;
+
+  perr = run_pamtest("login", "nobody", &conv_data, tests, NULL);
+  assert_int_equal(perr, PAMTEST_ERR_OK);
+}
 void usage(void) {
   printf("\
 options:\n\
@@ -228,6 +248,9 @@ int main(int argc, char *argv[]) {
             break;
           case 8:
             ptr = test_pam_authenticate_wrong_password;
+            break;
+          case 9:
+            ptr = test_pam_authenticate_null_password;
             break;
           default:
             printf("invalid test case\n");

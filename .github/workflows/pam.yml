@@ -119,6 +119,15 @@ jobs:
           tests/test -t 1 -r 7
           echo "[*] grep '\bauthentication failure' /var/log/auth.log:"
           sudo grep '\bauthentication failure' /var/log/auth.log
+          # This is tested against pam_unix
+          echo "[*] Test login with empty password"
+          sudo cp -v /etc/passwd /etc/passwd.bak
+          sed -i 's/^\(nobody:\)x\(:[0-9]\+:[0-9]\+:[^:]*:[^:]*:[^:]*\)$/\1\2/' /etc/passwd
+          tests/test -t 9 -r 0
+          echo "[*] grep '\bblank password' /var/log/auth.log:"
+          sudo grep '\bblank password' /var/log/auth.log
+          # Revert passwd
+          sudo cat /etc/passwd.bak 1>/etc/passwd
       - name: Prepare environment for testing
         run: ansible-playbook tests/pamtests.yml --tags setup
       - name: Run tests - round 2
@@ -233,7 +242,7 @@ jobs:
           sudo pam-auth-update --enable faildelay
           # Enable debug in pam_faildelay so we can see the log entries
           sudo sed -i 's/^\(auth\s\+optional\s\+pam_faildelay\.so\s\+delay=[0-9]\+\)$/\1 debug/' /etc/pam.d/common-auth-matrix
-          echo '[*] Test 9 - faildelay - root login:auth (wrong password)'
+          echo '[*] Test 8-4 - faildelay - root login:auth (wrong password)'
           time sudo tests/test -t 8 -r 6
           echo '[*] grep pam_faildelay /var/log/auth.log'
           sudo grep '\bpam_faildelay(' /var/log/auth.log
