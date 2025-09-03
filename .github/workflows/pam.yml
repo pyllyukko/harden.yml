@@ -78,12 +78,29 @@ jobs:
           sudo grep '\bpam_access(login:account):' /var/log/auth.log
       - name: chmod /var/log/auth.log
         run: sudo chmod -c 644 /var/log/auth.log
-      - name: Archive auth.log
+      - name: Archive PAM configs and logs
         uses: actions/upload-artifact@v4
         with:
-          name: pamtester-auth.log
+          name: pamtester
           path: |
             /var/log/auth.log
+            /etc/pam.d/common-account
+            /etc/pam.d/common-auth
+            /etc/pam.d/common-auth-matrix
+            /etc/pam.d/common-password
+            /etc/pam.d/common-session
+            /etc/pam.d/common-session-noninteractive
+            /etc/security/access.conf
+            /etc/security/faillock.conf
+            /etc/security/limits.conf
+            /etc/security/namespace.conf
+            /etc/passwdqc.conf
+            /var/lib/pam/account
+            /var/lib/pam/auth
+            /var/lib/pam/password
+            /var/lib/pam/seen
+            /var/lib/pam/session
+            /var/lib/pam/session-noninteractive
   libpamtest:
     runs-on: ubuntu-latest
     steps:
@@ -222,10 +239,10 @@ jobs:
           sudo grep '\bpam_faildelay(' /var/log/auth.log
       - name: chmod /var/log/auth.log
         run: sudo chmod -c 644 /var/log/auth.log
-      - name: Archive auth.log
+      - name: Archive PAM configs and logs
         uses: actions/upload-artifact@v4
         with:
-          name: auth.log
+          name: libpamtest
           path: |
             /var/log/auth.log
             /etc/pam.d/common-account
@@ -233,9 +250,20 @@ jobs:
             /etc/pam.d/common-auth-matrix
             /etc/pam.d/common-password
             /etc/pam.d/common-session
+            /etc/pam.d/common-session-noninteractive
             /etc/pam.d/login
             /etc/pam.d/su
+            /etc/security/access.conf
             /etc/security/faillock.conf
+            /etc/security/limits.conf
+            /etc/security/namespace.conf
+            /etc/passwdqc.conf
+            /var/lib/pam/account
+            /var/lib/pam/auth
+            /var/lib/pam/password
+            /var/lib/pam/seen
+            /var/lib/pam/session
+            /var/lib/pam/session-noninteractive
   # TODO: Not a complete list. Also Debian.
   upstream-changes:
     runs-on: ubuntu-latest
