@@ -161,6 +161,9 @@ jobs:
           ansible-playbook tests/pamtests.yml --tags setup
       - name: Run tests - post-harden
         run: |
+          # Disable faildelay to speed up things. We'll test faildelay later on it's own.
+          sudo pam-auth-update --disable faildelay
+
           echo '[*] Test 2 - invalid account'
           tests/test -t 2
           # Should be denied by pam_access
@@ -187,8 +190,6 @@ jobs:
           # Test that the login is initially working before faillock kicks in
           echo "[*] Test 1 - root login:auth with valid password before pam_faillock kicks in"
           sudo tests/test -t 1 -r 0
-          # Disable faildelay so this test goes faster
-          sudo pam-auth-update --disable faildelay
           # PAM_PERM_DENIED
           echo '[*] Test 8-1 - root login:auth (wrong password)'
           sudo tests/test -t 8 -r 6
