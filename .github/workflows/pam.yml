@@ -250,13 +250,16 @@ jobs:
 
           # Test login with empty password
           echo "[*] Test login with empty password"
+          # Disable pam_faildelay and pam_faillock so they won't affect return code
+          sudo pam-auth-update --disable faillock
+          sudo pam-auth-update --disable faildelay
           sudo sed -i 's/^\(nobody:\)x\(:[0-9]\+:[0-9]\+:[^:]*:[^:]*:[^:]*\)$/\1\2/' /etc/passwd
           getent passwd nobody
           # Fix /etc/pam.d/login to use regular common-auth with pam_unix
           sudo sed -i 's/^\(@include\s\+common-auth\)-matrix$/\1/' /etc/pam.d/login
           tests/test -t 9 -r 7
-          echo "[*] grep 'authentication failure' /var/log/auth.log:"
-          sudo grep '\bauthentication failure.\+\buser=nobody\b' /var/log/auth.log
+          echo "[*] grep 'could not identify password' /var/log/auth.log:"
+          sudo grep '\bcould not identify password' /var/log/auth.log
       - name: chmod /var/log/auth.log
         run: sudo chmod -c 644 /var/log/auth.log
       - name: Archive PAM configs and logs
