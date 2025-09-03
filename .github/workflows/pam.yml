@@ -123,6 +123,7 @@ jobs:
           echo "[*] Test login with empty password"
           sudo cp -v /etc/passwd /etc/passwd.bak
           sudo sed -i 's/^\(nobody:\)x\(:[0-9]\+:[0-9]\+:[^:]*:[^:]*:[^:]*\)$/\1\2/' /etc/passwd
+          getent passwd nobody
           tests/test -t 9 -r 0
           echo "[*] grep '\bblank password' /var/log/auth.log:"
           sudo grep '\bblank password' /var/log/auth.log
@@ -246,6 +247,16 @@ jobs:
           time sudo tests/test -t 8 -r 6
           echo '[*] grep pam_faildelay /var/log/auth.log'
           sudo grep '\bpam_faildelay(' /var/log/auth.log
+
+          # Test login with empty password
+          echo "[*] Test login with empty password"
+          sudo sed -i 's/^\(nobody:\)x\(:[0-9]\+:[0-9]\+:[^:]*:[^:]*:[^:]*\)$/\1\2/' /etc/passwd
+          getent passwd nobody
+          # Fix /etc/pam.d/login to use regular common-auth with pam_unix
+          sudo sed -i 's/^\(@include\s\+common-auth\)-matrix$/\1/' /etc/pam.d/login
+          tests/test -t 9 -r 7
+          echo "[*] grep 'authentication failure' /var/log/auth.log:"
+          sudo grep '\bauthentication failure.\+\buser=nobody\b' /var/log/auth.log
       - name: chmod /var/log/auth.log
         run: sudo chmod -c 644 /var/log/auth.log
       - name: Archive PAM configs and logs
