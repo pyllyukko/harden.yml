@@ -127,7 +127,7 @@ jobs:
           echo "[*] grep '\bblank password' /var/log/auth.log:"
           sudo grep '\bblank password' /var/log/auth.log
           # Revert passwd
-          sudo cat /etc/passwd.bak 1>/etc/passwd
+          sudo cp -v /etc/passwd.bak /etc/passwd
       - name: Prepare environment for testing
         run: ansible-playbook tests/pamtests.yml --tags setup
       - name: Run tests - round 2
