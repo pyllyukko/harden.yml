@@ -223,6 +223,11 @@ pamcheck: pam-files
 test: test.c
 	gcc -o $@ $< -lpamtest -lcmocka
 
+# For testing
+/etc/pam.d/common-auth-matrix: /etc/pam.d/common-auth
+	cp -v $< $@
+	sed -i "s/^\(auth\s\+\[success=[0-9]\+\s\+default=ignore\]\s\+\)pam_unix\.so.*$$/\1\/usr\/lib\/$$(uname -m)\/pam_wrapper\/pam_matrix.so passdb=\/tmp\/passdb verbose/" /etc/pam.d/common-auth-matrix
+
 tests/segfault: tests/segfault.c
 	gcc -o $@ $<
 

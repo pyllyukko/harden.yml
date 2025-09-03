@@ -183,14 +183,13 @@ jobs:
           sudo pam-auth-update --enable access
           sudo pam-auth-update --disable polyinstantiation
           sudo pam-auth-update --disable lastlog
+          # Disable faildelay to speed up things. We'll test faildelay later on it's own.
+          sudo pam-auth-update --disable faildelay
           # Re-create common-auth-matrix
           sudo rm -v /etc/pam.d/common-auth-matrix
           ansible-playbook tests/pamtests.yml --tags setup
       - name: Run tests - post-harden
         run: |
-          # Disable faildelay to speed up things. We'll test faildelay later on it's own.
-          sudo pam-auth-update --disable faildelay
-
           echo '[*] Test 2 - invalid account'
           tests/test -t 2
           # Should be denied by pam_access
@@ -241,6 +240,7 @@ jobs:
 
           # Test pam_faildelay
           sudo pam-auth-update --enable faildelay
+          sudo make /etc/pam.d/common-auth-matrix
           # Enable debug in pam_faildelay so we can see the log entries
           sudo sed -i 's/^\(auth\s\+optional\s\+pam_faildelay\.so\s\+delay=[0-9]\+\)$/\1 debug/' /etc/pam.d/common-auth-matrix
           echo '[*] Test 8-4 - faildelay - root login:auth (wrong password)'
@@ -253,6 +253,7 @@ jobs:
           # Disable pam_faildelay and pam_faillock so they won't affect return code
           sudo pam-auth-update --disable faillock
           sudo pam-auth-update --disable faildelay
+          sudo make /etc/pam.d/common-auth-matrix
           sudo sed -i 's/^\(nobody:\)x\(:[0-9]\+:[0-9]\+:[^:]*:[^:]*:[^:]*\)$/\1\2/' /etc/passwd
           getent passwd nobody
           # Fix /etc/pam.d/login to use regular common-auth with pam_unix
