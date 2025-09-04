@@ -42,6 +42,8 @@ jobs:
           sudo sed -i 's/^\(nobody:\)x\(:[0-9]\+:[0-9]\+:[^:]*:[^:]*:[^:]*\)$/\1\2/' /etc/passwd
           getent passwd nobody
           pamtester login nobody authenticate 0</dev/null
+          echo "[*] grep '\bblank password' /var/log/auth.log:"
+          sudo grep '\bblank password' /var/log/auth.log
           # Revert passwd
           sudo cp -v /etc/passwd.bak /etc/passwd
       - name: Run Ansible playbook for pam
@@ -125,6 +127,8 @@ jobs:
           tests/test -t 1 -r 7
           echo "[*] grep '\bauthentication failure' /var/log/auth.log:"
           sudo grep '\bauthentication failure' /var/log/auth.log
+          echo -n $'\n'
+
           # This is tested against pam_unix
           echo "[*] Test login with empty password"
           sudo cp -v /etc/passwd /etc/passwd.bak
@@ -144,12 +148,16 @@ jobs:
           # Authentication should succeed against pam_matrix
           echo '[*] Test 1 - root login:auth'
           tests/test -t 1 -r 0
+          echo -n $'\n'
+
           # pam_unix(login:account) should block as invalid user
           # This test should always succeed
           echo '[*] Test 2 - invalid account'
           tests/test -t 2
           echo "[*] grep '\bcould not identify user\b' /var/log/auth.log:"
           sudo grep '\bcould not identify user\b' /var/log/auth.log
+          echo -n $'\n'
+
           # These will fail as a regular user with "unix_chkpwd[1550490]: could not obtain user info (root)"
           #echo '[*] Test 3'
           #tests/test -t 3 -r 2
@@ -159,26 +167,39 @@ jobs:
           #tests/test -t 5 -r 2
           #echo '[*] Test 6'
           #tests/test -t 6 -r 2
+
           # Should work as root
           echo '[*] Test 3 - root login:account'
           sudo tests/test -t 3
+          echo -n $'\n'
+
           echo '[*] Test 4 - root cron:account'
           sudo tests/test -t 4
+          echo -n $'\n'
+
           # Nothing's preventing user nobody from using cron
           echo '[*] Test 5 - nobody cron:account'
           sudo tests/test -t 5 -r 0
+          echo -n $'\n'
+
           # Nothing's preventing user nobody from authenticating
           echo '[*] Test 6-1 - nobody login:auth'
           sudo tests/test -t 6 -r 0
+          echo -n $'\n'
+
           # Test pam_nologin
           # https://github.com/linux-pam/linux-pam/blob/master/modules/pam_nologin/pam_nologin.c
           sudo touch /etc/nologin
           echo '[*] Test 6-2 - nobody login:auth (nologin)'
           sudo tests/test -t 6 -r 7
           sudo rm -v /etc/nologin
+          echo -n $'\n'
+
           # Anyone can use su
           echo '[*] Test 7 - nobody su:auth'
           tests/test -t 7 -r 0
+          echo -n $'\n'
+
           echo '[*] Test 8 - root login:auth (wrong password)'
           # Wrong password
           # PAM_AUTH_ERR
@@ -198,12 +219,16 @@ jobs:
         run: |
           echo '[*] Test 2 - invalid account'
           tests/test -t 2
+          echo -n $'\n'
+
           # Should be denied by pam_access
           # PAM_PERM_DENIED
           echo '[*] Test 5 - nobody cron:account'
           sudo tests/test -t 5 -r 6
           echo "[*] grep '\bpam_access(cron:account)' /var/log/auth.log:"
           sudo grep '\bpam_access(cron:account)' /var/log/auth.log
+          echo -n $'\n'
+
           # Login for "nobody" was previously blocked by https://github.com/pyllyukko/harden.yml/blob/master/files/pam-configs/uid_ge_1000.new
           # Now it is handled in account phase by pam_access. So the authentication itself will succeed, but access is denied.
           #echo '[*] Test 6 - nobody login:auth'
@@ -212,9 +237,12 @@ jobs:
           # PAM_PERM_DENIED
           echo '[*] Test 7-1 - nobody su:auth'
           tests/test -t 7 -r 6
+          echo -n $'\n'
+
           # This should succeed because of pam_rootok
           echo '[*] Test 7-2 - nobody su:auth (as root)'
           sudo tests/test -t 7 -r 0
+          echo -n $'\n'
 
           # Test failed login & pam_faillock
           # We need Sudo to be able to write to faillock
@@ -243,6 +271,7 @@ jobs:
           sudo tests/test -t 1 -r 7
           # Reset faillock
           sudo faillock --user root --reset
+          echo -n $'\n'
 
           # Test pam_faildelay
           sudo pam-auth-update --enable faildelay
@@ -253,6 +282,7 @@ jobs:
           time sudo tests/test -t 8 -r 6
           echo '[*] grep pam_faildelay /var/log/auth.log'
           sudo grep '\bpam_faildelay(' /var/log/auth.log
+          echo -n $'\n'
 
           # Test login with empty password
           echo "[*] Test login with empty password"

@@ -69,6 +69,7 @@ Before hardening, test that some actions are allowed in default configuration:
 * Nonexistent services are not properly restricted
 * System accounts are able to login
     * Of course there is still authentication, but for defence in depth it should also be prohibited within PAM's `account` (authorization) and `session` types
+* Login with empty password is allowed
 
 #### Post-harden
 
