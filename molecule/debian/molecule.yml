@@ -4,7 +4,7 @@ dependency:
     requirements-file: requirements.yml
 platforms:
   - name: molecule-debian
-    image: debian:bookworm
+    image: debian:trixie
 provisioner:
   name: ansible
   # This playbook needs to reside in the project root directory so that the all the files and templates are found properly
