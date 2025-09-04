@@ -37,6 +37,13 @@ jobs:
           # Login for random users
           echo '[*] Test login:account as nobody'
           pamtester login nobody acct_mgmt || exit 1
+          echo "[*] Test login with empty password"
+          sudo cp -v /etc/passwd /etc/passwd.bak
+          sudo sed -i 's/^\(nobody:\)x\(:[0-9]\+:[0-9]\+:[^:]*:[^:]*:[^:]*\)$/\1\2/' /etc/passwd
+          getent passwd nobody
+          pamtester login nobody authenticate 0</dev/null
+          # Revert passwd
+          sudo cp -v /etc/passwd.bak /etc/passwd
       - name: Run Ansible playbook for pam
         run: ansible-playbook harden.yml --tags pam --skip-tags slackware,centos
       - name: Test post-harden
