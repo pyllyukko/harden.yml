@@ -17,7 +17,7 @@ ansible-playbook
 
 [ansible-playbook tests](https://github.com/pyllyukko/harden.yml/actions/workflows/ansible-playbook.yml) against the GitHub Ubuntu Runner. Even though Ubuntu is not "officially" supported by `harden.yml`, but this enables us to test kernel stuff and the installation is more comprehensive than the Molecule Docker containers.
 
-The tests are split based on [Lynis](https://cisofy.com/lynis/) test categories. The tests measure the [Lynis hardening index](https://linux-audit.com/lynis/lynis-hardening-index/) and will fail if the hardening index is under defined threshold (see [check\_lynis\_score.sh](https://github.com/pyllyukko/harden.yml/blob/master/tests/check_lynis_score.sh)). Certaing Lynis test categories are not scored properly, so the threshold is not possible for all categories.
+The tests are split based on [Lynis](https://cisofy.com/lynis/) test categories. The tests measure the [Lynis hardening index](https://linux-audit.com/lynis/lynis-hardening-index/) and will fail if the hardening index is under defined threshold (see [check\_lynis\_score.sh](https://github.com/pyllyukko/harden.yml/blob/master/tests/check_lynis_score.sh)). Certain Lynis test categories are not scored properly, so the threshold is not possible for all categories.
 
 The following Lynis test groups should produce a score of :100::
 
