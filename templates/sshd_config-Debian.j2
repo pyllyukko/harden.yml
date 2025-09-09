@@ -35,7 +35,7 @@ LogLevel VERBOSE
 #LoginGraceTime 2m
 PermitRootLogin no
 StrictModes yes
-MaxAuthTries {{ sshd_config["MaxAuthTries"] }}
+MaxAuthTries {{ max_auth_tries }}
 MaxSessions 10
 AllowGroups {{ allowed_group }}
 

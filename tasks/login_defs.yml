@@ -19,6 +19,7 @@
       DEFAULT_HOME: "no"
       CREATE_HOME: "yes"
       HOME_MODE: "0700"
+      LOGIN_RETRIES: "{{ max_auth_tries }}"
   tags:
     - configuration
     - logging

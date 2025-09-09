@@ -117,3 +117,13 @@
         group: root
         mode: '0644'
       notify: Run dconf update
+    - name: Set number of allowed authentication failures for GNOME login
+      community.general.ini_file:
+        path: /etc/dconf/db/local.d/00-allowed-failures
+        section: org/gnome/login-screen
+        option: allowed-failures
+        value: "{{ max_auth_tries }}"
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Run dconf update

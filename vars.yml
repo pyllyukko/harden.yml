@@ -69,3 +69,4 @@ clamav: {
 }
 logind_conf_location: '{% if ansible_distribution == "Slackware" %}/etc/elogind/logind.conf{% else %}/etc/systemd/logind.conf{% endif %}'
 alert_email: 'root'
+max_auth_tries: 3

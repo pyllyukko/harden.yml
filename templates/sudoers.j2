@@ -50,7 +50,7 @@ Defaults	!visiblepw
 Defaults	!pwfeedback
 Defaults	verifypw=always
 Defaults	always_set_home
-Defaults	passwd_tries=2, passwd_timeout=1
+Defaults	passwd_tries={{ max_auth_tries }}, passwd_timeout=1
 # Defaults	rootpw
 Defaults	sudoedit_checkdir, !sudoedit_follow
 Defaults	ignore_dot
