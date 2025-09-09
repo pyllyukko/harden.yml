@@ -70,6 +70,7 @@
   failed_when:
     - result.failed == true
     - '"sshd: no hostkeys available -- exiting." not in result.stderr'
+    - '"Missing privilege separation directory: /run/sshd" not in result.stderr'
   tags:
     - services
     - configuration
