@@ -516,6 +516,9 @@ jobs:
       - name: Show SSH version
         run: |
           /usr/bin/ssh -V
+      - name: Enable and start SSH daemon
+        run: |
+          sudo systemctl enable --now ssh
       - name: Install Lynis
         run: |
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
@@ -541,7 +544,6 @@ jobs:
           sudo debsums -ec | grep -v '^/etc/\(cloud/templates/sources\.list\.ubuntu\.deb822\.tmpl\|firefox/syspref\.js\|containers/registries\.conf\|default/motd-news\|needrestart/needrestart\.conf\|waagent\.conf\)$'
       - name: Show SSH daemon configuration
         run: |
-          sudo mkdir -v /run/sshd
           sudo sshd -T
   logging:
     runs-on: ubuntu-latest
