@@ -513,6 +513,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Show SSH version
+        run: |
+          /usr/bin/ssh -V
       - name: Install Lynis
         run: |
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
@@ -536,6 +539,9 @@ jobs:
         run: |
           sudo apt-get install debsums
           sudo debsums -ec | grep -v '^/etc/\(cloud/templates/sources\.list\.ubuntu\.deb822\.tmpl\|firefox/syspref\.js\|containers/registries\.conf\|default/motd-news\|needrestart/needrestart\.conf\|waagent\.conf\)$'
+      - name: Show SSH daemon configuration
+        run: |
+          sudo sshd -T
   logging:
     runs-on: ubuntu-latest
     steps:

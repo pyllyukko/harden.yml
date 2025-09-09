@@ -399,9 +399,11 @@
             - result.failed == true
             - result.state != "absent"
     # Stuff that is usually readable, but have no reason why they should be
-    - name: chmod /etc/ssh/sshd_config
+    # CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.1 Ensure permissions on /etc/ssh/sshd_config are configured
+    # CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.2 Ensure permissions on SSH private host key files are configured
+    - name: chmod /etc/ssh/sshd_config and keys
       ansible.builtin.file:
-        path: /etc/ssh/sshd_config
+        path: /etc/ssh/{{ item }}
         mode: '0600'
         owner: root
         group: root
@@ -410,6 +412,12 @@
         - result.failed == true
         - result.state != "absent"
       tags: permissions
+      with_items:
+        - sshd_config
+        - ssh_host_ecdsa_key
+        - ssh_host_ed25519_key
+        - ssh_host_rsa_key
+        - ssh_host_dsa_key
     - name: chmod boot loader configurations
       ansible.builtin.file:
         path: "{{ item }}"

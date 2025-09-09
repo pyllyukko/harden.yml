@@ -1,0 +1,55 @@
+# Ciphers and keying
+# CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.6 Ensure sshd Ciphers are configured
+Ciphers {{ sshd_config["Ciphers"] }}
+# CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.15 Ensure sshd MACs are configured
+MACs {{ sshd_config["MACs"] }}
+# CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.12 Ensure sshd KexAlgorithms is configured
+KexAlgorithms {{ sshd_config["KexAlgorithms"] }}
+HostKeyAlgorithms {{ sshd_config["HostKeyAlgorithms"] }}
+
+# Logging
+SyslogFacility AUTH
+# CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.14 Ensure sshd LogLevel is configured
+LogLevel VERBOSE
+
+# Authentication
+# CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.4 Ensure sshd access is configured
+AllowGroups {{ allowed_group }}
+# CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.10 Ensure sshd HostbasedAuthentication is disabled
+HostbasedAuthentication no
+# CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.11 Ensure sshd IgnoreRhosts is enabled
+IgnoreRhosts yes
+# CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.13 Ensure sshd LoginGraceTime is configured
+LoginGraceTime 60
+# CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.16 Ensure sshd MaxAuthTries is configured
+MaxAuthTries {{ max_auth_tries }}
+# CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.17 Ensure sshd MaxSessions is configured
+MaxSessions 10
+# CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.18 Ensure sshd MaxStartups is configured
+MaxStartups 10:30:60
+# CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.19 Ensure sshd PermitEmptyPasswords is disabled
+PermitEmptyPasswords no
+# CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.20 Ensure sshd PermitRootLogin is disabled
+PermitRootLogin no
+# CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.21 Ensure sshd PermitUserEnvironment is disabled
+PermitUserEnvironment no
+# CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.22 Ensure sshd UsePAM is enabled
+UsePAM yes
+StrictModes yes
+PubkeyAuthentication yes
+{% if stat_keytab.stat.exists == True and stat_keytab.stat.size > 0 -%}
+GSSAPIAuthentication yes
+GSSAPICleanupCredentials yes
+GSSAPIStrictAcceptorCheck yes
+{% else -%}
+# CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.9 Ensure sshd GSSAPIAuthentication is disabled
+GSSAPIAuthentication no
+{% endif %}
+
+# CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.8 Ensure sshd DisableForwarding is enabled
+DisableForwarding yes
+PrintLastLog yes
+TCPKeepAlive yes
+# CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.7 Ensure sshd ClientAliveInterval and ClientAliveCountMax are configured
+ClientAliveInterval 15
+ClientAliveCountMax 3

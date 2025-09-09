@@ -83,7 +83,7 @@
     name: ssh
     state: restarted
   when: >
-    (ansible_distribution == "Debian" or ansible_distribution == "Kali") and
+    (ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu") and
     ansible_facts.services.ssh.state == "running"
   tags: services
 - name: Run systemctl daemon-reload
