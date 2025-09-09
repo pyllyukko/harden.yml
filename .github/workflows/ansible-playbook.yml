@@ -541,6 +541,7 @@ jobs:
           sudo debsums -ec | grep -v '^/etc/\(cloud/templates/sources\.list\.ubuntu\.deb822\.tmpl\|firefox/syspref\.js\|containers/registries\.conf\|default/motd-news\|needrestart/needrestart\.conf\|waagent\.conf\)$'
       - name: Show SSH daemon configuration
         run: |
+          sudo mkdir -v /run/sshd
           sudo sshd -T
   logging:
     runs-on: ubuntu-latest
