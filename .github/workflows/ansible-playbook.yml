@@ -530,7 +530,9 @@ jobs:
       - name: Run Ansible playbook for SSH
         run: ansible-playbook harden.yml --tags ssh
       - name: Run Lynis
-        run: sudo lynis audit system --skip-plugins --tests-from-group ssh
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group ssh
+          sudo lynis show details SSH-7408
       - name: chmod Lynis log
         run: sudo chmod -c 644 /var/log/lynis.log
       - name: Archive Lynis log
@@ -545,6 +547,8 @@ jobs:
       - name: Show SSH daemon configuration
         run: |
           sudo sshd -T
+      - name: Check Lynis score
+        run: sudo bash tests/check_lynis_score.sh 79
   logging:
     runs-on: ubuntu-latest
     steps:
