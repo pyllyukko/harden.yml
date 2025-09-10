@@ -76,7 +76,6 @@
     - services
     - configuration
     - ssh
-    - debian
   notify:
     - "Restart sshd (Debian)"
     - "Restart sshd (Slackware)"
