@@ -48,6 +48,9 @@ GSSAPIAuthentication no
 
 # CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.8 Ensure sshd DisableForwarding is enabled
 DisableForwarding yes
+# These should be covered by DisableForwarding, but we'll set them anyway to have sshd -T look better
+AllowTcpForwarding no
+X11Forwarding no
 PrintLastLog yes
 TCPKeepAlive yes
 # CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.7 Ensure sshd ClientAliveInterval and ClientAliveCountMax are configured
