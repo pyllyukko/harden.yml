@@ -34,7 +34,7 @@
 - name: SSH daemon Slackware
   become: true
   when: >
-    ansible_distribution == "Slackware" and rc_sshd.stat.exists and rc_sshd.stat.xusr
+    ansible_distribution == "Slackware" and rc_sshd.stat.exists
   tags:
     - services
     - configuration
@@ -57,21 +57,20 @@
         backup: true
       notify:
         - "Restart sshd (Slackware)"
+# We can't use validate here.
+# If SSHd has never been started, "sshd -t -f" might fail with at least the following errors:
+#   - sshd: no hostkeys available -- exiting.
+#   - Missing privilege separation directory: /run/sshd
+# And in such case the hardening configuration does not get created.
+# We want to harden the SSHd even in cases where it has been installed, but not used.
 - name: Harden SSH daemon configuration
   ansible.builtin.template:
     src: "{{ playbook_dir }}/templates/sshd_config.j2"
     dest: /etc/ssh/sshd_config.d/harden.conf
-    validate: /usr/sbin/sshd -t -f %s
     owner: root
     group: root
     mode: '0600'
     backup: true
-  register: result
-  # sshd validation fails when the hostkeys do not exist
-  failed_when:
-    - result.failed == true
-    - '"sshd: no hostkeys available -- exiting." not in result.stderr'
-    - '"Missing privilege separation directory: /run/sshd" not in result.stderr'
   tags:
     - services
     - configuration
@@ -80,10 +79,14 @@
     - "Restart sshd (Debian)"
     - "Restart sshd (Slackware)"
   become: true
-  # Skip the task in Debian if ssh.service does not exist
+  # Skip the task in Debian if openssh-server package does not exist
   when: >
-    ((ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu") and ansible_facts.services.ssh is defined) or
-    (ansible_distribution == "Slackware" and rc_sshd.stat.exists and rc_sshd.stat.xusr)
+    (
+      ansible_distribution in ["Debian", "Kali", "Ubuntu"] and
+      'openssh-server' in ansible_facts.packages
+    )
+    or
+    (ansible_distribution == "Slackware" and rc_sshd.stat.exists)
 
 - name: Harden SSH client configuration
   tags:

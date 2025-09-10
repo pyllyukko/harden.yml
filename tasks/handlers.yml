@@ -64,9 +64,17 @@
     - configuration
   when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
   changed_when: true
-# rc.sshd exits if /var/run/sshd.pid doesn't exist
-- name: Restart sshd (Slackware)
+- name: Check SSH daemon service state (Slackware)
+  listen: Restart sshd (Slackware)
+  become: true
   when: ansible_distribution == "Slackware"
+  ansible.builtin.stat:
+    path: /etc/rc.d/rc.sshd
+  register: rc_sshd
+# rc.sshd exits if /var/run/sshd.pid doesn't exist
+- name: Restart sshd through /etc/rc.d/rc.sshd
+  listen: Restart sshd (Slackware)
+  when: ansible_distribution == "Slackware" and rc_sshd.stat.exists and rc_sshd.stat.xusr
   become: true
   ansible.builtin.command: /bin/sh /etc/rc.d/rc.sshd restart
   register: result
@@ -77,8 +85,12 @@
   tags:
     - services
     - slackware
-- name: Restart sshd (Debian)
+- name: Check SSH daemon service state
+  ansible.builtin.service_facts:
+  listen: "Restart sshd (Debian)"
+- name: Restart sshd through systemd
   become: true
+  listen: "Restart sshd (Debian)"
   ansible.builtin.service:
     name: ssh
     state: restarted
