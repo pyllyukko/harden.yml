@@ -12,7 +12,7 @@ Supported distros
 
 [![molecule](https://github.com/pyllyukko/harden.yml/actions/workflows/molecule.yml/badge.svg)](https://github.com/pyllyukko/harden.yml/actions/workflows/molecule.yml)
 
-* :book::worm: Debian (Bookworm)
+* Debian (Trixie)
     * :dragon: Kali
     * π Raspberry Pi OS
 * Slackware (>= [15.0](http://www.slackware.com/announce/15.0.php))
