@@ -30,7 +30,7 @@
         /etc/rc.d/rc.S: 0de8f8175ad51e16d8b3514d9f9a2440feed8ef2e8aa8a524b1c467ed8ea8a847f1e64ff358918bc50b296db48dce60c148c123861eecc1e9dd043557a80d905
         /etc/rc.d/rc.cgconfig: aba623d354a082d74acaf0e2fbd759a5c0fe7ce5b428e294b9faf643e2a72f4c56dc44966ae512fedd179f59bab5bc198ba3aebe6438413d6d8320a7a95467fe
         #/etc/ssh/ssh_config: 962eac688d025ba63c24fa734dc7d02d62e16a8f4fd37cb04ff6efe7893b4ba34ece1cdb67d2c4af331b5ba1c339371fa5647b2cc01889a035eff7f51734fa91
-        /etc/ssh/sshd_config: f8a3c99a9cf3b86fc948f58c2636893ae85178705b53ea0d824deb5549f97d6505e6ce96967149a4b4c9c832d35efb0c93b4d2d524978119200b9fa030d89ecc
+        #/etc/ssh/sshd_config: f8a3c99a9cf3b86fc948f58c2636893ae85178705b53ea0d824deb5549f97d6505e6ce96967149a4b4c9c832d35efb0c93b4d2d524978119200b9fa030d89ecc
         /etc/ssh/moduli: e57d770b10ea346278a94701c230cba404a4cf148a3320fc797207fb44ff7e8c080bd66b14900f55efa52cc5e6e73cbc3c3d49b9b6cf4d40c897a6969094aaa4
         /etc/sysstat/sysstat: 9f3c56380af28198edf48e5c1e1354e39bbeac4ddaea26ad9b713d8ab9d7873583954516f10c143f8321e1135a3e36a330d10db1547ff0a5f8abc6cd53681a75
         /etc/logrotate.d/pacct: 974fbde7f2ce2c390f02f41c23cf0f82c2dd3fea6d62e1012005eab23124d179741b02ce826beabd8f958e0e231adce45630bcf2ed56083c1f9e7b3f1eec0d84
@@ -54,6 +54,7 @@
         /etc/modprobe.d/usb-storage.conf: bd63700828774e0936e3b7e1db108fd91d6f97ef75eeb3fc7e0f6efa028c47a491b0d341164276a8dea7a9454997ca55111fb4731a14cd3889c7e8cb4b8ee10a
         /etc/logrotate.conf: 0db92e0fd8511205021b766888e1bf7a795273b78e1cd1e9ca6d17a49320a2d9b700383375cef0dd7f4ba28d7897325641dcdc183d7c4802de8ef34e24dc6a5b
         /etc/ca-certificates.conf: ec724759132c0d24c13bd5215a80eb086c729e8d19036090167e335852a7cf242263b4229eeddb6fea5d7763ac30c9fa3fe871cf5cb78cb3ed1121795804cfda
+
     - name: Check that umask is 077 in /etc/profile
       ansible.builtin.lineinfile:
         path: /etc/profile
@@ -63,3 +64,29 @@
       check_mode: yes
       register: conf
       failed_when: (conf is changed) or (conf is failed)
+
+    # Check that SSH daemon hardenings exist
+    - name: Check sshd_config for include
+      become: true
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        line: 'Include /etc/ssh/sshd_config.d/*.conf'
+        state: present
+        regexp: '^Include\s+/etc/ssh/sshd_config\.d/\*\.conf$'
+      check_mode: yes
+      register: conf
+      failed_when: (conf is changed) or (conf is failed)
+    - name: Stat /etc/ssh/sshd_config.d
+      ansible.builtin.stat:
+        path: /etc/ssh/sshd_config.d
+      register: sshd_config_d
+    - name: Stat /etc/ssh/sshd_config.d/harden.conf
+      become: true
+      ansible.builtin.stat:
+        path: /etc/ssh/sshd_config.d/harden.conf
+      register: sshd_harden
+    - name: Check that paths exist
+      ansible.builtin.assert:
+        that: >
+          sshd_config_d.stat.exists and sshd_config_d.stat.isdir and
+          sshd_harden.stat.exists
