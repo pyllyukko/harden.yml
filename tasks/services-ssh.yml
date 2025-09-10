@@ -31,32 +31,33 @@
   tags:
     - ssh
     - check
-# TODO: Make Slackware use /etc/ssh/sshd_config.d
-- name: Harden SSH daemon configuration (Slackware)
-  ansible.builtin.template:
-    src: "{{ playbook_dir }}/templates/sshd_config-{{ ansible_distribution }}.j2"
-    dest: /etc/ssh/sshd_config
-    validate: /usr/sbin/sshd -t -f %s
-    owner: root
-    group: root
-    mode: '0600'
-    backup: true
-  register: result
-  # sshd validation fails when the hostkeys do not exist
-  failed_when:
-    - result.failed == true
-    - '"sshd: no hostkeys available -- exiting." not in result.stderr'
+- name: SSH daemon Slackware
+  become: true
+  when: >
+    ansible_distribution == "Slackware" and rc_sshd.stat.exists and rc_sshd.stat.xusr
   tags:
     - services
     - configuration
     - ssh
     - slackware
-  notify:
-    - "Restart sshd (Slackware)"
-  become: true
-  when: >
-    ansible_distribution == "Slackware" and rc_sshd.stat.exists and rc_sshd.stat.xusr
-- name: Harden SSH daemon configuration (Debian)
+  block:
+    - name: Create /etc/ssh/sshd_config.d directory
+      ansible.builtin.file:
+        path: /etc/ssh/sshd_config.d
+        state: directory
+        mode: '0700'
+        owner: root
+        group: root
+    - name: Add Include sshd_config.d to /etc/ssh/sshd_config
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '^Include\s+/etc/ssh/sshd_config\.d/\*\.conf$'
+        insertbefore: '^#?Port\s+[0-9]+$'
+        line: "Include /etc/ssh/sshd_config.d/*.conf\n"
+        backup: true
+      notify:
+        - "Restart sshd (Slackware)"
+- name: Harden SSH daemon configuration
   ansible.builtin.template:
     src: "{{ playbook_dir }}/templates/sshd_config.j2"
     dest: /etc/ssh/sshd_config.d/harden.conf
@@ -78,10 +79,12 @@
     - debian
   notify:
     - "Restart sshd (Debian)"
+    - "Restart sshd (Slackware)"
   become: true
   # Skip the task in Debian if ssh.service does not exist
   when: >
-    (ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu") and ansible_facts.services.ssh is defined
+    ((ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu") and ansible_facts.services.ssh is defined) or
+    (ansible_distribution == "Slackware" and rc_sshd.stat.exists and rc_sshd.stat.xusr)
 
 - name: Harden SSH client configuration
   tags:
