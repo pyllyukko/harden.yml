@@ -422,7 +422,7 @@
         - ssh_host_dsa_key
     - name: chmod /etc/ssh/sshd_config.d
       ansible.builtin.file:
-        path: /etc/ssh/{{ item }}
+        path: /etc/ssh/sshd_config.d
         mode: '0700'
         owner: root
         group: root
