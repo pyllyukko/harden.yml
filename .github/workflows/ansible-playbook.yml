@@ -53,6 +53,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Show umask (pre-harden)
+        run: |
+          echo '[*] umask:'
+          umask
+          echo '[*] sudo umask:'
+          sudo -u runner /bin/bash -c umask
       - name: Install Lynis
         run: |
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
@@ -101,6 +107,9 @@ jobs:
         run: |
           sudo apt-get install debsums
           sudo debsums -ec | grep -v '^/etc/\(cloud/templates/sources\.list\.ubuntu\.deb822\.tmpl\|firefox/syspref\.js\|containers/registries\.conf\|default/motd-news\|needrestart/needrestart\.conf\|waagent\.conf\)$'
+      - name: Check umask (post-harden)
+        run: |
+          sudo -u runner /bin/bash -c umask | grep '^00[07]7$'
   accounting:
     runs-on: ubuntu-latest
     steps:
