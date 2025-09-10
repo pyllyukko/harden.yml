@@ -2,6 +2,9 @@
 - name: ClamAV
   become: true
   tags: clamav
+  # Skip ClamAV installation completely if there's less than 3 GiB of memory
+  # https://docs.clamav.net/manual/Installing/Docker.html#memory-ram-requirements
+  when: ansible_memtotal_mb >= 3072
   block:
     - name: Install ClamAV (Debian) (non-x86_64)
       ansible.builtin.apt:
