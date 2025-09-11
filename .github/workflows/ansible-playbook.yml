@@ -537,7 +537,7 @@ jobs:
           sudo lynis audit system --skip-plugins --tests-from-group ssh
           sudo cp -v /var/log/lynis.log /var/log/lynis.log.old
       - name: Run Ansible playbook for SSH
-        run: ansible-playbook harden.yml --tags ssh
+        run: ansible-playbook harden.yml --tags ssh --skip-tags slackware
       - name: Run Lynis
         run: |
           sudo lynis audit system --skip-plugins --tests-from-group ssh
