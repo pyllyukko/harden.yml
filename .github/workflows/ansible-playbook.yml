@@ -162,7 +162,9 @@ jobs:
       - name: Run aureport
         run: sudo aureport --summary
       - name: Show status of audit systemd units
-        run: for i in auditd.service systemd-journald-audit.socket; do systemctl status ${i}; done
+        run: |
+          systemctl status auditd.service
+          systemctl status systemd-journald-audit.socket || true
   # The only test that would be (positively) scored in this category is SCHD-7720,
   # but that test is skipped if/when atd is not running.
   scheduling:
