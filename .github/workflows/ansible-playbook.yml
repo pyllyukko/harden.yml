@@ -545,6 +545,7 @@ jobs:
           sudo cp -v /var/log/lynis.log /var/log/lynis.log.old
       - name: Run Ansible playbook for SSH
         run: ansible-playbook harden.yml --tags ssh --skip-tags slackware
+      # See https://github.com/CISOfy/lynis/issues/1126#issuecomment-879860977
       - name: Run Lynis
         run: |
           sudo lynis audit system --skip-plugins --tests-from-group ssh
