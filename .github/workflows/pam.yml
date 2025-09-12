@@ -384,13 +384,18 @@ jobs:
       # We need to start new PAM session in order for the controls to take effect
       - name: Test pam_limits core dump
         run: |
+          sudo sed -i 's/^\(session\s\+required\s\+pam_limits\.so\)$/\1 debug/' /etc/pam.d/sudo
           sudo -u runner bash tests/segfault.sh
+          test -f core && false
+          echo '[*] grep pam_limits /var/log/auth.log:'
+          sudo grep '\bpam_limits(' /var/log/auth.log
       - name: Archive limits.conf
         uses: actions/upload-artifact@v4
         with:
           name: limits.conf
           path: |
             /etc/security/limits.conf
+            /etc/security/limits.d
   polyinstantiation:
     runs-on: ubuntu-latest
     steps:
