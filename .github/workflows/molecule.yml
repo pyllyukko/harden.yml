@@ -16,6 +16,7 @@ jobs:
         run: |
           pip install --user molecule[docker] molecule-plugins[docker]
           sudo chown -cR runner /usr/local/lib/python3.*
+          molecule --version
       - name: Run Molecule
         run: molecule test
   molecule-debian:
@@ -27,6 +28,7 @@ jobs:
         run: |
           pip install --user molecule[docker] molecule-plugins[docker]
           sudo chown -cR runner /usr/local/lib/python3.*
+          molecule --version
       - name: Run Molecule
         run: molecule test --scenario-name debian
   molecule-kali:
@@ -38,5 +40,6 @@ jobs:
         run: |
           pip install --user molecule[docker] molecule-plugins[docker]
           sudo chown -cR runner /usr/local/lib/python3.*
+          molecule --version
       - name: Run Molecule
         run: molecule test --scenario-name kali
