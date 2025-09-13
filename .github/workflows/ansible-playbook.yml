@@ -532,6 +532,9 @@ jobs:
       - name: Show SSH version
         run: |
           /usr/bin/ssh -V
+      - name: Show Ubuntu version
+        run: |
+          lsb_release -a
       - name: Enable and start SSH daemon
         run: |
           sudo systemctl enable --now ssh
