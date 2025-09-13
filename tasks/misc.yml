@@ -206,23 +206,25 @@
       tags:
         - debian
         - molecule-notest
-    - name: Mask tracker-miner-fs-3 & tracker-extract-3 systemd units
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
-      become: true
-      ansible.builtin.systemd:
-        name: '{{ item }}'
-        scope: global
-        masked: true
-      register: result
-      failed_when:
-        - result.failed
-        - '"Failed to connect to bus: No such file or directory" not in result.msg'
-      with_items:
-        - tracker-miner-fs-3
-        - tracker-extract-3
-      tags:
-        - debian
-        - molecule-notest
+    # TODO: Stopped working for Debian 13
+    # See https://github.com/ansible/ansible/issues/85714
+    #- name: Mask tracker-miner-fs-3 & tracker-extract-3 systemd units
+    #  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+    #  become: true
+    #  ansible.builtin.systemd:
+    #    name: '{{ item }}'
+    #    scope: global
+    #    masked: true
+    #  register: result
+    #  failed_when:
+    #    - result.failed
+    #    - '"Failed to connect to bus: No such file or directory" not in result.msg'
+    #  with_items:
+    #    - tracker-miner-fs-3
+    #    - tracker-extract-3
+    #  tags:
+    #    - debian
+    #    - molecule-notest
 
 # SHLL-6211
 - name: Remove extraneous shells from /etc/shells
