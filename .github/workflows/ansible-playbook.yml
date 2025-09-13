@@ -532,6 +532,18 @@ jobs:
       - name: Show SSH version
         run: |
           /usr/bin/ssh -V
+          echo '[*] Ciphers'
+          ssh -Q cipher
+          echo '[*] cipher-auth:'
+          ssh -Q cipher-auth
+          echo '[*] MACs:'
+          ssh -Q mac
+          echo '[*] KEX:'
+          ssh -Q kex
+          echo '[*] Keys:'
+          ssh -Q key
+          echo '[*] key-sign:'
+          ssh -Q key-sign
       - name: Show Ubuntu version
         run: |
           lsb_release -a
