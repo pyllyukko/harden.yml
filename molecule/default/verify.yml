@@ -85,8 +85,14 @@
       ansible.builtin.stat:
         path: /etc/ssh/sshd_config.d/harden.conf
       register: sshd_harden
+    - name: Stat /etc/ssh/ssh_config.d/harden.conf
+      become: true
+      ansible.builtin.stat:
+        path: /etc/ssh/ssh_config.d/harden.conf
+      register: ssh_harden
     - name: Check that paths exist
       ansible.builtin.assert:
         that: >
           sshd_config_d.stat.exists and sshd_config_d.stat.isdir and
-          sshd_harden.stat.exists
+          sshd_harden.stat.exists and
+          ssh_harden.stat.exists

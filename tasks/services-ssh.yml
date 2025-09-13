@@ -31,7 +31,8 @@
   tags:
     - ssh
     - check
-- name: SSH daemon Slackware
+# Slackware has only the openssh package, which provides both server and client
+- name: SSH in Slackware
   become: true
   when: >
     ansible_distribution == "Slackware" and rc_sshd.stat.exists
@@ -41,13 +42,16 @@
     - ssh
     - slackware
   block:
-    - name: Create /etc/ssh/sshd_config.d directory
+    - name: Create /etc/ssh/ssh{,d}_config.d directories
       ansible.builtin.file:
-        path: /etc/ssh/sshd_config.d
+        path: '{{ item.key }}'
         state: directory
-        mode: '0700'
+        mode: '{{ item.value }}'
         owner: root
         group: root
+      with_dict:
+        /etc/ssh/sshd_config.d: '0700'
+        /etc/ssh/ssh_config.d: '0755'
     - name: Add Include sshd_config.d to /etc/ssh/sshd_config
       ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
@@ -57,6 +61,13 @@
         backup: true
       notify:
         - "Restart sshd (Slackware)"
+    - name: Add Include ssh_config.d to /etc/ssh/ssh_config
+      ansible.builtin.lineinfile:
+        path: /etc/ssh/ssh_config
+        regexp: '^Include\s+/etc/ssh/ssh_config\.d/\*\.conf$'
+        insertbefore: '^(#\s*)?Host\s+\*$'
+        line: "Include /etc/ssh/ssh_config.d/*.conf\n"
+        backup: true
 # We can't use validate here.
 # If SSHd has never been started, "sshd -t -f" might fail with at least the following errors:
 #   - sshd: no hostkeys available -- exiting.
@@ -91,28 +102,17 @@
 - name: Harden SSH client configuration
   tags:
     - configuration
-    - slackware
     - ssh
   become: true
-  when: ansible_distribution == "Slackware"
+  when: >
+    (
+      ansible_distribution in ["Debian", "Kali", "Ubuntu"] and
+      '"openssh-client" in ansible_facts.packages'
+    )
+    or
+    (ansible_distribution == "Slackware" and rc_sshd.stat.exists)
   ansible.builtin.template:
-    src: "ssh_config-{{ ansible_distribution }}.j2"
-    dest: /etc/ssh/ssh_config
-    owner: root
-    group: root
-    mode: '0644'
-    backup: true
-- name: Harden SSH client configuration (Debian)
-  tags:
-    - configuration
-    - debian
-    - ssh
-  become: true
-  when:
-    - ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
-    - '"openssh-client" in ansible_facts.packages'
-  ansible.builtin.template:
-    src: ssh_config-Slackware.j2
+    src: ssh_config.j2
     dest: /etc/ssh/ssh_config.d/harden.conf
     owner: root
     group: root

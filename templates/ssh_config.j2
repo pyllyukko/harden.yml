@@ -1,0 +1,14 @@
+Host *
+  HostbasedAuthentication no
+  CheckHostIP yes
+  StrictHostKeyChecking yes
+  Ciphers {{ sshd_config["Ciphers"] }}
+  MACs {{ sshd_config["MACs"] }}
+  KexAlgorithms {{ sshd_config["KexAlgorithms"] }}
+  HostKeyAlgorithms {{ sshd_config["HostKeyAlgorithms"] }}
+  VisualHostKey yes
+  UpdateHostKeys ask
+  IdentitiesOnly yes
+  FingerprintHash sha256
+  HashKnownHosts yes
+  VerifyHostKeyDNS ask
