@@ -292,6 +292,7 @@
   tags:
     - configuration
     - debian
+    - accounts
   with_dict:
     DIR_MODE: "0700"
     USERGROUPS: "yes"
