@@ -1,6 +1,0 @@
-Name: Set file mode creation mask
-Default: yes
-Priority: 0
-Session-Type: Additional
-Session:
-	optional	pam_umask.so

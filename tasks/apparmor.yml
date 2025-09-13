@@ -46,10 +46,6 @@
 - name: Enable extra profiles
   vars:
     apparmor_profiles:
-      # usr.lib.firefox.firefox & usr.lib.firefox.firefox.sh seem to exist only in Debian
-      # https://gitlab.com/apparmor/apparmor/-/tree/master/profiles/apparmor/profiles/extras has firefox.sh & firefox
-      - usr.lib.firefox.firefox
-      - usr.lib.firefox.firefox.sh
       - usr.lib.firefox.mozilla-xremote-client
       #- etc.cron.daily.logrotate
       - etc.cron.daily.slocate.cron

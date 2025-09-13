@@ -382,7 +382,6 @@
     - debian
   block:
     - name: Copying new pam-configs
-      tags: umask
       ansible.builtin.copy:
         src: pam-configs/{{ item }}.new
         dest: /usr/share/pam-configs/{{ item }}
@@ -394,7 +393,6 @@
         # ANSSI-BP-028 R55 - Dedicating temporary directories to users
         - polyinstantiation
         - pwhistory
-        - umask
         - ssh_agent
       notify: "Run pam-auth-update"
     - name: Copying new pam-configs related to authorization
@@ -544,8 +542,13 @@
         value: '{{ item.value }}'
         backup: true
       with_dict:
-        core: 0
         nproc: '{{ nproc_limit }}'
+    - name: Configure coredump limit to /etc/security/limits.d/99-coredump.conf
+      community.general.pam_limits:
+        domain: '*'
+        limit_type: hard
+        limit_item: core
+        value: 0
     # ANSSI-BP-028 R34 - Disabling the service accounts
     - name: Set nproc to 0 in limits.conf for system users that don't need to run any processes
       tags: accounts

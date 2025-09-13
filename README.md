@@ -12,7 +12,7 @@ Supported distros
 
 [![molecule](https://github.com/pyllyukko/harden.yml/actions/workflows/molecule.yml/badge.svg)](https://github.com/pyllyukko/harden.yml/actions/workflows/molecule.yml)
 
-* :book::worm: Debian (Bookworm)
+* Debian (Trixie)
     * :dragon: Kali
     * π Raspberry Pi OS
 * Slackware (>= [15.0](http://www.slackware.com/announce/15.0.php))
@@ -223,7 +223,6 @@ Creates bunch of `pam-config`s that are toggleable with `pam-auth-update`:
 | 🎟️ [pam\_time](http://www.linux-pam.org/Linux-PAM-html/sag-pam_time.html)                             | account        | `/etc/security/time.conf`                                                                                      |
 | 🎟️ [pam\_lastlog](http://www.linux-pam.org/Linux-PAM-html/sag-pam_lastlog.html)                       | account        | Lock out inactive users (no login in 90 days)                                                                  |
 | [pam\_namespace](http://www.linux-pam.org/Linux-PAM-html/sag-pam_namespace.html)                      | session        | [Polyinstantiated](https://en.wikipedia.org/wiki/Polyinstantiation#Operating_system_security) temp directories |
-| [pam\_umask](http://www.linux-pam.org/Linux-PAM-html/sag-pam_umask.html)                              | session        | Set file mode creation mask                                                                                    |
 | [pam\_lastlog](http://www.linux-pam.org/Linux-PAM-html/sag-pam_lastlog.html)                          | session        | Display info about last login and update the lastlog and wtmp files[<sup>2</sup>](#fn2)                        |
 | [pam\_pwhistory](http://www.linux-pam.org/Linux-PAM-html/sag-pam_pwhistory.html)                      | password       | Limit password reuse                                                                                           |
 

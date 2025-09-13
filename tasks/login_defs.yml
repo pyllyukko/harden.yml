@@ -293,8 +293,11 @@
   tags:
     - configuration
     - debian
+    - accounts
   with_dict:
     DIR_MODE: "0700"
+    USERGROUPS: "yes"
+    SYS_DIR_MODE: "0700"
 
 # https://wiki.debian.org/SystemGroups
 - name: Remove users from legacy groups
