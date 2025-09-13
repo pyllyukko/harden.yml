@@ -542,8 +542,8 @@ jobs:
           ssh -Q kex
           echo '[*] Keys:'
           ssh -Q key
-          echo '[*] key-sign:'
-          ssh -Q key-sign
+          echo '[*] key-sig:'
+          ssh -Q key-sig
       - name: Show Ubuntu version
         run: |
           lsb_release -a
