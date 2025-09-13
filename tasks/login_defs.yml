@@ -294,6 +294,7 @@
     - debian
   with_dict:
     DIR_MODE: "0700"
+    USERGROUPS: "yes"
 
 # https://wiki.debian.org/SystemGroups
 - name: Remove users from legacy groups
