@@ -282,6 +282,10 @@ jobs:
         run: |
           sudo chmod -c 644 /var/log/lynis-malware.log /var/log/lynis-hardening.log /var/log/rkhunter.log /var/lib/rkhunter/db/rkhunter.dat /etc/rkhunter.conf
           sudo chmod -c 755 /var/lib/rkhunter{,/db}
+      - name: Test ClamAV against EICAR
+        run: |
+          wget https://raw.githubusercontent.com/rapid7/metasploit-framework/refs/heads/master/data/eicar.com -O /tmp/eicar.com
+          clamscan /tmp/eicar.com && { echo -e '[\033[1;31m-\033[0m] Test failed' 1>&2; exit 1; } || true
       - name: Archive Lynis logs
         uses: actions/upload-artifact@v4
         with:
