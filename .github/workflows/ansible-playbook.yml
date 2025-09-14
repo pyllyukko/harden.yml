@@ -282,8 +282,16 @@ jobs:
         run: |
           sudo chmod -c 644 /var/log/lynis-malware.log /var/log/lynis-hardening.log /var/log/rkhunter.log /var/lib/rkhunter/db/rkhunter.dat /etc/rkhunter.conf
           sudo chmod -c 755 /var/lib/rkhunter{,/db}
+      - name: Show vanilla ClamAV configurations
+        run: |
+          echo '[*] clamd.conf:'
+          sudo clamconf -g clamd.conf
+          echo '[*] freshclam.conf:'
+          sudo clamconf -g freshclam.conf
+      # TODO: LibClamAV Error: cl_load(): No such file or directory: /usr/local/share/clamav
       - name: Test ClamAV against EICAR
         run: |
+          clamscan --version
           wget https://raw.githubusercontent.com/rapid7/metasploit-framework/refs/heads/master/data/eicar.com -O /tmp/eicar.com
           clamscan /tmp/eicar.com && { echo -e '[\033[1;31m-\033[0m] Test failed' 1>&2; exit 1; } || true
       - name: Archive Lynis logs
@@ -297,6 +305,8 @@ jobs:
             /var/lib/rkhunter/db/rkhunter.dat
             /etc/rkhunter.conf
             /etc/default/rkhunter
+            /usr/local/etc/clamd.conf
+            /usr/local/etc/freshclam.conf
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums

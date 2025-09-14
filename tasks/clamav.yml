@@ -30,6 +30,7 @@
           ansible.builtin.apt:
             name: ['clamav', 'clamav-daemon', 'clamav-base', 'clamav-freshclam', 'libclamav11']
             state: absent
+            purge: true
           tags:
             - services
             # This is commented out so that accounts tag can be run on it's own
