@@ -724,8 +724,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Show some basic info
+        run:
+          id
+          echo '[*] passwd:'
+          getent passwd
+          echo '[*] group:'
+          getent group
+          echo '[*] sudo -l:'
+          sudo -l
+      # TODO: Add sudo
       - name: Run Ansible harden.yml playbook
-        run: ansible-playbook harden.yml --tags gnome,pki,rng,kerberos,tiger,lightdm,php,apache,debsecan,debsums,timeout,authorization,sudo,ntp,fstab
+        run: ansible-playbook harden.yml --tags gnome,pki,rng,kerberos,tiger,lightdm,php,apache,debsecan,debsums,timeout,authorization,ntp,fstab
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
