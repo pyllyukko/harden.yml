@@ -288,12 +288,15 @@ jobs:
           sudo clamconf -g clamd.conf
           echo '[*] freshclam.conf:'
           sudo clamconf -g freshclam.conf
-      # TODO: LibClamAV Error: cl_load(): No such file or directory: /usr/local/share/clamav
       - name: Test ClamAV against EICAR
         run: |
           clamscan --version
           wget https://raw.githubusercontent.com/rapid7/metasploit-framework/refs/heads/master/data/eicar.com -O /tmp/eicar.com
-          clamscan /tmp/eicar.com && { echo -e '[\033[1;31m-\033[0m] Test failed' 1>&2; exit 1; } || true
+          clamscan /tmp/eicar.com | grep '\bFOUND$'
+      # TODO
+      #- name: Show systemd unit(s)
+      #  run: |
+      #    systemctl status clamav-freshclam
       - name: Archive Lynis logs
         uses: actions/upload-artifact@v4
         with:

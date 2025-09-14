@@ -83,6 +83,7 @@
             - name: Install ClamAV (x86_64)
               ansible.builtin.apt:
                 deb: "{{ clamav_download.dest }}"
+              notify: Run freshclam
 
     - name: Determine ClamAV sysconfdir
       ansible.builtin.shell: set -o pipefail; {{ clamav_location }}/clamconf | awk '/^Checking configuration files in/{print$5}'

@@ -173,3 +173,7 @@
   ansible.builtin.file:
     path: /etc/cron.deny
     state: absent
+- name: Run freshclam
+  become: true
+  ansible.builtin.command: /usr/local/bin/freshclam
+  changed_when: true
