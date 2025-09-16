@@ -31,6 +31,10 @@ jobs:
         run: |
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
           echo 'skip-upgrade-test=yes' | sudo tee -a /etc/lynis/custom.prf
+      - name: Run Lynis (pre-harden)
+        run: |
+          sudo lynis audit system --skip-plugins --tests-from-group banners
+          sudo cp -v /var/log/lynis.log /var/log/lynis.log.old
       - name: Run Ansible playbook for banners
         run: ansible-playbook -v harden.yml --tags banners --extra-vars run_lynis_after_hardening=true
       - name: Show Lynis details
@@ -39,15 +43,20 @@ jobs:
           sudo lynis show details BANN-7130
       - name: chmod Lynis log
         run: sudo chmod -c 644 /var/log/lynis.log
-      - name: Archive Lynis log
+      - name: Archive Lynis log and /etc/issue{,.net}
         uses: actions/upload-artifact@v4
         with:
-          name: lynis-banner.log
-          path: /var/log/lynis.log
+          name: banners
+          path: |
+            /var/log/lynis.log
+            /etc/issue
+            /etc/issue.net
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
           sudo debsums -ec | grep -v '^/etc/\(cloud/templates/sources\.list\.ubuntu\.deb822\.tmpl\|firefox/syspref\.js\|containers/registries\.conf\|default/motd-news\|needrestart/needrestart\.conf\|waagent\.conf\)$'
+      - name: Check Lynis score
+        run: sudo bash tests/check_lynis_score.sh 1
   authentication:
     runs-on: ubuntu-latest
     steps:
