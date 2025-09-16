@@ -163,6 +163,8 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 
 ### Slackware specific
 
+* Disables unnecessary services
+    * See `slackware_services` in [vars.yml](vars.yml)
 * Run `ansible-playbook --list-tasks --tags slackware harden.yml` for a full list
 * Make Xorg rootless
 * :wood: Makes default log files group `adm` readable ([as in Debian](http://www.debian.org/doc/manuals/debian-reference/ch01.en.html#listofnotablesysupsforfileaccess))
@@ -200,6 +202,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 ### Debian specific
 
 * Disables unnecessary systemd services
+    * See `debian_services` in [vars.yml](vars.yml)
 * :shield: Enables AppArmor
 * Configure `SUITE` in `debsecan`
 * Install `debsums` and enable weekly cron job
