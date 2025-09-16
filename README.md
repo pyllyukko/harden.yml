@@ -348,6 +348,14 @@ Other tags are just metadata for now. You can list all the tags with
 | `crls`                                            | Download CRLs                                            |
 | `/etc/ssl/certs/ca-certificates.crt`              | Create limited/reduced CA list                           |
 
+### virtualenv
+
+A recent version of Ansible is recommended to run `harden.yml`. If you want to do this with `virtualenv`, you can install it as follows:
+
+1. `virtualenv venv`
+2. `. venv/bin/activate`
+3. `pip install ansible jmespath`
+
 Tests
 -----
 
