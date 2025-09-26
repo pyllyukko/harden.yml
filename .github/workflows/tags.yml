@@ -1,6 +1,6 @@
 ---
 # Tests for running harden.yml with single tags
-name: pam
+name: tags
 on: [push, pull_request]
 
 env:
