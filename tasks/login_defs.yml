@@ -201,6 +201,7 @@
     - authorization
     - check
     - limits
+    - pam
   ansible.builtin.getent:
     database: passwd
     service: files
