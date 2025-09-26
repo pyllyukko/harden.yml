@@ -39,7 +39,7 @@
       ansible.builtin.getent:
         database: group
         key: "{{ allowed_group }}"
-      failed_when: getent_group.{{ allowed_group }}[2] == ""
+      failed_when: getent_group[allowed_group][2] == ""
       tags:
         - check
         - pam
