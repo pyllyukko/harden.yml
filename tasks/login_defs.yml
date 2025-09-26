@@ -282,6 +282,27 @@
   with_dict: "{{ getent_passwd }}"
   tags: accounts
   become: true
+- name: Set maxlogins to 0 in limits.conf for most system accounts
+  tags:
+    - accounts
+    - pam
+    - limits
+    - authorization
+    - configuration
+  become: true
+  community.general.pam_limits:
+    domain: '{{ item.key }}'
+    limit_type: hard
+    limit_item: maxlogins
+    value: 0
+  when:
+    - item.value[1] | int < uid_min | int
+    - (item.value[1] != "0" and item.key != "root")
+    - item.key != "Debian-gdm"
+    - item.key != "lightdm"
+    - item.key != "daemon"
+    - item.key != "logcheck"
+  with_dict: "{{ getent_passwd }}"
 - name: Configure /etc/adduser.conf (Debian)
   become: true
   ansible.builtin.replace:

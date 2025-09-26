@@ -117,9 +117,11 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * 🎟️ Properly locks down system accounts (0 - `SYS_UID_MAX` && !`root`)
     * :no_entry: Lock the user's password
     * :shell: Sets shell to `/sbin/nologin`
+    * Set `maxlogins` to `0` in `limits.conf` (enforced by `pam_limits`)
     * Expire the account
-    * :no_entry: Set `RLIMIT_NPROC` to `0` in [pam\_limits](#pam) for those system accounts that don't need to run any processes
+    * :no_entry: Set `RLIMIT_NPROC` and `RLIMIT_NOFILE` to `0` in [pam\_limits](#pam) for those system accounts that don't need to run any processes
         * :information_source: You can see this in action in the [PAM limits test](https://github.com/pyllyukko/harden.yml/actions/workflows/pam.yml)
+        * :information_source: See `unnecessary_system_accounts` in `vars.yml` for the list of accounts
 * 🎟️ Configures the default password inactivity period
     * Run `ansible-playbook --list-tasks --tags passwords harden.yml` to list all password related tasks
 * :busts_in_silhouette: Makes minor modifications to existing accounts. See `ansible-playbook --list-tasks --tags accounts harden.yml` for details.

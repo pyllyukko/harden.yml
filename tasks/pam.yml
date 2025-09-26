@@ -550,41 +550,24 @@
         limit_item: core
         value: 0
     # ANSSI-BP-028 R34 - Disabling the service accounts
-    - name: Set nproc to 0 in limits.conf for system users that don't need to run any processes
+    # limits.conf maxlogins is configured in login_defs.yml
+    - name: Service accounts
       tags: accounts
-      community.general.pam_limits:
-        domain: '{{ item }}'
-        limit_type: hard
-        limit_item: nproc
-        value: 0
-      # sys, man, list, irc, proxy, backup & gnats are from Debian
-      # See:
-      #   - /usr/share/base-passwd/passwd.master
-      #   - /usr/share/doc/base-passwd/users-and-groups.txt.gz
-      with_items:
-        - bin
-        - adm
-        - sys
-        - lp
-        - sync
-        - shutdown
-        - man
-        - halt
-        - mail
-        - news
-        - uucp
-        - operator
-        - games
-        - ftp
-        - smmsp
-        - list
-        - irc
-        - gnats
-        - gdm
-        - oprofile
-        - pop
-        #- proxy
-        - backup
+      block:
+        - name: Set nproc to 0 in limits.conf for system users that don't need to run any processes
+          community.general.pam_limits:
+            domain: '{{ item }}'
+            limit_type: hard
+            limit_item: nproc
+            value: 0
+          with_items: '{{ unnecessary_system_accounts }}'
+        - name: Set nofile to 0 in limits.conf for system users that don't need to run any processes
+          community.general.pam_limits:
+            domain: '{{ item }}'
+            limit_type: hard
+            limit_item: nofile
+            value: 0
+          with_items: '{{ unnecessary_system_accounts }}'
 
 - name: Deny use of su (Slackware)
   ansible.builtin.copy:

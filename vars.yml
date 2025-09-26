@@ -70,3 +70,32 @@ clamav: {
 logind_conf_location: '{% if ansible_distribution == "Slackware" %}/etc/elogind/logind.conf{% else %}/etc/systemd/logind.conf{% endif %}'
 alert_email: 'root'
 max_auth_tries: 3
+# These system accounts will have additional limits via pam_limits
+# sys, man, list, irc, proxy, backup & gnats are from Debian
+# See:
+#   - /usr/share/base-passwd/passwd.master
+#   - /usr/share/doc/base-passwd/users-and-groups.txt.gz
+unnecessary_system_accounts:
+  - bin
+  - adm
+  - sys
+  - lp
+  - sync
+  - shutdown
+  - man
+  - halt
+  - mail
+  - news
+  - uucp
+  - operator
+  - games
+  - ftp
+  - smmsp
+  - list
+  - irc
+  - gnats
+  - gdm
+  - oprofile
+  - pop
+  #- proxy
+  - backup
