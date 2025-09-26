@@ -33,7 +33,8 @@
 - name: Print Lynis score for banners
   become: true
   tags: banners
-  when: run_lynis_after_hardening
+  # We need to use "| bool" here in case it was set with ansible-playbook -e, which makes it a string
+  when: run_lynis_after_hardening | bool
   block:
     - name: Run Lynis test group banners
       ansible.builtin.command: lynis audit system -q --skip-plugins --tests-from-group banners # noqa no-changed-when

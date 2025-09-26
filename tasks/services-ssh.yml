@@ -107,7 +107,7 @@
   when: >
     (
       ansible_distribution in ["Debian", "Kali", "Ubuntu"] and
-      '"openssh-client" in ansible_facts.packages'
+      "openssh-client" in ansible_facts.packages
     )
     or
     (ansible_distribution == "Slackware" and rc_sshd.stat.exists)
