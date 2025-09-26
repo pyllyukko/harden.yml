@@ -545,6 +545,7 @@
         nproc: '{{ nproc_limit }}'
     - name: Configure coredump limit to /etc/security/limits.d/99-coredump.conf
       community.general.pam_limits:
+        dest: /etc/security/limits.d/99-coredump.conf
         domain: '*'
         limit_type: hard
         limit_item: core
