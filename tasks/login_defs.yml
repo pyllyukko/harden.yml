@@ -200,6 +200,7 @@
     - passwords
     - authorization
     - check
+    - limits
   ansible.builtin.getent:
     database: passwd
     service: files
@@ -209,6 +210,7 @@
     - check
     - passwords
     - authorization
+    - limits
   block:
     - name: slurp /etc/login.defs
       become: true

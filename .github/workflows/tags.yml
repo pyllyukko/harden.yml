@@ -1,0 +1,20 @@
+---
+# Tests for running harden.yml with single tags
+name: pam
+on: [push, pull_request]
+
+env:
+  ANSIBLE_FORCE_COLOR: '1'
+
+jobs:
+  limits:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run Ansible playbook for limits
+        run: ansible-playbook harden.yml --tags limits
+      - name: Show changed files with debsums
+        run: |
+          sudo apt-get install debsums
+          sudo debsums -ec | grep -v '^/etc/\(cloud/templates/sources\.list\.ubuntu\.deb822\.tmpl\|firefox/syspref\.js\|containers/registries\.conf\|default/motd-news\|needrestart/needrestart\.conf\|waagent\.conf\)$'
