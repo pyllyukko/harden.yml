@@ -101,6 +101,7 @@ jobs:
             /etc/security/access.conf
             /etc/security/faillock.conf
             /etc/security/limits.conf
+            /etc/security/limits.d
             /etc/security/namespace.conf
             /etc/passwdqc.conf
             /var/lib/pam/account
@@ -316,6 +317,7 @@ jobs:
             /etc/security/access.conf
             /etc/security/faillock.conf
             /etc/security/limits.conf
+            /etc/security/limits.d
             /etc/security/namespace.conf
             /etc/passwdqc.conf
             /var/lib/pam/account

@@ -299,6 +299,7 @@
     limit_type: hard
     limit_item: maxlogins
     value: 0
+    dest: /etc/security/limits.d/system_accounts.conf
   when:
     - item.value[1] | int < uid_min | int
     - (item.value[1] != "0" and item.key != "root")

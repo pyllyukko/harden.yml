@@ -561,6 +561,7 @@
             limit_type: hard
             limit_item: nproc
             value: 0
+            dest: /etc/security/limits.d/system_accounts.conf
           with_items: '{{ unnecessary_system_accounts }}'
         - name: Set nofile to 0 in limits.conf for system users that don't need to run any processes
           community.general.pam_limits:
@@ -568,6 +569,7 @@
             limit_type: hard
             limit_item: nofile
             value: 0
+            dest: /etc/security/limits.d/system_accounts.conf
           with_items: '{{ unnecessary_system_accounts }}'
 
 - name: Deny use of su (Slackware)
