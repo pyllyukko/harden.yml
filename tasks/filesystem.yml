@@ -251,6 +251,11 @@
       with_items:
         - /usr/bin/gpasswd
         - /usr/bin/newgrp
+      register: result
+      # Kali has newgrp in util-linux-extra package and it might not exist
+      failed_when:
+        - result.failed == true
+        - result.state != "absent"
 
 # ANSSI-BP-028 R50 - Limiting the rights to access sensitive files and directories
 - name: Chmod sensitive files
