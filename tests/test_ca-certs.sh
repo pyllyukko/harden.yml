@@ -31,7 +31,9 @@ for host in \
   github.com			\
   www.gandi.net			\
   deb.debian.org		\
-  downloads.openwrt.org
+  downloads.openwrt.org		\
+  packages.mozilla.org		\
+  packagecloud.io
 do
   echo "[*] Testing HTTPS for \`${host}'"
   openssl s_client -connect "${host}":443 -verify_return_error -CAfile "${ca_file}" -showcerts 0</dev/null || exit 1
