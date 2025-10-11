@@ -38,6 +38,21 @@
       with_dict:
         greeter-hide-users: "true"
         allow-guest: "false"
+    - name: Create restrictive /etc/pam.d/lightdm-autologin
+      tags: pam
+      ansible.builtin.copy:
+        src: pam.d/other.new
+        dest: /etc/pam.d/lightdm-autologin
+        owner: root
+        group: root
+        mode: '0644'
+        backup: true
+    - name: Comment out autologin-user from /etc/lightdm/lightdm.conf
+      ansible.builtin.replace:
+        regexp: '^(autologin-user.*)$'
+        replace: '#\g<1>'
+        path: /etc/lightdm/lightdm.conf
+        backup: true
 # CIS Debian Linux 10 Benchmark v1.0.0 - 02-13-2020
 # 1.8.2 Ensure GDM login banner is configured
 - name: Configure GDM3
