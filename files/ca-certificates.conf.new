@@ -8,6 +8,7 @@ mozilla/DigiCert_Global_Root_G3.crt
 mozilla/Entrust_Root_Certification_Authority_-_G2.crt
 mozilla/Go_Daddy_Root_Certificate_Authority_-_G2.crt
 mozilla/Starfield_Root_Certificate_Authority_-_G2.crt
+mozilla/Starfield_Services_Root_Certificate_Authority_-_G2.crt
 mozilla/SecureTrust_CA.crt
 mozilla/GlobalSign_Root_CA_-_R3.crt
 mozilla/QuoVadis_Root_CA_2_G3.crt
