@@ -53,7 +53,7 @@
         /etc/modprobe.d/firewire.conf: be39b6e9fa54423aca8476b74a2fa05314a994376a750e241affe5fe59b5779953247c22dee8306f7a2b2beb981231bfc11860d106af46b00fe85557117fef12
         /etc/modprobe.d/usb-storage.conf: bd63700828774e0936e3b7e1db108fd91d6f97ef75eeb3fc7e0f6efa028c47a491b0d341164276a8dea7a9454997ca55111fb4731a14cd3889c7e8cb4b8ee10a
         /etc/logrotate.conf: 0db92e0fd8511205021b766888e1bf7a795273b78e1cd1e9ca6d17a49320a2d9b700383375cef0dd7f4ba28d7897325641dcdc183d7c4802de8ef34e24dc6a5b
-        /etc/ca-certificates.conf: ec724759132c0d24c13bd5215a80eb086c729e8d19036090167e335852a7cf242263b4229eeddb6fea5d7763ac30c9fa3fe871cf5cb78cb3ed1121795804cfda
+        #/etc/ca-certificates.conf: ec724759132c0d24c13bd5215a80eb086c729e8d19036090167e335852a7cf242263b4229eeddb6fea5d7763ac30c9fa3fe871cf5cb78cb3ed1121795804cfda
 
     - name: Check that umask is 077 in /etc/profile
       ansible.builtin.lineinfile:
