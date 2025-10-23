@@ -2,15 +2,12 @@
 # TODO: /tmp and maybe the /var/tmp binding from NSA 2.2.1.4
 @load "filefuncs"
 BEGIN{
-  getline < "/etc/os-release"
-  if($0 ~ /Raspbian GNU\/Linux/)
+  if(stat("/etc/rpi-issue", stbuf)==0)
     os="raspbian"
   else if(stat("/etc/slackware-version", stbuf)==0)
     os="slackware"
   else if(stat("/etc/debian_version", stbuf)==0)
     os="debian"
-  else if(stat("/etc/centos-release", stbuf)==0)
-    os="centos"
   else
     os="unknown"
   bind_mount_found=0
@@ -100,9 +97,6 @@ $3 == "swap" {
       case "debian":
         # debian format
         printf "%-15s %-15s %-7s %-15s %-7s %s\n", $1, $2, $3, $4, $5, $6
-        break
-      case "centos":
-        printf "%-41s %-23s %-7s %-15s %s %s\n", $1, $2, $3, $4, $5, $6
         break
       case "slackware":
       default:

@@ -766,3 +766,10 @@ jobs:
         run: |
           sudo apt-get install debsums
           sudo debsums -ec | grep -v '^/etc/\(cloud/templates/sources\.list\.ubuntu\.deb822\.tmpl\|firefox/syspref\.js\|containers/registries\.conf\|default/motd-news\|needrestart/needrestart\.conf\|waagent\.conf\)$'
+      - name: Archive stuff
+        uses: actions/upload-artifact@v4
+        with:
+          name: misc
+          path: |
+            /etc/fstab
+            /etc/fstab.new
