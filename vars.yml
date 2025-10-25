@@ -33,6 +33,7 @@ debian_services:
   # CIS Debian Linux 12 Benchmark v1.1.0 - 09-26-2024      2.1.12 Ensure rpcbind services are not in use
   # CIS Distribution Independent Linux v2.0.0 - 07-16-2019 2.2.7 Ensure NFS and RPC are not enabled
   - rpcbind
+  - wayvnc
 allowed_services:
   - sshd
 allowed_tcp_ports:
