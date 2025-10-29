@@ -182,20 +182,31 @@
 #   * Loop through all connections of type wifi & ethernet and set:
 #       * ipv6.method
 #       * ignore-auto-routes (https://github.com/leviathansecurity/TunnelVision)
-- name: Configure NetworkManager
+- name: NetworkManager
   tags: network
   become: true
-  ansible.builtin.copy:
-    dest: /etc/NetworkManager/conf.d/99-harden.conf
-    owner: root
-    group: root
-    mode: '0644'
-    content: |
-      [connection]
-      ipv4.dhcp-send-hostname=false
-      ipv6.dhcp-send-hostname=false
-      ipv6.ip6-privacy=2
+  block:
+    - name: Configure NetworkManager
+      ansible.builtin.copy:
+        dest: /etc/NetworkManager/conf.d/99-harden.conf
+        owner: root
+        group: root
+        mode: '0644'
+        content: |
+          [connection]
+          ipv4.dhcp-send-hostname=false
+          ipv6.dhcp-send-hostname=false
+          ipv6.ip6-privacy=2
 
-      [device-wifi]
-      match-device=type:wifi
-      wifi.scan-rand-mac-address=yes
+          [device-wifi]
+          match-device=type:wifi
+          wifi.scan-rand-mac-address=yes
+    # See https://github.com/leviathansecurity/TunnelVision
+    # NOTE: This doesn't work for the very first time the connection is activated with the dispatcher, but only after that
+    - name: Create NetworkManager dispatcher that sets ignore-auto-routes
+      ansible.builtin.copy:
+        dest: /etc/NetworkManager/dispatcher.d/pre-up.d/nm-configure-connection.sh
+        src: nm-configure-connection.sh
+        owner: root
+        group: root
+        mode: '0755'
