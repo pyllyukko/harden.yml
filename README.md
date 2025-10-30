@@ -46,8 +46,6 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Creates a basic firewall
 * Configures [NetworkManager](https://networkmanager.dev/) as follows:
     * For each existing connection:
-        * Sets `ignore-auto-routes` to `true` (as a mitigation against [TunnelVision](https://github.com/leviathansecurity/TunnelVision))
-            * :warning: **WARNING**: If you rely on a DHCP server providing you additional routes this will naturally break it
         * Disables IPv6 (`ipv6.method` -> `disabled`)
     * Configures few defaults to `/etc/NetworkManager/conf.d/`:
         * Sets `dhcp-send-hostname` to `false`

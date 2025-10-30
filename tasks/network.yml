@@ -233,7 +233,7 @@
           community.general.nmcli:
             conn_name: "{{ item }}"
             state: present
-            gw4_ignore_auto: true
-            gw6_ignore_auto: true
+            #gw4_ignore_auto: true
+            #gw6_ignore_auto: true
             method6: disabled
           with_items: "{{ filtered_nm_connections }}"
