@@ -225,7 +225,7 @@
               {{
                 nm_connections.stdout_lines
                 | map('split', ':')
-                | selectattr('1', 'in', ['wifi', 'ethernet'])
+                | selectattr('1', 'in', ['802-11-wireless', '802-3-ethernet'])
                 | map('first')
                 | list
               }}
