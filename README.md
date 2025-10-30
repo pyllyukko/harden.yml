@@ -44,6 +44,14 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * IP stack hardening via [sysctl](https://en.wikipedia.org/wiki/Sysctl) settings
     * For the complete list, see [network.conf.new](files/sysctl.d/network.conf.new)
 * Creates a basic firewall
+* Configures [NetworkManager](https://networkmanager.dev/) as follows:
+    * For each existing connection:
+        * Sets `ignore-auto-routes` to `true` (as a mitigation against [TunnelVision](https://github.com/leviathansecurity/TunnelVision))
+            * :warning: **WARNING**: If you rely on a DHCP server providing you additional routes this will naturally break it
+        * Disables IPv6 (`ipv6.method` -> `disabled`)
+    * Configures few defaults to `/etc/NetworkManager/conf.d/`:
+        * Sets `dhcp-send-hostname` to `false`
+        * Sets `wifi.scan-rand-mac-address` to `true`
 
 ### :wood: Logging
 
@@ -284,6 +292,7 @@ Tags that you can use with `ansible-playbook --tags`:
 * `network`
     * `firewall`
     * `ipv6`
+    * `networkmanager`
 * :wood: `logging`
 * :file_folder: Filesystem related:
     * :no_entry: `permissions`

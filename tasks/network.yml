@@ -183,7 +183,10 @@
 #       * ipv6.method
 #       * ignore-auto-routes (https://github.com/leviathansecurity/TunnelVision)
 - name: NetworkManager
-  tags: network
+  tags:
+    - network
+    - networkmanager
+    - ipv6
   become: true
   block:
     - name: Configure NetworkManager
@@ -203,10 +206,34 @@
           wifi.scan-rand-mac-address=yes
     # See https://github.com/leviathansecurity/TunnelVision
     # NOTE: This doesn't work for the very first time the connection is activated with the dispatcher, but only after that
-    - name: Create NetworkManager dispatcher that sets ignore-auto-routes
-      ansible.builtin.copy:
-        dest: /etc/NetworkManager/dispatcher.d/pre-up.d/nm-configure-connection.sh
-        src: nm-configure-connection.sh
-        owner: root
-        group: root
-        mode: '0755'
+    #- name: Create NetworkManager dispatcher that sets ignore-auto-routes
+    #  ansible.builtin.copy:
+    #    dest: /etc/NetworkManager/dispatcher.d/pre-up.d/nm-configure-connection.sh
+    #    src: nm-configure-connection.sh
+    #    owner: root
+    #    group: root
+    #    mode: '0755'
+    - name: Configure NM connections
+      block:
+        - name: List all NetworkManager connections
+          ansible.builtin.command: /usr/bin/nmcli -t -f NAME,TYPE connection show
+          register: nm_connections
+          changed_when: false
+        - name: Build a connection list for WiFi and ethernet
+          set_fact:
+            filtered_nm_connections: >-
+              {{
+                nm_connections.stdout_lines
+                | map('split', ':')
+                | selectattr('1', 'in', ['wifi', 'ethernet'])
+                | map('first')
+                | list
+              }}
+        - name: Configure NetworkManager connections
+          community.general.nmcli:
+            conn_name: "{{ item }}"
+            state: present
+            gw4_ignore_auto: true
+            gw6_ignore_auto: true
+            method6: disabled
+          with_items: "{{ filtered_nm_connections }}"

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# NetworkManager dispatcher script to modify the connections (this is a hack!)
+
 if [ -n "${CONNECTION_ID}" ]
 then
   connection_type="$(/usr/bin/nmcli connection show "${CONNECTION_ID}" | gawk '$1=="connection.type:"{print$2}')"
