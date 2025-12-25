@@ -128,6 +128,8 @@
           when: ansible_distribution == "Debian"
           ansible.builtin.replace:
             path: /usr/lib/tiger/systems/Linux/2/deb_nopackfiles
+            # Tiger is an old piece of software
+            encoding: ISO-8859-1
             regexp: '^(dirlist=)"/bin/ /usr/bin/ /sbin/ /usr/sbin/ /lib/ /usr/X11R6/bin"$'
             replace: '\g<1>"/bin /usr/bin /sbin /usr/sbin /lib /usr/X11R6/bin"'
 
