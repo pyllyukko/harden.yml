@@ -68,7 +68,7 @@ Defaults	log_output
 ##
 ## User privilege specification
 ##
-root {{ ansible_hostname }}=(ALL:ALL) EXEC: ALL
+root {{ ansible_hostname }}=(ALL, !%users) EXEC: ALL
 {{ ansible_user_id }}	{{ ansible_hostname }}=(root) PASSWD:EXEC: ANSIBLE
 
 ## wheel group
