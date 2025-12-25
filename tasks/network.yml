@@ -220,7 +220,7 @@
           register: nm_connections
           changed_when: false
         - name: Build a connection list for WiFi and ethernet
-          set_fact:
+          ansible.builtin.set_fact:
             filtered_nm_connections: >-
               {{
                 nm_connections.stdout_lines
