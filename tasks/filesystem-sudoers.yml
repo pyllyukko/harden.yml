@@ -25,3 +25,23 @@
     #- permissions
     #- suid
     - sudo
+- name: /etc/sudoers.d/
+  tags:
+    - permissions
+    - sudo
+  become: true
+  block:
+    - name: Find files in /etc/sudoers.d/
+      ansible.builtin.find:
+        paths: /etc/sudoers.d
+        file_type: file
+        recurse: no
+      register: sudoers_files
+    - name: Adjust permissions of files under /etc/sudoers.d/
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        owner: root
+        group: root
+        mode: g-w,o-rwx
+      loop: "{{ sudoers_files.files }}"
+      when: sudoers_files.matched > 0
