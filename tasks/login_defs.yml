@@ -307,6 +307,8 @@
     - item.key != "lightdm"
     - item.key != "daemon"
     - item.key != "logcheck"
+    # https://wiki.debian.org/PostgreSql
+    #- item.key != "postgres"
   with_dict: "{{ getent_passwd }}"
 - name: Configure /etc/adduser.conf (Debian)
   become: true
