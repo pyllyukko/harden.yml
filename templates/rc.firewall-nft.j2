@@ -33,6 +33,10 @@ function start() {
 	add rule inet filter INPUT iifname "lo" ip6 saddr ::1 ip6 daddr ::1 counter accept
 
 	add rule inet filter OUTPUT meta skuid {bin, daemon, adm, lp, sync, shutdown, halt, mail, news, uucp, operator, games, smmsp, gdm, oprofile, usbmux, haldaemon} counter drop
+	add rule inet filter OUTPUT meta cgroup 0x6e747064 udp sport 123 udp dport 123 counter accept comment NTP
+	add rule inet filter OUTPUT meta cgroup 0x6e747064 udp sport 123 ct state related,established counter accept comment NTP
+	add rule inet filter OUTPUT meta cgroup 0x6e747064 counter drop
+	add rule inet filter OUTPUT meta skuid ntp counter drop comment "NTP user"
 
 	# acpid, smartd & haveged
 	add rule inet filter OUTPUT meta cgroup {0x61637069, 0x736d6172, 0x68617665} counter
