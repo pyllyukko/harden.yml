@@ -140,4 +140,11 @@ ca-certs
 
 ### Limitations
 
-The `ca-certs` package in the [GitHub Ubuntu runner](https://github.com/actions/runner-images?tab=readme-ov-file#available-images) doesn't seem to be updated as often as in Slackware.
+* The `ca-certs` package in the [GitHub Ubuntu runner](https://github.com/actions/runner-images?tab=readme-ov-file#available-images) doesn't seem to be updated as often as in Slackware
+* The following tags/categories are somewhat challenging:
+    * network
+    * firewall
+    * sudo
+    * audit
+    * kernel
+    * apparmor
