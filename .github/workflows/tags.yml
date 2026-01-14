@@ -1,7 +1,11 @@
 ---
 # Tests for running harden.yml with single tags
 name: tags
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "30 4 * * 0"
 
 env:
   ANSIBLE_FORCE_COLOR: '1'

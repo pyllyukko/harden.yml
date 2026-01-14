@@ -1,5 +1,9 @@
 name: lint
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "30 4 * * 0"
 
 jobs:
   ansible-lint:
