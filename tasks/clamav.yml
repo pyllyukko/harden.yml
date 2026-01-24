@@ -3671,6 +3671,9 @@
             - https://raw.githubusercontent.com/advanced-threat-research/Yara-Rules/master/malware/MALW_cobaltstrike.yar
             - https://raw.githubusercontent.com/avast/ioc/master/CobaltStrike/yara_rules/cs_rules.yar
             - https://raw.githubusercontent.com/gentilkiwi/mimikatz/master/kiwi_passwords.yar
+            - https://raw.githubusercontent.com/cuckoosandbox/cuckoo/refs/heads/master/cuckoo/data/yara/binaries/embedded.yar
+            - https://raw.githubusercontent.com/cuckoosandbox/cuckoo/refs/heads/master/cuckoo/data/yara/binaries/shellcodes.yar
+            - https://raw.githubusercontent.com/cuckoosandbox/cuckoo/refs/heads/master/cuckoo/data/yara/binaries/vmdetect.yar
         - name: Copy miscellaneous YARA rules
           ansible.builtin.copy:
             src: "{{ item }}"
