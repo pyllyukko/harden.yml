@@ -270,6 +270,8 @@ jobs:
         run: ansible-playbook harden.yml --tags clamav,rkhunter,chkrootkit --skip-tags slackware,yara
       - name: Show rkhunter.conf diff
         run: sudo diff --color=always /etc/rkhunter.conf.*.$(date +%F)@*:*:*~ /etc/rkhunter.conf || true
+      - name: Show ClamAV version
+        run: clamscan --version
       - name: Run rkhunter
         run: sudo rkhunter --check --skip-keypress || sudo grep 'Warning' /var/log/rkhunter.log
       #- name: Check rkhunter.log for warnings
