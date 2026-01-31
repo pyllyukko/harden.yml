@@ -627,6 +627,10 @@ SCRIPTWHITELIST=/bin/fgrep
 SCRIPTWHITELIST=/usr/bin/fgrep
 SCRIPTWHITELIST=/usr/bin/which.debianutils
 SCRIPTWHITELIST=/etc/cron.daily/dpkg
+SCRIPTWHITELIST=/etc/cron.daily/apache2
+SCRIPTWHITELIST=/etc/cron.daily/apt-compat
+SCRIPTWHITELIST=/etc/cron.daily/chkrootkit
+SCRIPTWHITELIST=/etc/cron.daily/sysstat
 {% if 'libwww-perl' in ansible_facts.packages %}
 SCRIPTWHITELIST=/usr/bin/lwp-request
 {% endif %}
@@ -638,6 +642,8 @@ SCRIPTWHITELIST=/usr/bin/whatis
 SCRIPTWHITELIST=/bin/egrep
 SCRIPTWHITELIST=/bin/fgrep
 {% endif %}
+SCRIPTWHITELIST=/etc/cron.daily/logrotate
+SCRIPTWHITELIST=/etc/cron.daily/man-db
 
 #
 # Allow the specified file to have the immutable attribute set.
