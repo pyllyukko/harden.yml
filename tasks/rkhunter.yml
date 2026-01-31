@@ -70,6 +70,24 @@
         - name: Build list of dirs to check in rkhunter.conf USER_FILEPROP_FILES_DIRS
           ansible.builtin.set_fact:
             non_empty_dirs: "{{ rkhunter_dirs_find.results | selectattr('matched','>',0) | map(attribute='item') | list }}"
+    - name: SCRIPTWHITELIST
+      tags: check
+      block:
+        - name: Check for files to be included in rkhunter.conf SCRIPTWHITELIST
+          ansible.builtin.stat:
+            path: "{{ item }}"
+          with_items:
+            - /etc/cron.daily/apache2
+            - /etc/cron.daily/apt-compat
+            - /etc/cron.daily/chkrootkit
+            - /etc/cron.daily/sysstat
+            - /etc/cron.daily/logrotate
+            - /etc/cron.daily/man-db
+          register: files_for_rkhunter_scriptwhitelist
+        - name: Build a list of files to include in rkhunter.conf SCRIPTWHITELIST
+          ansible.builtin.set_fact:
+            files_for_rkhunter_scriptwhitelist: >-
+              {{ files_for_rkhunter_scriptwhitelist.results | selectattr('stat.exists') | map(attribute='item') | list }}
     - name: 'Create /etc/rkhunter.conf'
       ansible.builtin.template:
         src: "{{ playbook_dir }}/templates/rkhunter.conf.j2"

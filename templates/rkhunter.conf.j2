@@ -638,6 +638,9 @@ SCRIPTWHITELIST=/usr/bin/whatis
 SCRIPTWHITELIST=/bin/egrep
 SCRIPTWHITELIST=/bin/fgrep
 {% endif %}
+{% for path in files_for_rkhunter_scriptwhitelist %}
+USER_FILEPROP_FILES_DIRS={{ path }}
+{% endfor %}
 
 #
 # Allow the specified file to have the immutable attribute set.
