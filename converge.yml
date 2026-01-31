@@ -36,10 +36,6 @@
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
     - name: Debian packages
       ansible.builtin.import_tasks: tasks/debian_packages.yml
-    # rkhunter needs to be ran after Debian packages, as it installs usbguard which affect rkhunter.conf
-    - name: rkhunter
-      ansible.builtin.import_tasks: tasks/rkhunter.yml
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
     - name: Lynis
       ansible.builtin.import_tasks: tasks/lynis.yml
       when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
@@ -51,6 +47,13 @@
       ansible.builtin.import_tasks: tasks/services.yml
     - name: Accounting services
       ansible.builtin.import_tasks: tasks/services-accounting.yml
+    # Idempotence considerations:
+    # * rkhunter needs to be ran after Debian packages, as it installs usbguard which affect rkhunter.conf
+    # * accounting installs sysstat which brings /etc/cron.daily/sysstat
+    # * services brings in cron for Molecule tests and causes rkhunter.conf generation to start monitoring /var/spool/cron/crontabs/*
+    - name: rkhunter
+      ansible.builtin.import_tasks: tasks/rkhunter.yml
+      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
     - name: login_defs
       ansible.builtin.import_tasks: tasks/login_defs.yml
     - name: Permissions
