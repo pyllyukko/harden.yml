@@ -298,7 +298,7 @@ jobs:
           sudo bash tests/check_lynis_score.sh 100
       - name: chmod Lynis & rkhunter files
         run: |
-          sudo chmod -c 644 /var/log/lynis-malware.log /var/log/lynis-hardening.log /var/log/rkhunter.log /var/lib/rkhunter/db/rkhunter.dat /etc/rkhunter.conf
+          sudo chmod -c 644 /var/log/lynis-malware.log /var/log/lynis-hardening.log /var/log/rkhunter.log /var/lib/rkhunter/db/rkhunter.dat /etc/rkhunter.conf /var/lib/rkhunter/db/rkhunter_prop_list.dat
           sudo chmod -c 755 /var/lib/rkhunter{,/db}
       - name: Show vanilla ClamAV configurations
         run: |
@@ -328,6 +328,7 @@ jobs:
             /etc/default/rkhunter
             /usr/local/etc/clamd.conf
             /usr/local/etc/freshclam.conf
+            /var/lib/rkhunter/db/rkhunter_prop_list.dat
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums

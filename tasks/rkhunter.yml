@@ -11,27 +11,65 @@
       tags:
         - packages
         - debian
-    - name: Get package_facts to check if libwww-perl package is installed (Debian)
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
-      tags:
-        - debian
-        - check
-      ansible.builtin.package_facts:
-        manager: auto
+    # For ALLOWHIDDENDIR=/etc/.pihole
     - name: getent passwd
       ansible.builtin.getent:
         database: passwd
       tags: check
-    - name: Stat /etc/polkit-1/rules.d
-      ansible.builtin.stat:
-        path: /etc/polkit-1/rules.d
-      register: stat_polkit_etc
+    - name: USER_FILEPROP_FILES_DIRS
       tags: check
-    - name: Stat /etc/ld.so.preload
-      ansible.builtin.stat:
-        path: /etc/ld.so.preload
-      register: stat_ld_preload
-      tags: check
+      block:
+        - name: Get package_facts to check if libwww-perl package is installed (Debian)
+          when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+          tags: debian
+          ansible.builtin.package_facts:
+            manager: auto
+        - name: Stat /etc/polkit-1/rules.d
+          ansible.builtin.stat:
+            path: /etc/polkit-1/rules.d
+          register: stat_polkit_etc
+        - name: Check for files to be included in rkhunter.conf USER_FILEPROP_FILES_DIRS
+          ansible.builtin.stat:
+            path: "{{ item }}"
+          loop:
+            - /etc/ld.so.preload
+            - /usr/bin/aide
+            - /var/lib/aide/aide.db
+          register: files_for_rkhunter
+        - name: Build a list of files to check in rkhunter.conf USER_FILEPROP_FILES_DIRS
+          ansible.builtin.set_fact:
+            files_for_rkhunter: >-
+              {{ files_for_rkhunter.results | selectattr('stat.exists') | map(attribute='item') | list }}
+        # We need to do this, because if you add only the dir (e.g.
+        # /etc/cron.d), rkhunter will expand PROP_FILE_LIST into that dir (e.g.
+        # /etc/cron.d/adduser, /etc/cron.d/amd etc.)
+        #
+        # Also when you add e.g. /etc/cron.yearly/* and the directory is empty
+        # you'll get "Invalid USER_FILEPROP_FILES_DIRS configuration option:
+        # Non-existent pathname: /etc/cron.yearly/*"
+        - name: Check a bunch of dirs for content
+          ansible.builtin.find:
+            paths: "{{ item }}"
+            file_type: any
+            recurse: no
+            patterns: '*'
+            hidden: no
+          register: rkhunter_dirs_find
+          changed_when: false
+          with_items:
+            - /etc/cron.d
+            - /etc/cron.hourly
+            - /etc/cron.daily
+            - /etc/cron.weekly
+            - /etc/cron.monthly
+            - /etc/cron.yearly
+            - /etc/sudoers.d
+            - /etc/polkit-1/rules.d
+            - /etc/ld.so.conf.d
+            - /var/spool/cron/crontabs
+        - name: Build list of dirs to check in rkhunter.conf USER_FILEPROP_FILES_DIRS
+          ansible.builtin.set_fact:
+            non_empty_dirs: "{{ rkhunter_dirs_find.results | selectattr('matched','>',0) | map(attribute='item') | list }}"
     - name: 'Create /etc/rkhunter.conf'
       ansible.builtin.template:
         src: "{{ playbook_dir }}/templates/rkhunter.conf.j2"
