@@ -458,6 +458,7 @@
         - debian
         - passwords
         - packages
+    # See https://www.openwall.com/passwdqc/
     - name: passwdqc filter
       block:
         - name: Stat /opt/passwdqc/common-passwords-v7-20plus-rockyou.pwq

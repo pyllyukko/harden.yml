@@ -281,6 +281,7 @@ Usage
     * :eyes: Consider installing and configuring Logwatch
     * :key: Run `journalctl --setup-keys` to generate a new key pair for Forward Secure Sealing (FSS)
     * Configure remote logging
+* Consider purchasing [Openwall passwdqc filter files](https://www.openwall.com/passwdqc/) to check for leaked credentials during password change (see "passwdqc filter" tasks in `pam.yml`)
 
 ### Tags
 
