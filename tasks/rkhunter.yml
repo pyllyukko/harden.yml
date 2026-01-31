@@ -83,6 +83,7 @@
             - /etc/cron.daily/sysstat
             - /etc/cron.daily/logrotate
             - /etc/cron.daily/man-db
+            - /etc/cron.weekly/man-db
           register: files_for_rkhunter_scriptwhitelist
         - name: Build a list of files to include in rkhunter.conf SCRIPTWHITELIST
           ansible.builtin.set_fact:
