@@ -1,2 +1,5 @@
 -w /var/lib/aide/aide.db -p wa -k sectools
+-w /etc/aide.conf -p wa -k sectools
+-w /etc/aide/ -p wa -k sectools
 -w /var/lib/rkhunter/db/ -p wa -k sectools
+-w /etc/rkhunter.conf -p wa -k sectools
