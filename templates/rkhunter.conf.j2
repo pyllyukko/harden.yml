@@ -728,8 +728,9 @@ ALLOWHIDDENFILE=/etc/.fstab
 {% endif %}
 # https://www.man7.org/linux/man-pages/man8/systemd-update-done.service.8.html
 ALLOWHIDDENFILE=/etc/.updated
-# golang-github-containers-common
+{% if 'golang-github-containers-common' in ansible_facts.packages %}
 ALLOWHIDDENFILE=/usr/share/man/man5/.containerignore.5.gz
+{% endif %}
 {% endif %}
 
 #
