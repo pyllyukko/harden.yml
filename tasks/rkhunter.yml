@@ -37,6 +37,7 @@
             - /var/lib/aide/aide.db
             # This is here instead of rkhunter.conf.j2 because of the Molecule tests
             - /etc/ssh/sshd_config
+            - /etc/nftables.conf
           register: files_for_rkhunter
         - name: Build a list of files to check in rkhunter.conf USER_FILEPROP_FILES_DIRS
           ansible.builtin.set_fact:
