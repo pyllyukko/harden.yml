@@ -559,7 +559,6 @@ USER_FILEPROP_FILES_DIRS=/usr/share/polkit-1/actions/*.policy
 USER_FILEPROP_FILES_DIRS=/etc/ld.so.conf
 USER_FILEPROP_FILES_DIRS=/etc/security/*.conf
 USER_FILEPROP_FILES_DIRS=/etc/pam.d/*
-USER_FILEPROP_FILES_DIRS=/etc/ssh/sshd_config
 {% for path in files_for_rkhunter %}
 USER_FILEPROP_FILES_DIRS={{ path }}
 {% endfor %}
