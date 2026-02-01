@@ -67,6 +67,8 @@
             - /etc/polkit-1/rules.d
             - /etc/ld.so.conf.d
             - /var/spool/cron/crontabs
+            - /etc/security/limits.d
+            - /etc/security/namespace.d
         - name: Build list of dirs to check in rkhunter.conf USER_FILEPROP_FILES_DIRS
           ansible.builtin.set_fact:
             non_empty_dirs: "{{ rkhunter_dirs_find.results | selectattr('matched','>',0) | map(attribute='item') | list }}"
