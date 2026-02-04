@@ -170,6 +170,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * :information_source: See [Restricted shell](https://github.com/pyllyukko/harden.yml/wiki/Restricted-shell)
     * :warning: **WARNING**: Contains plenty of caveats, details and hazards. Make sure you read and understand (at least) everything in the aforementioned [wiki page](https://github.com/pyllyukko/harden.yml/wiki/Restricted-shell), test it thoroughly and accept the risk that it may contain escapes.
 * Disable core dumps via `/etc/systemd/coredump.conf`
+* Kerberos hardening via `/etc/krb5.conf`
 
 ### Slackware specific
 
@@ -388,6 +389,7 @@ Some of these documents are quite old, but most of the stuff still applies.
     * [CIS Slackware Linux 10.2 Benchmark v1.1.0][1]
     * [CIS Debian Linux Benchmark](https://www.cisecurity.org/benchmark/debian_linux/)
     * [CIS Distribution Independent Linux](https://www.cisecurity.org/benchmark/distribution_independent_linux)
+    * CIS MIT Kerberos 1.10 Benchmark v1.0.0
 * [SlackDocs: Security HOWTOs](http://docs.slackware.com/howtos:security:start)
 * :alien: [Alien's Wiki: Security issues](http://alien.slackbook.org/dokuwiki/doku.php?id=linux:admin#security_issues)
 * [SlackWiki: Basic Security Fixes](http://slackwiki.com/Basic_Security_Fixes)
