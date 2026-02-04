@@ -82,18 +82,43 @@
           ansible.builtin.stat:
             path: "{{ item }}"
           with_items:
+            # Debian
             - /etc/cron.daily/apache2
             - /etc/cron.daily/apt-compat
             - /etc/cron.daily/chkrootkit
             - /etc/cron.daily/sysstat
+            - /etc/cron.weekly/man-db
+            # Slackware
+            - /etc/cron.daily/mlocate
+            - /etc/cron.daily/dehydrated
+            - /etc/cron.daily/certwatch
+            # Both
             - /etc/cron.daily/logrotate
             - /etc/cron.daily/man-db
-            - /etc/cron.weekly/man-db
           register: files_for_rkhunter_scriptwhitelist
         - name: Build a list of files to include in rkhunter.conf SCRIPTWHITELIST
           ansible.builtin.set_fact:
             files_for_rkhunter_scriptwhitelist: >-
               {{ files_for_rkhunter_scriptwhitelist.results | selectattr('stat.exists') | map(attribute='item') | list }}
+        - name: Find all .sh files in cron dirs
+          ansible.builtin.find:
+            paths: "{{ item }}"
+            file_type: file
+            recurse: false
+            patterns: "*.sh"
+            hidden: false
+          register: rkhunter_sh_find
+          changed_when: false
+          with_items:
+            - /etc/cron.d
+            - /etc/cron.hourly
+            - /etc/cron.daily
+            - /etc/cron.weekly
+            - /etc/cron.monthly
+            - /etc/cron.yearly
+        - name: Build flat list of found .sh file paths
+          ansible.builtin.set_fact:
+            sh_files: "{{ rkhunter_sh_find.results | map(attribute='files') | sum(start=[]) | map(attribute='path') | list }}"
     - name: 'Create /etc/rkhunter.conf'
       ansible.builtin.template:
         src: "{{ playbook_dir }}/templates/rkhunter.conf.j2"
