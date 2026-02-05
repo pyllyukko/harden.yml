@@ -169,7 +169,7 @@
       when: ansible_distribution == "Slackware"
       tags: slackware
       ansible.builtin.copy:
-        dest: /etc/cron.daily/run_lynis
+        dest: /etc/cron.daily/run_lynis.sh
         owner: root
         group: root
         mode: '0700'
