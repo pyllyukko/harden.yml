@@ -95,6 +95,8 @@
             # Both
             - /etc/cron.daily/logrotate
             - /etc/cron.daily/man-db
+            # As instructed in logwatch's README: "ln -s /usr/share/logwatch/scripts/logwatch.pl /etc/cron.daily/0logwatch"
+            - /usr/share/logwatch/scripts/logwatch.pl
           register: files_for_rkhunter_scriptwhitelist
         - name: Build a list of files to include in rkhunter.conf SCRIPTWHITELIST
           ansible.builtin.set_fact:
