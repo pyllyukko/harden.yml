@@ -32,3 +32,10 @@ jobs:
         uses: actions/checkout@v4
       - name: Run syntax-check
         run: ansible-playbook --syntax-check harden.yml
+  gawk-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Run Gawk lint
+        run: gawk -L -f files/fstab.awk 0</etc/fstab 1>/dev/null
