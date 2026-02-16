@@ -35,7 +35,7 @@
       ansible.builtin.find:
         paths: /etc/sudoers.d
         file_type: file
-        recurse: no
+        recurse: false
       register: sudoers_files
     - name: Adjust permissions of files under /etc/sudoers.d/
       ansible.builtin.file:
