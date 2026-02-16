@@ -31,6 +31,10 @@ The following Lynis test groups should produce a score of :100::
 
 The tests will also run `debsums` to show which files have been changed from the hardening.
 
+### SSH
+
+The SSH tests will also run [ssh-audit](https://github.com/jtesta/ssh-audit).
+
 Molecule
 --------
 

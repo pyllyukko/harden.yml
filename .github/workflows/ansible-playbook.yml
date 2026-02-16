@@ -601,6 +601,16 @@ jobs:
         run: |
           sudo lynis audit system --skip-plugins --tests-from-group ssh
           sudo lynis show details SSH-7408
+      - name: Install ssh-audit
+        run: |
+          sudo apt-get -y install python3-pip
+          python3 -m pip install --user ssh-audit
+      - name: Run ssh-audit
+        run: |
+          ssh-audit localhost
+      - name: Run ssh-audit against SSH client
+        run: |
+          bash tests/ssh-audit_client.sh
       - name: chmod Lynis log
         run: sudo chmod -c 644 /var/log/lynis.log
       - name: Archive Lynis log
