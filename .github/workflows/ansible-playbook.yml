@@ -608,6 +608,9 @@ jobs:
       - name: Run ssh-audit
         run: |
           ssh-audit localhost
+      - name: Run ssh-audit against SSH client
+        run: |
+          bash tests/ssh-audit_client.sh
       - name: chmod Lynis log
         run: sudo chmod -c 644 /var/log/lynis.log
       - name: Archive Lynis log
