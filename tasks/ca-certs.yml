@@ -19,6 +19,11 @@
         - packages
         - pki
         - debian
+    # This is because of Slackware.
+    - name: Remove immutable attribute from /etc/ca-certificates.conf
+      ansible.builtin.file:
+        path: /etc/ca-certificates.conf
+        attributes: -i
     - name: Copy ca-certificates.conf
       when: ansible_os_family != "RedHat"
       ansible.builtin.copy:
@@ -32,6 +37,10 @@
         - configuration
         - pki
       notify: "Run update-ca-certificates"
+    - name: Make /etc/ca-certificates.conf immutable
+      ansible.builtin.file:
+        path: /etc/ca-certificates.conf
+        attributes: +i
     - name: Install OpenSSL (Slackware)
       when: ansible_distribution == "Slackware"
       community.general.slackpkg:

@@ -8,7 +8,9 @@ SHELL=/bin/bash
 	/usr/sbin/update-ca-certificates --verbose --fresh
 
 /etc/ca-certificates.conf: $(CWD)/files/ca-certificates.conf.new FORCE
+	/usr/bin/chattr -V -i $@
 	/usr/bin/install -m 644 $< $@
+	/usr/bin/chattr -V +i $@
 
 /etc/motd: $(CWD)/newconfs/motd.new FORCE
 	/usr/bin/install -m 644 $< $@
