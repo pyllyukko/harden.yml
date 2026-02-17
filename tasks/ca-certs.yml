@@ -38,6 +38,7 @@
         - pki
       notify: "Run update-ca-certificates"
     - name: Make /etc/ca-certificates.conf immutable
+      when: ansible_virtualization_type != "docker"
       ansible.builtin.file:
         path: /etc/ca-certificates.conf
         attributes: +i
