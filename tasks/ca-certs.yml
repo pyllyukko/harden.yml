@@ -20,7 +20,17 @@
         - pki
         - debian
     # This is because of Slackware.
+    - name: Check if /etc/ca-certificates.conf has immutable attribute
+      tags: check
+      ansible.builtin.stat:
+        path: /etc/ca-certificates.conf
+      register: ca_certificates_conf_stat
     - name: Remove immutable attribute from /etc/ca-certificates.conf
+      # This task is not idempotent, so we need this check for Molecule tests.
+      when:
+        - ca_certificates_conf_stat.stat.exists
+        - ca_certificates_conf_stat.stat.attr_flags is defined
+        - "'i' in ca_certificates_conf_stat.stat.attr_flags"
       ansible.builtin.file:
         path: /etc/ca-certificates.conf
         attributes: -i
