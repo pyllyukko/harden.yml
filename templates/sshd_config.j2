@@ -6,6 +6,9 @@ MACs {{ sshd_config["MACs"] }}
 # CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.12 Ensure sshd KexAlgorithms is configured
 KexAlgorithms {{ sshd_config["KexAlgorithms"] }}
 HostKeyAlgorithms {{ sshd_config["HostKeyAlgorithms"] }}
+{% if ansible_distribution == "Debian" or ansible_distribution == "Ubuntu" %}
+GSSAPIKexAlgorithms {{ sshd_config["GSSAPIKexAlgorithms"] }}
+{% endif %}
 
 # Logging
 SyslogFacility AUTH

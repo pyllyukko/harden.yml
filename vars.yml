@@ -44,6 +44,7 @@ sshd_config:
   KexAlgorithms: '{% if ansible_distribution != "Ubuntu" %}mlkem768x25519-sha256,{% endif %}sntrup761x25519-sha512@openssh.com,curve25519-sha256,curve25519-sha256'
   HostKeyAlgorithms: ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,ssh-ed25519,rsa-sha2-512
   MaxAuthTries: 3
+  GSSAPIKexAlgorithms: gss-curve25519-sha256-,gss-nistp256-sha256-,gss-group16-sha512-,gss-group14-sha256-
 # Value from system-hardening-10.2.txt
 fail_delay: 20
 session_timeout: 15
