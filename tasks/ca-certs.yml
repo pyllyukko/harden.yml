@@ -11,7 +11,7 @@
         - configuration
       notify: "Run update-ca-certificates"
     - name: Install ca-certificates package (Debian)
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
       ansible.builtin.apt:
         name: ca-certificates
         update_cache: true
@@ -35,7 +35,7 @@
         path: /etc/ca-certificates.conf
         attributes: -i
     - name: Copy ca-certificates.conf
-      when: ansible_os_family != "RedHat"
+      when: ansible_facts['os_family'] != "RedHat"
       ansible.builtin.copy:
         src: ca-certificates.conf.new
         dest: /etc/ca-certificates.conf
@@ -48,12 +48,12 @@
         - pki
       notify: "Run update-ca-certificates"
     - name: Make /etc/ca-certificates.conf immutable
-      when: ansible_virtualization_type != "docker"
+      when: ansible_facts['virtualization_type'] != "docker"
       ansible.builtin.file:
         path: /etc/ca-certificates.conf
         attributes: +i
     - name: Install OpenSSL (Slackware)
-      when: ansible_distribution == "Slackware"
+      when: ansible_facts['distribution'] == "Slackware"
       community.general.slackpkg:
         name: openssl
         state: present

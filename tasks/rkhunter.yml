@@ -7,7 +7,7 @@
       ansible.builtin.apt:
         name: rkhunter
         update_cache: true
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
       tags:
         - packages
         - debian
@@ -20,7 +20,7 @@
       tags: check
       block:
         - name: Get package_facts to check if libwww-perl package is installed (Debian)
-          when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+          when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
           tags: debian
           ansible.builtin.package_facts:
             manager: auto
@@ -140,14 +140,14 @@
         minute: "30"
         hour: "5"
         job: "/usr/bin/test -x /usr/bin/rkhunter && /usr/bin/rkhunter --cronjob --rwo"
-      when: ansible_distribution != "Debian"
+      when: ansible_facts['distribution'] != "Debian"
       tags: configuration
     - name: Configure Debian specific rkhunter settings in /etc/default/rkhunter
       ansible.builtin.replace:
         path: /etc/default/rkhunter
         regexp: '^({{ item.key }}=).*'
         replace: '\g<1>"{{ item.value }}"'
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
       with_dict:
         CRON_DAILY_RUN: "yes"
         APT_AUTOGEN: "yes"

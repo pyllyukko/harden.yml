@@ -3,7 +3,7 @@
 # ANSSI-BP-028 R62 - Disabling the non-necessary services
 - name: Stop & disable unwanted services (Debian)
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
   ansible.builtin.service:
     name: "{{ item }}"
     state: stopped
@@ -19,7 +19,7 @@
 
 - name: Slackware services
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   tags:
     - services
     - slackware
@@ -53,7 +53,7 @@
 - name: Install cron
   become: true
   when:
-    - ansible_distribution == "Debian"
+    - ansible_facts['distribution'] == "Debian"
     - '"molecule-notest" in ansible_skip_tags'
   ansible.builtin.apt:
     name: cron
@@ -62,7 +62,7 @@
     - packages
     - debian
 - name: Check if cron is installed (Debian)
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   tags:
     - debian
     - check
@@ -74,7 +74,7 @@
 - name: Debian cron
   become: true
   when:
-    - ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+    - ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
     - '"cron" in ansible_facts.packages'
   tags:
     - services
@@ -100,7 +100,7 @@
 
 - name: Create empty /etc/at.allow (whitelist) and remove /etc/at.deny (blacklist)
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Slackware" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Slackware" or ansible_facts['distribution'] == "Ubuntu"
   tags:
     - services
     - configuration
@@ -125,7 +125,7 @@
 - name: Create a job that checks systemd's state
   become: true
   when:
-    - ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+    - ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
     - '"cron" in ansible_facts.packages'
   ansible.builtin.cron:
     name: "Check SystemState"
@@ -138,7 +138,7 @@
   tags:
     - slackware
     - cron
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   become: true
   block:
     - name: Increase crond's log level (Slackware)
@@ -205,7 +205,7 @@
 # Misc
 #- name: Install icmpinfo
 #  become: true
-#  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+#  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
 #  ansible.builtin.apt:
 #    name: icmpinfo
 #    update_cache: true
@@ -213,7 +213,7 @@
 #  - packages
 - name: Install icmpinfo (Slackware)
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   community.general.slackpkg:
     name: icmpinfo
     state: present
@@ -225,7 +225,7 @@
 
 - name: Slackware rc.d
   tags: slackware
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   become: true
   block:
     - name: Create /etc/rc.d/rc.local (Slackware)

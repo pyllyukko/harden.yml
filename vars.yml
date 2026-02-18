@@ -41,7 +41,7 @@ allowed_tcp_ports:
 sshd_config:
   Ciphers: chacha20-poly1305@openssh.com,aes256-gcm@openssh.com,aes256-ctr
   MACs: hmac-sha2-512-etm@openssh.com
-  KexAlgorithms: '{% if ansible_distribution != "Ubuntu" %}mlkem768x25519-sha256,{% endif %}sntrup761x25519-sha512@openssh.com,curve25519-sha256,curve25519-sha256'
+  KexAlgorithms: "{% if ansible_facts['distribution'] != \"Ubuntu\" %}mlkem768x25519-sha256,{% endif %}sntrup761x25519-sha512@openssh.com,curve25519-sha256,curve25519-sha256"
   HostKeyAlgorithms: ssh-ed25519-cert-v01@openssh.com,rsa-sha2-512-cert-v01@openssh.com,ssh-ed25519,rsa-sha2-512
   MaxAuthTries: 3
   GSSAPIKexAlgorithms: gss-curve25519-sha256-,gss-nistp256-sha256-,gss-group16-sha512-,gss-group14-sha256-
@@ -53,23 +53,23 @@ crypt_rounds: 500000
 run_lynis_after_hardening: false
 sudo_ids: false
 sudo_iolog: false
-sudo_group: '{% if ansible_distribution == "Slackware" %}wheel{% else %}sudo{% endif %}'
-aide_conf: '{% if ansible_distribution == "Slackware" %}/etc/aide.conf{% else %}/etc/aide/aide.conf{% endif %}'
+sudo_group: "{% if ansible_facts['distribution'] == \"Slackware\" %}wheel{% else %}sudo{% endif %}"
+aide_conf: "{% if ansible_facts['distribution'] == \"Slackware\" %}/etc/aide.conf{% else %}/etc/aide/aide.conf{% endif %}"
 pass_max_days: 365
 pass_min_days: 7
 pass_warn_age: 30
 inactive_password_lock: 30
-lynis_location: '{% if ansible_os_family == "RedHat" or ansible_distribution == "Slackware" %}/usr/bin/lynis{% else %}/usr/sbin/lynis{% endif %}'
+lynis_location: "{% if ansible_facts['os_family'] == \"RedHat\" or ansible_facts['distribution'] == \"Slackware\" %}/usr/bin/lynis{% else %}/usr/sbin/lynis{% endif %}"
 chkrootkit_conf_dir: '/etc/chkrootkit'
 cisofy_keyring: /etc/apt/keyrings/cisofy.asc
 hsts_max_age: 600
-clamav_location: '{% if (ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu") and ansible_architecture == "x86_64" %}/usr/local/bin{% else %}/usr/bin{% endif %}'
+clamav_location: "{% if (ansible_facts['distribution'] == \"Debian\" or ansible_facts['distribution'] == \"Kali\" or ansible_facts['distribution'] == \"Ubuntu\") and ansible_facts['architecture'] == \"x86_64\" %}/usr/local/bin{% else %}/usr/bin{% endif %}"
 clamav: {
   'socket': "/run/clamav/clamd.sock",
   'database': "/var/lib/clamav",
   'pid': "/run/clamav/clamd.pid"
 }
-logind_conf_location: '{% if ansible_distribution == "Slackware" %}/etc/elogind/logind.conf{% else %}/etc/systemd/logind.conf{% endif %}'
+logind_conf_location: "{% if ansible_facts['distribution'] == \"Slackware\" %}/etc/elogind/logind.conf{% else %}/etc/systemd/logind.conf{% endif %}"
 alert_email: 'root'
 max_auth_tries: 3
 # These system accounts will have additional limits via pam_limits

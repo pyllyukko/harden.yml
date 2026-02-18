@@ -47,7 +47,7 @@
     PASS_MIN_DAYS: "{{ pass_min_days }}"
     PASS_WARN_AGE: "{{ pass_warn_age }}"
     SHA_CRYPT_MIN_ROUNDS: "{{ crypt_rounds }}"
-    ENCRYPT_METHOD: "{{ 'YESCRYPT' if ansible_distribution == 'Debian' else 'SHA512' }}"
+    ENCRYPT_METHOD: "{{ 'YESCRYPT' if ansible_facts['distribution'] == 'Debian' else 'SHA512' }}"
     FAIL_DELAY: "{{ fail_delay }}"
     PREVENT_NO_AUTH: "yes"
     YESCRYPT_COST_FACTOR: 11
@@ -56,7 +56,7 @@
     - passwords
 # Required at least for getent
 - name: Install glibc package (Slackware)
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   become: true
   community.general.slackpkg:
     name: glibc
@@ -120,7 +120,7 @@
     - configuration
     - debian
     - umask
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   block:
     - name: Create /etc/profile.d/umask.sh (Debian)
       ansible.builtin.copy:
@@ -169,7 +169,7 @@
 
 - name: login_defs Slackware
   ansible.builtin.import_tasks: login_defs-slackware.yml
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   tags: slackware
 
 # CIS Debian Linux 10 Benchmark v1.0.0 - 6.2.17 Ensure no duplicate GIDs exist
@@ -180,7 +180,7 @@
   changed_when: false
 
 - name: Remove pi from adm group (Raspberry Pi OS)
-  when: ansible_distribution == "Debian"
+  when: ansible_facts['distribution'] == "Debian"
   become: true
   ansible.builtin.command: gpasswd -d pi adm
   register: result
@@ -317,7 +317,7 @@
     regexp: '^({{ item.key }}=).*$'
     replace: '\g<1>{{ item.value }}'
     validate: '/bin/grep "^{{ item.key }}={{ item.value }}$" %s'
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   tags:
     - configuration
     - debian
@@ -390,7 +390,7 @@
     - name: Debian specific groups
       become: true
       tags: debian
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
       block:
         - name: Remove all users from group "lpadmin"
           ansible.builtin.command: gpasswd -d {{ item }} lpadmin
@@ -414,7 +414,7 @@
     # https://www.raspberrypi.com/documentation/computers/os.html#permissions
     - name: Remove users from Raspberry Pi OS specific groups
       become: true
-      when: ansible_distribution == "Debian"
+      when: ansible_facts['distribution'] == "Debian"
       tags: debian
       block:
         - name: Remove all users from group "gpio"
@@ -448,7 +448,7 @@
 # Unfortunately the hash_rounds_min doesn't seem to work
 #- name: Configure libuser.conf
 #  become: true
-#  when: ansible_os_family == "RedHat"
+#  when: ansible_facts['os_family'] == "RedHat"
 #  tags:
 #    - centos
 #    - configuration

@@ -30,15 +30,15 @@
     - name: ClamAV
       ansible.builtin.import_tasks: tasks/clamav.yml
       # Slackware has ClamAV in SBo
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
     - name: AIDE
       ansible.builtin.import_tasks: tasks/aide.yml
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
     - name: Debian packages
       ansible.builtin.import_tasks: tasks/debian_packages.yml
     - name: Lynis
       ansible.builtin.import_tasks: tasks/lynis.yml
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
     - name: Banners
       ansible.builtin.import_tasks: tasks/banners.yml
     - name: PAM
@@ -53,7 +53,7 @@
     # * services brings in cron for Molecule tests and causes rkhunter.conf generation to start monitoring /var/spool/cron/crontabs/*
     - name: rkhunter
       ansible.builtin.import_tasks: tasks/rkhunter.yml
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
     - name: login_defs
       ansible.builtin.import_tasks: tasks/login_defs.yml
     - name: Permissions

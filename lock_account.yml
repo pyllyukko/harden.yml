@@ -51,10 +51,10 @@
       block:
       - name: Remove user's crontab (Slackware)
         command: crontab -d -u {{ user }}
-        when: ansible_distribution == "Slackware"
+        when: ansible_facts['distribution'] == "Slackware"
       - name: Remove user's crontab (Debian)
         command: crontab -r -u {{ user }}
-        when: ansible_distribution == "Debian"
+        when: ansible_facts['distribution'] == "Debian"
         ignore_errors: yes
       - name: Remove at jobs
         shell: for job in $(atq|awk '$NF=="{{ user }}"{print$1}'); do atrm $job; done

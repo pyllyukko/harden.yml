@@ -75,7 +75,7 @@ Tiger_Check_OS=Y                # Fast
 # - Linux, HPUX and Solaris specific
 Tiger_Check_NETWORKCONFIG=Y     # Fast
 # - Debian specific checks:
-{% if ansible_distribution == "Debian" or ansible_distribution == "Kali" %}
+{% if ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" %}
 Tiger_Deb_CheckMD5Sums=Y
 Tiger_Deb_NoPackFiles=Y
 {% else %}
@@ -205,9 +205,9 @@ Tiger_Dormant_Limit=60
 # What accounts are considered administrative (beyond root)
 # (likely to not be used by humans, and therefore have impossible passwords)
 # List of usernames separated by '|'... no whitespaces
-{% if ansible_distribution == "Debian" or ansible_distribution == "Kali" %}
+{% if ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" %}
 Tiger_Admin_Accounts='bin|daemon|games|lp|mail|news|sync|sys|uucp|man|proxy|postgres|www-data|irc|gnats'
-{% elif ansible_distribution == "Slackware" %}
+{% elif ansible_facts['distribution'] == "Slackware" %}
 Tiger_Admin_Accounts='adm|bin|daemon|games|lp|mail|news|operator|sync|uucp|postgres|apache'
 {% else %}
 Tiger_Admin_Accounts='adm|bin|daemon|games|lp|mail|news|operator|sync|sys|uucp|man|proxy|majordom|postgres|www-data|irc|gnats'
@@ -398,9 +398,9 @@ Tiger_Listening_ValidProcs=''
 # The process list below is just an example (useful for Linux)
 # change it to suit your needs. You can use either the process name
 # or the full path name
-{% if ansible_distribution == "Debian" or ansible_distribution == "Kali" %}
+{% if ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" %}
 Tiger_Running_Procs='/lib/systemd/systemd-journa /usr/sbin/cron /usr/bin/dbus-daemon /lib/systemd/systemd-timesy /lib/systemd/systemd-logind /lib/systemd/systemd-udevd /usr/lib/polkit-1/polkitd'
-{% elif ansible_distribution == "Slackware" %}
+{% elif ansible_facts['distribution'] == "Slackware" %}
 Tiger_Running_Procs='/usr/sbin/syslogd /usr/sbin/crond /usr/bin/dbus-daemon elogind-daemon /sbin/udevd /usr/lib/polkit-1/polkitd'
 {% else %}
 Tiger_Running_Procs='syslogd cron atd klogd'

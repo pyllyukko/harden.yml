@@ -4,7 +4,7 @@
     - configuration
     - authorization
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   block:
     - name: Create /etc/shutdown.allow
       ansible.builtin.copy:
@@ -28,7 +28,7 @@
     - configuration
     - umask
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   ansible.builtin.replace:
     path: /etc/profile
     regexp: '^(umask) [0-9]+$'
@@ -40,7 +40,7 @@
 - name: Configure defchmod and AGID in /usr/sbin/adduser (Slackware)
   tags: configuration
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   ansible.builtin.replace:
     path: /usr/sbin/adduser
     regexp: '^({{ item.key }}=).+'
@@ -59,7 +59,7 @@
     - authentication
     - inittab
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   block:
     - name: Remove S from System initialization (Slackware)
       ansible.builtin.replace:
@@ -89,12 +89,12 @@
       export LESSHISTFILE="/dev/null"
       ulimit -Hc 0
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
 
 # https://github.com/ansible/ansible/issues/11024
 # Cleanup Slackware's groups
 - name: Slackware groups
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   become: true
   block:
     # http://ftp.slackware.com/pub/slackware/slackware64-15.0/source/a/etc/group.new
@@ -140,7 +140,7 @@
   tags: accounts
   block:
     - name: Check if gshadow needs fixing (Slackware)
-      when: ansible_distribution == "Slackware"
+      when: ansible_facts['distribution'] == "Slackware"
       ansible.builtin.command: grpck -r
       tags: check
       changed_when: false
@@ -148,7 +148,7 @@
       register: grpck
     - name: Fix gshadow (Slackware)
       when:
-        - ansible_distribution == "Slackware"
+        - ansible_facts['distribution'] == "Slackware"
         - '"no matching group file entry in /etc/gshadow" in grpck.stdout'
       # yes might return 141
       ansible.builtin.shell: set -o pipefail; yes | grpck

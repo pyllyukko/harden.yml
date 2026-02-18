@@ -8,7 +8,7 @@
       ansible.builtin.apt:
         name: ['auditd', 'libcap-ng-utils', 'make']
         update_cache: true
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
       tags:
         - packages
         - debian
@@ -43,13 +43,13 @@
     #    path: /etc/audit/rules.d/10-base-config.rules
     #    regexp: "^(--backlog_wait_time [0-9]+)$"
     #    replace: '#\1'
-    #  when: (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7") or (ansible_distribution == "Slackware" and ansible_distribution_version == "14.2") # noqa yaml[line-length]
+    #  when: (ansible_facts['distribution'] == "CentOS" and ansible_facts['distribution_major_version'] == "7") or (ansible_facts['distribution'] == "Slackware" and ansible_facts['distribution_version'] == "14.2") # noqa yaml[line-length]
     #  tags: centos
     #- name: Remove 11-loginuid.rules for Slackware 14.2
     #  ansible.builtin.file:
     #    path: /etc/audit/rules.d/11-loginuid.rules
     #    state: absent
-    #  when: ansible_distribution == "Slackware" and ansible_distribution_version == "14.2"
+    #  when: ansible_facts['distribution'] == "Slackware" and ansible_facts['distribution_version'] == "14.2"
     #  tags:
     #    - slackware
     - name: Modify 20-dont-audit.rules
@@ -180,7 +180,7 @@
         name: auditd
         state: started
         enabled: true
-      when: ansible_distribution != "Slackware"
+      when: ansible_facts['distribution'] != "Slackware"
       tags:
         - services
         - configuration
@@ -194,7 +194,7 @@
       with_items:
         - audit=1
         - audit_backlog_limit=8192
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat" or ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['os_family'] == "RedHat" or ansible_facts['distribution'] == "Ubuntu"
       tags: configuration
       notify: "Run update-grub"
       register: result
@@ -206,7 +206,7 @@
         path: /boot/firmware/cmdline.txt
         regexp: '^(.(?!.*\baudit=1\b).*)$'
         replace: '\1 audit=1'
-      when: ansible_distribution == "Debian"
+      when: ansible_facts['distribution'] == "Debian"
       tags:
         - debian
         - configuration

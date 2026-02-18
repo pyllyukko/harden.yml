@@ -4,7 +4,7 @@
   tasks:
     - name: Check OS
       ansible.builtin.assert:
-        that: ansible_distribution == "Debian" and ansible_distribution_major_version | int == 12
+        that: ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] | int == 12
         msg: "Unsupported operating system"
     - name: Check latest definition release
       uri:

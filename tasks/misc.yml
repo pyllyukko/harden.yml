@@ -1,7 +1,7 @@
 ---
 - name: Make installpkg store md5sums (Slackware)
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   ansible.builtin.replace:
     path: /sbin/installpkg
     regexp: '^(MD5SUM)=[0-9]+$'
@@ -78,7 +78,7 @@
 - name: Remove stuff
   become: true
   tags: slackware
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   block:
     - name: Remove unneeded/unwanted packages (Slackware)
       community.general.slackpkg:
@@ -130,7 +130,7 @@
 #    insertbefore: '^exit 0$'
 #    block: |
 #      /bin/bash -c 'shopt -s nullglob; for host in /sys/bus/usb/devices/usb*; do echo 0 1>"${host}/authorized_default"; done'
-#  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+#  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
 #  tags:
 #    - configuration
 #    - debian
@@ -202,14 +202,14 @@
       failed_when:
         - result.failed
         - '"Could not find the requested service tracker-miner-fs" not in result.msg'
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
       tags:
         - debian
         - molecule-notest
     # TODO: Stopped working for Debian 13
     # See https://github.com/ansible/ansible/issues/85714
     #- name: Mask tracker-miner-fs-3 & tracker-extract-3 systemd units
-    #  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+    #  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
     #  become: true
     #  ansible.builtin.systemd:
     #    name: '{{ item }}'
@@ -258,7 +258,7 @@
     - configuration
     - kernel
   become: true
-  when: ansible_distribution != "Slackware"
+  when: ansible_facts['distribution'] != "Slackware"
   community.general.ini_file:
     path: /etc/systemd/coredump.conf
     section: Coredump
@@ -301,7 +301,7 @@
   become: true
   tags: shells
   # Currently we have PAM configs only for Slackware & Debian
-  when: ansible_distribution == "Slackware" or ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Slackware" or ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu"
   block:
     - name: Create a rbash symbolic link
       ansible.builtin.file:
@@ -403,7 +403,7 @@
 
 - name: Configure MAILADDR in /etc/cron.daily/certwatch
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   tags:
     - slackware
     - configuration

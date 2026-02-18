@@ -4,7 +4,7 @@
   tags:
     - aide
     - debian
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   become: true
   block:
     - name: Install AIDE package
@@ -81,7 +81,7 @@
   tags:
     - aide
     - slackware
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   become: true
   block:
     - name: Copy aide.conf
@@ -111,9 +111,9 @@
     - check
     - aide
   when: >
-    ansible_distribution == "Debian" or
-    ansible_distribution == "Kali" or
-    ansible_distribution == "Slackware"
+    ansible_facts['distribution'] == "Debian" or
+    ansible_facts['distribution'] == "Kali" or
+    ansible_facts['distribution'] == "Slackware"
 
 - name: Print Lynis score for file integrity
   become: true

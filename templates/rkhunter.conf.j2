@@ -174,10 +174,10 @@ DBDIR=/var/lib/rkhunter/db
 # The installer program will set the default directory. If this default is
 # subsequently commented out or removed, then the program will not run.
 #
-{% if ansible_distribution == "Debian" or ansible_os_family == "RedHat" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu" %}
+{% if ansible_facts['distribution'] == "Debian" or ansible_facts['os_family'] == "RedHat" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu" %}
 SCRIPTDIR=/usr/share/rkhunter/scripts
 {% endif %}
-{% if ansible_distribution == "Slackware" %}
+{% if ansible_facts['distribution'] == "Slackware" %}
 SCRIPTDIR=/usr/lib64/rkhunter/scripts
 {% endif %}
 
@@ -439,7 +439,7 @@ HASH_CMD=SHA256
 #
 # Also see the PKGMGR_NO_VRFY and USE_SUNSUM options.
 #
-{% if ansible_distribution == "Debian" or ansible_distribution == "Ubuntu" or ansible_distribution == "Kali" %}
+{% if ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu" or ansible_facts['distribution'] == "Kali" %}
 PKGMGR=DPKG
 {% else %}
 PKGMGR=NONE
@@ -544,11 +544,11 @@ PKGMGR=NONE
 USER_FILEPROP_FILES_DIRS=/etc/rkhunter.conf
 #USER_FILEPROP_FILES_DIRS=/etc/rkhunter.conf.local
 #USER_FILEPROP_FILES_DIRS=/etc/rkhunter.d/*
-{% if ansible_distribution == "Slackware" %}
+{% if ansible_facts['distribution'] == "Slackware" %}
 USER_FILEPROP_FILES_DIRS=/lib64/security/*.so
 {% endif %}
-{% if ansible_distribution == "Debian" or ansible_distribution == "Ubuntu" or ansible_distribution == "Kali" %}
-USER_FILEPROP_FILES_DIRS=/lib/{{ ansible_architecture }}-linux-gnu/security/*.so
+{% if ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu" or ansible_facts['distribution'] == "Kali" %}
+USER_FILEPROP_FILES_DIRS=/lib/{{ ansible_facts['architecture'] }}-linux-gnu/security/*.so
 USER_FILEPROP_FILES_DIRS=/etc/crontab
 {% endif %}
 USER_FILEPROP_FILES_DIRS=/etc/sudoers
@@ -618,7 +618,7 @@ USER_FILEPROP_FILES_DIRS={{ d }}/*
 # The default value is the null string.
 #
 #SCRIPTWHITELIST=/usr/bin/groups
-{% if ansible_distribution == "Debian" or ansible_distribution == "Ubuntu" %}
+{% if ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu" %}
 SCRIPTWHITELIST=/usr/sbin/adduser
 SCRIPTWHITELIST=/usr/bin/ldd
 SCRIPTWHITELIST=/usr/bin/which
@@ -632,7 +632,7 @@ SCRIPTWHITELIST=/etc/cron.daily/dpkg
 SCRIPTWHITELIST=/usr/bin/lwp-request
 {% endif %}
 {% endif %}
-{% if ansible_distribution == "Slackware" %}
+{% if ansible_facts['distribution'] == "Slackware" %}
 SCRIPTWHITELIST=/usr/sbin/adduser
 SCRIPTWHITELIST=/usr/bin/ldd
 SCRIPTWHITELIST=/usr/bin/whatis
@@ -683,7 +683,7 @@ SCRIPTWHITELIST={{ f }}
 #
 # The default value is the null string.
 #
-{% if (ansible_distribution == "Debian" or ansible_distribution == "Ubuntu") and 'openjdk-17-jre-headless' in ansible_facts.packages %}
+{% if (ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu") and 'openjdk-17-jre-headless' in ansible_facts.packages %}
 ALLOWHIDDENDIR=/etc/.java
 {% else %}
 #ALLOWHIDDENDIR=/etc/.java
@@ -709,8 +709,8 @@ ALLOWHIDDENDIR=/etc/.pihole
 #ALLOWHIDDENFILE=/usr/lib/hmaccalc/sha1hmac.hmac
 #ALLOWHIDDENFILE=/usr/lib/hmaccalc/sha256hmac.hmac
 #ALLOWHIDDENFILE=/usr/sbin/.sshd.hmac
-{% if ansible_distribution == "Slackware" %}
-{% if ansible_distribution_version == "15.0" %}
+{% if ansible_facts['distribution'] == "Slackware" %}
+{% if ansible_facts['distribution_version'] == "15.0" %}
 ALLOWHIDDENFILE=/usr/man/man5/.k5identity.5
 ALLOWHIDDENFILE=/usr/man/man5/.k5login.5
 # Linode Network Helper
@@ -718,13 +718,13 @@ ALLOWHIDDENFILE=/usr/man/man5/.k5login.5
 ALLOWHIDDENFILE=/etc/.resolv.conf.linode-last
 ALLOWHIDDENFILE=/etc/.resolv.conf.linode-orig
 {% endif %}
-{% if ansible_distribution_version == "14.2" %}
+{% if ansible_facts['distribution_version'] == "14.2" %}
 ALLOWHIDDENFILE=/usr/man/man5/.k5identity.5.gz
 ALLOWHIDDENFILE=/usr/man/man5/.k5login.5.gz
 {% endif %}
 {% endif %}
-{% if ansible_distribution == "Debian" or ansible_distribution == "Ubuntu" %}
-{% if ansible_distribution == "Debian" %}
+{% if ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu" %}
+{% if ansible_facts['distribution'] == "Debian" %}
 # dphys-swapfile does this
 ALLOWHIDDENFILE=/etc/.fstab
 {% endif %}
@@ -803,7 +803,7 @@ SCAN_MODE_DEV=THOROUGH
 #
 #ALLOWDEVFILE=/dev/shm/pulse-shm-*
 #ALLOWDEVFILE=/dev/shm/sem.ADBE_*
-{% if ansible_distribution == "Debian" %}
+{% if ansible_facts['distribution'] == "Debian" %}
 # https://bugs.lttng.org/issues/1143
 ALLOWDEVFILE=/dev/shm/lttng-ust-wait-*
 {% if getent_passwd.pihole is defined %}
@@ -867,7 +867,7 @@ ALLOWDEVFILE=/dev/shm/qb-*/qb-response-usbguard-header
 #
 # The default is 1048576 (1M) bytes.
 #
-{% if ansible_distribution == "Debian" and 'lightdm-gtk-greeter' in ansible_facts.packages %}
+{% if ansible_facts['distribution'] == "Debian" and 'lightdm-gtk-greeter' in ansible_facts.packages %}
 IPC_SEG_SIZE=68157440
 {% else %}
 #IPC_SEG_SIZE=1048576
@@ -952,7 +952,7 @@ IPC_SEG_SIZE=68157440
 #
 # This option has no default value.
 #
-{% if ansible_distribution == "Slackware" %}
+{% if ansible_facts['distribution'] == "Slackware" %}
 STARTUP_PATHS=/etc/rc.d /etc/inittab
 {% else %}
 #STARTUP_PATHS=/etc/rc.d /etc/rc.local
@@ -1149,9 +1149,9 @@ ALLOW_SYSLOG_REMOTE_LOGGING=1
 #
 # Also see the WARN_ON_OS_CHANGE and UPDT_ON_OS_CHANGE options.
 #
-{% if ansible_distribution == "Debian" %}
+{% if ansible_facts['distribution'] == "Debian" %}
 OS_VERSION_FILE=/etc/debian_version
-{% elif ansible_distribution == "Slackware" %}
+{% elif ansible_facts['distribution'] == "Slackware" %}
 OS_VERSION_FILE=/etc/slackware-version
 {% else %}
 #OS_VERSION_FILE=/etc/release

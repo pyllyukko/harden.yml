@@ -9,9 +9,9 @@
     - name: Check OS version
       ansible.builtin.assert:
         that: >
-          (ansible_distribution == "Slackware" and ansible_distribution_major_version | int >= 15) or
-          (ansible_distribution == "Debian" and ansible_distribution_major_version | int >= 13) or
-          ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+          (ansible_facts['distribution'] == "Slackware" and ansible_facts['distribution_major_version'] | int >= 15) or
+          (ansible_facts['distribution'] == "Debian" and ansible_facts['distribution_major_version'] | int >= 13) or
+          ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
         msg: "Unsupported operating system"
       tags: check
     - name: Sudo checks
@@ -24,14 +24,14 @@
             database: group
             key: sudo
           failed_when: getent_group.sudo[2] == ""
-          when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+          when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
           tags: debian
         - name: 'Check that some user(s) exist in "wheel" group'
           ansible.builtin.getent:
             database: group
             key: wheel
           failed_when: getent_group.wheel[2] == "" or getent_group.wheel[2] == "root"
-          when: ansible_distribution == "Slackware"
+          when: ansible_facts['distribution'] == "Slackware"
           tags: slackware
     # PAM's access.conf and sshd_config will actually start blocking access, so
     # check that we are not locking ourselves out of the system being hardened.
@@ -50,7 +50,7 @@
         - slackware
         - check
         - aide
-      when: ansible_distribution == "Slackware"
+      when: ansible_facts['distribution'] == "Slackware"
       ansible.builtin.stat:
         path: /usr/bin/aide
       register: result
@@ -60,7 +60,7 @@
         - slackware
         - check
         - rkhunter
-      when: ansible_distribution == "Slackware"
+      when: ansible_facts['distribution'] == "Slackware"
       ansible.builtin.stat:
         path: /usr/bin/rkhunter
       register: result
@@ -70,7 +70,7 @@
         - slackware
         - check
         - audit
-      when: ansible_distribution == "Slackware"
+      when: ansible_facts['distribution'] == "Slackware"
       ansible.builtin.stat:
         path: /sbin/auditd
       register: result
@@ -89,14 +89,14 @@
         - name: getent shadow for Ansible user
           ansible.builtin.getent:
             database: shadow
-            key: '{{ ansible_user_id }}'
+            key: "{{ ansible_facts['user_id'] }}"
             split: ':'
           no_log: true
         # If password age is today-pass_max_days, you're still able to login with "Your password will expire today."
         # So > comparison should be sufficient, but we'll put in the one day safe margin (>=) just in case.
         - name: Check that Ansible user's password is not too old
           ansible.builtin.assert:
-            that: ansible_facts.getent_shadow[ansible_user_id][1] | int >= ((ansible_date_time.epoch_int | int / 86400) | int) - pass_max_days
+            that: ansible_facts.getent_shadow[ansible_facts['user_id']][1] | int >= ((ansible_facts['date_time'].epoch_int | int / 86400) | int) - pass_max_days
             msg: "Ansible user's password too old"
 
     # End of checks. Start hardening.

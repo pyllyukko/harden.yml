@@ -2,7 +2,7 @@
 
 # TCP wrappers
 - name: Install TCP wrappers library and nftables (Debian)
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   become: true
   ansible.builtin.apt:
     update_cache: true
@@ -43,7 +43,7 @@
     path: /etc/rc.d/rc.firewall
   register: stat_result
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   tags:
     - services
     - network
@@ -52,7 +52,7 @@
     - check
 - name: Firewall for Slackware
   become: true
-  when: ansible_distribution == "Slackware" and not stat_result.stat.exists
+  when: ansible_facts['distribution'] == "Slackware" and not stat_result.stat.exists
   tags:
     - network
     - firewall
@@ -95,7 +95,7 @@
         - services
         - slackware
 - name: Enable Slackware firewall
-  when: ansible_distribution == "Slackware" and stat_result.stat.exists and not stat_result.stat.xusr
+  when: ansible_facts['distribution'] == "Slackware" and stat_result.stat.exists and not stat_result.stat.xusr
   ansible.builtin.file:
     path: /etc/rc.d/rc.firewall
     mode: '0700'
@@ -115,7 +115,7 @@
     - network
     - debian
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   block:
     - name: Copy nftables.conf
       ansible.builtin.template:
@@ -157,7 +157,7 @@
         path: /boot/firmware/cmdline.txt
         regexp: '^(.(?!.*\bipv6\.disable=1\b).*)$'
         replace: '\1 ipv6.disable=1'
-      when: ansible_distribution == "Debian"
+      when: ansible_facts['distribution'] == "Debian"
       tags: debian
       register: result
       failed_when:
@@ -168,7 +168,7 @@
         path: /etc/default/grub
         regexp: '^(GRUB_CMDLINE_LINUX="(?!.*\bipv6\.disable=1\b).*)"$'
         replace: '\1 ipv6.disable=1"'
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['os_family'] == "RedHat"
       notify: "Run update-grub"
       register: result
       failed_when:
