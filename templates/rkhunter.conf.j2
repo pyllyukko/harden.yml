@@ -691,7 +691,7 @@ ALLOWHIDDENDIR=/etc/.java
 #ALLOWHIDDENDIR=/dev/.udev
 #ALLOWHIDDENDIR=/dev/.udevdb
 #ALLOWHIDDENDIR=/dev/.mdadm
-{% if getent_passwd.pihole is defined %}
+{% if ansible_facts['getent_passwd'].pihole is defined %}
 ALLOWHIDDENDIR=/etc/.pihole
 {% endif %}
 
@@ -806,7 +806,7 @@ SCAN_MODE_DEV=THOROUGH
 {% if ansible_facts['distribution'] == "Debian" %}
 # https://bugs.lttng.org/issues/1143
 ALLOWDEVFILE=/dev/shm/lttng-ust-wait-*
-{% if getent_passwd.pihole is defined %}
+{% if ansible_facts['getent_passwd'].pihole is defined %}
 ALLOWDEVFILE=/dev/shm/FTL-clients
 ALLOWDEVFILE=/dev/shm/FTL-counters
 ALLOWDEVFILE=/dev/shm/FTL-dns-cache
