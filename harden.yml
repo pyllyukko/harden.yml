@@ -23,14 +23,14 @@
           ansible.builtin.getent:
             database: group
             key: sudo
-          failed_when: ansible_facts["getent_group"].sudo[2] == ""
+          failed_when: getent_group.sudo[2] == ""
           when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
           tags: debian
         - name: 'Check that some user(s) exist in "wheel" group'
           ansible.builtin.getent:
             database: group
             key: wheel
-          failed_when: ansible_facts["getent_group"].wheel[2] == "" or ansible_facts["getent_group"].wheel[2] == "root"
+          failed_when: getent_group.wheel[2] == "" or getent_group.wheel[2] == "root"
           when: ansible_facts['distribution'] == "Slackware"
           tags: slackware
     # PAM's access.conf and sshd_config will actually start blocking access, so
@@ -39,7 +39,7 @@
       ansible.builtin.getent:
         database: group
         key: "{{ allowed_group }}"
-      failed_when: ansible_facts["getent_group"][allowed_group][2] == ""
+      failed_when: getent_group[allowed_group][2] == ""
       tags:
         - check
         - pam
