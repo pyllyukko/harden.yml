@@ -1,7 +1,7 @@
 # Login access control table.
 
 + : root : LOCAL
-{% if ansible_distribution == "Debian" %}
+{% if ansible_facts['distribution'] == "Debian" %}
 # At least debsecan uses "daemon" account
 + : daemon : cron
 + : logcheck : cron
@@ -9,7 +9,7 @@
 # Disallow cron from everyone (else)
 - : ALL : cron
 + : ({{ allowed_group }}) : ALL
-{% if ansible_distribution == "Debian" %}
+{% if ansible_facts['distribution'] == "Debian" %}
 + : Debian-gdm lightdm : LOCAL
 {% endif %}
 # Disallow everything else

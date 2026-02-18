@@ -7,7 +7,7 @@
   block:
     - name: Install sysstat
       become: true
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
       ansible.builtin.apt:
         name: sysstat
         update_cache: true
@@ -17,7 +17,7 @@
         - debian
     - name: Enable system accounting in /etc/default/sysstat
       become: true
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
       ansible.builtin.replace:
         path: /etc/default/sysstat
         regexp: '^ENABLED=.*$'
@@ -29,7 +29,7 @@
         - debian
     - name: Enable system accounting systemd service
       become: true
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
       ansible.builtin.service:
         name: sysstat
         state: started
@@ -40,7 +40,7 @@
         - debian
     - name: Install sysstat (Slackware)
       become: true
-      when: ansible_distribution == "Slackware"
+      when: ansible_facts['distribution'] == "Slackware"
       community.general.slackpkg:
         name: sysstat
         state: present
@@ -51,7 +51,7 @@
         - slackware
     - name: Enable rc.sysstat (Slackware)
       become: true
-      when: ansible_distribution == "Slackware"
+      when: ansible_facts['distribution'] == "Slackware"
       ansible.builtin.file:
         path: /etc/rc.d/rc.sysstat
         owner: root
@@ -65,7 +65,7 @@
     # Ansible states that it's cron module requires "any 'vixie cron' conformant variant"
     # dcron states that "Our crontab format is roughly similar to that used by vixiecron."
     - name: Create sysstat cron jobs
-      when: ansible_distribution == "Slackware"
+      when: ansible_facts['distribution'] == "Slackware"
       become: true
       tags:
         - services
@@ -90,13 +90,13 @@
         regexp: '^HISTORY=[0-9]+$'
         replace: 'HISTORY=99999'
         validate: '/bin/grep "^HISTORY=99999$" %s'
-      when: ansible_os_family != "RedHat"
+      when: ansible_facts['os_family'] != "RedHat"
       tags:
         - services
         - configuration
     #- name: Configure sysstat (RH)
     #  become: true
-    #  when: ansible_os_family == "RedHat"
+    #  when: ansible_facts['os_family'] == "RedHat"
     #  ansible.builtin.replace:
     #    path: /etc/sysconfig/sysstat
     #    regexp: '^HISTORY=[0-9]+$'
@@ -111,7 +111,7 @@
 # Process accounting
 - name: Install acct
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   ansible.builtin.apt:
     name: acct
     update_cache: true
@@ -122,7 +122,7 @@
     - debian
 - name: Enable acct
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   ansible.builtin.systemd:
     name: acct
     state: started
@@ -135,7 +135,7 @@
     - molecule-notest
 - name: Install acct (Slackware)
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   community.general.slackpkg:
     name: acct
     state: present
@@ -146,7 +146,7 @@
     - slackware
 - name: Create /var/log/pacct (Slackware)
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   ansible.builtin.copy:
     content: ""
     dest: /var/log/pacct
@@ -160,7 +160,7 @@
     - slackware
 - name: Create /etc/logrotate.d/pacct (Slackware)
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   ansible.builtin.copy:
     src: logrotate.d/pacct.new
     dest: /etc/logrotate.d/pacct
@@ -173,7 +173,7 @@
     - slackware
 - name: Start process accounting (Slackware)
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   ansible.builtin.command: /sbin/accton /var/log/pacct
   register: result
   changed_when:
@@ -193,7 +193,7 @@
     - configuration
     - debian
     - molecule-notest
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   notify: Run systemctl daemon-reload
   community.general.ini_file:
     path: /lib/systemd/system/{{ item }}.service

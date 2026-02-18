@@ -30,7 +30,7 @@
 
 # This needs to happen before populating /etc/pam.d/other with pam_deny or otherwise sudo will stop working
 - name: Create /etc/pam.d/sudo (Slackware)
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   become: true
   ansible.builtin.copy:
     dest: /etc/pam.d/sudo
@@ -53,7 +53,7 @@
 # last line for session group (see PAM_NAMESPACE(8)) and Slackware's
 # configurations include postlogin before other session modules.
 - name: Copy modified /etc/pam.d/postlogin (Slackware)
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   become: true
   ansible.builtin.copy:
     src: pam.d/postlogin.new
@@ -71,7 +71,7 @@
 # ANSSI-BP-028 R55 - Dedicating temporary directories to users
 # sshd is handled by the task below
 - name: Add pam_namespace to /etc/pam.d/{login,sddm,xdm} (Slackware)
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   become: true
   ansible.builtin.lineinfile:
     path: /etc/pam.d/{{ item }}
@@ -95,7 +95,7 @@
 # This also relates to restricted shells
 # Debian's config from https://salsa.debian.org/ssh-team/openssh/-/blob/master/debian/openssh-server.sshd.pam.in
 - name: Copy /etc/pam.d/sshd
-  when: ansible_distribution == "Slackware" or ansible_distribution == "Debian"
+  when: ansible_facts['distribution'] == "Slackware" or ansible_facts['distribution'] == "Debian"
   become: true
   tags:
     - pam
@@ -104,7 +104,7 @@
     - ssh
     - services
   ansible.builtin.copy:
-    src: pam.d/sshd.{{ ansible_distribution }}
+    src: pam.d/sshd.{{ ansible_facts['distribution'] }}
     dest: /etc/pam.d/sshd
     owner: root
     group: root
@@ -112,7 +112,7 @@
     backup: true
 
 - name: Remove nullok from /etc/pam.d/vsftpd (Slackware)
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   become: true
   tags:
     - configuration
@@ -167,7 +167,7 @@
         - configuration
         - pam
     - name: Slackware specific PAM stuff
-      when: ansible_distribution == "Slackware"
+      when: ansible_facts['distribution'] == "Slackware"
       tags:
         - pam
         - slackware
@@ -188,7 +188,7 @@
 # https://github.com/elogind/elogind/issues/294
 - name: Remove /etc/pam.d/elogind-user (Slackware)
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   tags:
     - configuration
     - pam
@@ -199,7 +199,7 @@
 
 - name: Check some Slackware's PAM files
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   ansible.builtin.shell: 'set -o pipefail; echo "79e37b98714471de80ed60ac8aad337b547259ce27d669a58f8b9d94d77e676e336409f1da9a0f4e412c11398791ff3123a996899410729cda23b771e6111393  /etc/pam.d/{{ item }}" | sha512sum -c' # noqa yaml[line-length]
   args:
     executable: /bin/bash
@@ -226,7 +226,7 @@
 # AUTH-9408
 - name: faillock
   become: true
-  when: ansible_os_family != "RedHat"
+  when: ansible_facts['os_family'] != "RedHat"
   tags:
     - pam
     - authorization
@@ -249,7 +249,7 @@
     # pam-auth-update as long as there are no failed logins recorded in
     # /var/run/faillock/
     - name: Insert "auth required pam_faillock.so preauth" into /etc/pam.d/common-auth
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
       tags:
         - configuration
         - debian
@@ -263,7 +263,7 @@
 # ANSSI-BP-028 R31 - User password strength
 - name: Slackware system-auth
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   tags:
     - slackware
     - pam
@@ -287,7 +287,7 @@
 
 # postlogin doesn't include any auth lines
 - name: Remove auth include postlogin (Slackware)
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   become: true
   ansible.builtin.lineinfile:
     path: /etc/pam.d/{{ item }}
@@ -312,7 +312,7 @@
     - pam
     - passwords
     - debian
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   ansible.builtin.replace:
     path: '{{ item }}'
     regexp: '\s+nullok(_secure)?'
@@ -325,7 +325,7 @@
 # https://wiki.debian.org/WHEEL/PAM
 # This is not enabled in Slackware because it has a separate "Deny use of su" task
 - name: Enable pam_wheel.so in /etc/pam.d/su
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   become: true
   ansible.builtin.replace:
     path: /etc/pam.d/su
@@ -374,7 +374,7 @@
 
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.19
 - name: Debian pam-configs
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   become: true
   tags:
     - configuration
@@ -422,7 +422,7 @@
       notify: "Run pam-auth-update"
 
 #- name: authconfig
-#  when: ansible_os_family == "RedHat"
+#  when: ansible_facts['os_family'] == "RedHat"
 #  become: true
 #  tags:
 #    - configuration
@@ -450,7 +450,7 @@
   block:
     # ANSSI-BP-028 R31 - User password strength
     - name: Install passwdqc (Debian)
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
       ansible.builtin.apt:
         name: libpam-passwdqc
         update_cache: true
@@ -472,8 +472,8 @@
             regexp: '^#?(filter=).*$'
             replace: '\g<1>/opt/passwdqc/common-passwords-v7-20plus-rockyou.pwq'
             backup: true
-          when: ((ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu") and stat_passwdqc_pwq.stat.exists) or
-                (ansible_distribution == "Slackware" and passwdqc_stat.stat.exists and stat_passwdqc_pwq.stat.exists)
+          when: ((ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu") and stat_passwdqc_pwq.stat.exists) or
+                (ansible_facts['distribution'] == "Slackware" and passwdqc_stat.stat.exists and stat_passwdqc_pwq.stat.exists)
         - name: Configure pam_passwdqc to use passwdqc.conf (Debian)
           ansible.builtin.replace:
             path: /usr/share/pam-configs/passwdqc
@@ -481,10 +481,10 @@
             replace: '\1 config=/etc/passwdqc.conf'
             backup: true
           notify: Run pam-auth-update
-          when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+          when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
     # ANSSI-BP-028 R31 - User password strength
     - name: Install libpwquality (Slackware)
-      when: ansible_distribution == "Slackware"
+      when: ansible_facts['distribution'] == "Slackware"
       community.general.slackpkg:
         name: libpwquality
         state: present
@@ -495,7 +495,7 @@
     # ANSSI-BP-028 R68 - Protecting the stored passwords
     # https://github.com/linux-pam/linux-pam/issues/352
     - name: Add rounds={{ crypt_rounds }} to pam_unix in /etc/pam.d/common-password
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
       tags: debian
       ansible.builtin.replace:
         path: /etc/pam.d/common-password
@@ -512,7 +512,7 @@
         replace: '\g<2>= {{ item.value }}'
         validate: '/bin/grep "^{{ item.key }}\s\+= {{ item.value }}$" %s'
         backup: true
-      when: ansible_distribution == "Slackware"
+      when: ansible_facts['distribution'] == "Slackware"
       with_dict:
         retry: 3
         minlen: 14
@@ -581,7 +581,7 @@
     group: root
     mode: '0644'
     backup: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   become: true
   tags:
     - configuration

@@ -1,7 +1,7 @@
 ---
 - name: Install security software
   tags: debian
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   become: true
   block:
     - name: Install security software
@@ -25,7 +25,7 @@
         - services
     # This does not exist in Kali
     - name: Install checksecurity
-      when: ansible_distribution == "Debian" or ansible_distribution == "Ubuntu"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu"
       ansible.builtin.apt:
         name: checksecurity
       tags: packages
@@ -125,7 +125,7 @@
         # https://wiki.debian.org/UsrMerge
         # TODO: Add /usr/lib?
         - name: Fix deb_nopackfiles
-          when: ansible_distribution == "Debian"
+          when: ansible_facts['distribution'] == "Debian"
           ansible.builtin.replace:
             path: /usr/lib/tiger/systems/Linux/2/deb_nopackfiles
             # Tiger is an old piece of software
@@ -138,7 +138,7 @@
     - debian
     - configuration
     - kernel
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
   become: true
   #notify: "Load sysctl settings"
   ansible.builtin.replace:
@@ -152,7 +152,7 @@
 
 # debsecan
 - name: debsecan
-  when: ansible_distribution == "Debian"
+  when: ansible_facts['distribution'] == "Debian"
   tags:
     - debsecan
     - debian
@@ -167,7 +167,7 @@
         name: debsecan
         question: debsecan/suite
         vtype: select
-        value: "{{ ansible_distribution_release }}"
+        value: "{{ ansible_facts['distribution_release'] }}"
       tags: configuration
     - name: Configure debsecan MAILTO
       tags:
@@ -184,7 +184,7 @@
 
 # debsums
 - name: debsums
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
   become: true
   tags:
     - debsums
@@ -203,7 +203,7 @@
 
 - name: Configure chkrootkit
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   tags:
     - chkrootkit
     - debian
@@ -260,7 +260,7 @@
         mode: '0600'
 
 - name: Debian APT
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
   become: true
   tags:
     - debian

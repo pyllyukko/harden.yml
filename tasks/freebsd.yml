@@ -89,7 +89,7 @@
         when: kern_ident.stdout == "FREENAS64"
       - name: 'TCP wrappers: create /etc/hosts.allow'
         ansible.builtin.template:
-          src: "{{ playbook_dir }}/templates/hosts.allow-{{ ansible_system }}.j2"
+          src: "{{ playbook_dir }}/templates/hosts.allow-{{ ansible_facts['system'] }}.j2"
           dest: /etc/hosts.allow
       - name: chmod /root
         ansible.builtin.file:
@@ -104,4 +104,4 @@
       - name: Update the login.conf database
         ansible.builtin.command: cap_mkdb
       become: true
-      when: ansible_distribution == "FreeBSD"
+      when: ansible_facts['distribution'] == "FreeBSD"

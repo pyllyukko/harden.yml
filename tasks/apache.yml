@@ -1,6 +1,6 @@
 ---
 - name: Configure Apache
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   become: true
   tags:
     - configuration

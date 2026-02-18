@@ -1,6 +1,6 @@
 ---
 - name: Debian SSH checks
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   tags:
     - ssh
     - debian
@@ -14,7 +14,7 @@
         manager: auto
 - name: Check SSH daemon service state (Slackware)
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   ansible.builtin.stat:
     path: /etc/rc.d/rc.sshd
   register: rc_sshd
@@ -35,7 +35,7 @@
 - name: SSH in Slackware
   become: true
   when: >
-    ansible_distribution == "Slackware" and rc_sshd.stat.exists
+    ansible_facts['distribution'] == "Slackware" and rc_sshd.stat.exists
   tags:
     - services
     - configuration
@@ -93,11 +93,11 @@
   # Skip the task in Debian if openssh-server package does not exist
   when: >
     (
-      ansible_distribution in ["Debian", "Kali", "Ubuntu"] and
+      ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"] and
       'openssh-server' in ansible_facts.packages
     )
     or
-    (ansible_distribution == "Slackware" and rc_sshd.stat.exists)
+    (ansible_facts['distribution'] == "Slackware" and rc_sshd.stat.exists)
 
 - name: Harden SSH client configuration
   tags:
@@ -106,11 +106,11 @@
   become: true
   when: >
     (
-      ansible_distribution in ["Debian", "Kali", "Ubuntu"] and
+      ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"] and
       "openssh-client" in ansible_facts.packages
     )
     or
-    (ansible_distribution == "Slackware" and rc_sshd.stat.exists)
+    (ansible_facts['distribution'] == "Slackware" and rc_sshd.stat.exists)
   ansible.builtin.template:
     src: ssh_config.j2
     dest: /etc/ssh/ssh_config.d/harden.conf
@@ -130,7 +130,7 @@
     regexp: '^[0-9]{14}\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+2047\b'
     backup: true
 #- name: Set SSH_USE_STRONG_RNG for sshd (RH)
-#  when: ansible_os_family == "RedHat"
+#  when: ansible_facts['os_family'] == "RedHat"
 #  become: true
 #  tags:
 #    - configuration

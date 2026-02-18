@@ -2,7 +2,7 @@
 # ANSSI-BP-028 R71 - Implementing a logging system
 # For tests that might not have this installed
 - name: Install logrotate package (Slackware)
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   become: true
   community.general.slackpkg:
     name: logrotate
@@ -14,7 +14,7 @@
   notify: chmod cron
 - name: Install logrotate package (Debian)
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   ansible.builtin.apt:
     name: logrotate
     update_cache: true
@@ -54,7 +54,7 @@
     - logging
     - debian
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
   block:
     - name: Configure [bw]tmp retention period to {{ log_retention_time_in_months }} months (Debian)
       ansible.builtin.replace:
@@ -98,7 +98,7 @@
     - permissions
     - slackware
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   block:
     - name: Make new log file default permissions group adm readable (Slackware)
       ansible.builtin.replace:
@@ -144,7 +144,7 @@
     - configuration
     - slackware
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   block:
     - name: Make existing log files group adm readable (Slackware)
       ansible.builtin.file:
@@ -206,7 +206,7 @@
 # https://www.freedesktop.org/software/systemd/man/latest/journald.conf.html
 - name: Configure journald.conf
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   tags:
     - logging
     - configuration

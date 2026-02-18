@@ -1,7 +1,7 @@
 ---
 # Install rng-tools when TRNG is available and in use
 - name: RNG
-  when: ansible_distribution == "Debian"
+  when: ansible_facts['distribution'] == "Debian"
   tags:
     - rng
     - debian

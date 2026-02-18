@@ -2,7 +2,7 @@
 # ANSSI-BP-028 R37 - Using Mandatory Access Control features
 # ANSSI-BP-028 R45 - Activating AppArmor security profiles
 - name: Install AppArmor
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   become: true
   ansible.builtin.apt:
     name: ['apparmor', 'apparmor-profiles', 'apparmor-utils']
@@ -17,7 +17,7 @@
     regexp: '^(.(?!.*\blsm=apparmor\b).*)$'
     replace: '\1 lsm=apparmor'
   become: true
-  when: ansible_distribution == "Debian"
+  when: ansible_facts['distribution'] == "Debian"
   tags: configuration
   register: result
   failed_when:
@@ -33,7 +33,7 @@
   with_items:
     - apparmor=1
     - security=apparmor
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   tags:
     - configuration
     - apparmor
@@ -92,7 +92,7 @@
       - usr.sbin.postqueue
       - usr.lib.dovecot.dovecot-lda
   become: true
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
   block:
     - name: Copy extra profiles
       ansible.builtin.copy:

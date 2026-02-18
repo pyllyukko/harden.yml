@@ -5,7 +5,7 @@
     - packages
     - lynis
     - debian
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   block:
     - name: Install apt-transport-https & gnupg2
       ansible.builtin.apt:
@@ -35,7 +35,7 @@
         group: root
         mode: '0600'
 #- name: Install Lynis into CentOS
-#  when: ansible_distribution == "CentOS"
+#  when: ansible_facts['distribution'] == "CentOS"
 #  become: true
 #  tags:
 #    - packages
@@ -96,7 +96,7 @@
           config-data=sysctl;kernel.perf_event_paranoid;2;1;Restrict unprivileged access to the perf_event_open() system call.;sysctl -a;url:https;//kernel.org/doc/Documentation/sysctl/kernel.txt;category:security;
     # https://github.com/CISOfy/lynis/issues/967
     - name: Configure /etc/cron.{allow,deny} permissions in /etc/lynis/default.prf
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
       tags: debian
       ansible.builtin.replace:
         path: /etc/lynis/default.prf
@@ -107,7 +107,7 @@
         cron.allow: rw-r-----:root:crontab
         cron.deny: rw-r-----:root:crontab
     - name: Configure /etc/at.{allow,deny} permissions in /etc/lynis/default.prf
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Slackware"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Slackware"
       ansible.builtin.replace:
         path: /etc/lynis/default.prf
         regexp: '^(permfile=/etc/{{ item.key }}):rw-------:root:-:WARN:'
@@ -126,17 +126,17 @@
           skip-test=PKGS-7384
           skip-test=PKGS-7386
           skip-test=PKGS-7387
-      when: ansible_os_family != "RedHat"
+      when: ansible_facts['os_family'] != "RedHat"
     - name: Configure Slackware specific tests to skip
       ansible.builtin.blockinfile:
         path: /etc/lynis/custom.prf
         marker: "# {mark} ANSIBLE MANAGED BLOCK - Slackware"
         block: |
           skip-test=PKGS-7398
-      when: ansible_distribution == "Slackware"
+      when: ansible_facts['distribution'] == "Slackware"
       tags: slackware
     - name: Lynis systemd service
-      when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_os_family == "RedHat"
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['os_family'] == "RedHat"
       tags:
         - services
         # This is not idempotent
@@ -166,7 +166,7 @@
           # "System has not been booted with systemd as init system (PID 1)."
           tags: molecule-notest
     - name: Create daily cron job to run Lynis
-      when: ansible_distribution == "Slackware"
+      when: ansible_facts['distribution'] == "Slackware"
       tags: slackware
       ansible.builtin.copy:
         dest: /etc/cron.daily/run_lynis.sh

@@ -1,7 +1,7 @@
 ---
 - name: Run update-ca-certificates
   become: true
-  when: ansible_os_family != "RedHat"
+  when: ansible_facts['os_family'] != "RedHat"
   ansible.builtin.command: /usr/sbin/update-ca-certificates --verbose --fresh
   tags:
     - configuration
@@ -34,7 +34,7 @@
   become: true
   async: 3600
   poll: 0
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   changed_when: true
 - name: Create aide.db (Slackware)
   ansible.builtin.command: /usr/bin/aide -i
@@ -45,9 +45,9 @@
     - slackware
   become: true
   notify: "Copy aide.db.new to aide.db"
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
 - name: Copy aide.db.new to aide.db
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   become: true
   ansible.builtin.copy:
     remote_src: true
@@ -62,19 +62,19 @@
   tags:
     - pam
     - configuration
-  when: ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   changed_when: true
 - name: Check SSH daemon service state (Slackware)
   listen: Restart sshd (Slackware)
   become: true
-  when: ansible_distribution == "Slackware"
+  when: ansible_facts['distribution'] == "Slackware"
   ansible.builtin.stat:
     path: /etc/rc.d/rc.sshd
   register: rc_sshd
 # rc.sshd exits if /var/run/sshd.pid doesn't exist
 - name: Restart sshd through /etc/rc.d/rc.sshd
   listen: Restart sshd (Slackware)
-  when: ansible_distribution == "Slackware" and rc_sshd.stat.exists and rc_sshd.stat.xusr
+  when: ansible_facts['distribution'] == "Slackware" and rc_sshd.stat.exists and rc_sshd.stat.xusr
   become: true
   ansible.builtin.command: /bin/sh /etc/rc.d/rc.sshd restart
   register: result
@@ -95,7 +95,7 @@
     name: ssh
     state: restarted
   when: >
-    (ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu") and
+    (ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu") and
     ansible_facts.services.ssh.state == "running"
   tags: services
 - name: Run systemctl daemon-reload

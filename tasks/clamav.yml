@@ -4,20 +4,20 @@
   tags: clamav
   # Skip ClamAV installation completely if there's less than 3 GiB of memory
   # https://docs.clamav.net/manual/Installing/Docker.html#memory-ram-requirements
-  when: ansible_memtotal_mb >= 3072
+  when: ansible_facts['memtotal_mb'] >= 3072
   block:
     - name: Install ClamAV (Debian) (non-x86_64)
       ansible.builtin.apt:
         name: ['clamav', 'clamav-daemon']
         update_cache: true
-      when: (ansible_distribution == "Debian" or ansible_distribution == "Kali") and ansible_architecture != "x86_64"
+      when: (ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali") and ansible_facts['architecture'] != "x86_64"
       tags:
         - packages
         - services
         - debian
 
     - name: ClamAV Debian x86_64
-      when: (ansible_distribution == "Debian" or ansible_distribution == "Kali" or ansible_distribution == "Ubuntu") and ansible_architecture == "x86_64"
+      when: (ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu") and ansible_facts['architecture'] == "x86_64"
       tags:
         - packages
         - debian
@@ -3693,7 +3693,7 @@
     # https://docs.clamav.net/manual/OnAccess.html
     # This is disabled for now because of "ERROR: ClamInotif: could not watch path '/home/pyllyukko', Invalid argument"
     - name: Stop & disable ClamAV's On-Access service (Debian)
-      when: ansible_distribution == "Debian" and ansible_architecture != "x86_64"
+      when: ansible_facts['distribution'] == "Debian" and ansible_facts['architecture'] != "x86_64"
       tags:
         - debian
         - services
@@ -3721,4 +3721,4 @@
         backup: true
       when:
         - clamav_unofficial_sigs.stat.exists
-        - ansible_distribution == "Slackware"
+        - ansible_facts['distribution'] == "Slackware"

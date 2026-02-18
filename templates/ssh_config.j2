@@ -12,6 +12,6 @@ Host *
   FingerprintHash sha256
   HashKnownHosts yes
   VerifyHostKeyDNS ask
-{% if ansible_distribution == "Debian" or ansible_distribution == "Ubuntu" %}
+{% if ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu" %}
   GSSAPIKexAlgorithms {{ sshd_config["GSSAPIKexAlgorithms"] }}
 {% endif %}
