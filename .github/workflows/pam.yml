@@ -351,7 +351,7 @@ jobs:
           9b39d1238b4686cb17e04051e0b5f9a5bd264e7789c6cf5409d7ed5114de781d28fbc8a7457f1ea67664ec595313e2c49710ac1a2480dbc49ed3d6ccf91bb3e6  pam-files/runuser-l
           c4468029c85cf3346bb34c1ba6682e185b681569beefe2fa6bd6233b15cf9d4f37e916791f5b2d1385ba97f7d0287116b9f6e2a3e458ff2abcc68224c9e597f9  pam-files/login
           c4468029c85cf3346bb34c1ba6682e185b681569beefe2fa6bd6233b15cf9d4f37e916791f5b2d1385ba97f7d0287116b9f6e2a3e458ff2abcc68224c9e597f9  pam-files/remote
-          7b9d8bd3702b285e7d914283515595546d6da628f18916d1e6bfcc4642e06fcefd085b8067c490fd6a5916e310139e533427982379f4318809f9bfe482151c62  pam-files/openssh-server.sshd.pam.in
+          fa441ecb20633cd11fddd3a8537e76c9c7dca97be101b1dbbc6c47e0ae7e41fd040c63ef305b861daf838c043f3b9b38ae3da16e8729af0baceb74cd781db1cb  pam-files/openssh-server.sshd.pam.in
           EOF
       - name: Archive pam-files
         uses: actions/upload-artifact@v4
