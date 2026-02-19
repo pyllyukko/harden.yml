@@ -28,14 +28,14 @@
             - gid_min | int != 0
       - name: Remove user from system groups
         command: gpasswd -d {{ user }} {{ item.key }}
-        with_dict: "{{ getent_group }}"
+        with_dict: "{{ ansible_facts['getent_group'] }}"
         when: item.value[1] | int < gid_min | int and user in item.value[2]
         ignore_errors: yes
         become: yes
 
     - name: Remove ~{{ user }}/.ssh/authorized_keys
       file:
-        path: "{{ getent_passwd[user][4] }}/.ssh/authorized_keys"
+        path: "{{ ansible_facts['getent_passwd'][user][4] }}/.ssh/authorized_keys"
         state: absent
       become: yes
     - name: Kill processes

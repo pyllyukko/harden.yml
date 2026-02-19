@@ -15,8 +15,8 @@
       ansible.builtin.replace:
         path: /etc/rc.d/rc.S
         regexp: '^(\s*/sbin/mount -v proc /proc -n -t proc).*$'
-        replace: '\g<1> -o hidepid=2,gid={{ getent_group.polkitd[1] }} 2> /dev/null'
-        validate: '/bin/grep "^\s*/sbin/mount -v proc /proc -n -t proc -o hidepid=2,gid={{ getent_group.polkitd[1] }} 2> /dev/null$" %s'
+        replace: '\g<1> -o hidepid=2,gid={{ ansible_facts["getent_group"].polkitd[1] }} 2> /dev/null'
+        validate: '/bin/grep "^\s*/sbin/mount -v proc /proc -n -t proc -o hidepid=2,gid={{ ansible_facts["getent_group"].polkitd[1] }} 2> /dev/null$" %s'
         backup: true
       tags: configuration
     - name: Fix mkinitrd so initrd image uses hardened mount options for /proc and /dev
@@ -24,7 +24,7 @@
         path: /sbin/mkinitrd
         insertbefore: '# Wrap the initrd as an initramfs image and move it into place:$'
         block: |
-          sed -i 's:^\(mount -n proc /proc -t proc\)$:\1 -o hidepid=2,gid={{ getent_group.polkitd[1] }}:' "${SOURCE_TREE}/init"
+          sed -i 's:^\(mount -n proc /proc -t proc\)$:\1 -o hidepid=2,gid={{ ansible_facts["getent_group"].polkitd[1] }}:' "${SOURCE_TREE}/init"
           sed -i 's:^\(\s\+mount -n devtmpfs /dev -t devtmpfs -o size=[0-9]\+M\)$:\1,noexec,nosuid:' "${SOURCE_TREE}/init"
           sed -i '/^mount -n tmpfs \/run -t tmpfs -o mode=0755,size=[0-9]\+M,nodev,nosuid,noexec$/amount --make-shared /run' "${SOURCE_TREE}/init"
       tags: configuration
@@ -396,7 +396,7 @@
           ansible.builtin.file:
             path: "{{ item.value[4] }}"
             mode: '0700'
-          with_dict: "{{ getent_passwd }}"
+          with_dict: "{{ ansible_facts['getent_passwd'] }}"
           # UID_MIN & UID_MAX in /etc/login.defs
           when: item.value[1] | int >= 1000 and item.value[1] | int <= 60000
           register: result

@@ -14,7 +14,7 @@
 # lines containing a username.
 #
 # To enable anonymous FTP, remove the "ftp" user:
-{% for user in getent_passwd %}
+{% for user in ansible_facts['getent_passwd'] %}
 {{ user }}
 {% endfor %}
 

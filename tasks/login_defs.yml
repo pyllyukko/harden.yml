@@ -258,7 +258,7 @@
   ansible.builtin.command: chage --inactive {{ inactive_password_lock }} --mindays {{ pass_min_days }} --maxdays {{ pass_max_days }} --warndays {{ pass_warn_age }} {{ item.key }} # noqa yaml[line-length]
   changed_when: true
   when: item.value[1] | int >= uid_min | int and item.value[1] | int <= uid_max | int
-  with_dict: "{{ getent_passwd }}"
+  with_dict: "{{ ansible_facts['getent_passwd'] }}"
   tags:
     - accounts
     - passwords
@@ -283,7 +283,7 @@
     - item.key != "lightdm"
     - item.key != "daemon"
     - item.key != "logcheck"
-  with_dict: "{{ getent_passwd }}"
+  with_dict: "{{ ansible_facts['getent_passwd'] }}"
   tags: accounts
   become: true
 - name: Set maxlogins to 0 in limits.conf for most system accounts
@@ -309,7 +309,7 @@
     - item.key != "logcheck"
     # https://wiki.debian.org/PostgreSql
     #- item.key != "postgres"
-  with_dict: "{{ getent_passwd }}"
+  with_dict: "{{ ansible_facts['getent_passwd'] }}"
 - name: Configure /etc/adduser.conf (Debian)
   become: true
   ansible.builtin.replace:
@@ -342,49 +342,49 @@
         # Common groups
         - name: Remove almost all users from group "lp"
           ansible.builtin.command: gpasswd -d {{ item }} lp
-          with_items: '{{ getent_group["lp"][2] | split(",") }}'
+          with_items: '{{ ansible_facts["getent_group"]["lp"][2] | split(",") }}'
           register: result
           changed_when:
             - '"is not a member of" not in result.stderr'
           when:
-            - '"lp" in getent_group'
-            - getent_group["lp"][2] | length > 0
+            - '"lp" in ansible_facts["getent_group"]'
+            - ansible_facts["getent_group"]["lp"][2] | length > 0
         - name: Remove all users from group "floppy"
           ansible.builtin.command: gpasswd -d {{ item }} floppy
-          with_items: '{{ getent_group["floppy"][2] | split(",") }}'
+          with_items: '{{ ansible_facts["getent_group"]["floppy"][2] | split(",") }}'
           register: result
           changed_when:
             - '"is not a member of" not in result.stderr'
           when:
-            - '"floppy" in getent_group'
-            - getent_group["floppy"][2] | length > 0
+            - '"floppy" in ansible_facts["getent_group"]'
+            - ansible_facts["getent_group"]["floppy"][2] | length > 0
         - name: Remove all users from group "cdrom"
           ansible.builtin.command: gpasswd -d {{ item }} cdrom
-          with_items: '{{ getent_group["cdrom"][2] | split(",") }}'
+          with_items: '{{ ansible_facts["getent_group"]["cdrom"][2] | split(",") }}'
           register: result
           changed_when:
             - '"is not a member of" not in result.stderr'
           when:
-            - '"cdrom" in getent_group'
-            - getent_group["cdrom"][2] | length > 0
+            - '"cdrom" in ansible_facts["getent_group"]'
+            - ansible_facts["getent_group"]["cdrom"][2] | length > 0
         - name: Remove all users from group "games"
           ansible.builtin.command: gpasswd -d {{ item }} games
-          with_items: '{{ getent_group["games"][2] | split(",") }}'
+          with_items: '{{ ansible_facts["getent_group"]["games"][2] | split(",") }}'
           register: result
           changed_when:
             - '"is not a member of" not in result.stderr'
           when:
-            - '"games" in getent_group'
-            - getent_group["games"][2] | length > 0
+            - '"games" in ansible_facts["getent_group"]'
+            - ansible_facts["getent_group"]["games"][2] | length > 0
         - name: Remove almost all users from group "scanner"
           ansible.builtin.command: gpasswd -d {{ item }} scanner
-          with_items: '{{ getent_group["scanner"][2] | split(",") }}'
+          with_items: '{{ ansible_facts["getent_group"]["scanner"][2] | split(",") }}'
           register: result
           changed_when:
             - '"is not a member of" not in result.stderr'
           when:
-            - '"scanner" in getent_group'
-            - getent_group["scanner"][2] | length > 0
+            - '"scanner" in ansible_facts["getent_group"]'
+            - ansible_facts["getent_group"]["scanner"][2] | length > 0
             - item != "saned"
     # Debian specific groups
     - name: Debian specific groups
@@ -394,22 +394,22 @@
       block:
         - name: Remove all users from group "lpadmin"
           ansible.builtin.command: gpasswd -d {{ item }} lpadmin
-          with_items: '{{ getent_group["lpadmin"][2] | split(",") }}'
+          with_items: '{{ ansible_facts["getent_group"]["lpadmin"][2] | split(",") }}'
           register: result
           changed_when:
             - '"is not a member of" not in result.stderr'
           when:
-            - '"lpadmin" in getent_group'
-            - getent_group["lpadmin"][2] | length > 0
+            - '"lpadmin" in ansible_facts["getent_group"]'
+            - ansible_facts["getent_group"]["lpadmin"][2] | length > 0
         - name: Remove all users from group "dip"
           ansible.builtin.command: gpasswd -d {{ item }} dip
-          with_items: '{{ getent_group["dip"][2] | split(",") }}'
+          with_items: '{{ ansible_facts["getent_group"]["dip"][2] | split(",") }}'
           register: result
           changed_when:
             - '"is not a member of" not in result.stderr'
           when:
-            - '"dip" in getent_group'
-            - getent_group["dip"][2] | length > 0
+            - '"dip" in ansible_facts["getent_group"]'
+            - ansible_facts["getent_group"]["dip"][2] | length > 0
     # Raspbian gpio, i2c & spi groups
     # https://www.raspberrypi.com/documentation/computers/os.html#permissions
     - name: Remove users from Raspberry Pi OS specific groups
@@ -419,31 +419,31 @@
       block:
         - name: Remove all users from group "gpio"
           ansible.builtin.command: gpasswd -d {{ item }} gpio
-          with_items: '{{ getent_group["gpio"][2] | split(",") }}'
+          with_items: '{{ ansible_facts["getent_group"]["gpio"][2] | split(",") }}'
           register: result
           changed_when:
             - '"is not a member of" not in result.stderr'
           when:
-            - '"gpio" in getent_group'
-            - getent_group["gpio"][2] | length > 0
+            - '"gpio" in ansible_facts["getent_group"]'
+            - ansible_facts["getent_group"]["gpio"][2] | length > 0
         - name: Remove all users from group "i2c"
           ansible.builtin.command: gpasswd -d {{ item }} i2c
-          with_items: '{{ getent_group["i2c"][2] | split(",") }}'
+          with_items: '{{ ansible_facts["getent_group"]["i2c"][2] | split(",") }}'
           register: result
           changed_when:
             - '"is not a member of" not in result.stderr'
           when:
-            - '"i2c" in getent_group'
-            - getent_group["i2c"][2] | length > 0
+            - '"i2c" in ansible_facts["getent_group"]'
+            - ansible_facts["getent_group"]["i2c"][2] | length > 0
         - name: Remove all users from group "spi"
           ansible.builtin.command: gpasswd -d {{ item }} spi
-          with_items: '{{ getent_group["spi"][2] | split(",") }}'
+          with_items: '{{ ansible_facts["getent_group"]["spi"][2] | split(",") }}'
           register: result
           changed_when:
             - '"is not a member of" not in result.stderr'
           when:
-            - '"spi" in getent_group'
-            - getent_group["spi"][2] | length > 0
+            - '"spi" in ansible_facts["getent_group"]'
+            - ansible_facts["getent_group"]["spi"][2] | length > 0
 
 # Unfortunately the hash_rounds_min doesn't seem to work
 #- name: Configure libuser.conf
