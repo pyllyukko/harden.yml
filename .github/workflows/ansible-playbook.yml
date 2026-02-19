@@ -753,6 +753,9 @@ jobs:
       - name: Run systemd-analyze security
         run: |
           systemd-analyze --no-pager security
+      - name: Check for WX memory allocations
+        run: |
+          sudo bash tests/check_maps.sh
       - name: chmod Lynis log
         run: sudo chmod -c 644 /var/log/lynis.log
       - name: Archive Lynis log
