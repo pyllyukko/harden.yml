@@ -750,6 +750,9 @@ jobs:
           sudo lynis show details BOOT-5122
           sudo lynis show details BOOT-5184
           sudo lynis show details BOOT-5260
+      - name: Run systemd-analyze security
+        run: |
+          systemd-analyze --no-pager security
       - name: chmod Lynis log
         run: sudo chmod -c 644 /var/log/lynis.log
       - name: Archive Lynis log
