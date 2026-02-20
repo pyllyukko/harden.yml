@@ -221,6 +221,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Installs a bunch of security related packages (see [debian\_packages.yml](tasks/debian_packages.yml))
 * Configures `chkrootkit` and enables daily checks
 * Configures APT not to install suggested packages
+* Limited systemd service hardening (see [services-systemd.yml](tasks/services-systemd.yml))
 
 #### pam-configs
 
@@ -396,6 +397,7 @@ Some of these documents are quite old, but most of the stuff still applies.
 * [SlackWiki: Basic Security Fixes](http://slackwiki.com/Basic_Security_Fixes)
 * :bomb: [Wikipedia: Fork bomb Prevention](https://en.wikipedia.org/wiki/Fork_bomb#Prevention)
 * [Configuration recommendations of a gnu/linux system](https://cyber.gouv.fr/en/publications/configuration-recommendations-gnulinux-system) (ANSSI-BP-028)
+* [How to harden a systemd service unit](https://linux-audit.com/systemd/how-to-harden-a-systemd-service-unit/)
 
 ### Other docs
 
