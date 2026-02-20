@@ -3,6 +3,7 @@
     - systemd
     - molecule-notest
   become: true
+  when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
   block:
     - name: Create conf.d directories for selected systemd services
       ansible.builtin.file:
