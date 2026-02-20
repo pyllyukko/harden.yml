@@ -1,0 +1,17 @@
+[Service]
+KeyringMode=private
+MemoryDenyWriteExecute=true
+ProtectClock=true
+ProtectControlGroups=true
+ProtectHome=read-only
+ProtectHostname=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+LockPersonality=true
+SystemCallArchitectures=native
+RestrictNamespaces=true
+#SystemCallLog=~@system-service
+#SystemCallFilter=@system-service
+PrivateTmp=true
+RestrictSUIDSGID=true

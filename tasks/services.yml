@@ -201,6 +201,8 @@
 
 - name: SSH
   ansible.builtin.import_tasks: services-ssh.yml
+- name: systemd
+  ansible.builtin.import_tasks: services-systemd.yml
 
 # Misc
 #- name: Install icmpinfo

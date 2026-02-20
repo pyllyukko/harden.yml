@@ -101,3 +101,5 @@ unnecessary_system_accounts:
   - pop
   #- proxy
   - backup
+systemd_services_to_harden:
+  - cron
