@@ -1,0 +1,24 @@
+- name: systemd service hardening
+  tags:
+    - systemd
+    - molecule-notest
+  become: true
+  block:
+    - name: Create conf.d directories for selected systemd services
+      ansible.builtin.file:
+        path: '/etc/systemd/system/{{ item }}.service.d'
+        state: directory
+        mode: '0755'
+        owner: root
+        group: root
+      with_items: "{{ systemd_services_to_harden }}"
+    # Generic hardening
+    - name: Copy systemd service hardening
+      ansible.builtin.copy:
+        src: systemd_service_hardening.service
+        dest: '/etc/systemd/system/{{ item }}.service.d/harden.conf'
+        owner: root
+        group: root
+        mode: '0600'
+      notify: Run systemctl daemon-reload
+      with_items: "{{ systemd_services_to_harden }}"
