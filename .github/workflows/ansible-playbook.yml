@@ -755,7 +755,8 @@ jobs:
         run: bash tests/check_systemd_service_hardenings.sh
       - name: Run systemd-analyze security
         run: |
-          systemd-analyze --no-pager security
+          systemd-analyze --no-pager security 1>/tmp/systemd-analyze-1.txt
+          cat /tmp/systemd-analyze-1.txt
       - name: Check for WX memory allocations
         run: |
           sudo bash tests/check_maps.sh
@@ -765,8 +766,12 @@ jobs:
         run: |
           sudo lynis audit system --skip-plugins --tests-from-group boot_services
           sudo lynis show details BOOT-5264
-      - name: Run systemd-analyze security cron
+      - name: Run systemd-analyze security (again)
         run: |
+          systemd-analyze --no-pager security 1>/tmp/systemd-analyze-2.txt
+          echo '[*] Diff:'
+          diff /tmp/systemd-analyze-[12].txt
+          echo '[*] systemd-analyze security cron:'
           systemd-analyze --no-pager security cron
       - name: chmod Lynis log
         run: sudo chmod -c 644 /var/log/lynis.log
