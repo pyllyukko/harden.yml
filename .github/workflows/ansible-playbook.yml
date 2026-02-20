@@ -770,7 +770,7 @@ jobs:
         run: |
           systemd-analyze --no-pager security 1>/tmp/systemd-analyze-2.txt
           echo '[*] Diff:'
-          diff /tmp/systemd-analyze-[12].txt
+          diff --color=always /tmp/systemd-analyze-[12].txt || true
           echo '[*] systemd-analyze security cron:'
           systemd-analyze --no-pager security cron
       - name: chmod Lynis log
