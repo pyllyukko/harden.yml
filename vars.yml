@@ -103,3 +103,4 @@ unnecessary_system_accounts:
   - backup
 systemd_services_to_harden:
   - cron
+  - dbus

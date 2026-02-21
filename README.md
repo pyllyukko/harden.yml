@@ -340,6 +340,7 @@ Tags that you can use with `ansible-playbook --tags`:
 * :shell: `shells`
 * `umask`
 * :timer_clock: `timeout`
+* `systemd`
 
 There are also operating system tags for tasks that only apply to specific OS.
 You can speed up the hardening by skipping OSs that don't apply. E.g. if you're

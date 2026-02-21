@@ -8,6 +8,7 @@ ProtectHostname=true
 ProtectKernelLogs=true
 ProtectKernelModules=true
 ProtectKernelTunables=true
+ProtectSystem=full
 LockPersonality=true
 SystemCallArchitectures=native
 RestrictNamespaces=true
