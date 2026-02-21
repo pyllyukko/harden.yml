@@ -16,3 +16,4 @@ RestrictNamespaces=true
 #SystemCallFilter=@system-service
 PrivateTmp=true
 RestrictSUIDSGID=true
+#NoNewPrivileges=true

@@ -104,3 +104,5 @@ unnecessary_system_accounts:
 systemd_services_to_harden:
   - cron
   - dbus
+  # Quite pointless, but why not...
+  - plymouth-start
