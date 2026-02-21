@@ -5,7 +5,7 @@
 # If any of these exist in the services we are hardening, we prefer not to mess
 # around with them, and not to overwrite upstream settings.
 
-for service in cron dbus
+for service in cron dbus plymouth-start
 do
   echo "[*] Checking service ${service}"
   file="/usr/lib/systemd/system/${service}.service"
@@ -29,7 +29,8 @@ do
     RestrictNamespaces		\
     PrivateTmp			\
     SystemCallFilter		\
-    RestrictSUIDSGID
+    RestrictSUIDSGID		\
+    NoNewPrivileges
   do
     if grep "^${hardening}\b" "${file}"
     then
