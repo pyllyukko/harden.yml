@@ -30,7 +30,8 @@ do
     PrivateTmp			\
     SystemCallFilter		\
     RestrictSUIDSGID		\
-    NoNewPrivileges
+    NoNewPrivileges		\
+    ProtectSystem
   do
     if grep "^${hardening}\b" "${file}"
     then
