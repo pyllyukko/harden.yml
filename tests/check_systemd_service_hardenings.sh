@@ -5,7 +5,7 @@
 # If any of these exist in the services we are hardening, we prefer not to mess
 # around with them, and not to overwrite upstream settings.
 
-for service in cron dbus plymouth-start
+for service in cron dbus plymouth-start udisks2
 do
   echo "[*] Checking service ${service}"
   file="/usr/lib/systemd/system/${service}.service"
