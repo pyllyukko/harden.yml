@@ -773,6 +773,13 @@ jobs:
           diff --color=always /tmp/systemd-analyze-[12].txt || true
           echo '[*] systemd-analyze security cron:'
           systemd-analyze --no-pager security cron
+          echo '[*] systemd-analyze security udisks2:'
+          systemd-analyze --no-pager security udisks2
+      - name: Restart udisks2 and run minor tests
+        run: |
+          sudo systemctl restart udisks2
+          udisksctl dump | cat
+          udevadm info --export-db | cat
       - name: chmod Lynis log
         run: sudo chmod -c 644 /var/log/lynis.log
       - name: Archive Lynis log

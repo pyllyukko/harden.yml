@@ -12,9 +12,11 @@
         mode: '0755'
         owner: root
         group: root
-      with_items: "{{ systemd_services_to_harden }}"
+      with_items:
+        - "{{ systemd_services_to_harden }}"
+        - udisks2
     # Generic hardening
-    - name: Copy systemd service hardening
+    - name: Copy generic systemd service hardening
       ansible.builtin.copy:
         src: systemd_service_hardening.service
         dest: '/etc/systemd/system/{{ item }}.service.d/harden.conf'
@@ -23,3 +25,14 @@
         mode: '0600'
       notify: Run systemctl daemon-reload
       with_items: "{{ systemd_services_to_harden }}"
+    # Specific hardening
+    - name: Copy service specific systemd service hardening
+      ansible.builtin.copy:
+        src: '{{ item }}.service'
+        dest: '/etc/systemd/system/{{ item }}.service.d/harden.conf'
+        owner: root
+        group: root
+        mode: '0600'
+      notify: Run systemctl daemon-reload
+      with_items:
+        - udisks2
