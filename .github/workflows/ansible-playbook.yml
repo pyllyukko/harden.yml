@@ -810,4 +810,5 @@ jobs:
           path: |
             /etc/fstab
             /etc/fstab.new
-            /etc/sudoers*
+            /etc/sudoers
+            /etc/sudoers.d/*
