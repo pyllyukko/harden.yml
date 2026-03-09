@@ -97,6 +97,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * See [ssh\_config.j2](templates/ssh_config.j2) and [sshd\_config.j2](templates/sshd_config.j2)
 * :sandwich: Configures [sudo](https://www.sudo.ws/) (see [sudoers.j2](templates/sudoers.j2))
     * :warning: **WARNING**: If there are rules in `/etc/sudoers.d/` that match our `become: true` tasks that do not have explicit `EXEC`, it can "break" `sudo` as we define `Defaults noexec` in the main `sudoers` file. There is a "Fix generic rules" task in `sudoers.yml` which tries to tackle this problem, but it's not guaranteed to work.
+    * :warning: **WARNING**: Sudo binary `/usr/bin/sudo` is `chmod`ded so, that only `sudo_group` (see `vars.yml`) can run it
     * :wood: You can set the `sudo_iolog` in `vars.yml` to `true` to enable I/O logging
     * You can set the `sudo_ids` in `vars.yml` to `true` to enable "Intrusion Detection" as described in [Sudo Mastery](#other-docs) chapter 9 ([#59](https://github.com/pyllyukko/harden.yml/issues/59))
     * See also [notes](#information_source-notes)
