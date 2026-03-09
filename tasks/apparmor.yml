@@ -114,7 +114,7 @@
       with_items: '{{ apparmor_profiles }}'
       tags: configuration
       register: result
-      changed_when: result.stdout | regex_search('^Setting .+ to enforce mode\.$')
+      changed_when: result.stdout is search('^Setting .+ to enforce mode\.$')
       when: aastatus.rc == 0
     - name: Fix Postfix profiles
       ansible.builtin.replace:
