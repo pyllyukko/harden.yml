@@ -798,6 +798,11 @@ jobs:
         run: |
           sudo apt-get install debsums
           sudo debsums -ec | grep -v '^/etc/\(cloud/templates/sources\.list\.ubuntu\.deb822\.tmpl\|firefox/syspref\.js\|containers/registries\.conf\|default/motd-news\|needrestart/needrestart\.conf\|waagent\.conf\)$'
+      - name: chmod files and dirs for archiving
+        run: |
+          sudo chmod -c o+r /etc/fstab{,.new}
+          sudo chmod -c 755 /etc/sudoers.d
+          sudo chmod -c 644 /etc/sudoers /etc/sudoers.d/*
       - name: Archive stuff
         uses: actions/upload-artifact@v4
         with:
@@ -805,3 +810,4 @@ jobs:
           path: |
             /etc/fstab
             /etc/fstab.new
+            /etc/sudoers*
