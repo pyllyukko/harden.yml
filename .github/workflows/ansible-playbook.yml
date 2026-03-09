@@ -789,7 +789,9 @@ jobs:
           ls -ld /etc/sudoers.d
           sudo ls -l /etc/sudoers{,.d} /usr/bin/sudo
       - name: Add user runner to sudo group
-        run: sudo usermod -G sudo -a runner
+        run: |
+          sudo usermod -G sudo -a runner
+          getent group sudo
       - name: Run Ansible harden.yml playbook
         run: ansible-playbook harden.yml --tags gnome,pki,rng,kerberos,tiger,lightdm,php,apache,debsecan,debsums,timeout,authorization,ntp,fstab,sudo
       - name: Show changed files with debsums

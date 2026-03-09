@@ -24,7 +24,7 @@
             database: group
             key: sudo
           failed_when: getent_group.sudo[2] == ""
-          when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
+          when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
           tags: debian
         - name: 'Check that some user(s) exist in "wheel" group'
           ansible.builtin.getent:
