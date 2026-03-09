@@ -15,7 +15,7 @@
   ansible.builtin.apt:
     name: sudo
     update_cache: true
-  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
   tags:
     - packages
     - debian
@@ -28,7 +28,8 @@
   when: >
     ansible_facts['distribution'] == "Slackware" or
     ansible_facts['distribution'] == "Debian" or
-    ansible_facts['distribution'] == "Kali"
+    ansible_facts['distribution'] == "Kali" or
+    ansible_facts['distribution'] == "Ubuntu"
   become: true
   block:
     - name: 'Create /etc/sudoers.new'
