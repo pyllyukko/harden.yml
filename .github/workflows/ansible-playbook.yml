@@ -788,6 +788,8 @@ jobs:
           echo '[*] sudoers:'
           ls -ld /etc/sudoers.d
           sudo ls -l /etc/sudoers{,.d} /usr/bin/sudo
+          echo '[*] sudoers.d/* content:'
+          sudo more /etc/sudoers.d/* | cat
       - name: Add user runner to sudo group
         run: |
           sudo usermod -G sudo -a runner
