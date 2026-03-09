@@ -25,6 +25,8 @@
     #- permissions
     #- suid
     - sudo
+  # Do not do this in the GitHub Action Runner
+  when: ansible_facts['distribution'] != "Ubuntu"
 - name: /etc/sudoers.d/
   tags:
     - permissions
