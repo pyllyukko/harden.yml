@@ -45,7 +45,9 @@ Defaults	syslog=auth
 Defaults	noexec
 Defaults	listpw=always
 Defaults	timestamp_timeout=0
+{% if ansible_facts['distribution'] != "Ubuntu" %}
 Defaults	requiretty
+{% endif %}
 Defaults	!visiblepw
 Defaults	!pwfeedback
 Defaults	verifypw=always
