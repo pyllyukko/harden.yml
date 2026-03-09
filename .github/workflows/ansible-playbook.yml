@@ -786,9 +786,10 @@ jobs:
           echo '[*] sudo -l:'
           sudo -l
           echo '[*] sudoers:'
+          ls -ld /etc/sudoers.d
           sudo ls -l /etc/sudoers{,.d}
       - name: Run Ansible harden.yml playbook
-        run: ansible-playbook harden.yml --tags gnome,pki,rng,kerberos,tiger,lightdm,php,apache,debsecan,debsums,timeout,authorization,ntp,fstab,sudoers
+        run: ansible-playbook harden.yml --tags gnome,pki,rng,kerberos,tiger,lightdm,php,apache,debsecan,debsums,timeout,authorization,ntp,fstab,sudo
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
