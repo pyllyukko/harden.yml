@@ -26,7 +26,7 @@
     #- suid
     - sudo
   # Do not do this in the GitHub Action Runner
-  when: ansible_facts['distribution'] != "Ubuntu"
+  when: not is_github_actions
 - name: /etc/sudoers.d/
   tags:
     - permissions

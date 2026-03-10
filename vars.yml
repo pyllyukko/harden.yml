@@ -101,3 +101,5 @@ unnecessary_system_accounts:
   - pop
   #- proxy
   - backup
+is_github_actions: >-
+  {{ (lookup('ansible.builtin.env', 'GITHUB_ACTIONS') | default('', true) | lower) == 'true' }}
