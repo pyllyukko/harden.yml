@@ -794,6 +794,11 @@ jobs:
         run: |
           sudo usermod -G sudo -a runner
           getent group sudo
+          echo $$
+      - name: Check if runner user is in the sudo group
+        run: |
+          id
+          echo $$
       - name: Run Ansible harden.yml playbook
         run: ansible-playbook harden.yml --tags gnome,pki,rng,kerberos,tiger,lightdm,php,apache,debsecan,debsums,timeout,authorization,ntp,fstab,sudo
       - name: Run Ansible harden.yml playbook for Sudo IDS
