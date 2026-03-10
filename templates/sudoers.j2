@@ -11,7 +11,7 @@
 ## Cmnd alias specification
 ##
 Cmnd_Alias	PAGERS = /usr/bin/more, /usr/bin/pg, /usr/bin/less, /usr/bin/pager
-{% if not sudo_ids %}
+{% if not sudo_ids | bool %}
 Cmnd_Alias	SHELLS = /bin/sh "", /bin/bash "", /bin/dash "", /bin/zsh "", /bin/csh "", /bin/tcsh ""
 {% endif %}
 {% if ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" %}
@@ -75,7 +75,7 @@ root {{ ansible_facts['hostname'] }}=(ALL, !%users) EXEC: ALL
 
 ## wheel group
 {% if ansible_facts['distribution'] == "Slackware" or ansible_facts['os_family'] == "RedHat" %}
-{% if not sudo_ids %}
+{% if not sudo_ids | bool %}
 %wheel {{ ansible_facts['hostname'] }}=(root) TIMEOUT={{ session_timeout }}m PASSWD:EXEC: SHELLS
 {% endif %}
 %wheel {{ ansible_facts['hostname'] }}=(root) TIMEOUT={{ session_timeout }}m PASSWD:NOEXEC: sudoedit
@@ -92,7 +92,7 @@ root {{ ansible_facts['hostname'] }}=(ALL, !%users) EXEC: ALL
 
 ## sudo group (Debian)
 {% if ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" %}
-{% if not sudo_ids %}
+{% if not sudo_ids | bool %}
 %sudo	{{ ansible_facts['hostname'] }}=(root) TIMEOUT={{ session_timeout }}m PASSWD:EXEC: SHELLS
 {% endif %}
 %sudo	{{ ansible_facts['hostname'] }}=(:systemd-journal) PASSWD:EXEC: /bin/journalctl

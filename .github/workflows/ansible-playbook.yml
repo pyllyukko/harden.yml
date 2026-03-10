@@ -796,6 +796,8 @@ jobs:
           getent group sudo
       - name: Run Ansible harden.yml playbook
         run: ansible-playbook harden.yml --tags gnome,pki,rng,kerberos,tiger,lightdm,php,apache,debsecan,debsums,timeout,authorization,ntp,fstab,sudo
+      - name: Run Ansible harden.yml playbook for Sudo IDS
+        run: ansible-playbook harden.yml --tags sudo --extra-vars sudo_ids=true
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums

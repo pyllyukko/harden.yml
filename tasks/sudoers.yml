@@ -52,10 +52,10 @@
       ansible.builtin.file:
         path: /etc/sudoers.d/10-shells
         state: absent
-      when: not sudo_ids
+      when: not sudo_ids | bool
     - name: sudoers IDS
       ansible.builtin.import_tasks: sudoers-ids.yml
-      when: sudo_ids
+      when: sudo_ids | bool
     # https://jpmens.net/2013/02/06/don-t-try-this-at-the-office-etc-sudoers/
     - name: 'Validate /etc/sudoers.new'
       ansible.builtin.command: visudo -cs -f /etc/sudoers.new
