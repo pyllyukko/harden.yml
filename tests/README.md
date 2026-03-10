@@ -35,6 +35,13 @@ The tests will also run `debsums` to show which files have been changed from the
 
 The SSH tests will also run [ssh-audit](https://github.com/jtesta/ssh-audit).
 
+### Sudo
+
+Sudo is tested in `miscellaneous` with few exceptions:
+
+* `requiretty` is not enabled as there's no TTY
+* "Set file permissions/ownership for sudo" task is skipped, as adding the `runner` user into the `sudo` group doesn't take effect during the action
+
 Molecule
 --------
 
