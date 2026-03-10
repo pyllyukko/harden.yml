@@ -61,7 +61,7 @@ Defaults	use_pty
 Defaults	timestamp_type=tty
 Defaults	umask=0077
 Defaults!NOIOLOG !log_output
-{% if sudo_iolog %}
+{% if sudo_iolog | bool %}
 Defaults	log_output
 {% endif %}
 ## For pam_ssh_agent_auth
@@ -85,7 +85,7 @@ root {{ ansible_facts['hostname'] }}=(ALL, !%users) EXEC: ALL
 {% if ansible_facts['os_family'] == "RedHat" %}
 %wheel {{ ansible_facts['hostname'] }}=(root) PASSWD:EXEC: /bin/yum update
 {% endif %}
-{% if sudo_iolog %}
+{% if sudo_iolog | bool %}
 %wheel {{ ansible_facts['hostname'] }}=(root) PASSWD:NOEXEC: /usr/bin/sudoreplay
 {% endif %}
 {% endif %}
@@ -102,7 +102,7 @@ root {{ ansible_facts['hostname'] }}=(ALL, !%users) EXEC: ALL
 %sudo	{{ ansible_facts['hostname'] }}=(root) TIMEOUT={{ session_timeout }}m PASSWD:NOEXEC: sudoedit
 %sudo	{{ ansible_facts['hostname'] }}=(logcheck) TIMEOUT=1m PASSWD:EXEC: /usr/sbin/logcheck
 %sudo	{{ ansible_facts['hostname'] }}=(:debian-tor) PASSWD:NOEXEC: /usr/bin/nyx ""
-{% if sudo_iolog %}
+{% if sudo_iolog | bool %}
 %sudo	{{ ansible_facts['hostname'] }}=(root) PASSWD:NOEXEC: /usr/bin/sudoreplay
 {% endif %}
 {% endif %}
