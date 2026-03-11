@@ -9,7 +9,7 @@ then
   exit 1
 fi
 
-/usr/bin/pkcheck --action-id="${action}" $$
+/usr/bin/pkcheck --action-id "${action}" $$
 ret=${?}
 echo "[*] pkcheck returned ${ret}"
 if [ ${ret} -ne ${1} ]
