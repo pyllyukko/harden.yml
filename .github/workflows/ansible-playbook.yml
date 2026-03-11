@@ -782,21 +782,32 @@ jobs:
       - name: Show some basic info
         run: |
           id
+          echo -n $'\n'
           echo '[*] passwd:'
           getent passwd
+          echo -n $'\n'
           echo '[*] group:'
           getent group
+          echo -n $'\n'
           echo '[*] sudo -l:'
           sudo -l
+          echo -n $'\n'
           echo '[*] sudoers:'
           ls -ld /etc/sudoers.d
           sudo ls -l /etc/sudoers{,.d} /usr/bin/sudo
+          echo -n $'\n'
           echo '[*] sudoers.d/* content:'
           sudo more /etc/sudoers.d/* | cat
+          echo -n $'\n'
+          echo '[*] polkit 49-ubuntu-admin.rules:'
+          cat /usr/share/polkit-1/rules.d/49-ubuntu-admin.rules
+          echo -n $'\n'
           echo '[*] polkit 50-default.rules:'
           cat /usr/share/polkit-1/rules.d/50-default.rules
+          echo -n $'\n'
           echo '[*] pkaction --version:'
           pkaction --version
+          echo -n $'\n'
           echo '[*] /usr/share/polkit-1/rules.d:'
           ls -l /usr/share/polkit-1/rules.d
       - name: Add user runner to sudo group
