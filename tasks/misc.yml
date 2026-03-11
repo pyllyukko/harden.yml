@@ -432,3 +432,14 @@
   failed_when:
     - result.failed == true
     - result.msg != "Path /etc/mdadm.conf does not exist !"
+- name: Disallow non-admin users from authenticating as other users in polkit
+  become: true
+  tags:
+    - polkit
+    - authorization
+  ansible.builtin.template:
+    src: 49-deny-non-admins.rules.j2
+    dest: /etc/polkit-1/rules.d/49-deny-non-admins.rules
+    mode: '0640'
+    owner: root
+    group: polkitd

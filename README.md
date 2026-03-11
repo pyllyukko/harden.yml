@@ -141,6 +141,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * See [securetty in Debian #47](https://github.com/pyllyukko/harden.yml/issues/47)
 * Creates `/etc/ftpusers`
 * Restricts the use of [cron](https://en.wikipedia.org/wiki/Cron) and `at`
+* Disallow non-admin users from authenticating as other users in polkit
 * Run `ansible-playbook --list-tasks --tags authorization` for a full list
 
 #### PAM
@@ -286,6 +287,7 @@ Usage
     * :key: Run `journalctl --setup-keys` to generate a new key pair for Forward Secure Sealing (FSS)
     * Configure remote logging
 * Consider purchasing [Openwall passwdqc filter files](https://www.openwall.com/passwdqc/) to check for leaked credentials during password change (see "passwdqc filter" tasks in `pam.yml`)
+* Variable `sudo_group` is also considered as administrator group (see tag `polkit`)
 
 ### Tags
 
@@ -341,6 +343,7 @@ Tags that you can use with `ansible-playbook --tags`:
 * :shell: `shells`
 * `umask`
 * :timer_clock: `timeout`
+* `polkit`
 
 There are also operating system tags for tasks that only apply to specific OS.
 You can speed up the hardening by skipping OSs that don't apply. E.g. if you're

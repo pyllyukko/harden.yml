@@ -816,8 +816,8 @@ jobs:
       - name: chmod files and dirs for archiving
         run: |
           sudo chmod -c o+r /etc/fstab{,.new}
-          sudo chmod -c 755 /etc/sudoers.d
-          sudo chmod -c 644 /etc/sudoers /etc/sudoers.d/*
+          sudo chmod -c 755 /etc/sudoers.d /etc/polkit-1/rules.d
+          sudo chmod -c 644 /etc/sudoers /etc/sudoers.d/* /etc/polkit-1/rules.d/*
       - name: Archive stuff
         uses: actions/upload-artifact@v4
         with:
@@ -827,3 +827,4 @@ jobs:
             /etc/fstab.new
             /etc/sudoers
             /etc/sudoers.d/*
+            /etc/polkit-1/rules.d/*
