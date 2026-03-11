@@ -819,7 +819,9 @@ jobs:
           sudo ls -l /var/log/sudo-io
       # Expected result: Not authorized
       - name: Check polkit post-harden
-        run: bash tests/test_polkit.sh 1
+        run: |
+          sudo systemctl reload polkit.service
+          bash tests/test_polkit.sh 1
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
