@@ -12,7 +12,7 @@ fi
 /usr/bin/pkcheck --action-id "${action}" --process $$
 ret=${?}
 echo "[*] pkcheck returned ${ret}"
-if [ ${ret} -ne ${1} ]
+if [ ${ret} -ne "${1}" ]
 then
   exit 1
 fi
