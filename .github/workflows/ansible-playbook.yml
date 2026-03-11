@@ -793,6 +793,8 @@ jobs:
           sudo ls -l /etc/sudoers{,.d} /usr/bin/sudo
           echo '[*] sudoers.d/* content:'
           sudo more /etc/sudoers.d/* | cat
+          echo '[*] polkit 50-default.rules:'
+          cat /usr/share/polkit-1/rules.d/50-default.rules
       - name: Add user runner to sudo group
         run: |
           sudo usermod -G sudo -a runner
@@ -802,6 +804,9 @@ jobs:
         run: |
           id
           echo $$
+      # Expected result: Authorization requires authentication
+      - name: Check polkit pre-harden
+        run: bash tests/test_polkit.sh 2
       - name: Run Ansible harden.yml playbook
         run: ansible-playbook harden.yml --tags gnome,pki,rng,kerberos,tiger,lightdm,php,apache,debsecan,debsums,timeout,authorization,ntp,fstab,sudo
       - name: Run Ansible harden.yml playbook for Sudo IDS
@@ -812,6 +817,9 @@ jobs:
         run: |
           sudo id
           sudo ls -l /var/log/sudo-io
+      # Expected result: Not authorized
+      - name: Check polkit post-harden
+        run: bash tests/test_polkit.sh 1
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
