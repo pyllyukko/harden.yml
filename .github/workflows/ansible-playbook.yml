@@ -810,15 +810,16 @@ jobs:
           echo -n $'\n'
           echo '[*] /usr/share/polkit-1/rules.d:'
           ls -l /usr/share/polkit-1/rules.d
-      - name: Add user runner to sudo group
-        run: |
-          sudo usermod -G sudo -a runner
-          getent group sudo
-          echo $$
-      - name: Check if runner user is in the sudo group
-        run: |
-          id
-          echo $$
+      # See https://github.com/pyllyukko/harden.yml/blob/master/tests/README.md#sudo
+      #- name: Add user runner to sudo group
+      #  run: |
+      #    sudo usermod -G sudo -a runner
+      #    getent group sudo
+      #    echo $$
+      #- name: Check if runner user is in the sudo group
+      #  run: |
+      #    id
+      #    echo $$
       # Expected result: Authorization requires authentication
       - name: Check polkit pre-harden
         run: bash tests/test_polkit.sh 2
