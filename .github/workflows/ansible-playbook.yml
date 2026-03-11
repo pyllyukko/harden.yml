@@ -795,6 +795,10 @@ jobs:
           sudo more /etc/sudoers.d/* | cat
           echo '[*] polkit 50-default.rules:'
           cat /usr/share/polkit-1/rules.d/50-default.rules
+          echo '[*] pkaction --version:'
+          pkaction --version
+          echo '[*] /usr/share/polkit-1/rules.d:'
+          ls -l /usr/share/polkit-1/rules.d
       - name: Add user runner to sudo group
         run: |
           sudo usermod -G sudo -a runner
