@@ -392,6 +392,9 @@ jobs:
         run: |
           sudo apt-get install debsums
           sudo debsums -ec | grep -v '^/etc/\(cloud/templates/sources\.list\.ubuntu\.deb822\.tmpl\|firefox/syspref\.js\|containers/registries\.conf\|default/motd-news\|needrestart/needrestart\.conf\|waagent\.conf\)$'
+      - name: Find all SUID/SGID programs
+        run: |
+          find / -type f \( -perm -04000 -o -perm -02000 \) -ls 2>/dev/null
   # Not scored
   homedirs:
     runs-on: ubuntu-latest
