@@ -789,16 +789,6 @@ jobs:
           echo '[*] group:'
           getent group
           echo -n $'\n'
-          echo '[*] sudo -l:'
-          sudo -l
-          echo -n $'\n'
-          echo '[*] sudoers:'
-          ls -ld /etc/sudoers.d
-          sudo ls -l /etc/sudoers{,.d} /usr/bin/sudo
-          echo -n $'\n'
-          echo '[*] sudoers.d/* content:'
-          sudo more /etc/sudoers.d/* | cat
-          echo -n $'\n'
           echo '[*] polkit 49-ubuntu-admin.rules:'
           cat /usr/share/polkit-1/rules.d/49-ubuntu-admin.rules
           echo -n $'\n'
@@ -810,29 +800,10 @@ jobs:
           echo -n $'\n'
           echo '[*] /usr/share/polkit-1/rules.d:'
           ls -l /usr/share/polkit-1/rules.d
-      # See https://github.com/pyllyukko/harden.yml/blob/master/tests/README.md#sudo
-      #- name: Add user runner to sudo group
-      #  run: |
-      #    sudo usermod -G sudo -a runner
-      #    getent group sudo
-      #    echo $$
-      #- name: Check if runner user is in the sudo group
-      #  run: |
-      #    id
-      #    echo $$
-      # Expected result: Authorization requires authentication
       - name: Check polkit pre-harden
         run: bash tests/test_polkit.sh 2
       - name: Run Ansible harden.yml playbook
-        run: ansible-playbook harden.yml --tags gnome,pki,rng,kerberos,tiger,lightdm,php,apache,debsecan,debsums,timeout,authorization,ntp,fstab,sudo
-      - name: Run Ansible harden.yml playbook for Sudo IDS
-        run: ansible-playbook harden.yml --tags sudo --extra-vars sudo_ids=true
-      - name: Run Ansible harden.yml playbook for Sudo iolog
-        run: ansible-playbook harden.yml --tags sudo --extra-vars sudo_iolog=true
-      - name: Check for Sudo iolog
-        run: |
-          sudo id
-          sudo ls -l /var/log/sudo-io
+        run: ansible-playbook harden.yml --tags gnome,pki,rng,kerberos,tiger,lightdm,php,apache,debsecan,debsums,timeout,authorization,ntp,fstab
       # Expected result: Not authorized
       - name: Check polkit post-harden
         run: bash tests/test_polkit.sh 1
@@ -843,8 +814,8 @@ jobs:
       - name: chmod files and dirs for archiving
         run: |
           sudo chmod -c o+r /etc/fstab{,.new}
-          sudo chmod -c 755 /etc/sudoers.d /etc/polkit-1/rules.d
-          sudo chmod -c 644 /etc/sudoers /etc/sudoers.d/* /etc/polkit-1/rules.d/*
+          sudo chmod -c 755 /etc/polkit-1/rules.d
+          sudo chmod -c 644 /etc/polkit-1/rules.d/*
       - name: Archive stuff
         uses: actions/upload-artifact@v4
         with:
@@ -852,6 +823,64 @@ jobs:
           path: |
             /etc/fstab
             /etc/fstab.new
+            /etc/polkit-1/rules.d/*
+  sudo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Show some basic info
+        run: |
+          id
+          echo -n $'\n'
+          echo '[*] passwd:'
+          getent passwd
+          echo -n $'\n'
+          echo '[*] group:'
+          getent group
+          echo -n $'\n'
+          echo '[*] sudo -l:'
+          sudo -l
+          echo -n $'\n'
+          echo '[*] sudoers:'
+          ls -ld /etc/sudoers.d
+          sudo ls -l /etc/sudoers{,.d} /usr/bin/sudo
+          echo -n $'\n'
+          echo '[*] sudoers.d/* content:'
+          sudo more /etc/sudoers.d/* | cat
+          echo -n $'\n'
+      # See https://github.com/pyllyukko/harden.yml/blob/master/tests/README.md#sudo
+      #- name: Add user runner to sudo group
+      #  run: |
+      #    sudo usermod -G sudo -a runner
+      #    getent group sudo
+      #    echo $$
+      #- name: Check if runner user is in the sudo group
+      #  run: |
+      #    id
+      #    echo $$
+      - name: Run Ansible harden.yml playbook for Sudo
+        run: ansible-playbook harden.yml --tags sudo
+      - name: Run Ansible harden.yml playbook for Sudo IDS
+        run: ansible-playbook harden.yml --tags sudo --extra-vars sudo_ids=true
+      - name: Run Ansible harden.yml playbook for Sudo iolog
+        run: ansible-playbook harden.yml --tags sudo --extra-vars sudo_iolog=true
+      - name: Check for Sudo iolog
+        run: |
+          sudo id
+          sudo ls -l /var/log/sudo-io
+      - name: Show changed files with debsums
+        run: |
+          sudo apt-get install debsums
+          sudo debsums -ec | grep -v '^/etc/\(cloud/templates/sources\.list\.ubuntu\.deb822\.tmpl\|firefox/syspref\.js\|containers/registries\.conf\|default/motd-news\|needrestart/needrestart\.conf\|waagent\.conf\)$'
+      - name: chmod files and dirs for archiving
+        run: |
+          sudo chmod -c 755 /etc/sudoers.d
+          sudo chmod -c 644 /etc/sudoers /etc/sudoers.d/*
+      - name: Archive stuff
+        uses: actions/upload-artifact@v4
+        with:
+          name: sudo
+          path: |
             /etc/sudoers
             /etc/sudoers.d/*
-            /etc/polkit-1/rules.d/*
