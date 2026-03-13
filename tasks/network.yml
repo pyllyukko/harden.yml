@@ -219,6 +219,9 @@
           ansible.builtin.command: /usr/bin/nmcli -t -f NAME,TYPE connection show
           register: nm_connections
           changed_when: false
+          failed_when:
+            - nm_connections.failed
+            - "'Error: NetworkManager is not running.' not in nm_connections.stderr"
         - name: Build a connection list for WiFi and ethernet
           ansible.builtin.set_fact:
             filtered_nm_connections: >-
