@@ -75,6 +75,16 @@
         path: /sbin/auditd
       register: result
       failed_when: not result.stat.exists
+    - name: Check that Lynis is installed (Slackware)
+      tags:
+        - slackware
+        - check
+        - lynis
+      when: ansible_facts['distribution'] == "Slackware"
+      ansible.builtin.stat:
+        path: /usr/bin/lynis
+      register: result
+      failed_when: not result.stat.exists
 
     # Once we change existing users max password age and set the inactive age,
     # the user isn't able to authenticate anymore if the password is too old.
