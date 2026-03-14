@@ -588,3 +588,13 @@
     - pam
     - slackware
     - authorization
+
+- name: Add pam_shells to /etc/pam.d/chsh (Slackware)
+  when: ansible_facts['distribution'] == "Slackware"
+  become: true
+  ansible.builtin.lineinfile:
+    path: /etc/pam.d/chsh
+    regexp: '^account\s+required\s+pam_shells\.so$'
+    line: 'account required pam_shells.so'
+    backup: true
+    insertafter: '^#%PAM-1\.0$'
