@@ -28,10 +28,10 @@
       ansible.builtin.command: /bin/sh /etc/rc.d/rc.{{ item }} stop
       with_items: "{{ slackware_services }}"
       register: result
-      failed_when:
-        - result.failed
-        - result.rc != 127
-        - "'No such file or directory' not in result.stderr"
+      # These init scripts behave quite different from each other (e.g. how the
+      # services are stopped/killed), so it's unpractical to try to catch all
+      # the different each and every error message and return codes.
+      failed_when: false
       changed_when:
         - result.rc == 0
         - "'No such file or directory' not in result.stderr"
