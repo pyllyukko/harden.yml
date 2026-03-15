@@ -436,6 +436,7 @@
   tags:
     - polkit
     - authorization
+  become: true
   block:
     - name: Stat /etc/polkit-1/rules.d
       tags: check
@@ -443,7 +444,6 @@
         path: /etc/polkit-1/rules.d
       register: stat_polkit_etc
     - name: Disallow non-admin users from authenticating as other users in polkit
-      become: true
       when: stat_polkit_etc.stat.exists
       ansible.builtin.template:
         src: 49-deny-non-admins.rules.j2

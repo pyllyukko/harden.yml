@@ -579,6 +579,22 @@
         - permissions
         - slackware
         - ntp
+    - name: chmod polkit directories
+      tags:
+        - polkit
+        - permissions
+      ansible.builtin.file:
+        path: '{{ item }}'
+        mode: '0750'
+        owner: root
+        group: polkitd
+      register: result
+      failed_when:
+        - result.failed == true
+        - result.state != "absent"
+      with_items:
+        - /etc/polkit-1
+        - /usr/share/polkit-1
 
 # Log files and dirs
 - name: Log files and dirs
