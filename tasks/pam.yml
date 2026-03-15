@@ -592,6 +592,11 @@
 - name: Add pam_shells to /etc/pam.d/chsh (Slackware)
   when: ansible_facts['distribution'] == "Slackware"
   become: true
+  tags:
+    - configuration
+    - slackware
+    - pam
+    - authorization
   ansible.builtin.lineinfile:
     path: /etc/pam.d/chsh
     regexp: '^account\s+required\s+pam_shells\.so$'
