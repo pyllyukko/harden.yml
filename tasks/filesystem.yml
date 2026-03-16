@@ -580,7 +580,9 @@
         - slackware
         - ntp
     - name: polkit
-      tags: polkit
+      tags:
+        - polkit
+        - permissions
       block:
         - name: getent group polkitd
           ansible.builtin.getent:
@@ -589,7 +591,6 @@
             fail_key: false
           tags: check
         - name: chmod polkit directories
-          tags: permissions
           when: "'polkitd' in getent_group"
           ansible.builtin.file:
             path: '{{ item }}'
