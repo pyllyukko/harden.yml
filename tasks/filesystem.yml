@@ -591,7 +591,7 @@
             fail_key: false
           tags: check
         - name: chmod polkit directories
-          when: "'polkitd' in getent_group"
+          when: getent_group.polkitd is defined
           ansible.builtin.file:
             path: '{{ item }}'
             mode: '0750'
