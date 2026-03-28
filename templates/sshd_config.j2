@@ -38,6 +38,7 @@ PermitRootLogin no
 PermitUserEnvironment no
 # CIS Debian Linux 12 Benchmark v1.1.0 - 5.1.22 Ensure sshd UsePAM is enabled
 UsePAM yes
+PermitUserRC no
 StrictModes yes
 PubkeyAuthentication yes
 {% if stat_keytab.stat.exists == True and stat_keytab.stat.size > 0 -%}
