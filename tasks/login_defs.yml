@@ -339,6 +339,16 @@
         database: group
         service: files
       tags: check
+    - name: Remove all users from group "shadow"
+      become: true
+      ansible.builtin.command: gpasswd -d {{ item }} shadow
+      with_items: '{{ getent_group["shadow"][2] | split(",") }}'
+      register: result
+      changed_when:
+        - '"is not a member of" not in result.stderr'
+      when:
+        - '"shadow" in getent_group'
+        - getent_group["shadow"][2] | length > 0
     - name: Legacy groups
       become: true
       block:
