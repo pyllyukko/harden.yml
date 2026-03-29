@@ -1,5 +1,5 @@
 ---
-# https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#id-1.5.14.10
+# https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#idm1318
 # Regarding SHA_CRYPT_MIN_ROUNDS: https://github.com/linux-pam/linux-pam/issues/352
 # ANSSI-BP-028 R36 - Changing the default value of UMASK
 - name: Configure shadow password suite (generic)
@@ -20,6 +20,7 @@
       CREATE_HOME: "yes"
       HOME_MODE: "0700"
       LOGIN_RETRIES: "{{ max_auth_tries }}"
+      LOG_UNKFAIL_ENAB: "yes"
   tags:
     - configuration
     - logging
