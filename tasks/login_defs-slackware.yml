@@ -143,6 +143,17 @@
   ansible.builtin.user:
     name: haldaemon
     home: /nonexistent
+# As instructed in /usr/doc/openssh-9.9p2/README.privsep
+- name: Change homedir and comment of sshd user
+  when: ansible_facts['distribution'] == "Slackware"
+  tags:
+    - accounts
+    - ssh
+  become: true
+  ansible.builtin.user:
+    name: sshd
+    home: /var/empty
+    comment: sshd privsep
 
 - name: Slackwate grpck
   become: true
