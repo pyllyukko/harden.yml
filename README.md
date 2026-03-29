@@ -94,6 +94,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * :blowfish: Configures `sshd_config` and `ssh_config` (see `ansible-playbook --list-tasks --tags ssh harden.yml` for details)
     * Removes 2048-bit moduli from `/etc/ssh/moduli`
     * :information_source: Removes SUID bit from `ssh-keysign`, so host-based authentication will stop working. Host-based authentication shouldn't be used anyway.
+    * :information_source: Password authentication is **not** disabled so you wouldn't lock yourself out of your system accidentally
     * See [ssh\_config.j2](templates/ssh_config.j2) and [sshd\_config.j2](templates/sshd_config.j2)
 * :sandwich: Configures [sudo](https://www.sudo.ws/) (see [sudoers.j2](templates/sudoers.j2))
     * :warning: **WARNING**: If there are rules in `/etc/sudoers.d/` that match our `become: true` tasks that do not have explicit `EXEC`, it can "break" `sudo` as we define `Defaults noexec` in the main `sudoers` file. There is a "Fix generic rules" task in `sudoers.yml` which tries to tackle this problem, but it's not guaranteed to work.
@@ -307,6 +308,7 @@ Usage
     * Configure remote logging
 * Consider purchasing [Openwall passwdqc filter files](https://www.openwall.com/passwdqc/) to check for leaked credentials during password change (see "passwdqc filter" tasks in `pam.yml`)
 * Variable `sudo_group` is also considered as administrator group (see tag `polkit`)
+* Consider setting `PasswordAuthentication` to `no` in `/etc/ssh/sshd_config`
 
 ### Tags
 
