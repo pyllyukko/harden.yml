@@ -135,6 +135,15 @@
         - wheel
         - audio
 
+# This user account is not needed anymore, but it should be removed in upstream instead of here
+- name: Change homedir of haldaemon user
+  when: ansible_facts['distribution'] == "Slackware"
+  tags: accounts
+  become: true
+  ansible.builtin.user:
+    name: haldaemon
+    home: /nonexistent
+
 - name: Slackwate grpck
   become: true
   tags: accounts
