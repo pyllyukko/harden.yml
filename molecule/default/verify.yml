@@ -96,3 +96,10 @@
           sshd_config_d.stat.exists and sshd_config_d.stat.isdir and
           sshd_harden.stat.exists and
           ssh_harden.stat.exists
+    - name: Run pwck & grpck
+      become: true
+      ansible.builtin.command:
+        cmd: /usr/sbin/{{ item }} -r
+      with_items:
+        - pwck
+        - grpck
