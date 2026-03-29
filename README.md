@@ -252,6 +252,23 @@ Creates bunch of `pam-config`s that are toggleable with `pam-auth-update`:
     * `sshd` needs to have `AllowAgentForwarding yes`
     * You need to configure `sudo` with `Defaults env_keep += "SSH_AUTH_SOCK"`
 
+Out of scope
+------------
+
+At least the following hardening areas are currently not covered at all:
+
+* Bootloader password enforcement
+* Secure Boot / UEFI Hardening
+* DNS
+    * DNSSEC
+* X11/Wayland hardening
+* Automatic security updates (beyond installing `unattended-upgrades` in Debian)
+* Wireless interfaces like WiFi and Bluetooth
+* Authentication:
+    * Biometric authentication
+    * MFA
+* Remote logging
+
 Usage
 -----
 
