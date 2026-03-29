@@ -22,6 +22,7 @@
       LOGIN_RETRIES: "{{ max_auth_tries }}"
       LOG_UNKFAIL_ENAB: "yes"
       SYSLOG_SU_ENAB: "yes"
+      SYSLOG_SG_ENAB: "yes"
   tags:
     - configuration
     - logging
