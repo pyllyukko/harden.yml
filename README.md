@@ -212,7 +212,9 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Removes `auth include postlogin` from several files, as `postlogin` should (and has) only `session` module types
 * :sandwich: Creates `/etc/pam.d/sudo`, as that seemed to be missing
 * 🎟️ Disallows the use of `su` (see [su.new](files/pam.d/su.new))
+    * :information_source: [Filesystem/permissions hardening](#file_folder-filesystem) will also remove the SUID bit from `su`, so it won't even be able to switch privileges
 * :no_entry: [Block](files/pam.d/other.new) `/etc/pam.d/remote` (see [/etc/pam.d/remote](https://github.com/pyllyukko/harden.yml/wiki/PAM#etcpamdremote))
+* Adds `pam_shells` to `/etc/pam.d/chsh` (require a valid shell in order to change your shell)
 
 ### Debian specific
 
