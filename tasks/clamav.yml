@@ -51,7 +51,7 @@
           ansible.builtin.user:
             name: clamav
             group: clamav
-            shell: /sbin/nologin
+            shell: '{{ nologin }}'
             system: true
             create_home: false
             home: /var/lib/clamav
