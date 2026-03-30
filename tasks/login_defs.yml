@@ -175,15 +175,16 @@
   when: ansible_facts['distribution'] == "Slackware"
   tags: slackware
 
+- name: Accounts
+  ansible.builtin.import_tasks: accounts.yml
+
 # CIS Debian Linux 10 Benchmark v1.0.0 - 6.2.17 Ensure no duplicate GIDs exist
+# CIS Debian Linux 13 Benchmark v1.0.0 - 7.2.6 Ensure no duplicate GIDs exist
 - name: Verify integrity of group files
   become: true
   ansible.builtin.command: grpck -r
   tags: check
   changed_when: false
-
-- name: Accounts
-  ansible.builtin.import_tasks: accounts.yml
 
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.1.4 Ensure inactive password lock is 30 days or less
 # Debian's "useradd -D -f 30" fails with "cannot create new defaults file"
