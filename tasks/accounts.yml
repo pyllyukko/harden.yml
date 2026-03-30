@@ -78,7 +78,7 @@
   ansible.builtin.user:
     name: '{{ item.key }}'
     # Nowadays Debian has a symlink /bin -> /usr/bin, so this should be fine
-    shell: /sbin/nologin
+    shell: '{{ nologin }}'
     # pam_unix(account) will deny access if account is expired
     expires: '{{ 60 * 60 * 24 }}'
     password_lock: true

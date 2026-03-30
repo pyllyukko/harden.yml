@@ -103,3 +103,4 @@ unnecessary_system_accounts:
   - backup
 is_github_actions: >-
   {{ (lookup('ansible.builtin.env', 'GITHUB_ACTIONS') | default('', true) | lower) == 'true' }}
+nologin: "{% if ansible_facts['distribution'] == \"Slackware\" %}/sbin/nologin{% else %}/usr/sbin/nologin{% endif %}"
