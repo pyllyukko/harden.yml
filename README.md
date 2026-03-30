@@ -260,8 +260,10 @@ At least the following hardening areas are currently not covered at all:
 
 * Bootloader password enforcement
 * Secure Boot / UEFI Hardening
-* DNS
-    * DNSSEC
+* Network:
+    * DNS
+        * DNSSEC
+    * Defence against [ARP cache poisoning](https://en.wikipedia.org/wiki/ARP_spoofing)
 * X11/Wayland hardening
 * Automatic security updates (beyond installing `unattended-upgrades` in Debian)
 * Wireless interfaces like WiFi and Bluetooth
@@ -309,6 +311,7 @@ Usage
 * Consider purchasing [Openwall passwdqc filter files](https://www.openwall.com/passwdqc/) to check for leaked credentials during password change (see "passwdqc filter" tasks in `pam.yml`)
 * Variable `sudo_group` is also considered as administrator group (see tag `polkit`)
 * Consider setting `PasswordAuthentication` to `no` in `/etc/ssh/sshd_config`
+* Consider running [arpwatch](https://ee.lbl.gov/) to detect [ARP cache poisoning](https://en.wikipedia.org/wiki/ARP_spoofing)
 
 ### Tags
 
