@@ -1,0 +1,316 @@
+---
+# The tasks below require *local* user accounts
+- name: getent passwd
+  tags:
+    - accounts
+    - passwords
+    - authorization
+    - check
+    - limits
+    - pam
+  ansible.builtin.getent:
+    database: passwd
+    service: files
+
+- name: Get login.defs values
+  tags:
+    - accounts
+    - check
+    - passwords
+    - authorization
+    - limits
+    - pam
+  block:
+    - name: slurp /etc/login.defs
+      become: true
+      ansible.builtin.slurp:
+        src: /etc/login.defs
+      register: login_defs
+      no_log: true
+    - name: Set uid_min & uid_max variables
+      ansible.builtin.set_fact:
+        uid_min: "{{ login_defs['content'] | b64decode | regex_search('^UID_MIN\\s+([0-9]+)$', '\\1', multiline=True) | first }}"
+        uid_max: "{{ login_defs['content'] | b64decode | regex_search('^UID_MAX\\s+([0-9]+)$', '\\1', multiline=True) | first }}"
+    - name: Verify uid_min & uid_max values
+      ansible.builtin.assert:
+        that:
+          - uid_min is regex('^[0-9]+$')
+          - uid_max is regex('^[0-9]+$')
+          - uid_min | int != 0
+          - uid_max | int != 0
+
+- name: Remove pi from adm group (Raspberry Pi OS)
+  when: ansible_facts['distribution'] == "Debian"
+  become: true
+  ansible.builtin.command: gpasswd -d pi adm
+  register: result
+  failed_when:
+    - result.failed == true
+    - '"is not a member of" not in result.stderr'
+  changed_when:
+    - '"is not a member of" not in result.stderr'
+  tags:
+    - accounts
+    - debian
+
+# CIS Debian Linux 10 Benchmark v1.0.0:
+#   5.4.1.1 Ensure password expiration is 365 days or less
+#   5.4.1.2 Ensure minimum days between password changes is configured
+#   5.4.1.3 Ensure password expiration warning days is 7 or more
+#   5.4.1.4 Ensure inactive password lock is 30 days or less
+# ansible.builtin.user doesn't seem to be able to set inactive & warndays,
+# so we'll use chage instead.
+- name: Set password policies for existing users
+  become: true
+  ansible.builtin.command: chage --inactive {{ inactive_password_lock }} --mindays {{ pass_min_days }} --maxdays {{ pass_max_days }} --warndays {{ pass_warn_age }} {{ item.key }} # noqa yaml[line-length]
+  changed_when: true
+  when: item.value[1] | int >= uid_min | int and item.value[1] | int <= uid_max | int
+  with_dict: "{{ getent_passwd }}"
+  tags:
+    - accounts
+    - passwords
+    - authorization
+
+# CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.2 Ensure system accounts are secured
+# Slackware Linux Benchmark v1.1 - 8.1 Block System Accounts
+# ANSSI-BP-028 R34 - Disabling the service accounts
+- name: Lock system accounts
+  ansible.builtin.user:
+    name: '{{ item.key }}'
+    # Nowadays Debian has a symlink /bin -> /usr/bin, so this should be fine
+    shell: /sbin/nologin
+    # pam_unix(account) will deny access if account is expired
+    expires: '{{ 60 * 60 * 24 }}'
+    password_lock: true
+  # CIS Debian Benchmark also has accounts sync, shutdown & halt
+  when:
+    - item.value[1] | int < uid_min | int
+    - (item.value[1] != "0" and item.key != "root")
+    - item.key != "Debian-gdm"
+    - item.key != "lightdm"
+    - item.key != "daemon"
+    - item.key != "logcheck"
+  with_dict: "{{ getent_passwd }}"
+  tags: accounts
+  become: true
+
+- name: Set maxlogins to 0 in limits.conf for most system accounts
+  tags:
+    - accounts
+    - pam
+    - limits
+    - authorization
+    - configuration
+  become: true
+  community.general.pam_limits:
+    domain: '{{ item.key }}'
+    limit_type: hard
+    limit_item: maxlogins
+    value: 0
+    dest: /etc/security/limits.d/system_accounts.conf
+  when:
+    - item.value[1] | int < uid_min | int
+    - (item.value[1] != "0" and item.key != "root")
+    - item.key != "Debian-gdm"
+    - item.key != "lightdm"
+    - item.key != "daemon"
+    - item.key != "logcheck"
+    # https://wiki.debian.org/PostgreSql
+    #- item.key != "postgres"
+  with_dict: "{{ getent_passwd }}"
+
+# https://wiki.debian.org/SystemGroups
+- name: Remove users from legacy groups
+  tags: accounts
+  block:
+    - name: getent group
+      ansible.builtin.getent:
+        database: group
+        service: files
+      tags: check
+    - name: Remove all users from group "shadow"
+      become: true
+      ansible.builtin.command: gpasswd -d {{ item }} shadow
+      with_items: '{{ getent_group["shadow"][2] | split(",") }}'
+      register: result
+      changed_when:
+        - '"is not a member of" not in result.stderr'
+      when:
+        - '"shadow" in getent_group'
+        - getent_group["shadow"][2] | length > 0
+    - name: Legacy groups
+      become: true
+      block:
+        # Common groups
+        - name: Remove almost all users from group "lp"
+          ansible.builtin.command: gpasswd -d {{ item }} lp
+          with_items: '{{ getent_group["lp"][2] | split(",") }}'
+          register: result
+          changed_when:
+            - '"is not a member of" not in result.stderr'
+          when:
+            - '"lp" in getent_group'
+            - getent_group["lp"][2] | length > 0
+        - name: Remove all users from group "floppy"
+          ansible.builtin.command: gpasswd -d {{ item }} floppy
+          with_items: '{{ getent_group["floppy"][2] | split(",") }}'
+          register: result
+          changed_when:
+            - '"is not a member of" not in result.stderr'
+          when:
+            - '"floppy" in getent_group'
+            - getent_group["floppy"][2] | length > 0
+        - name: Remove all users from group "cdrom"
+          ansible.builtin.command: gpasswd -d {{ item }} cdrom
+          with_items: '{{ getent_group["cdrom"][2] | split(",") }}'
+          register: result
+          changed_when:
+            - '"is not a member of" not in result.stderr'
+          when:
+            - '"cdrom" in getent_group'
+            - getent_group["cdrom"][2] | length > 0
+        - name: Remove all users from group "games"
+          ansible.builtin.command: gpasswd -d {{ item }} games
+          with_items: '{{ getent_group["games"][2] | split(",") }}'
+          register: result
+          changed_when:
+            - '"is not a member of" not in result.stderr'
+          when:
+            - '"games" in getent_group'
+            - getent_group["games"][2] | length > 0
+        - name: Remove almost all users from group "scanner"
+          ansible.builtin.command: gpasswd -d {{ item }} scanner
+          with_items: '{{ getent_group["scanner"][2] | split(",") }}'
+          register: result
+          changed_when:
+            - '"is not a member of" not in result.stderr'
+          when:
+            - '"scanner" in getent_group'
+            - getent_group["scanner"][2] | length > 0
+            - item != "saned"
+    # Debian specific groups
+    - name: Debian specific groups
+      become: true
+      tags: debian
+      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
+      block:
+        - name: Remove all users from group "lpadmin"
+          ansible.builtin.command: gpasswd -d {{ item }} lpadmin
+          with_items: '{{ getent_group["lpadmin"][2] | split(",") }}'
+          register: result
+          changed_when:
+            - '"is not a member of" not in result.stderr'
+          when:
+            - '"lpadmin" in getent_group'
+            - getent_group["lpadmin"][2] | length > 0
+        - name: Remove all users from group "dip"
+          ansible.builtin.command: gpasswd -d {{ item }} dip
+          with_items: '{{ getent_group["dip"][2] | split(",") }}'
+          register: result
+          changed_when:
+            - '"is not a member of" not in result.stderr'
+          when:
+            - '"dip" in getent_group'
+            - getent_group["dip"][2] | length > 0
+    # Raspbian gpio, i2c & spi groups
+    # https://www.raspberrypi.com/documentation/computers/os.html#permissions
+    - name: Remove users from Raspberry Pi OS specific groups
+      become: true
+      when: ansible_facts['distribution'] == "Debian"
+      tags: debian
+      block:
+        - name: Remove all users from group "gpio"
+          ansible.builtin.command: gpasswd -d {{ item }} gpio
+          with_items: '{{ getent_group["gpio"][2] | split(",") }}'
+          register: result
+          changed_when:
+            - '"is not a member of" not in result.stderr'
+          when:
+            - '"gpio" in getent_group'
+            - getent_group["gpio"][2] | length > 0
+        - name: Remove all users from group "i2c"
+          ansible.builtin.command: gpasswd -d {{ item }} i2c
+          with_items: '{{ getent_group["i2c"][2] | split(",") }}'
+          register: result
+          changed_when:
+            - '"is not a member of" not in result.stderr'
+          when:
+            - '"i2c" in getent_group'
+            - getent_group["i2c"][2] | length > 0
+        - name: Remove all users from group "spi"
+          ansible.builtin.command: gpasswd -d {{ item }} spi
+          with_items: '{{ getent_group["spi"][2] | split(",") }}'
+          register: result
+          changed_when:
+            - '"is not a member of" not in result.stderr'
+          when:
+            - '"spi" in getent_group'
+            - getent_group["spi"][2] | length > 0
+
+# https://github.com/ansible/ansible/issues/11024
+# Cleanup Slackware's groups
+- name: Slackware groups
+  when: ansible_facts['distribution'] == "Slackware"
+  become: true
+  tags: slackware
+  block:
+    # http://ftp.slackware.com/pub/slackware/slackware64-15.0/source/a/etc/group.new
+    # Didn't want to use replace here, as this is herecy.
+    # But this was the only way I could make this idempotent.
+    - name: Remove all members from certain groups (Slackware)
+      ansible.builtin.replace:
+        path: /etc/group
+        regexp: '^({{ item }}:x:[0-9]+:).*$'
+        replace: '\g<1>'
+        validate: '/bin/grep "^{{ item }}:x:[0-9]\+:$" %s'
+      tags: accounts
+      with_items:
+        - root
+        - bin
+        - daemon
+        - sys
+        - adm
+        - disk
+    - name: Remove uucp from dialout group (Slackware)
+      ansible.builtin.command: gpasswd -d uucp dialout
+      register: result
+      changed_when: '"is not a member of" not in result.stderr'
+      failed_when:
+        - result.failed == true
+        - '"is not a member of" not in result.stderr'
+      tags: accounts
+    # root is root and that's enough :)
+    - name: Remove root from all supplemental groups
+      ansible.builtin.command: gpasswd -d root {{ item }}
+      register: result
+      failed_when:
+        - result.failed == true
+        - '"is not a member of" not in result.stderr'
+      changed_when: '"is not a member of" not in result.stderr'
+      tags: accounts
+      with_items:
+        - wheel
+        - audio
+
+# This user account is not needed anymore, but it should be removed in upstream instead of here
+- name: Change homedir of haldaemon user
+  when: ansible_facts['distribution'] == "Slackware"
+  tags:
+    - accounts
+    - slackware
+  become: true
+  ansible.builtin.user:
+    name: haldaemon
+    home: /nonexistent
+# As instructed in /usr/doc/openssh-9.9p2/README.privsep
+- name: Change homedir and comment of sshd user
+  when: ansible_facts['distribution'] == "Slackware"
+  tags:
+    - accounts
+    - ssh
+    - slackware
+  become: true
+  ansible.builtin.user:
+    name: sshd
+    home: /var/empty
+    comment: sshd privsep
