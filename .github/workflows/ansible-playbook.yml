@@ -75,6 +75,10 @@ jobs:
       - name: Show hashing algorithms
         run: |
           sudo getent shadow | grep -o '^[^$]\+\$[^$]\+\$'
+      - name: Backup /etc/{passwd,group}
+        run: |
+          sudo cp -v /etc/passwd /etc/passwd.bak
+          sudo cp -v /etc/group /etc/group.bak
       - name: Install Lynis
         run: |
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
@@ -119,6 +123,12 @@ jobs:
       # 2025-01-08 20:44:29 Hardening: assigned partial number of hardening points (0 of 2). Currently having 2 points (out of 4)
       - name: Check Lynis score
         run: sudo bash tests/check_lynis_score.sh 93
+      - name: Diff /etc/{passwd,group}
+        run: |
+          echo '[*] passwd:'
+          diff --color=always /etc/passwd.bak /etc/passwd
+          echo -e '\n[*] group:'
+          diff --color=always /etc/group.bak /etc/group
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
