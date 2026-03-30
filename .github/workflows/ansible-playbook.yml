@@ -126,9 +126,9 @@ jobs:
       - name: Diff /etc/{passwd,group}
         run: |
           echo '[*] passwd:'
-          diff --color=always /etc/passwd.bak /etc/passwd
+          diff --color=always /etc/passwd.bak /etc/passwd || true
           echo -e '\n[*] group:'
-          diff --color=always /etc/group.bak /etc/group
+          diff --color=always /etc/group.bak /etc/group || true
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
