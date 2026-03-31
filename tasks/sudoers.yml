@@ -98,7 +98,6 @@
         - configuration
         - molecule-idempotence-notest
     - name: 'Remove /etc/sudoers.new'
-      tags: molecule-idempotence-notest
       ansible.builtin.file:
         path: /etc/sudoers.new
         state: absent
