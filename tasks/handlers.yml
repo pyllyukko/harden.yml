@@ -177,3 +177,22 @@
   become: true
   ansible.builtin.command: /usr/local/bin/freshclam
   changed_when: true
+  listen: Freshclam
+- name: 'Make /var/lib/clamav/*.c[lv]d +r'
+  become: true
+  ansible.builtin.file:
+    path: /var/lib/clamav/{{ item }}
+    mode: '0644'
+  with_items:
+    - daily.cld
+    - daily.cvd
+    - bytecode.cld
+    - bytecode.cvd
+    - main.cvd
+    - main.cld
+  register: result
+  failed_when:
+    - result.failed == true
+    - result.state != "absent"
+  tags: permissions
+  listen: Freshclam

@@ -83,7 +83,7 @@
             - name: Install ClamAV (x86_64)
               ansible.builtin.apt:
                 deb: "{{ clamav_download.dest }}"
-              notify: Run freshclam
+              notify: Freshclam
 
     - name: Determine ClamAV sysconfdir
       ansible.builtin.shell: set -o pipefail; {{ clamav_location }}/clamconf | awk '/^Checking configuration files in/{print$5}'
@@ -228,7 +228,7 @@
         - result.failed == true
         - result.state != "absent"
     # "CLD files are uncompressed and unsigned versions of the CVD that have had CDIFFs applied"
-    - name: Make /var/lib/clamav/*.c[lv]d +r
+    - name: 'Make /var/lib/clamav/*.c[lv]d +r'
       ansible.builtin.file:
         path: /var/lib/clamav/{{ item }}
         mode: '0644'
