@@ -98,3 +98,7 @@ dev.tty.ldisc_autoload = 0
 # Restrict the use of the perf subsystem
 kernel.perf_cpu_time_max_percent=1
 kernel.perf_event_max_sample_rate=1
+
+# https://gitlab.com/apparmor/apparmor/-/wikis/Kernel_Feature_Matrix
+# https://www.openwall.com/lists/oss-security/2026/03/28/6
+#kernel.unprivileged_userns_apparmor_policy = 1
