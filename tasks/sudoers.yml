@@ -86,7 +86,6 @@
       with_items: "{{ sudoers_includes.files }}"
       tags: configuration
     - name: 'Copy /etc/sudoers.new to /etc/sudoers'
-      tags: molecule-idempotence-notest
       ansible.builtin.copy:
         remote_src: true
         src: /etc/sudoers.new
@@ -95,7 +94,9 @@
         group: root
         mode: '0440'
         backup: true
-      tags: configuration
+      tags:
+        - configuration
+        - molecule-idempotence-notest
     - name: 'Remove /etc/sudoers.new'
       tags: molecule-idempotence-notest
       ansible.builtin.file:
