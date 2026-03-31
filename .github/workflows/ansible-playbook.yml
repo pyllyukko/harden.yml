@@ -439,6 +439,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: sysctl -a
+        run: sudo sysctl -a | tee /tmp/sysctl-1.txt
       - name: Install Lynis
         run: |
           ansible-playbook harden.yml --tags lynis --skip-tags slackware,centos
@@ -462,6 +464,10 @@ jobs:
             /etc/sysctl.conf
       - name: Check Lynis score
         run: sudo bash tests/check_lynis_score.sh 94
+      - name: Diff sysctl settings
+        run: |
+          sudo sysctl -a | tee /tmp/sysctl-2.txt
+          diff --color=always /tmp/sysctl-[12] || true
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
