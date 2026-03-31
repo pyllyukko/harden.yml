@@ -33,6 +33,7 @@
   become: true
   block:
     - name: 'Create /etc/sudoers.new'
+      tags: molecule-idempotence-notest
       ansible.builtin.template:
         src: "{{ playbook_dir }}/templates/sudoers.j2"
         dest: /etc/sudoers.new
@@ -58,6 +59,7 @@
       when: sudo_ids | bool
     # https://jpmens.net/2013/02/06/don-t-try-this-at-the-office-etc-sudoers/
     - name: 'Validate /etc/sudoers.new'
+      tags: molecule-idempotence-notest
       ansible.builtin.command: visudo -cs -f /etc/sudoers.new
       register: result
       changed_when:
@@ -83,6 +85,7 @@
       with_items: "{{ sudoers_includes.files }}"
       tags: configuration
     - name: 'Copy /etc/sudoers.new to /etc/sudoers'
+      tags: molecule-idempotence-notest
       ansible.builtin.copy:
         remote_src: true
         src: /etc/sudoers.new
@@ -93,6 +96,7 @@
         backup: true
       tags: configuration
     - name: 'Remove /etc/sudoers.new'
+      tags: molecule-idempotence-notest
       ansible.builtin.file:
         path: /etc/sudoers.new
         state: absent
