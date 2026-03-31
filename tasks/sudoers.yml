@@ -59,12 +59,13 @@
       when: sudo_ids | bool
     # https://jpmens.net/2013/02/06/don-t-try-this-at-the-office-etc-sudoers/
     - name: 'Validate /etc/sudoers.new'
-      tags: molecule-idempotence-notest
       ansible.builtin.command: visudo -cs -f /etc/sudoers.new
       register: result
       changed_when:
         - '"parsed OK" not in result.stdout'
-      tags: check
+      tags:
+        - check
+        - molecule-idempotence-notest
     # As we define "Defaults noexec" in our main sudoers file, sudo will "break" if
     # there are includes without explicit exec that match our "become: true" tasks.
     # Usually these are catchall rules like "vagrant ALL=(ALL) NOPASSWD: ALL".
