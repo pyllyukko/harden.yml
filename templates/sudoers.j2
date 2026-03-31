@@ -45,7 +45,7 @@ Defaults	syslog=auth
 Defaults	noexec
 Defaults	listpw=always
 Defaults	timestamp_timeout=0
-{% if not is_github_actions %}
+{% if not is_github_actions and "molecule-notest" not in ansible_skip_tags %}
 Defaults	requiretty
 {% endif %}
 Defaults	!visiblepw

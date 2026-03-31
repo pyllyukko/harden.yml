@@ -72,6 +72,8 @@
       ansible.builtin.import_tasks: tasks/logging.yml
     - name: Apache
       ansible.builtin.import_tasks: tasks/apache.yml
+    - name: Sudo
+      ansible.builtin.import_tasks: tasks/sudoers.yml
 
   handlers:
     - name: Handlers
