@@ -49,9 +49,17 @@ Molecule is ran against [Debian](https://hub.docker.com/_/debian), [Slackware](h
 
 ### Limitations
 
-* Certain hardenings like `kernel` & `network` are not tested
+* Certain hardenings like `kernel` & `network` are not tested. Also the following:
+    * `apparmor`
+    * `audit`
+    * `entropy`
 * Debian-based containers do not have systemd, so anything related to systemd can't be tested
 * After configuring `nproc` limit into `/etc/security/limits.conf`, Molecule will start failing if the host has lower limit than the container when it tries to set that limit via `pam_limits`
+* Certain tasks that install additional software are only tested in Debian derivatives:
+    * `clamav`
+    * `aide`
+    * `rkhunter`
+    * `lynis`
 
 ShellCheck
 ----------
