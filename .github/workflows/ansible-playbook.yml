@@ -467,7 +467,7 @@ jobs:
       - name: Diff sysctl settings
         run: |
           sudo sysctl -a | tee /tmp/sysctl-2.txt
-          diff --color=always /tmp/sysctl-[12] || true
+          diff --color=always /tmp/sysctl-[12].txt || true
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
