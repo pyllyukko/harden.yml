@@ -70,6 +70,8 @@
       ansible.builtin.import_tasks: tasks/kernel.yml
     - name: Logging
       ansible.builtin.import_tasks: tasks/logging.yml
+    - name: Apache
+      ansible.builtin.import_tasks: tasks/apache.yml
 
   handlers:
     - name: Handlers
