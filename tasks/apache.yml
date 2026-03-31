@@ -1,6 +1,16 @@
 ---
-- name: Configure Apache
+- name: Stat /etc/httpd/httpd.conf
   when: ansible_facts['distribution'] == "Slackware"
+  ansible.builtin.stat:
+    path: /etc/httpd/httpd.conf
+  register: stat_result
+  tags:
+    - check
+    - apache
+- name: Configure Apache
+  when:
+    - ansible_facts['distribution'] == "Slackware"
+    - stat_result.stat.exists
   become: true
   tags:
     - configuration
