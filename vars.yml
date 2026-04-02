@@ -56,7 +56,8 @@ sudo_iolog: false
 sudo_group: "{% if ansible_facts['distribution'] == \"Slackware\" %}wheel{% else %}sudo{% endif %}"
 aide_conf: "{% if ansible_facts['distribution'] == \"Slackware\" %}/etc/aide.conf{% else %}/etc/aide/aide.conf{% endif %}"
 pass_max_days: 365
-pass_min_days: 7
+# CIS Debian Linux 13 Benchmark v1.0.0 - 5.4.1.2 Ensure minimum password days is configured
+pass_min_days: 1
 pass_warn_age: 30
 inactive_password_lock: 30
 lynis_location: "{% if ansible_facts['os_family'] == \"RedHat\" or ansible_facts['distribution'] == \"Slackware\" %}/usr/bin/lynis{% else %}/usr/sbin/lynis{% endif %}"
