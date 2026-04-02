@@ -506,35 +506,14 @@
     # https://www.redhat.com/sysadmin/more-lockdown-controls
     # ANSSI-BP-028 R31 - User password strength
     - name: Configure pwquality
-      ansible.builtin.replace:
-        path: /etc/security/pwquality.conf
-        regexp: '^(# ?)?({{ item.key }}\s+)=.*$'
-        replace: '\g<2>= {{ item.value }}'
-        validate: '/bin/grep "^{{ item.key }}\s\+= {{ item.value }}$" %s'
+      ansible.builtin.template:
+        src: pwquality.conf.j2
+        dest: /etc/security/pwquality.conf
+        owner: root
+        group: root
+        mode: '0644'
         backup: true
       when: ansible_facts['distribution'] == "Slackware"
-      with_dict:
-        retry: 3
-        # CIS Debian Linux 13 Benchmark v1.0.0 - 5.3.3.2.2 Ensure password length is configured
-        minlen: 14
-        # CIS Debian Linux 13 Benchmark v1.0.0 - 5.3.3.2.3 Ensure password complexity is configured
-        minclass: 4
-        dcredit: -1
-        ucredit: -1
-        ocredit: -1
-        lcredit: -1
-        # CIS Debian Linux 13 Benchmark v1.0.0 - 5.3.3.2.1 Ensure password number of changed characters is configured
-        difok: 2
-        # CIS Debian Linux 13 Benchmark v1.0.0 - 5.3.3.2.4 Ensure password same consecutive characters is configured
-        maxrepeat: 3
-        # CIS Debian Linux 13 Benchmark v1.0.0 - 5.3.3.2.5 Ensure password maximum sequential characters is configured
-        # This doesn't exist in the default /etc/security/pwquality.conf
-        #maxsequence: 3
-        # CIS Debian Linux 13 Benchmark v1.0.0 - 5.3.3.2.6 Ensure password dictionary check is enabled
-        dictcheck: 1
-        # CIS Debian Linux 13 Benchmark v1.0.0 - 5.3.3.2.7 Ensure password quality checking is enforced
-        enforcing: 1
-        # TODO: CIS Debian Linux 13 Benchmark v1.0.0 - 5.3.3.2.8 Ensure password quality is enforced for the root user
       tags: slackware
 
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#user-limits
