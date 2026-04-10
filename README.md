@@ -353,6 +353,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * `gnome`
     * :tiger: `tiger`
     * `john`
+    * 🔄 `unattended-upgrades`
 * :placard: `banners`
 * [AAA](https://en.wikipedia.org/wiki/AAA_(computer_security)):
     * :bar_chart: `accounting` (includes `sysstat`)

@@ -16,7 +16,6 @@
           - needrestart
           - arpwatch
           - usbguard
-          - unattended-upgrades
           - checksec
           - hardening-runtime
           - apt-show-versions
@@ -41,6 +40,21 @@
         - packages
       ansible.builtin.apt:
         name: tiger
+
+- name: unattended-upgrades
+  tags: unattended-upgrades
+  become: true
+  block:
+    - name: Install unattended-upgrades
+      ansible.builtin.apt:
+        name: unattended-upgrades
+        update_cache: true
+    - name: Configure unattended-upgrades
+      ansible.builtin.debconf:
+        name: unattended-upgrades
+        question: unattended-upgrades/enable_auto_updates
+        vtype: boolean
+        value: "true"
 
 # The JtR packaged with Debian 12 (1.9.0) doesn't support the modern hashing algorithms
 #- name: John
