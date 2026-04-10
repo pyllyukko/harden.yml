@@ -43,6 +43,7 @@
 
 - name: unattended-upgrades
   tags: unattended-upgrades
+  when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
   become: true
   block:
     - name: Install unattended-upgrades
