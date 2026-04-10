@@ -3675,6 +3675,7 @@
             - https://raw.githubusercontent.com/cuckoosandbox/cuckoo/refs/heads/master/cuckoo/data/yara/binaries/embedded.yar
             - https://raw.githubusercontent.com/cuckoosandbox/cuckoo/refs/heads/master/cuckoo/data/yara/binaries/shellcodes.yar
             - https://raw.githubusercontent.com/cuckoosandbox/cuckoo/refs/heads/master/cuckoo/data/yara/binaries/vmdetect.yar
+            - https://raw.githubusercontent.com/magicsword-io/LOLDrivers/refs/heads/main/detections/av/LOLDrivers.hdb
         - name: Copy miscellaneous YARA rules
           ansible.builtin.copy:
             src: "{{ item }}"
