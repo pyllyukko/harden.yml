@@ -227,7 +227,6 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Installs a bunch of security related packages (see [debian\_packages.yml](tasks/debian_packages.yml))
 * Configures `chkrootkit` and enables daily checks
 * Configures APT not to install suggested packages
-* Limited systemd service hardening (see [services-systemd.yml](tasks/services-systemd.yml))
 
 #### pam-configs
 
@@ -371,7 +370,7 @@ Tags that you can use with `ansible-playbook --tags`:
 * `umask`
 * :timer_clock: `timeout`
 * `polkit`
-* `systemd`
+* `systemd` (experimental, enable with `harden_systemd_services`)
 
 There are also operating system tags for tasks that only apply to specific OS.
 You can speed up the hardening by skipping OSs that don't apply. E.g. if you're
@@ -390,6 +389,8 @@ Other tags are just metadata for now. You can list all the tags with
     * :construction: UNDER CONSTRUCTION :construction: and experimental
     * See [New password policies according to NIST SP 800-63 #88](https://github.com/pyllyukko/harden.yml/issues/88)
     * :information_source: Only supports `libpwquality` for now
+* Experimental and limited systemd service hardening (see [services-systemd.yml](tasks/services-systemd.yml))
+    * Needs to be enabled with `harden_systemd_services`
 
 #### Makefile
 

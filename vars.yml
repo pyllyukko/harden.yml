@@ -115,3 +115,4 @@ systemd_services_to_harden:
   - dbus
   # Quite pointless, but why not...
   - plymouth-start
+harden_systemd_services: false

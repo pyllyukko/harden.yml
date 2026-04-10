@@ -780,7 +780,7 @@ jobs:
         run: |
           sudo bash tests/check_maps.sh
       - name: Run Ansible playbook for systemd
-        run: ansible-playbook -v harden.yml --tags systemd
+        run: ansible-playbook -v harden.yml --extra-vars harden_systemd_services=true --tags systemd
       - name: Run Lynis
         run: |
           sudo lynis audit system --skip-plugins --tests-from-group boot_services
