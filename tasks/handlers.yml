@@ -204,3 +204,24 @@
   ansible.builtin.systemd_service:
     name: systemd-logind
     state: reloaded
+- name: Make cracklib words
+  listen: cracklib dict
+  become: true
+  community.general.make:
+    chdir: /usr/local/src/cracklib/words
+    target: cracklib-words
+- name: Copy cracklib-words to it's proper location
+  listen: cracklib dict
+  become: true
+  ansible.builtin.copy:
+    src: /usr/local/src/cracklib/words/cracklib-words
+    dest: "{{ cracklib_words_dir }}/cracklib-words"
+    owner: root
+    group: root
+    mode: '0644'
+    remote_src: true
+- name: create-cracklib-dict
+  listen: cracklib dict
+  become: true
+  ansible.builtin.command:
+    cmd: /sbin/create-cracklib-dict -o {{ cracklib_dict }} {{ cracklib_words_dir }}/cracklib-words

@@ -522,6 +522,23 @@
             backup: true
           when: stat_result.stat.exists
 
+- name: cracklib
+  tags:
+    - passwords
+    - cracklib
+  become: true
+  block:
+    - name: Check for cracklib
+      ansible.builtin.stat:
+        path: /sbin/create-cracklib-dict
+      register: stat_result
+    - name: Git checkout
+      when: stat_result.stat.exists
+      ansible.builtin.git:
+        repo: 'https://github.com/cracklib/cracklib.git'
+        dest: /usr/local/src/cracklib
+      notify: cracklib dict
+
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#user-limits
 - name: pam_limits
   become: true
