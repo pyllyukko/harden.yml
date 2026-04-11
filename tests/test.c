@@ -171,6 +171,35 @@ static void test_pam_acct_cron_nobody(void **state)
   perr = run_pamtest("cron", "nobody", NULL, tests, NULL);
   assert_int_equal(perr, PAMTEST_ERR_OK);
 }
+/* Test 10: Password change (chauthtok)
+ * Tests password policy enforcement via pam_chauthtok().
+ * This test runs as root (sudo), so pam_unix skips the current password
+ * prompt.  The conversation only needs: new password, retype new password.
+ * Before hardening, the password "changeme1" should be accepted by pam_unix.
+ * After hardening (pam_pwquality), it should be rejected as too short
+ * (minlen=14) and lacking complexity (minclass=4).
+ * Depends on PAM configuration		*/
+static void test_pam_chauthtok(void **state)
+{
+  enum pamtest_err perr;
+  struct pamtest_conv_data conv_data;
+  const char *authtoks[] = {
+    "changeme1",
+    "changeme1",
+    NULL,
+  };
+  struct pam_testcase tests[] = {
+    pam_test(PAMTEST_CHAUTHTOK, testcase),
+  };
+
+  (void) state;	/* unused */
+
+  ZERO_STRUCT(conv_data);
+  conv_data.in_echo_off = authtoks;
+
+  perr = run_pamtest("login", "root", &conv_data, tests, NULL);
+  assert_int_equal(perr, PAMTEST_ERR_OK);
+}
 // Test 9: Login with empty password
 static void test_pam_authenticate_null_password(void **state)
 {
@@ -204,6 +233,9 @@ options:\n\
 		5	cron:acct nobody user\n\
 		6	login:auth nobody user\n\
 		7	su:auth nobody user\n\
+		8	login:auth wrong password\n\
+		9	login:auth empty password\n\
+		10	login:chauthtok password change\n\
 ");
 }
 int main(int argc, char *argv[]) {
@@ -251,6 +283,9 @@ int main(int argc, char *argv[]) {
             break;
           case 9:
             ptr = test_pam_authenticate_null_password;
+            break;
+          case 10:
+            ptr = test_pam_chauthtok;
             break;
           default:
             printf("invalid test case\n");

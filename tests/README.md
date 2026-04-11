@@ -128,6 +128,7 @@ Round 2:
 | 6-2    | `login` | `auth`        | `nobody`        | Regular login as other user when `/etc/nologin` exists | [PAM\_AUTH\_ERR](https://github.com/linux-pam/linux-pam/blob/cfe667baa301ffa136a713b0ae22ba0ef493aa48/modules/pam_nologin/pam_nologin.c#L93) |
 | 7      | `su`    | `auth`        | `nobody`        | Using `su`                                             | `PAM_SUCCESS`   |
 | 8      | `login` | `auth`        | `root`          | Login with invalid password                            | `PAM_AUTH_ERR`  |
+| 10     | `login` | `password`    | `root`          | Password change with weak password (`changeme1`)       | `PAM_SUCCESS`   |
 
 #### Post-harden
 
@@ -141,6 +142,7 @@ Round 2:
 | 8-[123] | `login` | `auth`        | `root`          | Login with invalid password 3 times                                | `PAM_PERM_DENIED` |
 | 1       | `login` | `auth`        | `root`          | Login with valid password. Temporarily locked by `pam_faillock`.   | [PAM\_AUTH\_ERR](https://github.com/linux-pam/linux-pam/blob/cfe667baa301ffa136a713b0ae22ba0ef493aa48/modules/pam_faillock/pam_faillock.c#L269) |
 | 8-4     | `login` | `auth`        | `root`          | Login with invalid password. Test `pam_faildelay`.               . | `PAM_PERM_DENIED` |
+| 10      | `login` | `password`    | `root`          | Password change with weak password. Rejected by `pam_pwquality`.   | `PAM_AUTHTOK_ERR` |
 | 9       | `login` | `auth`        | `nobody`        | Login with empty password.                                         | `PAM_AUTH_ERR`    |
 
 ### Limits

@@ -9,37 +9,70 @@ difok = 2
 # Minimum acceptable size for the new password (plus one if
 # credits are not disabled which is the default). (See pam_cracklib manual.)
 # Cannot be set to lower value than 6.
+{% if password_policy == "nist_sp800_63" %}
+# SP 800-63B-4 3.1.1.2. Password Verifiers: Verifiers and CSPs SHALL require passwords that are used as a single-factor authentication mechanism to be a minimum of 15 characters in length.
+minlen = 15
+{% else %}
 # CIS Debian Linux 13 Benchmark v1.0.0 - 5.3.3.2.2 Ensure password length is configured
 minlen = 14
+{% endif %}
 #
-# CIS Debian Linux 13 Benchmark v1.0.0 - 5.3.3.2.3 Ensure password complexity is configured (applied)
 # The maximum credit for having digits in the new password. If less than 0
 # it is the minimum number of digits in the new password.
+{% if password_policy == "nist_sp800_63" %}
+# SP 800-63B-4 3.1.1.1. Password Authenticators: Other composition requirements for passwords SHALL NOT be imposed.
+# SP 800-63B-4 3.1.1.2. Password Verifiers: Verifiers and CSPs SHALL NOT impose other composition rules (e.g., requiring mixtures of different character types) for passwords.
+dcredit = 0
+{% else %}
+# CIS Debian Linux 13 Benchmark v1.0.0 - 5.3.3.2.3 Ensure password complexity is configured (applied)
 dcredit = -1
+{% endif %}
 #
 # The maximum credit for having uppercase characters in the new password.
 # If less than 0 it is the minimum number of uppercase characters in the new
 # password.
+{% if password_policy == "nist_sp800_63" %}
+ucredit = 0
+{% else %}
 ucredit = -1
+{% endif %}
 #
 # The maximum credit for having lowercase characters in the new password.
 # If less than 0 it is the minimum number of lowercase characters in the new
 # password.
+{% if password_policy == "nist_sp800_63" %}
+lcredit = 0
+{% else %}
 lcredit = -1
+{% endif %}
 #
 # The maximum credit for having other characters in the new password.
 # If less than 0 it is the minimum number of other characters in the new
 # password.
+{% if password_policy == "nist_sp800_63" %}
+ocredit = 0
+{% else %}
 ocredit = -1
+{% endif %}
 #
 # The minimum number of required classes of characters for the new
 # password (digits, uppercase, lowercase, others).
+{% if password_policy == "nist_sp800_63" %}
+minclass = 0
+{% else %}
 minclass = 4
+{% endif %}
 #
 # The maximum number of allowed consecutive same characters in the new password.
 # The check is disabled if the value is 0.
+{% if password_policy == "nist_sp800_63" %}
+# SP 800-63B-4 3.1.1.1. Password Authenticators: Other composition requirements for passwords SHALL NOT be imposed.
+# SP 800-63B-4 3.1.1.2. Password Verifiers: Verifiers and CSPs SHALL NOT impose other composition rules (e.g., requiring mixtures of different character types) for passwords.
+maxrepeat = 0
+{% else %}
 # CIS Debian Linux 13 Benchmark v1.0.0 - 5.3.3.2.4 Ensure password same consecutive characters is configured
 maxrepeat = 3
+{% endif %}
 #
 # The maximum number of allowed consecutive characters of the same class in the
 # new password.
@@ -86,5 +119,11 @@ enforce_for_root
 # Enabled if the option is present.
 # local_users_only
 
+{% if password_policy == "nist_sp800_63" %}
+# SP 800-63B-4 3.1.1.1. Password Authenticators: Other composition requirements for passwords SHALL NOT be imposed.
+# SP 800-63B-4 3.1.1.2. Password Verifiers: Verifiers and CSPs SHALL NOT impose other composition rules (e.g., requiring mixtures of different character types) for passwords.
+maxsequence = 0
+{% else %}
 # CIS Debian Linux 13 Benchmark v1.0.0 - 5.3.3.2.5 Ensure password maximum sequential characters is configured
 maxsequence = 3
+{% endif %}
