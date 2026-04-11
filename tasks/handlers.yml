@@ -225,3 +225,4 @@
   become: true
   ansible.builtin.command:
     cmd: /sbin/create-cracklib-dict -o {{ cracklib_dict }} {{ cracklib_words_dir }}/cracklib-words
+  changed_when: true
