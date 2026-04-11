@@ -254,4 +254,6 @@
   with_dict:
     IdleActionSec: '{{ session_timeout }}min'
     IdleAction: "lock"
+    # "Note that setting KillUserProcesses=yes will break tools like screen(1) and tmux(1), unless they are moved out of the session scope."
+    #KillUserProcesses: "yes"
   notify: Reload logind
