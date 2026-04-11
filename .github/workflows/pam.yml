@@ -209,6 +209,18 @@ jobs:
           # Wrong password
           # PAM_AUTH_ERR
           time tests/test -t 8 -r 7
+
+          # Test password change with a weak password before hardening
+          # Before hardening, pam_pwquality is not in the password stack,
+          # so a weak password like "changeme1" should be accepted by pam_unix.
+          # A successful chauthtok actually changes root's password in /etc/shadow,
+          # so we backup and restore to avoid contaminating later tests.
+          # PAM_SUCCESS
+          echo '[*] Test 10 - chauthtok weak password (pre-harden)'
+          sudo cp -a /etc/shadow /etc/shadow.bak.test10
+          sudo tests/test -t 10 -r 0
+          sudo cp -a /etc/shadow.bak.test10 /etc/shadow
+          sudo rm -f /etc/shadow.bak.test10
       - name: Harden PAM
         run: |
           ansible-playbook harden.yml --tags pam --skip-tags slackware
@@ -247,6 +259,19 @@ jobs:
           # This should succeed because of pam_rootok
           echo '[*] Test 7-2 - nobody su:auth (as root)'
           sudo tests/test -t 7 -r 0
+          echo -n $'\n'
+
+          # Test password change with a weak password after hardening
+          # After hardening, pam_pwquality (or pam_passwdqc) is in the password
+          # stack and should reject "changeme1" as too short (minlen=14) and
+          # lacking complexity (minclass=4).
+          # PAM_AUTHTOK_ERR
+          echo '[*] Test 10 - chauthtok weak password (post-harden)'
+          sudo tests/test -t 10 -r 20
+          echo "[*] grep '\bpam_pwquality(' /var/log/auth.log:"
+          sudo grep '\bpam_pwquality(' /var/log/auth.log || true
+          echo "[*] grep '\bpam_passwdqc(' /var/log/auth.log:"
+          sudo grep '\bpam_passwdqc(' /var/log/auth.log || true
           echo -n $'\n'
 
           # Test failed login & pam_faillock
@@ -323,6 +348,7 @@ jobs:
             /etc/security/limits.conf
             /etc/security/limits.d
             /etc/security/namespace.conf
+            /etc/security/pwquality.conf
             /etc/passwdqc.conf
             /var/lib/pam/account
             /var/lib/pam/auth
