@@ -106,7 +106,7 @@
         # So > comparison should be sufficient, but we'll put in the one day safe margin (>=) just in case.
         - name: Check that Ansible user's password is not too old
           ansible.builtin.assert:
-            that: ansible_facts.getent_shadow[ansible_facts['user_id']][1] | int >= (((ansible_facts['date_time']['epoch'] | int) / 86400) | int) - pass_max_days
+            that: ansible_facts.getent_shadow[ansible_facts['user_id']][1] | int >= (((ansible_facts['date_time']['epoch'] | int) / 86400) | int) - (pass_max_days | int)
             msg: "Ansible user's password too old"
 
     # End of checks. Start hardening.
