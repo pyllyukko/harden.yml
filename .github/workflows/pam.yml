@@ -462,3 +462,4 @@ jobs:
           grep '^minclass\s\+=\s\+0$' /etc/security/pwquality.conf
           grep '^maxrepeat\s\+=\s\+0$' /etc/security/pwquality.conf
           grep '^maxsequence\s\+=\s\+0$' /etc/security/pwquality.conf
+          grep '^PASS_MAX_DAYS\s\+9\{5\}$' /etc/login.defs

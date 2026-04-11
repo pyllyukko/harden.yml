@@ -387,6 +387,7 @@ Other tags are just metadata for now. You can list all the tags with
 * You can set the `password_policy` variable to `nist_sp800_63` in `vars.yml` for [NIST Special Publication (SP) 800-63-4](https://pages.nist.gov/800-63-4/) password policy
     * :construction: UNDER CONSTRUCTION :construction: and experimental
     * See [New password policies according to NIST SP 800-63 #88](https://github.com/pyllyukko/harden.yml/issues/88)
+    * :information_source: Only supports `libpwquality` for now
 
 #### Makefile
 
