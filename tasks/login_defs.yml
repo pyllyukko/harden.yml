@@ -254,3 +254,4 @@
   with_dict:
     IdleActionSec: '{{ session_timeout }}min'
     IdleAction: "lock"
+  notify: Reload logind
