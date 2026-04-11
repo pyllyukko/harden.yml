@@ -533,7 +533,7 @@
         path: /sbin/create-cracklib-dict
       register: stat_result
     # TODO: Download archive and uncompress as not all systems have Git installed
-    - name: Git checkout
+    - name: Git clone cracklib # noqa: latest[git]
       when: stat_result.stat.exists
       ansible.builtin.git:
         repo: 'https://github.com/cracklib/cracklib.git'
