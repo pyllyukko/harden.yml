@@ -55,11 +55,16 @@ sudo_ids: false
 sudo_iolog: false
 sudo_group: "{% if ansible_facts['distribution'] == \"Slackware\" %}wheel{% else %}sudo{% endif %}"
 aide_conf: "{% if ansible_facts['distribution'] == \"Slackware\" %}/etc/aide.conf{% else %}/etc/aide/aide.conf{% endif %}"
-pass_max_days: 365
+
+# "traditional" or "nist_sp800_63"
+# See https://github.com/pyllyukko/harden.yml/issues/88
+password_policy: "traditional"
+pass_max_days: "{% if password_policy == \"nist_sp800_63\" %}99999{% else %}365{% endif %}"
 # CIS Debian Linux 13 Benchmark v1.0.0 - 5.4.1.2 Ensure minimum password days is configured
 pass_min_days: 1
 pass_warn_age: 30
 inactive_password_lock: 30
+
 lynis_location: "{% if ansible_facts['os_family'] == \"RedHat\" or ansible_facts['distribution'] == \"Slackware\" %}/usr/bin/lynis{% else %}/usr/sbin/lynis{% endif %}"
 chkrootkit_conf_dir: '/etc/chkrootkit'
 cisofy_keyring: /etc/apt/keyrings/cisofy.asc
