@@ -448,6 +448,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - name: Install libpam-pwquality
+        run: sudo apt-get install libpam-pwquality
       - name: Run Ansible playbook for SP800-63 password policy
         run: ansible-playbook harden.yml --tags passwords --extra-vars password_policy=nist_sp800_63 --skip-tags slackware,centos
       - name: Show password policy (pwquality)

@@ -505,16 +505,21 @@
     # CIS Debian Linux 13 Benchmark v1.0.0 - 5.3.3.2 Configure pam_pwquality module
     # https://www.redhat.com/sysadmin/more-lockdown-controls
     # ANSSI-BP-028 R31 - User password strength
-    - name: Configure pwquality
-      ansible.builtin.template:
-        src: pwquality.conf.j2
-        dest: /etc/security/pwquality.conf
-        owner: root
-        group: root
-        mode: '0644'
-        backup: true
-      when: ansible_facts['distribution'] == "Slackware"
-      tags: slackware
+    - name: pwquality
+      block:
+        - name: Stat /etc/security/pwquality.conf
+          ansible.builtin.stat:
+            path: /etc/security/pwquality.conf
+          register: stat_result
+        - name: Configure pwquality
+          ansible.builtin.template:
+            src: pwquality.conf.j2
+            dest: /etc/security/pwquality.conf
+            owner: root
+            group: root
+            mode: '0644'
+            backup: true
+          when: stat_result.stat.exists
 
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#user-limits
 - name: pam_limits
