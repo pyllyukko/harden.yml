@@ -1,0 +1,40 @@
+- name: systemd service hardening
+  tags:
+    - systemd
+    - molecule-notest
+  become: true
+  when:
+    - ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
+    - harden_systemd_services | bool
+  block:
+    - name: Create conf.d directories for selected systemd services
+      ansible.builtin.file:
+        path: '/etc/systemd/system/{{ item }}.service.d'
+        state: directory
+        mode: '0755'
+        owner: root
+        group: root
+      with_items:
+        - "{{ systemd_services_to_harden }}"
+        - udisks2
+    # Generic hardening
+    - name: Copy generic systemd service hardening
+      ansible.builtin.copy:
+        src: systemd_service_hardening.service
+        dest: '/etc/systemd/system/{{ item }}.service.d/harden.conf'
+        owner: root
+        group: root
+        mode: '0600'
+      notify: Run systemctl daemon-reload
+      with_items: "{{ systemd_services_to_harden }}"
+    # Specific hardening
+    - name: Copy service specific systemd service hardening
+      ansible.builtin.copy:
+        src: '{{ item }}.service'
+        dest: '/etc/systemd/system/{{ item }}.service.d/harden.conf'
+        owner: root
+        group: root
+        mode: '0600'
+      notify: Run systemctl daemon-reload
+      with_items:
+        - udisks2

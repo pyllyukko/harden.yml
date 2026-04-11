@@ -370,6 +370,7 @@ Tags that you can use with `ansible-playbook --tags`:
 * `umask`
 * :timer_clock: `timeout`
 * `polkit`
+* `systemd` (experimental, enable with `harden_systemd_services`)
 
 There are also operating system tags for tasks that only apply to specific OS.
 You can speed up the hardening by skipping OSs that don't apply. E.g. if you're
@@ -388,6 +389,8 @@ Other tags are just metadata for now. You can list all the tags with
     * :construction: UNDER CONSTRUCTION :construction: and experimental
     * See [New password policies according to NIST SP 800-63 #88](https://github.com/pyllyukko/harden.yml/issues/88)
     * :information_source: Only supports `libpwquality` for now
+* Experimental and limited systemd service hardening (see [services-systemd.yml](tasks/services-systemd.yml))
+    * Needs to be enabled with `harden_systemd_services`
 
 #### Makefile
 
@@ -431,6 +434,7 @@ Some of these documents are quite old, but most of the stuff still applies.
 * [SlackWiki: Basic Security Fixes](http://slackwiki.com/Basic_Security_Fixes)
 * :bomb: [Wikipedia: Fork bomb Prevention](https://en.wikipedia.org/wiki/Fork_bomb#Prevention)
 * [Configuration recommendations of a gnu/linux system](https://cyber.gouv.fr/en/publications/configuration-recommendations-gnulinux-system) (ANSSI-BP-028)
+* [How to harden a systemd service unit](https://linux-audit.com/systemd/how-to-harden-a-systemd-service-unit/)
 
 ### Other docs
 

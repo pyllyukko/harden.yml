@@ -1,0 +1,6 @@
+[Service]
+MemoryDenyWriteExecute=true
+ProtectClock=true
+ProtectHostname=true
+LockPersonality=true
+SystemCallArchitectures=native
