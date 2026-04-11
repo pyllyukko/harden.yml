@@ -360,6 +360,7 @@ Tags that you can use with `ansible-playbook --tags`:
     * :bar_chart: `accounting` (includes `sysstat`)
     * 🎟️ `authorization`
     * `passwords`
+        * `cracklib`
     * :busts_in_silhouette: `accounts`
     * `pam`
         * `limits`

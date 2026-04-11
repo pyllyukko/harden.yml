@@ -532,6 +532,7 @@
       ansible.builtin.stat:
         path: /sbin/create-cracklib-dict
       register: stat_result
+    # TODO: Download archive and uncompress as not all systems have Git installed
     - name: Git checkout
       when: stat_result.stat.exists
       ansible.builtin.git:
