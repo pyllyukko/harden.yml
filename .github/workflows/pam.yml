@@ -329,6 +329,8 @@ jobs:
           sudo grep '\bcould not identify password' /var/log/auth.log
       - name: chmod /var/log/auth.log
         run: sudo chmod -c 644 /var/log/auth.log
+      - name: Show password policy (pwquality)
+        run: grep -v '^\(#.*\)\?$' /etc/security/pwquality.conf
       - name: Archive PAM configs and logs
         uses: actions/upload-artifact@v4
         with:
@@ -441,3 +443,19 @@ jobs:
         run: |
           sudo -u runner bash tests/polyinstantiation.sh
           sudo ls -l /tmp-inst/runner/test_file.txt
+  sp800-63:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run Ansible playbook for SP800-63 password policy
+        run: ansible-playbook harden.yml --tags passwords --extra-vars password_policy=nist_sp800_63 --skip-tags slackware,centos
+      - name: Show password policy (pwquality)
+        run: grep -v '^\(#.*\)\?$' /etc/security/pwquality.conf
+      - name: Check password policy
+        run: |
+          grep '^[dulo]credit\s\+=\s\+0$' /etc/security/pwquality.conf
+          grep '^minlen\s\+=\s\+15$' /etc/security/pwquality.conf
+          grep '^minclass\s\+=\s\+0$' /etc/security/pwquality.conf
+          grep '^maxrepeat\s\+=\s\+0$' /etc/security/pwquality.conf
+          grep '^maxsequence\s\+=\s\+0$' /etc/security/pwquality.conf
