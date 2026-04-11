@@ -86,8 +86,7 @@ maxrepeat = 3
 # Whether to check for the words from the cracklib dictionary.
 # The check is enabled if the value is not 0.
 # CIS Debian Linux 13 Benchmark v1.0.0 - 5.3.3.2.6 Ensure password dictionary check is enabled
-# cracklib was deprecated in PAM 1.5.0 https://github.com/linux-pam/linux-pam/releases/tag/v1.5.0
-# dictcheck = 1
+dictcheck = 1
 #
 # Whether to check if it contains the user name in some form.
 # The check is enabled if the value is not 0.
@@ -104,7 +103,7 @@ maxrepeat = 3
 enforcing = 1
 #
 # Path to the cracklib dictionaries. Default is to use the cracklib default.
-# dictpath =
+dictpath = /var/cache/cracklib/cracklib_dict
 #
 # Prompt user at most N times before returning with error. The default is 1.
 # retry = 1
