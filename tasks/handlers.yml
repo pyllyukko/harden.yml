@@ -199,7 +199,7 @@
 - name: Reload logind
   when:
     - ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
-    - "molecule-notest" not in ansible_skip_tags
+    - '"molecule-notest" not in ansible_skip_tags'
   become: true
   ansible.builtin.systemd_service:
     name: systemd-logind
