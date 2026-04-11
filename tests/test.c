@@ -173,8 +173,8 @@ static void test_pam_acct_cron_nobody(void **state)
 }
 /* Test 10: Password change (chauthtok)
  * Tests password policy enforcement via pam_chauthtok().
- * The conversation provides tokens for echo-off prompts:
- * current password, new password, retype new password.
+ * This test runs as root (sudo), so pam_unix skips the current password
+ * prompt.  The conversation only needs: new password, retype new password.
  * Before hardening, the password "changeme1" should be accepted by pam_unix.
  * After hardening (pam_pwquality), it should be rejected as too short
  * (minlen=14) and lacking complexity (minclass=4).
@@ -184,7 +184,6 @@ static void test_pam_chauthtok(void **state)
   enum pamtest_err perr;
   struct pamtest_conv_data conv_data;
   const char *authtoks[] = {
-    "currentpassword",
     "changeme1",
     "changeme1",
     NULL,

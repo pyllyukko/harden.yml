@@ -213,9 +213,14 @@ jobs:
           # Test password change with a weak password before hardening
           # Before hardening, pam_pwquality is not in the password stack,
           # so a weak password like "changeme1" should be accepted by pam_unix.
+          # A successful chauthtok actually changes root's password in /etc/shadow,
+          # so we backup and restore to avoid contaminating later tests.
           # PAM_SUCCESS
           echo '[*] Test 10 - chauthtok weak password (pre-harden)'
+          sudo cp -a /etc/shadow /etc/shadow.bak.test10
           sudo tests/test -t 10 -r 0
+          sudo cp -a /etc/shadow.bak.test10 /etc/shadow
+          sudo rm -f /etc/shadow.bak.test10
       - name: Harden PAM
         run: |
           ansible-playbook harden.yml --tags pam --skip-tags slackware
