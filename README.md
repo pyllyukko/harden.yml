@@ -271,6 +271,7 @@ At least the following hardening areas are currently not covered at all:
     * Biometric authentication
     * MFA
 * Remote logging
+* Compiler restrictions (e.g. removing/blocking development tools like `gcc`, `make` etc.)
 
 Usage
 -----
