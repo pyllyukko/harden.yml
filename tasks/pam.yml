@@ -450,7 +450,7 @@
   block:
     # ANSSI-BP-028 R31 - User password strength
     - name: Install passwdqc (Debian)
-      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
+      when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
       ansible.builtin.apt:
         name: libpam-passwdqc
         update_cache: true
@@ -458,31 +458,14 @@
         - debian
         - passwords
         - packages
-    # See https://www.openwall.com/passwdqc/
-    - name: passwdqc filter
-      block:
-        # NIST SP 800-63B-4 3.1.1.2. Password Verifiers: When processing a request to establish or change a password, verifiers SHALL compare the prospective secret against a blocklist that contains known commonly used, expected, or compromised passwords.
-        - name: Stat /opt/passwdqc/common-passwords-v7-20plus-rockyou.pwq
-          ansible.builtin.stat:
-            path: /opt/passwdqc/common-passwords-v7-20plus-rockyou.pwq
-          register: stat_passwdqc_pwq
-          tags: check
-        - name: Configure passwdqc.conf to use a filter file
-          ansible.builtin.replace:
-            path: /etc/passwdqc.conf
-            regexp: '^#?(filter=).*$'
-            replace: '\g<1>/opt/passwdqc/common-passwords-v7-20plus-rockyou.pwq'
-            backup: true
-          when: ((ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu") and stat_passwdqc_pwq.stat.exists) or
-                (ansible_facts['distribution'] == "Slackware" and passwdqc_stat.stat.exists and stat_passwdqc_pwq.stat.exists)
-        - name: Configure pam_passwdqc to use passwdqc.conf (Debian)
-          ansible.builtin.replace:
-            path: /usr/share/pam-configs/passwdqc
-            regexp: '^(\s+requisite\s+pam_passwdqc\.so(?!.*\bconfig=/etc/passwdqc\.conf\b).*)$'
-            replace: '\1 config=/etc/passwdqc.conf'
-            backup: true
-          notify: Run pam-auth-update
-          when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
+    - name: Configure pam_passwdqc to use passwdqc.conf (Debian)
+      ansible.builtin.replace:
+        path: /usr/share/pam-configs/passwdqc
+        regexp: '^(\s+requisite\s+pam_passwdqc\.so(?!.*\bconfig=/etc/passwdqc\.conf\b).*)$'
+        replace: '\1 config=/etc/passwdqc.conf'
+        backup: true
+      notify: Run pam-auth-update
+      when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
     # ANSSI-BP-028 R31 - User password strength
     - name: Install libpwquality (Slackware)
       when: ansible_facts['distribution'] == "Slackware"
@@ -496,7 +479,7 @@
     # ANSSI-BP-028 R68 - Protecting the stored passwords
     # https://github.com/linux-pam/linux-pam/issues/352
     - name: Add rounds={{ crypt_rounds }} to pam_unix in /etc/pam.d/common-password
-      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
+      when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
       tags: debian
       ansible.builtin.replace:
         path: /etc/pam.d/common-password
@@ -547,6 +530,35 @@
         repo: 'https://github.com/cracklib/cracklib.git'
         dest: /usr/local/src/cracklib
       notify: cracklib dict
+
+# See https://www.openwall.com/passwdqc/
+- name: passwdqc
+  become: true
+  tags:
+    - passwords
+    - configuration
+  block:
+    # NIST SP 800-63B-4 3.1.1.2. Password Verifiers: When processing a request to establish or change a password, verifiers SHALL compare the prospective secret against a blocklist that contains known commonly used, expected, or compromised passwords.
+    - name: Stat /opt/passwdqc/common-passwords-v7-20plus-rockyou.pwq
+      ansible.builtin.stat:
+        path: /opt/passwdqc/common-passwords-v7-20plus-rockyou.pwq
+      register: stat_passwdqc_pwq
+      tags: check
+    - name: Download John the Ripper's password.lst
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/openwall/john/refs/heads/bleeding-jumbo/run/password.lst
+        dest: /usr/share/dict/password.lst
+        owner: root
+        group: root
+        mode: '0644'
+    - name: Configure passwdqc.conf
+      ansible.builtin.template:
+        src: passwdqc.conf.j2
+        dest: /etc/passwdqc.conf
+        owner: root
+        group: root
+        mode: '0644'
+        backup: true
 
 # https://www.debian.org/doc/manuals/securing-debian-manual/ch04s11.en.html#user-limits
 - name: pam_limits
