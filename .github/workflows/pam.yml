@@ -468,12 +468,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Install libpam-pwquality
+      - name: Install cracklib-runtime
         run: sudo apt-get install cracklib-runtime
       - name: Show cracklib default dictionary
-        run: file /var/cache/cracklib/cracklib_dict.*
+        run: file /var/cache/cracklib/cracklib_dict.* | tee /tmp/cracklib-1.txt
       - name: Run Ansible playbook for cracklib
         run: ansible-playbook harden.yml --tags cracklib
       - name: Show cracklib dictionary
         run: |
-          file /var/cache/cracklib/cracklib_dict.*
+          file /var/cache/cracklib/cracklib_dict.* | tee /tmp/cracklib-2.txt
+          diff --color=always /tmp/cracklib-[12].txt || true
