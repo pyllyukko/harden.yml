@@ -145,12 +145,11 @@ done
 # ---------------------------------------------------------------------------
 printf "\n[lookup count]\n"
 if [ -f "${ROCKYOU_BZ2}" ] && command -v bzcat >/dev/null 2>&1; then
-  # Pick lines from various positions in a single pass
-  bzcat "${ROCKYOU_BZ2}" | awk 'NR==1||NR==1000||NR==50000||NR==500000||NR==5000000||NR==10000000||NR==14000000' \
-    > "${tmp_dir}/sample_positive.txt"
+  # Pick 100 random lines from the wordlist
+  bzcat "${ROCKYOU_BZ2}" | shuf -n 100 > "${tmp_dir}/sample_positive.txt"
   sample_count=$(wc -l < "${tmp_dir}/sample_positive.txt")
 
-  assert_output "Count matches from sampled lines" "${sample_count}" \
+  assert_output "Count matches from ${sample_count} random lines" "${sample_count}" \
     sh -c "cat '${tmp_dir}/sample_positive.txt' | ${PWQFILTER_BIN} --filter='${FILTER}' --count"
 else
   printf "%-55s%s\n" "Batch sample (skipped, no wordlist)" "SKIP"
