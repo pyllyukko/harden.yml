@@ -445,6 +445,7 @@ Some of these documents are quite old, but most of the stuff still applies.
     * [CIS Debian Linux Benchmark](https://www.cisecurity.org/benchmark/debian_linux/)
     * [CIS Distribution Independent Linux](https://www.cisecurity.org/benchmark/distribution_independent_linux)
     * CIS MIT Kerberos 1.10 Benchmark v1.0.0
+    * [CIS Password Policy Guide](https://www.cisecurity.org/insights/white-papers/cis-password-policy-guide)
 * [SlackDocs: Security HOWTOs](http://docs.slackware.com/howtos:security:start)
 * :alien: [Alien's Wiki: Security issues](http://alien.slackbook.org/dokuwiki/doku.php?id=linux:admin#security_issues)
 * [SlackWiki: Basic Security Fixes](http://slackwiki.com/Basic_Security_Fixes)
