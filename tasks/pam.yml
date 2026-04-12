@@ -504,6 +504,13 @@
             mode: '0644'
             backup: true
           when: stat_result.stat.exists
+    # CIS Debian Linux 13 Benchmark v1.0.0 - 5.3.3.3.1 Ensure password history remember is configured
+    - name: Configure /etc/security/pwhistory.conf
+      ansible.builtin.replace:
+        path: /etc/security/pwhistory.conf
+        regexp: '^(#\s*)?(remember\s+=\s+)[0-9]+$'
+        replace: '\g<2>24'
+        backup: true
 
 - name: cracklib
   tags:

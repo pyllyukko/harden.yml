@@ -146,6 +146,8 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * Two password quality backends are supported. The playbook auto-detects which is installed and prefers `passwdqc` over `libpwquality` (see [passwdqc.conf.j2](templates/passwdqc.conf.j2) and [pwquality.conf.j2](templates/pwquality.conf.j2))
 * Creates cracklib dictionary to be used with `libpwquality` (see `ansible-playbook --list-tasks --tags cracklib harden.yml` and the cracklib related handlers in [handlers.yml](tasks/handlers.yml))
 * Creates a passwdqc filter file based on rockyou
+* Configures `/etc/security/pwhistory.conf`
+    * :information_source: `pam_pwhistory` needs to be manually enabled with `pam-auth-update` in Debian
 * Run `ansible-playbook --list-tasks --tags passwords harden.yml` to list all password related tasks
 
 #### 🎟️ Authorization
