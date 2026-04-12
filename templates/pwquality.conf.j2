@@ -81,16 +81,17 @@ maxrepeat = 3
 #
 # Whether to check for the words from the passwd entry GECOS string of the user.
 # The check is enabled if the value is not 0.
-# gecoscheck = 0
+gecoscheck = 1
 #
 # Whether to check for the words from the cracklib dictionary.
 # The check is enabled if the value is not 0.
 # CIS Debian Linux 13 Benchmark v1.0.0 - 5.3.3.2.6 Ensure password dictionary check is enabled
+# SP 800-63B-4 3.1.1.2. Password Verifiers: When processing a request to establish or change a password, verifiers SHALL compare the prospective secret against a blocklist that contains known commonly used, expected, or compromised passwords.
 dictcheck = 1
 #
 # Whether to check if it contains the user name in some form.
 # The check is enabled if the value is not 0.
-# usercheck = 1
+usercheck = 1
 #
 # Length of substrings from the username to check for in the password
 # The check is enabled if the value is greater than 0 and usercheck is enabled.
