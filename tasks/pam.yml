@@ -582,7 +582,12 @@
           args:
             creates: /opt/passwdqc/rockyou.pwq
             executable: /bin/bash
-    # TODO: Custom rockyou.pwq filter not yet in use. Needs more verification.
+        - name: chmod 644 /opt/passwdqc/rockyou.pwq
+          ansible.builtin.file:
+            path: /opt/passwdqc/rockyou.pwq
+            mode: '0644'
+            owner: root
+            group: root
     - name: Configure passwdqc.conf
       ansible.builtin.template:
         src: passwdqc.conf.j2

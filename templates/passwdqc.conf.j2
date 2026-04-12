@@ -16,5 +16,5 @@ wordlist=/usr/share/dict/password.lst
 {% if stat_passwdqc_pwq.stat.exists %}
 filter=/opt/passwdqc/common-passwords-v7-20plus-rockyou.pwq
 {% else %}
-#filter=/opt/passwdqc/hibp.pwq
+filter=/opt/passwdqc/rockyou.pwq
 {% endif %}
