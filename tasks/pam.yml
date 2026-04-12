@@ -571,7 +571,7 @@
             state: directory
             mode: '0755'
         - name: Create passwdqc filter to /opt/passwdqc/rockyou.pwq
-          ansible.builtin.shell: set -o pipefail; bzcat /usr/share/dict/rockyou.txt.bz2 | pwqfilter -o /opt/passwdqc/rockyou.pwq --create=14700000
+          ansible.builtin.shell: set -o pipefail; bzcat /usr/share/dict/rockyou.txt.bz2 | pwqfilter -o /opt/passwdqc/rockyou.pwq --create=14637132 --optimize-fp-rate-at-high-load
           args:
             creates: /opt/passwdqc/rockyou.pwq
             executable: /bin/bash

@@ -9,7 +9,7 @@ set -euo pipefail
 PWQFILTER_BIN="${PWQFILTER_BIN:-pwqfilter}"
 FILTER="${FILTER:-/opt/passwdqc/rockyou.pwq}"
 ROCKYOU_BZ2="${ROCKYOU_BZ2:-/usr/share/dict/rockyou.txt.bz2}"
-EXPECTED_CAPACITY=14700000
+EXPECTED_CAPACITY=14637132
 
 if ! command -v "${PWQFILTER_BIN}" >/dev/null 2>&1; then
   echo "[-] pwqfilter not found" >&2
