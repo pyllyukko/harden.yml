@@ -187,6 +187,7 @@
   changed_when: false
 
 # CIS Debian Linux 10 Benchmark v1.0.0 - 5.4.1.4 Ensure inactive password lock is 30 days or less
+# CIS Debian Linux 13 Benchmark v1.0.0 - 5.4.1.5 Ensure inactive password lock is configured
 # Debian's "useradd -D -f 30" fails with "cannot create new defaults file"
 - name: Set the number of days after a password expires until the account is permanently disabled (inactive password lock)
   become: true

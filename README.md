@@ -132,9 +132,21 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
         * :information_source: You can see this in action in the [PAM limits test](https://github.com/pyllyukko/harden.yml/actions/workflows/pam.yml)
         * :information_source: See `unnecessary_system_accounts` in `vars.yml` for the list of accounts
         * :information_source: `RLIMIT_NOFILE` will cause `pam_open_session: Too many open files` errors and `RLIMIT_NPROC` will cause `fork: Resource temporarily unavailable` errors
-* 🎟️ Configures the default password inactivity period
-    * Run `ansible-playbook --list-tasks --tags passwords harden.yml` to list all password related tasks
 * :busts_in_silhouette: Makes minor modifications to existing accounts. See `ansible-playbook --list-tasks --tags accounts harden.yml` for details.
+
+#### Password policy
+
+* 🎟️ Configures the default password inactivity period
+* Configures the password aging values to `/etc/login.defs`
+    * `PASS_MAX_DAYS`
+    * `PASS_MIN_DAYS`
+    * `PASS_WARN_AGE`
+* These settings are also applied to existing user accounts
+
+* Two password quality backends are supported. The playbook auto-detects which is installed and prefers `passwdqc` over `libpwquality` (see [passwdqc.conf.j2](templates/passwdqc.conf.j2) and [pwquality.conf.j2](templates/pwquality.conf.j2))
+* Creates cracklib dictionary to be used with `libpwquality` (see `ansible-playbook --list-tasks --tags cracklib harden.yml` and the cracklib related handlers in [handlers.yml](tasks/handlers.yml))
+* Creates a passwdqc filter file based on rockyou
+* Run `ansible-playbook --list-tasks --tags passwords harden.yml` to list all password related tasks
 
 #### 🎟️ Authorization
 
@@ -149,7 +161,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 
 * Configures `/etc/security/namespace.conf`
 * 🎟️ Configures `/etc/security/access.conf` for `pam_access` (authorization) (see [access.conf.j2](templates/access.conf.j2))
-* Configures `/etc/security/pwquality.conf` if available
+* Configures password quality — `/etc/security/pwquality.conf` or `/etc/passwdqc.conf` — depending on which is installed (see [Password policy](#password-policy) section)
 * 🛞 Require [pam\_wheel](http://linux-pam.org/Linux-PAM-html/sag-pam_wheel.html) in `/etc/pam.d/su`
 * :no_entry: Creates a secure [/etc/pam.d/other](http://linux-pam.org/Linux-PAM-html/sag-security-issues-other.html)
     * See also [A strong /etc/pam.d/other](https://tldp.org/HOWTO/html_single/User-Authentication-HOWTO/#AEN266)
