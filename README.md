@@ -313,6 +313,7 @@ Usage
 * Variable `sudo_group` is also considered as administrator group (see tag `polkit`)
 * Consider setting `PasswordAuthentication` to `no` in `/etc/ssh/sshd_config`
 * Consider running [arpwatch](https://ee.lbl.gov/) to detect [ARP cache poisoning](https://en.wikipedia.org/wiki/ARP_spoofing)
+* `passwdqc` > `libpwquality`
 
 ### Tags
 
