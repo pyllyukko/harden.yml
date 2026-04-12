@@ -24,9 +24,9 @@ if [ ! -f "${FILTER}" ]; then
 fi
 
 if [ -t 1 ]; then
-  GREEN="\033[0;32m"
-  RED="\033[0;31m"
-  NC="\033[0m"
+  GREEN=$'\033[0;32m'
+  RED=$'\033[0;31m'
+  NC=$'\033[0m'
 else
   GREEN=""
   RED=""
@@ -49,10 +49,10 @@ assert() {
   fi
 
   if [ "${actual_exit}" -eq "${expected_exit}" ]; then
-    printf "${GREEN}PASS${NC}\n"
+    printf "%sPASS%s\n" "${GREEN}" "${NC}"
     ((pass++)) || true
   else
-    printf "${RED}FAIL${NC} (expected exit %d, got %d)\n" "${expected_exit}" "${actual_exit}"
+    printf "%sFAIL%s (expected exit %d, got %d)\n" "${RED}" "${NC}" "${expected_exit}" "${actual_exit}"
     ((fail++)) || true
   fi
 }
@@ -66,10 +66,10 @@ assert_output() {
   actual_output=$("$@" 2>/dev/null) || true
 
   if [ "${actual_output}" = "${expected_output}" ]; then
-    printf "${GREEN}PASS${NC}\n"
+    printf "%sPASS%s\n" "${GREEN}" "${NC}"
     ((pass++)) || true
   else
-    printf "${RED}FAIL${NC}\n"
+    printf "%sFAIL%s\n" "${RED}" "${NC}"
     printf "  expected: %s\n" "${expected_output}"
     printf "  got:      %s\n" "${actual_output}"
     ((fail++)) || true
@@ -99,9 +99,9 @@ assert "Filter file size is ${expected_size} bytes" 0 test "${file_size}" -eq "$
 # ---------------------------------------------------------------------------
 printf "\n[status]\n"
 assert "Status reports success" 0 \
-  ${PWQFILTER_BIN} --status --filter="${FILTER}"
+  "${PWQFILTER_BIN}" --status --filter="${FILTER}"
 
-status_output=$(${PWQFILTER_BIN} --status --filter="${FILTER}" 2>&1)
+status_output=$("${PWQFILTER_BIN}" --status --filter="${FILTER}" 2>&1)
 
 # Verify capacity matches
 reported_capacity=$(echo "${status_output}" | grep -oP 'Capacity \K[0-9]+')
@@ -172,5 +172,5 @@ assert_output "Inverted: unknown word is returned" "xyzzy_not_here" \
 # ---------------------------------------------------------------------------
 # Summary
 # ---------------------------------------------------------------------------
-printf "\n=== Results: ${pass} passed, ${fail} failed ===\n"
+printf "\n=== Results: %d passed, %d failed ===\n" "${pass}" "${fail}"
 [ "${fail}" -eq 0 ]
