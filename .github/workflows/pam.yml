@@ -463,6 +463,10 @@ jobs:
           grep '^maxrepeat\s\+=\s\+0$' /etc/security/pwquality.conf
           grep '^maxsequence\s\+=\s\+0$' /etc/security/pwquality.conf
           grep '^PASS_MAX_DAYS\s\+9\{5\}$' /etc/login.defs
+      - name: Check passwdqc
+        run: |
+          ls -l /usr/share/dict/password.lst
+          cat /etc/passwdqc.conf
   cracklib:
     runs-on: ubuntu-latest
     steps:
@@ -478,3 +482,14 @@ jobs:
         run: |
           file /var/cache/cracklib/cracklib_dict.* | tee /tmp/cracklib-2.txt
           diff --color=always /tmp/cracklib-[12].txt || true
+  pwqfilter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Run Ansible playbook for passwords
+        run: ansible-playbook harden.yml --tags passwords
+      - name: Test passwdqc filter
+        run: |
+          ls -l /opt/passwdqc/rockyou.pwq
+          bash tests/test_pwqfilter.sh

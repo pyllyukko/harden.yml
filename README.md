@@ -313,6 +313,7 @@ Usage
 * Variable `sudo_group` is also considered as administrator group (see tag `polkit`)
 * Consider setting `PasswordAuthentication` to `no` in `/etc/ssh/sshd_config`
 * Consider running [arpwatch](https://ee.lbl.gov/) to detect [ARP cache poisoning](https://en.wikipedia.org/wiki/ARP_spoofing)
+* `passwdqc` > `libpwquality`
 
 ### Tags
 
@@ -389,7 +390,6 @@ Other tags are just metadata for now. You can list all the tags with
 * You can set the `password_policy` variable to `nist_sp800_63` in `vars.yml` for [NIST Special Publication (SP) 800-63-4](https://pages.nist.gov/800-63-4/) password policy
     * :construction: UNDER CONSTRUCTION :construction: and experimental
     * See [New password policies according to NIST SP 800-63 #88](https://github.com/pyllyukko/harden.yml/issues/88)
-    * :information_source: Only supports `libpwquality` for now
 * Experimental and limited systemd service hardening (see [services-systemd.yml](tasks/services-systemd.yml))
     * Needs to be enabled with `harden_systemd_services`
 

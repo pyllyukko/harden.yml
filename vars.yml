@@ -56,7 +56,9 @@ sudo_iolog: false
 sudo_group: "{% if ansible_facts['distribution'] == \"Slackware\" %}wheel{% else %}sudo{% endif %}"
 aide_conf: "{% if ansible_facts['distribution'] == \"Slackware\" %}/etc/aide.conf{% else %}/etc/aide/aide.conf{% endif %}"
 
-# "traditional" or "nist_sp800_63"
+# Password policy mode:
+#   "traditional"   - CIS style (composition rules, 365-day rotation, password history)
+#   "nist_sp800_63" - NIST SP 800-63 (length-based, no composition, no rotation)
 # See https://github.com/pyllyukko/harden.yml/issues/88
 password_policy: "traditional"
 pass_max_days: "{% if password_policy == \"nist_sp800_63\" %}99999{% else %}365{% endif %}"

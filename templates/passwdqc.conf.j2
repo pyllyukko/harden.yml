@@ -1,0 +1,20 @@
+{% if password_policy == "nist_sp800_63" %}
+min=15,15,15,15,15
+{% else %}
+min=disabled,24,11,8,7
+{% endif %}
+max=72
+passphrase=3
+match=4
+similar=deny
+random=47
+enforce=everyone
+retry=3
+# The below are just examples, by default none of these are used
+wordlist=/usr/share/dict/password.lst
+#denylist=/etc/passwdqc.deny
+{% if stat_passwdqc_pwq.stat.exists %}
+filter=/opt/passwdqc/common-passwords-v7-20plus-rockyou.pwq
+{% else %}
+#filter=/opt/passwdqc/hibp.pwq
+{% endif %}
