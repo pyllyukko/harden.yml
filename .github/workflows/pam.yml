@@ -463,6 +463,10 @@ jobs:
           grep '^maxrepeat\s\+=\s\+0$' /etc/security/pwquality.conf
           grep '^maxsequence\s\+=\s\+0$' /etc/security/pwquality.conf
           grep '^PASS_MAX_DAYS\s\+9\{5\}$' /etc/login.defs
+      - name: Check passwdqc
+        run: |
+          ls -l /usr/share/dict/password.lst
+          cat /etc/passwdqc.conf
   cracklib:
     runs-on: ubuntu-latest
     steps:
