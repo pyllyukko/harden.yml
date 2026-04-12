@@ -537,6 +537,9 @@
   tags:
     - passwords
     - configuration
+  when: >
+    (ansible_facts['distribution'] == "Slackware" and passwdqc_stat.stat.exists) or
+    ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
   block:
     # NIST SP 800-63B-4 3.1.1.2. Password Verifiers: When processing a request to establish or change a password, verifiers SHALL compare the prospective secret against a blocklist that contains known commonly used, expected, or compromised passwords.
     - name: Stat /opt/passwdqc/common-passwords-v7-20plus-rockyou.pwq
@@ -572,6 +575,7 @@
           args:
             creates: /opt/passwdqc/rockyou.pwq
             executable: /bin/bash
+    # TODO: Custom rockyou.pwq filter not yet in use. Needs more verification.
     - name: Configure passwdqc.conf
       ansible.builtin.template:
         src: passwdqc.conf.j2
