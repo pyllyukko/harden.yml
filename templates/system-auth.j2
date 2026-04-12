@@ -55,6 +55,7 @@ password    requisite     pam_passwdqc.so config=/etc/passwdqc.conf
 {% else %}
 password    requisite     pam_pwquality.so minlen={{ 15 if password_policy == 'nist_sp800_63' else 14 }} retry=3
 {% endif %}
+password    requisite     pam_pwhistory.so use_authtok
 password    sufficient    pam_unix.so sha512 shadow minlen={{ 15 if password_policy == 'nist_sp800_63' else 14 }} try_first_pass use_authtok rounds={{ crypt_rounds }}
 
 # Traditional password handling without pam_pwquality password checking.
