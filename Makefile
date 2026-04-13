@@ -239,3 +239,14 @@ manifest: $(manifest_files)
 .PHONY: manifest-suid-diff
 manifest-suid-diff: manifests/slackware64-14.2/MANIFEST.bz2 manifests/slackware64-current/MANIFEST.bz2
 	-diff <(bzgrep -i '^[^d].\{2\}\(s\|.\{3\}s\)' $< | gawk '{print$$1,$$2,$$6}' | sort) <(bzgrep -i '^[^d].\{2\}\(s\|.\{3\}s\)' $(word 2,$^) | gawk '{print$$1,$$2,$$6}' | sort)
+
+/usr/share/dict/rockyou.txt.bz2:
+	wget -nv -O $@ https://downloads.skullsecurity.org/passwords/rockyou.txt.bz2
+	chmod -c 644 $@
+
+/opt/passwdqc:
+	mkdir -v -m 755 $@
+
+/opt/passwdqc/rockyou.pwq: /usr/share/dict/rockyou.txt.bz2 | /opt/passwdqc
+	bzcat $< | pwqfilter -o $@ --create=14637132 --optimize-fp-rate-at-high-load
+	chmod -c 644 $@
