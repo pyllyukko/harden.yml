@@ -554,13 +554,25 @@
         path: /opt/passwdqc/common-passwords-v7-20plus-rockyou.pwq
       register: stat_passwdqc_pwq
       tags: check
-    - name: Download John the Ripper's password.lst
-      ansible.builtin.get_url:
-        url: https://raw.githubusercontent.com/openwall/john/refs/heads/bleeding-jumbo/run/password.lst
-        dest: /usr/share/dict/password.lst
-        owner: root
-        group: root
-        mode: '0644'
+    - name: /usr/share/dict/password.lst
+      tags: molecule-idempotence-notest
+      block:
+        - name: Download John the Ripper's password.lst
+          ansible.builtin.get_url:
+            url: https://raw.githubusercontent.com/openwall/john/refs/heads/bleeding-jumbo/run/password.lst
+            dest: /usr/share/dict/password.lst
+            owner: root
+            group: root
+            mode: '0644'
+        # NIST SP 800-63B-4: "Context-specific words, such as the name of the service, the username, and derivatives thereof"
+        - name: Add hostname and domainname to /usr/share/dict/password.lst
+          ansible.builtin.lineinfile:
+            path: /usr/share/dict/password.lst
+            regexp: '^{{ item }}$'
+            line: '{{ item }}'
+          with_items:
+            - '{{ ansible_hostname }}'
+            - '{{ ansible_domain }}'
     - name: Create filter
       when: not stat_passwdqc_pwq.stat.exists
       block:
