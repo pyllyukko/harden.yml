@@ -143,12 +143,30 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * `PASS_WARN_AGE`
 * These settings are also applied to existing user accounts
 
-* Two password quality backends are supported. The playbook auto-detects which is installed and prefers `passwdqc` over `libpwquality` (see [passwdqc.conf.j2](templates/passwdqc.conf.j2) and [pwquality.conf.j2](templates/pwquality.conf.j2))
-* Creates cracklib dictionary to be used with `libpwquality` (see `ansible-playbook --list-tasks --tags cracklib harden.yml` and the cracklib related handlers in [handlers.yml](tasks/handlers.yml))
-* Creates a passwdqc filter file based on rockyou
+* Two password quality backends are supported. The playbook auto-detects which is installed and prefers [passwdqc](https://www.openwall.com/passwdqc/) over `libpwquality` (see [passwdqc.conf.j2](templates/passwdqc.conf.j2) and [pwquality.conf.j2](templates/pwquality.conf.j2))
+* Creates a [CrackLib](https://github.com/cracklib/cracklib) dictionary to be used with [libpwquality](https://github.com/libpwquality/libpwquality) (see `ansible-playbook --list-tasks --tags cracklib harden.yml` and the cracklib related handlers in [handlers.yml](tasks/handlers.yml))
+    * The small dictionary that usually comes bundled with CrackLib packages contains 51526 words and the one we generate ([cracklib-words](https://github.com/cracklib/cracklib/tree/main/words)) contains 1911477 words
+* Creates a `passwdqc` [cuckoo filter](https://en.wikipedia.org/wiki/Cuckoo_filter) file based on RockYou
+* Downloads [John the Ripper](https://www.openwall.com/john/)'s [password.lst](https://github.com/openwall/john/blob/bleeding-jumbo/run/password.lst) to be used with `passwdqc`'s `wordlist` option
 * Configures `/etc/security/pwhistory.conf`
     * :information_source: `pam_pwhistory` needs to be manually enabled with `pam-auth-update` in Debian
 * Run `ansible-playbook --list-tasks --tags passwords harden.yml` to list all password related tasks
+
+##### NIST SP 800-63
+
+You can set the `password_policy` variable to `nist_sp800_63` in `vars.yml` for [NIST Special Publication (SP) 800-63-4](https://pages.nist.gov/800-63-4/) style password policy.
+
+* :warning: This is an experimental feature and :construction: under construction :construction:
+* See [New password policies according to NIST SP 800-63 #88](https://github.com/pyllyukko/harden.yml/issues/88)
+* :information_source: If you opt to use this, it is highly recommended to use `passwdqc` instead of `libpwquality`, as `passwdqc`'s `wordlist` & `filter` features are superior compared to `libpwquality`'s use of CrackLib
+
+The main differences are:
+
+| Property                            | Traditional | SP 800-63 |
+| ----------------------------------- | ----------- | --------- |
+| Password maximum age (days)         |         365 |     99999 |
+| Password minimum length             |          14 |        15 |
+| Composition/complexity requirements |          ✅ |        ❌ |
 
 #### 🎟️ Authorization
 
@@ -402,9 +420,6 @@ Other tags are just metadata for now. You can list all the tags with
 * Limited hardening for FreeBSD (see [freebsd.yml](tasks/freebsd.yml))
 * :sandwich: Experimental feature: If you enable `sudo_ids` in `vars.yml`, it enables "Sudo Intrusion Detection" as seen in chapter 9 of [Sudo Mastery](https://mwl.io/nonfiction/tools#sudo2)
     * Only for `SHELLS` `Cmnd_Alias` for now
-* You can set the `password_policy` variable to `nist_sp800_63` in `vars.yml` for [NIST Special Publication (SP) 800-63-4](https://pages.nist.gov/800-63-4/) password policy
-    * :construction: UNDER CONSTRUCTION :construction: and experimental
-    * See [New password policies according to NIST SP 800-63 #88](https://github.com/pyllyukko/harden.yml/issues/88)
 * Experimental and limited systemd service hardening (see [services-systemd.yml](tasks/services-systemd.yml))
     * Needs to be enabled with `harden_systemd_services`
 
