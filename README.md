@@ -144,8 +144,8 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * These settings are also applied to existing user accounts
 
 * Two password quality backends are supported. The playbook auto-detects which is installed and prefers [passwdqc](https://www.openwall.com/passwdqc/) over `libpwquality` (see [passwdqc.conf.j2](templates/passwdqc.conf.j2) and [pwquality.conf.j2](templates/pwquality.conf.j2))
-* Creates a [CrackLib](https://github.com/cracklib/cracklib) dictionary to be used with [libpwquality](https://github.com/libpwquality/libpwquality) (see `ansible-playbook --list-tasks --tags cracklib harden.yml` and the cracklib related handlers in [handlers.yml](tasks/handlers.yml))
-    * The small dictionary that usually comes bundled with CrackLib packages contains 51526 words and the one we generate ([cracklib-words](https://github.com/cracklib/cracklib/tree/main/words)) contains 1911477 words
+* Creates a [CrackLib](https://github.com/cracklib/cracklib) dictionary to be used with [libpwquality](https://github.com/libpwquality/libpwquality) (see `ansible-playbook --list-tasks --tags cracklib harden.yml` and the CrackLib related handlers in [handlers.yml](tasks/handlers.yml))
+    * The small dictionary (derived from `cracklib-small`) that usually comes bundled with CrackLib packages contains 51526 words and the one we generate (from [cracklib-words](https://github.com/cracklib/cracklib/tree/main/words)) contains 1911477 words
 * Creates a `passwdqc` [cuckoo filter](https://en.wikipedia.org/wiki/Cuckoo_filter) file based on RockYou
 * Downloads [John the Ripper](https://www.openwall.com/john/)'s [password.lst](https://github.com/openwall/john/blob/bleeding-jumbo/run/password.lst) to be used with `passwdqc`'s `wordlist` option
 * Configures `/etc/security/pwhistory.conf`
