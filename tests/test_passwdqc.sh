@@ -4,6 +4,7 @@ ret=0
 
 # N0 is used for passwords consisting of characters from one character class only.
 # Lowercase alphabets only
+echo '[*] Test 1'
 pass="$(tr -dc 'a-z' < /dev/urandom | head -c 30)"
 echo "[*] Password: ${pass}"
 echo "runner:${pass}" | sudo /usr/sbin/chpasswd
@@ -14,6 +15,7 @@ then
 fi
 
 # Alphabets only
+echo $'\n[*] Test 2'
 pass="$(tr -dc 'a-zA-Z' < /dev/urandom | head -c 23)"
 echo "[*] Password: ${pass}"
 echo "runner:${pass}" | sudo /usr/sbin/chpasswd
