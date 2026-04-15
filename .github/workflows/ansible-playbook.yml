@@ -128,7 +128,7 @@ jobs:
           echo '[*] Before password change:'
           sudo getent shadow runner
           echo 'runner:Sore4Meal+fox_were3Vessel+barber7czech7Lane5' | sudo /usr/sbin/chpasswd
-          sudo getent shadow runner
+          sudo getent shadow runner | grep --color '\$y\$'
       - name: Diff /etc/{passwd,group}
         run: |
           echo '[*] passwd:'
