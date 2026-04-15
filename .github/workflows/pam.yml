@@ -491,6 +491,7 @@ jobs:
         run: ansible-playbook harden.yml --tags passwords
       - name: Test passwdqc
         run: |
+          sudo sed -i 's/^\(retry=\).*/\11/' /etc/passwdqc.conf
           bash tests/test_passwdqc.sh
       - name: Test passwdqc filter
         run: |
