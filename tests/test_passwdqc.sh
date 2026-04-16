@@ -28,12 +28,10 @@ then
   ret=1
 fi
 
-# N2 is used for passphrases.  Note that besides meeting this length
-# requirement, a passphrase must also consist of a sufficient number of words
-# (see the passphrase option below).
-# Not really a passphrase, but let's try it anyway
-pass="a$(tr -dc '[:alnum:]' < /dev/urandom | head -c 8)Z"
-echo "[*] Password: ${pass}"
+# N3 and N4 are used for passwords consisting of characters from three and four
+# character classes, respectively.
+pass="a@1$(tr -dc '[:alpha:]' < /dev/urandom | head -c 2)Z"
+echo -e "\n[*] Password: ${pass}"
 echo "runner:${pass}" | sudo /usr/sbin/chpasswd
 if [ "${PIPESTATUS[1]}" -ne 1 ]
 then
@@ -41,14 +39,12 @@ then
   ret=1
 fi
 
-# N3 and N4 are used for passwords consisting of characters from three and four
-# character classes, respectively.
-pass="a@1$(tr -dc '[:alpha:]' < /dev/urandom | head -c 2)Z"
-echo "[*] Password: ${pass}"
-echo "runner:${pass}" | sudo /usr/sbin/chpasswd
-if [ "${PIPESTATUS[1]}" -ne 1 ]
+# https://xkcd.com/936/
+echo "\n[*] Testing a passphrase"
+echo "runner:correct.horse.battery" | sudo /usr/sbin/chpasswd
+if [ "${PIPESTATUS[1]}" -ne 0 ]
 then
-  echo -e '[\033[1;31m-\033[0m] passwdqc did not reject bad passwd' 1>&2
+  echo -e '[\033[1;31m-\033[0m] passwdqc did not accept a 3 word passphrase' 1>&2
   ret=1
 fi
 
