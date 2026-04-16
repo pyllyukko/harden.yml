@@ -30,7 +30,7 @@ fi
 
 # N3 and N4 are used for passwords consisting of characters from three and four
 # character classes, respectively.
-pass="a@1$(tr -dc '[:alpha:]' < /dev/urandom | head -c 2)Z"
+pass="a@1$(tr -dc '[:alpha:]' < /dev/urandom | head -c 3)Z"
 echo -e "\n[*] Password: ${pass}"
 echo "runner:${pass}" | sudo /usr/sbin/chpasswd
 if [ "${PIPESTATUS[1]}" -ne 1 ]
