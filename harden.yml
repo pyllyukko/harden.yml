@@ -85,6 +85,20 @@
         path: /usr/bin/lynis
       register: result
       failed_when: not result.stat.exists
+    - name: Debian packages
+      when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
+      tags: check
+      block:
+        - name: Gather Debian package facts
+          when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
+          ansible.builtin.package_facts:
+            manager: apt
+        - name: Assert ca-certificates is installed
+          ansible.builtin.assert:
+            that:
+              - "'ca-certificates' in ansible_facts.packages"
+            fail_msg: "ca-certificates package is not installed"
+            success_msg: "ca-certificates package is installed"
 
     # Once we change existing users max password age and set the inactive age,
     # the user isn't able to authenticate anymore if the password is too old.
