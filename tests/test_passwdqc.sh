@@ -31,7 +31,7 @@ fi
 # N3 and N4 are used for passwords consisting of characters from three and four
 # character classes, respectively.
 pass="a@1$(tr -dc '[:alpha:]' < /dev/urandom | head -c 3)Z"
-echo -e "\n[*] Password: ${pass}"
+printf '\n[*] Password: %s' "${pass}"
 echo "runner:${pass}" | sudo /usr/sbin/chpasswd
 if [ "${PIPESTATUS[1]}" -ne 1 ]
 then
@@ -40,7 +40,7 @@ then
 fi
 
 # https://xkcd.com/936/
-echo "\n[*] Testing a passphrase"
+echo $'\n[*] Testing a passphrase'
 echo "runner:correct.horse.battery" | sudo /usr/sbin/chpasswd
 if [ "${PIPESTATUS[1]}" -ne 0 ]
 then
