@@ -45,46 +45,36 @@
         - pam
         - ssh
         - authorization
-    - name: Check that AIDE is installed (Slackware)
+    - name: Slackware packages/binaries
+      when: ansible_facts['distribution'] == "Slackware"
       tags:
         - slackware
         - check
-        - aide
-      when: ansible_facts['distribution'] == "Slackware"
-      ansible.builtin.stat:
-        path: /usr/bin/aide
-      register: result
-      failed_when: not result.stat.exists
-    - name: Check that rkhunter is installed (Slackware)
-      tags:
-        - slackware
-        - check
-        - rkhunter
-      when: ansible_facts['distribution'] == "Slackware"
-      ansible.builtin.stat:
-        path: /usr/bin/rkhunter
-      register: result
-      failed_when: not result.stat.exists
-    - name: Check that audit is installed (Slackware)
-      tags:
-        - slackware
-        - check
-        - audit
-      when: ansible_facts['distribution'] == "Slackware"
-      ansible.builtin.stat:
-        path: /sbin/auditd
-      register: result
-      failed_when: not result.stat.exists
-    - name: Check that Lynis is installed (Slackware)
-      tags:
-        - slackware
-        - check
-        - lynis
-      when: ansible_facts['distribution'] == "Slackware"
-      ansible.builtin.stat:
-        path: /usr/bin/lynis
-      register: result
-      failed_when: not result.stat.exists
+      block:
+        - name: Check that AIDE is installed (Slackware)
+          tags: aide
+          ansible.builtin.stat:
+            path: /usr/bin/aide
+          register: result
+          failed_when: not result.stat.exists
+        - name: Check that rkhunter is installed (Slackware)
+          tags: rkhunter
+          ansible.builtin.stat:
+            path: /usr/bin/rkhunter
+          register: result
+          failed_when: not result.stat.exists
+        - name: Check that audit is installed (Slackware)
+          tags: audit
+          ansible.builtin.stat:
+            path: /sbin/auditd
+          register: result
+          failed_when: not result.stat.exists
+        - name: Check that Lynis is installed (Slackware)
+          tags: lynis
+          ansible.builtin.stat:
+            path: /usr/bin/lynis
+          register: result
+          failed_when: not result.stat.exists
     - name: Debian packages
       when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
       tags: check
