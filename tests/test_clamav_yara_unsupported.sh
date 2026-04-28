@@ -126,6 +126,7 @@ YAR
   echo '{'
   echo '  strings:'
   for i in $(seq 1 65); do
+    # shellcheck disable=SC2016  # $s%02d is a printf format, not a variable
     printf '    $s%02d = "marker_%02d"\n' "${i}" "${i}"
   done
   echo '  condition:'
