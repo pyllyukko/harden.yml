@@ -283,7 +283,7 @@ jobs:
       - name: Install jmespath
         run: sudo pipx inject ansible-core jmespath
       - name: Run Ansible playbook for clamav, rkhunter & chkrootkit
-        run: ansible-playbook harden.yml --tags clamav,rkhunter,chkrootkit --skip-tags slackware,yara
+        run: ansible-playbook harden.yml --tags clamav,rkhunter,chkrootkit --skip-tags slackware
       - name: Show rkhunter.conf diff
         run: sudo diff --color=always /etc/rkhunter.conf.*.$(date +%F)@*:*:*~ /etc/rkhunter.conf || true
       - name: Show ClamAV version
@@ -327,6 +327,9 @@ jobs:
           clamscan --version
           wget https://raw.githubusercontent.com/rapid7/metasploit-framework/refs/heads/master/data/eicar.com -O /tmp/eicar.com
           clamscan /tmp/eicar.com | grep '\bFOUND$'
+      - name: Test YARA Forge core rules
+        run: |
+          clamscan --database=/var/lib/clamav/yara-rules-core-stripped.yar /tmp/eicar.com | grep '\bFOUND$'
       # TODO
       #- name: Show systemd unit(s)
       #  run: |
