@@ -568,9 +568,17 @@ def _decoded_len(s: str) -> int:
     return out
 
 
-def analyse_rule(text: str) -> list[str]:
+def analyse_rule(text: str, *, strict_empty_string: bool = True) -> list[str]:
     """Return list of failure reasons for this rule body
-    (empty list = supported)."""
+    (empty list = supported).
+
+    ``strict_empty_string=True`` (the default) removes rules containing
+    an empty ``""`` literal *anywhere* in the rule.  ClamAV >= 1.5
+    actually loads such rules, but it spams ``LibClamAV Error:
+    yyerror(): ... empty string`` for every occurrence.  Pass
+    ``False`` to keep those rules at the cost of noisy clamscan
+    output.
+    """
     reasons: list[str] = []
     raw = text
 
@@ -598,21 +606,29 @@ def analyse_rule(text: str) -> list[str]:
     keep_only = sanitize(raw, keep_strings=True)
     code_only = sanitize(raw, keep_strings=False)
 
-    # 3. Empty string literal inside the strings: section.
-    #    ClamAV's YARA lexer rejects ``$x = ""`` but tolerates ``""``
-    #    elsewhere (e.g. in meta).  Scan only the strings: section.
-    in_strings = False
-    for line in keep_only.splitlines():
-        bare = line.strip()
-        if bare.startswith("strings:"):
-            in_strings = True
-            continue
-        if bare.startswith("condition:"):
-            in_strings = False
-            continue
-        if in_strings and re.search(r'(?<!\\)""', line):
+    # 3. Empty string literal.
+    #    ClamAV's YARA lexer rejects ``$x = ""`` in the strings:
+    #    section outright, and prints a noisy ``yyerror(): ... empty
+    #    string`` line for every ``""`` elsewhere (meta etc.) even
+    #    though the rule still loads.  Scan the whole rule when
+    #    strict_empty_string is set; otherwise only the strings:
+    #    section.
+    if strict_empty_string:
+        if re.search(r'(?<!\\)""', keep_only):
             reasons.append('empty string ("")')
-            break
+    else:
+        in_strings = False
+        for line in keep_only.splitlines():
+            bare = line.strip()
+            if bare.startswith("strings:"):
+                in_strings = True
+                continue
+            if bare.startswith("condition:"):
+                in_strings = False
+                continue
+            if in_strings and re.search(r'(?<!\\)""', line):
+                reasons.append('empty string ("")')
+                break
 
     # 4. Forbidden module / helper identifiers.
     found = set()
@@ -774,6 +790,13 @@ def main() -> int:
         action="store_true",
         help="print every removed rule and reason",
     )
+    ap.add_argument(
+        "--allow-empty-strings",
+        action="store_true",
+        help="keep rules containing empty \"\" literals outside the "
+             "strings: section (clamav loads them but logs a noisy "
+             "yyerror() for each occurrence)",
+    )
     args = ap.parse_args()
 
     if not args.rules.is_file():
@@ -803,7 +826,10 @@ def main() -> int:
     if not args.no_static:
         for s, e, name in rules:
             body = "".join(lines[s - 1:e])
-            reasons = analyse_rule(body)
+            reasons = analyse_rule(
+                body,
+                strict_empty_string=not args.allow_empty_strings,
+            )
             if reasons:
                 removals[name] = reasons
         print(
