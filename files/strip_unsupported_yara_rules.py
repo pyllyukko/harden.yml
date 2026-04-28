@@ -574,20 +574,19 @@ def analyse_rule(text: str) -> list[str]:
     reasons: list[str] = []
     raw = text
 
-    # 1. Modifiers.
-    first_line = raw.lstrip().split("\n", 1)[0]
-    m = RULE_START_RE.match(first_line)
-    if m and m.group("mods"):
-        if "private" in m.group("mods"):
-            reasons.append("modifier: private")
-        if "global" in m.group("mods"):
-            reasons.append("modifier: global")
+    # 1. Rule modifiers.
+    #    NOTE: ClamAV 1.5.x silently accepts ``private`` and ``global``
+    #    rule modifiers (they have no runtime effect for clamav scans
+    #    but the rules still load).  We therefore no longer reject
+    #    them.  See tests/test_clamav_yara_unsupported.sh for the
+    #    canary that will detect any future change in behaviour.
 
     # 2. import statements.
-    for line in raw.splitlines():
-        if IMPORT_RE.match(line):
-            reasons.append("import statement")
-            break
+    #    A bare ``import "pe"`` is silently accepted by ClamAV; it is
+    #    only the *use* of an unknown module symbol (e.g.
+    #    ``pe.entry_point``) that fails to load.  That use is already
+    #    detected via FORBIDDEN_MODULES in step 4 below, so we no
+    #    longer reject every rule that imports something.
 
     # Build two views:
     #   keep_only:  comments stripped but string literal contents kept.
@@ -599,10 +598,21 @@ def analyse_rule(text: str) -> list[str]:
     keep_only = sanitize(raw, keep_strings=True)
     code_only = sanitize(raw, keep_strings=False)
 
-    # 3. Empty string literals anywhere in the rule
-    #    (yara_lexer rejects every "" — meta, strings, anywhere).
-    if re.search(r'(?<!\\)""', keep_only):
-        reasons.append('empty string ("")')
+    # 3. Empty string literal inside the strings: section.
+    #    ClamAV's YARA lexer rejects ``$x = ""`` but tolerates ``""``
+    #    elsewhere (e.g. in meta).  Scan only the strings: section.
+    in_strings = False
+    for line in keep_only.splitlines():
+        bare = line.strip()
+        if bare.startswith("strings:"):
+            in_strings = True
+            continue
+        if bare.startswith("condition:"):
+            in_strings = False
+            continue
+        if in_strings and re.search(r'(?<!\\)""', line):
+            reasons.append('empty string ("")')
+            break
 
     # 4. Forbidden module / helper identifiers.
     found = set()
@@ -665,17 +675,16 @@ def analyse_rule(text: str) -> list[str]:
         reasons.append(f"unsupported string modifier `{m.group(1)}`")
         break
 
-    # 10. Illegal escape sequences and over-long string literals.
-    #     ClamAV's YARA lexer (yara_lexer.l) only accepts the escapes
-    #     ``\\``, ``\"``, ``\t``, ``\n``, ``\xNN`` inside double-quoted
-    #     strings; anything else (e.g. ``\r``, ``\v``, ``\h``, ``\;``)
-    #     raises "illegal escape sequence".  The decoded string also
-    #     must fit in LEX_BUF_SIZE = 1024 bytes (effectively 1023).
-    for slit in _iter_string_literals(raw):
-        bad = _bad_escape(slit)
-        if bad:
-            reasons.append(f"illegal escape sequence `\\{bad}`")
-            break
+    # 10. Over-long string literals.
+    #     ClamAV's YARA lexer caps decoded string-literal length at
+    #     LEX_BUF_SIZE = 1024 bytes; longer literals raise
+    #     "out of space in lex_buf".
+    #     NOTE: The lexer also accepts only the escapes
+    #     ``\\ \" \t \n \xNN`` and warns on others, but the warning is
+    #     non-fatal in ClamAV >= 1.5 -- the rule still loads and
+    #     matches.  The illegal-escape canary in
+    #     tests/test_clamav_yara_unsupported.sh will fire if that ever
+    #     becomes fatal again.
     for slit in _iter_string_literals(raw):
         if _decoded_len(slit) >= 1024:
             reasons.append("string literal too long for lex_buf (>=1024)")

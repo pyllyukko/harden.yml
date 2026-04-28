@@ -330,6 +330,13 @@ jobs:
       - name: Test YARA Forge core rules
         run: |
           clamscan --database=/var/lib/clamav/yara-rules-core-stripped.yar /tmp/eicar.com | grep '\bFOUND$'
+      - name: Canary - YARA features ClamAV does not support
+        # Asserts every category the stripper removes is still rejected
+        # by ClamAV.  When ClamAV adds support for one of these YARA
+        # features this step starts failing, signalling that the
+        # corresponding check in strip_unsupported_yara_rules.py can be
+        # relaxed so that more YARA Forge rules are kept.
+        run: bash tests/test_clamav_yara_unsupported.sh
       # TODO
       #- name: Show systemd unit(s)
       #  run: |
