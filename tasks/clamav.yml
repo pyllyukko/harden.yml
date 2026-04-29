@@ -285,7 +285,7 @@
     - name: YARA
       tags:
         - yara
-        - molecule-notest
+        - molecule-idempotence-notest
       block:
         - name: Download YARA Forge core rules
           ansible.builtin.get_url:
