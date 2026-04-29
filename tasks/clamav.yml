@@ -323,6 +323,7 @@
             mode: '0755'
         - name: Run strip_unsupported_yara_rules.py
           ansible.builtin.command: /usr/local/bin/strip_unsupported_yara_rules.py /var/lib/clamav/yara-rules-core-stripped.yar
+          changed_when: true
         - name: Remove /var/lib/clamav/yara-rules-core-stripped.yar.bak
           ansible.builtin.file:
             path: /var/lib/clamav/yara-rules-core-stripped.yar.bak
