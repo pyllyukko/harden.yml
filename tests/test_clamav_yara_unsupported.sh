@@ -256,14 +256,16 @@ do
   # reference compiler.  If yara itself can't compile/load the rule
   # then the fixture is buggy and the clamscan result below would be
   # meaningless.
-  yara_out="$(yara "${fx}" "${tmp}/payload.bin" 2>&1)"
-  yara_rc=$?
-  # yara exits 0 on match, 1 on no-match; anything else (compile
-  # error, fatal) means the rule is not a valid yara rule.
-  if [ "${yara_rc}" -ne 0 ] && [ "${yara_rc}" -ne 1 ]
+  #
+  # NB: ``yara`` exits 1 for *both* "no match" and "compile error",
+  # so the exit code alone is useless.  Compile errors are reported
+  # on stderr in the form ``<file>(<line>): error: …``; "no match"
+  # leaves stderr empty.  Capture the streams separately and grep.
+  yara_err="$(yara "${fx}" "${tmp}/payload.bin" 2>&1 >/dev/null)"
+  if printf '%s\n' "${yara_err}" | grep -qE ': error:'
   then
-    printf '[-] %-38s fixture rejected by yara 4.x (exit %d): %s\n' \
-      "${name}" "${yara_rc}" "${yara_out}" 1>&2
+    printf '[-] %-38s fixture rejected by yara 4.x:\n%s\n' \
+      "${name}" "${yara_err}" 1>&2
     yara_broken+=("${name}")
     continue
   fi
