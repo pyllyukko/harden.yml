@@ -269,6 +269,13 @@
           sigs.InterServer.net.HEX.Topline.blacklisted.ip.controller.176.223.165.12.366
           sigs.InterServer.net.HEX.Topline.blacklisted.domain.alemoney.xyz.610
       tags: configuration
+    - name: Download LOLDrivers signatures
+      ansible.builtin.get_url:
+        url: "https://raw.githubusercontent.com/magicsword-io/LOLDrivers/refs/heads/main/detections/av/LOLDrivers.hdb"
+        dest: /var/lib/clamav/LOLDrivers.hdb
+        owner: root
+        group: root
+        mode: '0644'
     # https://docs.clamav.net/manual/Signatures/YaraRules.html
     # https://github.com/Neo23x0/signature-base (e36e80a)
     #
