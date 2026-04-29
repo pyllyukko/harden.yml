@@ -337,7 +337,9 @@ jobs:
         # features this step starts failing, signalling that the
         # corresponding check in strip_unsupported_yara_rules.py can be
         # relaxed so that more YARA Forge rules are kept.
-        run: bash tests/test_clamav_yara_unsupported.sh
+        run: |
+          sudo apt-get install yara
+          bash tests/test_clamav_yara_unsupported.sh
       # TODO
       #- name: Show systemd unit(s)
       #  run: |
