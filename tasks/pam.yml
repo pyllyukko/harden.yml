@@ -589,6 +589,15 @@
             path: /opt/passwdqc
             state: directory
             mode: '0755'
+        - name: Install bzip2 (Debian)
+          when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
+          ansible.builtin.apt:
+            name: bzip2
+            update_cache: true
+            state: present
+          tags:
+            - debian
+            - packages
         - name: Create passwdqc filter to /opt/passwdqc/rockyou.pwq
           ansible.builtin.shell: set -o pipefail; bzcat /usr/share/dict/rockyou.txt.bz2 | pwqfilter -o /opt/passwdqc/rockyou.pwq --create=14637132 --optimize-fp-rate-at-high-load
           args:
