@@ -303,9 +303,13 @@
             mode: '0644'
           register: yara_forge
         - name: Ensure unzip is installed
+          when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
           ansible.builtin.package:
             name: unzip
             state: present
+          tags:
+            - packages
+            - debian
         - name: Extract YARA Forge core rules
           ansible.builtin.unarchive:
             src: '{{ yara_forge.dest }}'
