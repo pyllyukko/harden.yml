@@ -21,7 +21,14 @@ then
   exit 2
 fi
 
+if ! command -v yara >/dev/null 2>&1
+then
+  echo "[-] yara not installed" 1>&2
+  exit 2
+fi
+
 clamscan --version
+yara --version
 
 tmp="$(mktemp -d)"
 trap 'rm -rf "${tmp}"' EXIT
@@ -226,14 +233,17 @@ rule canary_sanity_loadable
 YAR
 
 # ---------------------------------------------------------------------------
-# Run each fixture through clamscan and check the rule is *not* loaded.
-# clamscan exit codes do not distinguish "rule failed to load" from
-# "no match", so we parse "Known viruses: N" from its output:
-#   N == 0  --> rule was rejected (expected for unsupported features)
-#   N >= 1  --> ClamAV now supports this feature (regression canary fires)
+# Two-stage check for each fixture:
+#   1. ``yara``      MUST accept the fixture (otherwise the fixture
+#                    itself is buggy -- it should exercise a feature
+#                    that real YARA supports but ClamAV does not).
+#   2. ``clamscan``  MUST reject the fixture (otherwise ClamAV has
+#                    gained support for the feature and the matching
+#                    check in the stripper can be relaxed).
 # ---------------------------------------------------------------------------
 
 regressions=()
+yara_broken=()
 fixtures=("${tmp}"/fixtures/*.yar)
 total=${#fixtures[@]}
 ok=0
@@ -241,6 +251,29 @@ ok=0
 for fx in "${fixtures[@]}"
 do
   name="$(basename "${fx}" .yar)"
+
+  # Step 1: verify the fixture is a *valid* YARA rule with the
+  # reference compiler.  If yara itself can't compile/load the rule
+  # then the fixture is buggy and the clamscan result below would be
+  # meaningless.
+  yara_out="$(yara "${fx}" "${tmp}/payload.bin" 2>&1)"
+  yara_rc=$?
+  # yara exits 0 on match, 1 on no-match; anything else (compile
+  # error, fatal) means the rule is not a valid yara rule.
+  if [ "${yara_rc}" -ne 0 ] && [ "${yara_rc}" -ne 1 ]
+  then
+    printf '[-] %-38s fixture rejected by yara 4.x (exit %d): %s\n' \
+      "${name}" "${yara_rc}" "${yara_out}" 1>&2
+    yara_broken+=("${name}")
+    continue
+  fi
+
+  # Step 2: feed the same fixture to clamscan and check the rule
+  # is *not* loaded.  clamscan exit codes do not distinguish "rule
+  # failed to load" from "no match", so we parse the
+  # ``Known viruses: N`` line:
+  #   N == 0  --> rule was rejected (expected for unsupported features)
+  #   N >= 1  --> ClamAV now supports this feature (regression canary fires)
   out="$(clamscan --database="${fx}" "${tmp}/payload.bin" 2>&1 || true)"
   loaded="$(printf '%s\n' "${out}" | sed -n 's/^Known viruses: \([0-9]\+\)$/\1/p' | head -n1)"
 
@@ -270,6 +303,16 @@ done
 
 echo
 echo "[*] ${ok}/${total} fixtures behaved as expected"
+
+if [ "${#yara_broken[@]}" -gt 0 ]
+then
+  echo "[-] The following fixtures could not be compiled by yara:" 1>&2
+  printf '    - %s\n' "${yara_broken[@]}" 1>&2
+  echo 1>&2
+  echo "[-] These fixtures are buggy -- fix them so they exercise" 1>&2
+  echo "    a YARA feature that real yara accepts but clamscan does not." 1>&2
+  exit 2
+fi
 
 if [ "${#regressions[@]}" -gt 0 ]
 then

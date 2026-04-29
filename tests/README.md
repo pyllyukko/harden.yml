@@ -169,3 +169,35 @@ ca-certs
     * audit
     * kernel
     * apparmor
+
+ClamAV / YARA
+-------------
+
+The `malware` job runs [test\_clamav\_yara\_unsupported.sh](https://github.com/pyllyukko/harden.yml/blob/master/tests/test_clamav_yara_unsupported.sh), a regression canary for YARA features that ClamAV does **not** support and that [files/strip\_unsupported\_yara\_rules.py](https://github.com/pyllyukko/harden.yml/blob/master/files/strip_unsupported_yara_rules.py) therefore strips from the [YARA Forge](https://yarahq.github.io/) bundle before loading it into `clamscan`.
+
+For each unsupported feature the script builds a tiny fixture rule and:
+
+1. Compiles it with the reference `yara` engine — it **must** load (otherwise the fixture is buggy).
+2. Feeds it to `clamscan --database=…` — it **must** be rejected (`Known viruses: 0`).
+
+If `clamscan` ever starts loading one of the fixtures, ClamAV has gained support for that feature and the matching check in the stripper can be relaxed so more YARA-Forge rules are kept.
+
+| Fixture                            | Feature                                                     | Example rule in `yara-rules-core.yar`            |
+| ---------------------------------- | ----------------------------------------------------------- | ------------------------------------------------ |
+| `01_undefined_module_pe`           | `import "pe"` + use of `pe.entry_point`                     | `ARKBIRD_SOLG_APT_MAL_NK_Lazarus_Nukesped_June_2020_1` |
+| `02_undefined_module_math`         | `math.entropy(…)`                                           | (none in core)                                   |
+| `03_undefined_module_hash`         | `hash.md5(…)`                                               | `SEKOIA_Apt_Apt33_Tickler`                       |
+| `04_undefined_module_console`      | `console.log(…)`                                            | `DITEKSHEN_INDICATOR_RMM_Meshagent`              |
+| `05_undefined_func_uint32be`       | `uint32be(…)` (also `uint16be`, `int32be`)                  | `CRAIU_Exploit_CVE_2024_6387`                    |
+| `06_empty_string_in_strings`       | `$a = ""` in the `strings:` section                         | `AVASTTI_Cobaltstrike_Beacon_X64`                |
+| `07_too_many_subsigs`              | more than 64 `$xx = …` strings in one rule                  | (none in core)                                   |
+| `08_no_strings_section`            | no `strings:` section at all                                | `AVASTTI_EXE_PRIVATE`                            |
+| `09_hex_with_slash_comment`        | `//` comment inside a hex `{…}` string                      | `ARTIFACTDROP_Go_Reflectiveloader_Decryption_Loop` |
+| `10_regex_wide_modifier`           | regex string `/…/ wide`                                     | `DEADBITS_KPOT_V2`                               |
+| `11_string_modifier_xor`           | `"…" xor`                                                   | `ESET_Apt_Windows_Invisimole_DNS_Downloader`     |
+| `12_string_modifier_base64`        | `"…" base64`                                                | `CAPE_Mykings`                                   |
+| `13_string_modifier_private`       | `"…" private` (per-string private modifier)                 | (none in core)                                   |
+| `14_string_too_long`               | string literal longer than ClamAV's `lex_buf` (~1024 bytes) | `SEKOIA_Reverseshell_Win_1St_Troy`               |
+| `15_hex_alt_no_filter`             | hex alternative `(…|…)` without 2 adjacent fixed bytes      | `DITEKSHEN_INDICATOR_RTF_Exploit_Scripting`      |
+
+The job also installs and runs [strip\_unsupported\_yara\_rules.py](https://github.com/pyllyukko/harden.yml/blob/master/files/strip_unsupported_yara_rules.py) against the actual YARA-Forge core bundle to make sure it stays loadable end-to-end.
