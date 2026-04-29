@@ -295,6 +295,10 @@
             group: root
             mode: '0644'
           register: yara_forge
+        - name: Ensure unzip is installed
+          ansible.builtin.package:
+            name: unzip
+            state: present
         - name: Extract YARA Forge core rules
           ansible.builtin.unarchive:
             src: '{{ yara_forge.dest }}'
