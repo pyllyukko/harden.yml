@@ -296,7 +296,7 @@
       block:
         - name: Download YARA Forge core rules
           ansible.builtin.get_url:
-            url: "https://github.com/YARAHQ/yara-forge/releases/latest/download/yara-forge-rules-core.zip"
+            url: "https://github.com/YARAHQ/yara-forge/releases/latest/download/yara-forge-rules-{{ yara_forge_variant }}.zip"
             dest: /var/lib/clamav/
             owner: root
             group: root
@@ -310,15 +310,15 @@
           tags:
             - packages
             - debian
-        - name: Extract YARA Forge core rules
+        - name: Extract YARA Forge {{ yara_forge_variant }} rules
           ansible.builtin.unarchive:
             src: '{{ yara_forge.dest }}'
             dest: /var/lib/clamav/
             remote_src: true
-        - name: Move yara-rules-core.yar
+        - name: Move yara-rules-{{ yara_forge_variant }}.yar
           ansible.builtin.copy:
-            src: /var/lib/clamav/packages/core/yara-rules-core.yar
-            dest: /var/lib/clamav/yara-rules-core-stripped.yar
+            src: /var/lib/clamav/packages/core/yara-rules-{{ yara_forge_variant }}.yar
+            dest: /var/lib/clamav/yara-rules-{{ yara_forge_variant }}-stripped.yar
             remote_src: true
             owner: root
             mode: '0644'
@@ -326,7 +326,7 @@
           ansible.builtin.file:
             path: /var/lib/clamav/packages
             state: absent
-        - name: Remove yara-forge-rules-core.zip
+        - name: Remove yara-forge-rules-{{ yara_forge_variant }}.zip
           ansible.builtin.file:
             path: '{{ yara_forge.dest }}'
             state: absent
@@ -337,11 +337,11 @@
             owner: root
             mode: '0755'
         - name: Run strip_unsupported_yara_rules.py
-          ansible.builtin.command: /usr/local/bin/strip_unsupported_yara_rules.py /var/lib/clamav/yara-rules-core-stripped.yar
+          ansible.builtin.command: /usr/local/bin/strip_unsupported_yara_rules.py /var/lib/clamav/yara-rules-{{ yara_forge_variant }}-stripped.yar
           changed_when: true
-        - name: Remove /var/lib/clamav/yara-rules-core-stripped.yar.bak
+        - name: Remove /var/lib/clamav/yara-rules-{{ yara_forge_variant }}-stripped.yar.bak
           ansible.builtin.file:
-            path: /var/lib/clamav/yara-rules-core-stripped.yar.bak
+            path: /var/lib/clamav/yara-rules-{{ yara_forge_variant }}-stripped.yar.bak
             state: absent
     # Debian uses --move=/root/quarantine
     #- name: mkdir /root/quarantine

@@ -105,7 +105,7 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
 * :smiling_imp: [ClamAV](https://www.clamav.net/) configuration (see [clamav.yml](tasks/clamav.yml))
     * Configures `clamd` & `freshclam` by first generating fresh configurations with [clamconf](https://docs.clamav.net/manual/Usage/Configuration.html#clamconf)
     * Configured ClamAV to unarchive with password "infected" (see [Passwords for archive files](https://docs.clamav.net/manual/Signatures/EncryptedArchives.html) & [ClamAV and ZIP File Decryption](https://blog.didierstevens.com/2017/02/15/quickpost-clamav-and-zip-file-decryption/))
-    * Downloads [YARA Forge](https://yarahq.github.io/) core rules for [ClamAV to use](https://docs.clamav.net/manual/Signatures/YaraRules.html). ClamAV doesn't support all YARA features so a bunch of rules needs to be discarded. This is done with [strip\_unsupported\_yara\_rules.py](files/strip_unsupported_yara_rules.py).
+    * Downloads [YARA Forge](https://yarahq.github.io/) rules for [ClamAV to use](https://docs.clamav.net/manual/Signatures/YaraRules.html). ClamAV doesn't support all YARA features so a bunch of rules needs to be discarded. This is done with [strip\_unsupported\_yara\_rules.py](files/strip_unsupported_yara_rules.py).
     * :warning: **WARNING**: ClamAV consumes a lot of memory, so it might not be suitable for all systems. See [Recommended System Requirements](https://docs.clamav.net/#recommended-system-requirements).
     * :information_source: `harden.yml` skips the ClamAV installation completely if there's less than 3 GiB of memory available
 * [rkhunter](https://sourceforge.net/projects/rkhunter/) configuration (see [rkhunter.yml](tasks/rkhunter.yml))
