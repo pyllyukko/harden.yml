@@ -294,7 +294,7 @@
         - yara
         - molecule-idempotence-notest
       block:
-        - name: Download YARA Forge core rules
+        - name: Download YARA Forge rules
           ansible.builtin.get_url:
             url: "https://github.com/YARAHQ/yara-forge/releases/latest/download/yara-forge-rules-{{ yara_forge_variant }}.zip"
             dest: /var/lib/clamav/
@@ -317,7 +317,7 @@
             remote_src: true
         - name: Move yara-rules-{{ yara_forge_variant }}.yar
           ansible.builtin.copy:
-            src: /var/lib/clamav/packages/core/yara-rules-{{ yara_forge_variant }}.yar
+            src: /var/lib/clamav/packages/{{ yara_forge_variant }}/yara-rules-{{ yara_forge_variant }}.yar
             dest: /var/lib/clamav/yara-rules-{{ yara_forge_variant }}-stripped.yar
             remote_src: true
             owner: root
