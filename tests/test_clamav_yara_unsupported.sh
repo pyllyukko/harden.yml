@@ -76,6 +76,7 @@ rule canary_import_pe
 YAR
 
 cat > "${tmp}/fixtures/02_undefined_module_math.yar" <<'YAR'
+import "math"
 rule canary_math_module
 {
   strings:
@@ -86,6 +87,7 @@ rule canary_math_module
 YAR
 
 cat > "${tmp}/fixtures/03_undefined_module_hash.yar" <<'YAR'
+import "hash"
 rule canary_hash_module
 {
   strings:
@@ -96,6 +98,7 @@ rule canary_hash_module
 YAR
 
 cat > "${tmp}/fixtures/04_undefined_module_console.yar" <<'YAR'
+import "console"
 rule canary_console_module
 {
   strings:
@@ -115,17 +118,11 @@ rule canary_uint32be_func
 }
 YAR
 
-# Empty string literal must be in the strings: section to fail loading.
-cat > "${tmp}/fixtures/06_empty_string_in_strings.yar" <<'YAR'
-rule canary_empty_string_in_strings
-{
-  strings:
-    $a = ""
-    $b = "harmless"
-  condition:
-    $b
-}
-YAR
+# NB: an empty ``""`` literal in ``strings:`` is rejected by *both*
+# yara 4.x and clamscan, so it is not a valid "yara accepts / clamav
+# rejects" canary and is intentionally NOT included as a fixture here.
+# The stripper still drops empty strings by default to silence the
+# noisy ``LibClamAV Error: yyerror()`` log lines clamscan would emit.
 
 # clamav cap: max 64 subsigs per rule.  65 strings should make load fail.
 {
@@ -259,10 +256,15 @@ do
   #
   # NB: ``yara`` exits 1 for *both* "no match" and "compile error",
   # so the exit code alone is useless.  Compile errors are reported
-  # on stderr in the form ``<file>(<line>): error: …``; "no match"
-  # leaves stderr empty.  Capture the streams separately and grep.
+  # on stderr; the format varies between yara versions:
+  #   yara 4.2 :  ``<file>(<line>): error: …``
+  #   yara 4.5 :  ``error: rule "<name>" in <file>(<line>): …``
+  # Both shapes contain the word ``error:`` (followed by either a
+  # space or a token); plain "no match" leaves stderr empty and lex
+  # warnings use ``warning:`` -- so a case-sensitive grep for
+  # ``error:`` reliably distinguishes the two.
   yara_err="$(yara "${fx}" "${tmp}/payload.bin" 2>&1 >/dev/null)"
-  if printf '%s\n' "${yara_err}" | grep -qE ': error:'
+  if printf '%s\n' "${yara_err}" | grep -q 'error:'
   then
     printf '[-] %-38s fixture rejected by yara 4.x:\n%s\n' \
       "${name}" "${yara_err}" 1>&2
