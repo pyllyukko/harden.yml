@@ -52,7 +52,11 @@ big_string="$(printf 'A%.0s' {1..1100})"
 #   - ``global``  rule modifier
 #   - bare ``import "X"`` with no use of ``X.something``
 #   - empty ``""`` literal in ``meta:`` (only ``""`` in ``strings:`` is fatal)
-#   - ``\h`` and other illegal escapes (lexer warns, rule still loads)
+#   - illegal backslash escapes in string literals (clamav prints
+#     ``yyerror(): ... illegal escape sequence`` but still loads the
+#     rule).  The stripper drops these by default to keep the
+#     clamscan log clean -- same noise-reduction rationale as for
+#     empty ``""``.  Pass ``--allow-illegal-escapes`` to keep them.
 #
 # If ClamAV ever starts rejecting any of those again we will notice
 # via the ansible-playbook workflow loading fewer YARA Forge rules

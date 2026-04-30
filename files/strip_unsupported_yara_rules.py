@@ -568,7 +568,12 @@ def _decoded_len(s: str) -> int:
     return out
 
 
-def analyse_rule(text: str, *, strict_empty_string: bool = True) -> list[str]:
+def analyse_rule(
+    text: str,
+    *,
+    strict_empty_string: bool = True,
+    strict_illegal_escapes: bool = True,
+) -> list[str]:
     """Return list of failure reasons for this rule body
     (empty list = supported).
 
@@ -577,6 +582,14 @@ def analyse_rule(text: str, *, strict_empty_string: bool = True) -> list[str]:
     actually loads such rules, but it spams ``LibClamAV Error:
     yyerror(): ... empty string`` for every occurrence.  Pass
     ``False`` to keep those rules at the cost of noisy clamscan
+    output.
+
+    ``strict_illegal_escapes=True`` (the default) removes rules that
+    contain backslash escape sequences ClamAV's YARA lexer does not
+    understand (anything outside ``\\\\ \\" \\t \\n \\xNN``).  ClamAV
+    >= 1.5 still loads such rules, but it logs ``LibClamAV Error:
+    yyerror(): ... illegal escape sequence`` for every occurrence.
+    Pass ``False`` to keep those rules at the cost of noisy clamscan
     output.
     """
     reasons: list[str] = []
@@ -695,16 +708,24 @@ def analyse_rule(text: str, *, strict_empty_string: bool = True) -> list[str]:
     #     ClamAV's YARA lexer caps decoded string-literal length at
     #     LEX_BUF_SIZE = 1024 bytes; longer literals raise
     #     "out of space in lex_buf".
-    #     NOTE: The lexer also accepts only the escapes
-    #     ``\\ \" \t \n \xNN`` and warns on others, but the warning is
-    #     non-fatal in ClamAV >= 1.5 -- the rule still loads and
-    #     matches.  The illegal-escape canary in
-    #     tests/test_clamav_yara_unsupported.sh will fire if that ever
-    #     becomes fatal again.
+    #     Also (when ``strict_illegal_escapes`` is set) reject literals
+    #     that contain escape sequences outside ``\\ \" \t \n \xNN``.
+    #     ClamAV >= 1.5 still loads those rules but logs
+    #     ``yyerror(): ... illegal escape sequence`` for every
+    #     occurrence.  The illegal-escape canary in
+    #     tests/test_clamav_yara_unsupported.sh will fire if loading
+    #     ever becomes fatal again.
+    bad_esc_seen: set[str] = set()
     for slit in _iter_string_literals(raw):
         if _decoded_len(slit) >= 1024:
             reasons.append("string literal too long for lex_buf (>=1024)")
             break
+    if strict_illegal_escapes:
+        for slit in _iter_string_literals(raw):
+            bad = _bad_escape(slit)
+            if bad is not None and bad not in bad_esc_seen:
+                bad_esc_seen.add(bad)
+                reasons.append(f'illegal escape sequence "\\{bad}"')
 
     # de-dup while preserving order.
     seen: set[str] = set()
@@ -797,6 +818,13 @@ def main() -> int:
              "strings: section (clamav loads them but logs a noisy "
              "yyerror() for each occurrence)",
     )
+    ap.add_argument(
+        "--allow-illegal-escapes",
+        action="store_true",
+        help="keep rules whose string literals contain backslash "
+             "escapes outside \\\\ \\\" \\t \\n \\xNN (clamav loads "
+             "them but logs a noisy yyerror() for each occurrence)",
+    )
     args = ap.parse_args()
 
     if not args.rules.is_file():
@@ -829,6 +857,7 @@ def main() -> int:
             reasons = analyse_rule(
                 body,
                 strict_empty_string=not args.allow_empty_strings,
+                strict_illegal_escapes=not args.allow_illegal_escapes,
             )
             if reasons:
                 removals[name] = reasons
