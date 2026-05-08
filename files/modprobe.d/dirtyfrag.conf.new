@@ -1,0 +1,4 @@
+# https://github.com/V4bel/dirtyfrag#mitigation
+install esp4 /bin/false
+install esp6 /bin/false
+install rxrpc /bin/false

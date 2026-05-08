@@ -52,6 +52,7 @@
     - firewire
     - usb-storage
     - disable-algif
+    - dirtyfrag
 # https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/selinux_users_and_administrators_guide/sect-security-enhanced_linux-working_with_selinux-disable_ptrace
 #- name: Disable ptrace() with SELinux
 #  become: true
