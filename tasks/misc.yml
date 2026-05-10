@@ -81,10 +81,9 @@
   when: ansible_facts['distribution'] == "Slackware"
   block:
     - name: Remove unneeded/unwanted packages (Slackware)
-      community.general.slackpkg:
-        name: '{{ item }}'
-        state: absent
-        update_cache: true
+      ansible.builtin.command: /sbin/removepkg {{ item }}
+      register: result
+      changed_when: '"Removing package:" in result.stdout'
       with_items:
         - netkit-rsh
         - uucp
