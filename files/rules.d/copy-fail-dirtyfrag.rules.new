@@ -1,0 +1,7 @@
+# https://www.elastic.co/security-labs/copy-fail-dirtyfrag-linux-page-bugs-in-the-wild
+-a always,exit -F arch=b64 -S socket -k socket_syscall
+-a always,exit -F arch=b32 -S socketcall -k socket_syscall
+-a always,exit -F arch=b64 -S splice -k splice-syscall
+-a always,exit -F arch=b32 -S splice -k splice-syscall
+-a always,exit -F arch=b64 -S bind -k socket_bound
+-a always,exit -F arch=b32 -S bind -k socket_bound
