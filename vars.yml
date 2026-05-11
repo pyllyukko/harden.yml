@@ -120,3 +120,5 @@ systemd_services_to_harden:
 harden_systemd_services: false
 cracklib_words_dir: "{% if ansible_facts['distribution'] == \"Slackware\" %}/usr/share/cracklib{% else %}/usr/share/dict{% endif %}"
 cracklib_dict: "{% if ansible_facts['distribution'] == \"Slackware\" %}/usr/share/cracklib/pw_dict{% else %}/var/cache/cracklib/cracklib_dict{% endif %}"
+# core, extended or full
+yara_forge_variant: core
