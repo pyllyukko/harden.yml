@@ -92,15 +92,15 @@ done
 for host in \
   mx01.mail.icloud.com				\
   alt4.gmail-smtp-in.l.google.com		\
-  outlook-com.olc.protection.outlook.com	\
-  hotmail-com.olc.protection.outlook.com	\
   mta7.am0.yahoodns.net				\
   mail.cwo.com					\
   mail.protonmail.ch				\
   spool.mail.gandi.net				\
   fb.mail.gandi.net				\
   mx-tnl.mail.saunalahti.fi			\
-  mx-stp.mail.saunalahti.fi
+  mx-stp.mail.saunalahti.fi			\
+  outlook-com.olc.protection.outlook.com	\
+  hotmail-com.olc.protection.outlook.com
 do
   echo "[*] Testing SMTP STARTTLS for \`${host}'"
   openssl s_client -connect "${host}":25 -starttls smtp -verify_return_error -CAfile "${ca_file}" -showcerts 0</dev/null || exit 1
