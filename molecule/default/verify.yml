@@ -102,9 +102,7 @@
         cmd: /usr/sbin/pwck -r
       register: pwck_result
       changed_when: false
-      failed_when:
-        - pwck_result.rc != 0
-        - not (pwck_result.rc == 2 and "directory '/nonexistent' does not exist" in pwck_result.stdout)
+      failed_when: pwck_result.rc != 0 and not (pwck_result.rc == 2 and "directory '/nonexistent' does not exist" in pwck_result.stdout)
     - name: Run grpck
       become: true
       ansible.builtin.command:
