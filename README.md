@@ -201,6 +201,7 @@ The main differences are:
     * [![ca-certs](https://github.com/pyllyukko/harden.yml/actions/workflows/ca-certs.yml/badge.svg)](https://github.com/pyllyukko/harden.yml/actions/workflows/ca-certs.yml)
     * You can also run `make /etc/ssl/certs/ca-certificates.crt` to update the CAs
     * :information_source: Do note, that Slackware will overwrite `/etc/ca-certificates.conf` when upgrading `ca-certificates` package. See Slackware's ChangeLog entry for Wed Oct 6 00:02:15 UTC 2021.
+    * :bulb: See the [CA incidents](https://github.com/pyllyukko/harden.yml/wiki/CA_incidents) wiki page for a curated list of historical CA compromises, mis-issuance and other incidents that motivate reducing the default trust store.
 * :shell: Restricts the number of available shells (`/etc/shells`)
 * :shell: Creates an option to use a [restricted shell](https://en.wikipedia.org/wiki/Restricted_shell) ([rbash](https://www.gnu.org/software/bash/manual/html_node/The-Restricted-Shell.html))
     * Only available for Debian & Slackware and for the `sshd` service because of the required PAM configuration changes (regarding `pam_env` & enforcing `PATH`)
