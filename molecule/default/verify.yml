@@ -96,10 +96,17 @@
           sshd_config_d.stat.exists and sshd_config_d.stat.isdir and
           sshd_harden.stat.exists and
           ssh_harden.stat.exists
-    - name: Run pwck & grpck
+    - name: Run pwck
       become: true
       ansible.builtin.command:
-        cmd: /usr/sbin/{{ item }} -r
-      with_items:
-        - pwck
-        - grpck
+        cmd: /usr/sbin/pwck -r
+      register: pwck_result
+      changed_when: false
+      failed_when:
+        - pwck_result.rc != 0
+        - not (pwck_result.rc == 2 and "directory '/nonexistent' does not exist" in pwck_result.stdout)
+    - name: Run grpck
+      become: true
+      ansible.builtin.command:
+        cmd: /usr/sbin/grpck -r
+      changed_when: false
