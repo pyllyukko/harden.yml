@@ -3,7 +3,7 @@
 ca_file=./ca-certificates.crt
 ca_dir="/usr/share/ca-certificates"
 echo "[*] Fetching Slackware's CA package version"
-slackware_ca="$(curl ftp://ftp.slackware.com/pub/slackware/slackware64-15.0/patches/packages/ | gawk '$9 ~ /^ca-certificates-[0-9]{8}-noarch-[0-9]+_slack15.0\.txz$/{print$9}')"
+slackware_ca="$(curl ftp://ftp.slackware.com/pub/slackware/slackware64-15.0/patches/packages/ | gawk '$9 ~ /^ca-certificates-[0-9]{8}-noarch-[0-9]+_slack15\.0\.txz$/{print$9}')"
 
 if [ -n "${slackware_ca}" ]
 then
