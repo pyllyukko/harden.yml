@@ -102,3 +102,8 @@ kernel.perf_event_max_sample_rate=1
 # https://gitlab.com/apparmor/apparmor/-/wikis/Kernel_Feature_Matrix
 # https://www.openwall.com/lists/oss-security/2026/03/28/6
 #kernel.unprivileged_userns_apparmor_policy = 1
+
+# Debian-specific
+# https://www.openwall.com/lists/oss-security/2022/01/29/1
+# https://sources.debian.org/patches/linux/latest/debian/add-sysctl-to-disallow-unprivileged-CLONE_NEWUSER-by-default.patch/
+#kernel.unprivileged_userns_clone = 0
