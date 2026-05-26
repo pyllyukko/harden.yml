@@ -7,17 +7,22 @@
     - configuration
     - cgroup
   block:
-    - name: Configure libcgroup
+    - name: Configure libcgroup cgrules.conf
       ansible.builtin.copy:
-        src: '{{ item }}.new'
-        dest: /etc/{{ item }}
+        src: cgrules.conf.new
+        dest: /etc/cgrules.conf
         owner: root
         group: root
         mode: '0600'
         backup: true
-      with_items:
-        - cgconfig.conf
-        - cgrules.conf
+    - name: Configure libcgroup cgconfig.conf
+      ansible.builtin.template:
+        src: cgconfig.conf.j2
+        dest: /etc/cgconfig.conf
+        owner: root
+        group: root
+        mode: '0600'
+        backup: true
     - name: Configure /etc/rc.d/rc.cgconfig
       ansible.builtin.replace:
         path: /etc/rc.d/rc.cgconfig

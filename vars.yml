@@ -122,3 +122,9 @@ cracklib_words_dir: "{% if ansible_facts['distribution'] == \"Slackware\" %}/usr
 cracklib_dict: "{% if ansible_facts['distribution'] == \"Slackware\" %}/usr/share/cracklib/pw_dict{% else %}/var/cache/cracklib/cracklib_dict{% endif %}"
 # core, extended or full
 yara_forge_variant: core
+firewall:
+  ntpd: 0x6e747064
+  acpid: 0x61637069
+  smartd: 0x736d6172
+  haveged: 0x68617665
+  syslogd: 0x7379736c

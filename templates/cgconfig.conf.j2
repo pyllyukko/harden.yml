@@ -45,7 +45,7 @@ group daemons/syslogd {
 		}
 	}
 	net_cls {
-		net_cls.classid = 0x7379736c;
+		net_cls.classid = {{ "0x%x" | format(firewall["syslogd"]) }};
 	}
 }
 group daemons/smartd {
@@ -63,7 +63,7 @@ group daemons/smartd {
 		}
 	}
 	net_cls {
-		net_cls.classid = 0x736d6172;
+		net_cls.classid = {{ "0x%x" | format(firewall["smartd"]) }};
 	}
 }
 group daemons/acpid {
@@ -81,7 +81,7 @@ group daemons/acpid {
 		}
 	}
 	net_cls {
-		net_cls.classid = 0x61637069;
+		net_cls.classid = {{ "0x%x" | format(firewall["acpid"]) }};
 	}
 }
 group daemons/haveged {
@@ -99,7 +99,7 @@ group daemons/haveged {
 		}
 	}
 	net_cls {
-		net_cls.classid = 0x68617665;
+		net_cls.classid = {{ "0x%x" | format(firewall["haveged"]) }};
 	}
 }
 group daemons/NetworkManager {
@@ -171,7 +171,7 @@ group daemons/ntpd {
 		}
 	}
 	net_cls {
-		net_cls.classid = 0x6e747064;
+		net_cls.classid = {{ "0x%x" | format(firewall["ntpd"]) }};
 	}
 }
 group daemons/httpd {
