@@ -45,5 +45,7 @@ root:/usr/sbin/dovecot		net_cls daemons/dovecot/
 opendmarc:/usr/sbin/opendmarc	net_cls daemons/opendmarc/
 *:/usr/sbin/oidentd		net_cls daemons/oidentd/
 icecc				net_cls daemons/icecream/
+root:/usr/bin/sddm.bin		net_cls daemons/sddm/
+sddm				net_cls daemons/sddm/
 @users				cpu,cpuacct,net_cls	users/%u
 # End of file
