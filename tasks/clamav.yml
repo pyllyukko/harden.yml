@@ -123,7 +123,7 @@
             - name: Enable ClamAV systemd services
               ansible.builtin.service:
                 name: '{{ item }}'
-                enabled: yes
+                enabled: true
                 state: started
               with_items:
                 - clamav-freshclam
