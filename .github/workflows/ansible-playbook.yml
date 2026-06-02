@@ -336,10 +336,10 @@ jobs:
         run: |
           sudo apt-get install yara
           bash tests/test_clamav_yara_unsupported.sh
-      # TODO
-      #- name: Show systemd unit(s)
-      #  run: |
-      #    systemctl status clamav-freshclam
+      - name: Show systemd unit(s)
+        run: |
+          systemctl status clamav-freshclam
+          systemctl status clamav-daemon
       - name: chmod Lynis & rkhunter files
         run: |
           sudo chmod -c 644 /var/log/lynis-malware.log /var/log/lynis-hardening.log /var/log/rkhunter.log /var/lib/rkhunter/db/rkhunter.dat /etc/rkhunter.conf /var/lib/rkhunter/db/rkhunter_prop_list.dat
