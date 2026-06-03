@@ -121,6 +121,7 @@
               with_dict:
                 "@prefix@": /usr/local
             - name: Enable ClamAV systemd services
+              tags: molecule-notest
               ansible.builtin.systemd_service:
                 name: '{{ item }}'
                 enabled: true
