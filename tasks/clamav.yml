@@ -121,10 +121,11 @@
               with_dict:
                 "@prefix@": /usr/local
             - name: Enable ClamAV systemd services
-              ansible.builtin.service:
+              ansible.builtin.systemd_service:
                 name: '{{ item }}'
                 enabled: true
                 state: started
+                daemon_reload: true
               with_items:
                 - clamav-freshclam
                 - clamav-daemon
