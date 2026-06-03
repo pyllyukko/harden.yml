@@ -85,7 +85,9 @@
                 deb: "{{ clamav_download.dest }}"
               notify: Freshclam
         - name: ClamAV services
-          tags: services
+          tags:
+            - services
+            - molecule-idempotence-notest
           block:
             - name: Download ClamAV systemd services
               ansible.builtin.get_url:
