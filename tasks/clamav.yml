@@ -395,6 +395,7 @@
         replace: '{{ item.value }}'
       with_dict:
         "@DATADIR@": "{{ clamav['database'] }}"
+        '^(ListenStream)=.+$': '\g<1>={{ clamav.socket }}'
     - name: Configure ClamAV /etc/systemd/system/clamav-daemon.service
       ansible.builtin.replace:
         path: '/etc/systemd/system/clamav-daemon.service'
