@@ -83,7 +83,7 @@
             - name: Install ClamAV (x86_64)
               ansible.builtin.apt:
                 deb: "{{ clamav_download.dest }}"
-              notify: Freshclam
+              #notify: Freshclam
 
     - name: Determine ClamAV sysconfdir
       ansible.builtin.shell: set -o pipefail; {{ clamav_location }}/clamconf | awk '/^Checking configuration files in/{print$5}'
@@ -374,6 +374,9 @@
     - clamav
     - debian
   block:
+    - name: Run freshclam
+      ansible.builtin.command: /usr/local/bin/freshclam
+      changed_when: true
     - name: Download ClamAV systemd services
       ansible.builtin.get_url:
         url: "https://raw.githubusercontent.com/Cisco-Talos/clamav/refs/heads/main/{{ item }}.in"
