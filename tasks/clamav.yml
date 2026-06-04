@@ -84,54 +84,6 @@
               ansible.builtin.apt:
                 deb: "{{ clamav_download.dest }}"
               notify: Freshclam
-        - name: ClamAV services
-          tags:
-            - services
-            - molecule-idempotence-notest
-          block:
-            - name: Download ClamAV systemd services
-              ansible.builtin.get_url:
-                url: "https://raw.githubusercontent.com/Cisco-Talos/clamav/refs/heads/main/{{ item }}.in"
-                dest: /etc/systemd/system/{{ item | basename }}
-                owner: root
-                group: root
-                mode: '0644'
-              with_items:
-                - clamd/clamav-daemon.service
-                - clamd/clamav-daemon.socket
-                - freshclam/clamav-freshclam.service
-            - name: Configure ClamAV /etc/systemd/system/clamav-daemon.socket
-              ansible.builtin.replace:
-                path: '/etc/systemd/system/clamav-daemon.socket'
-                regexp: '{{ item.key }}'
-                replace: '{{ item.value }}'
-              with_dict:
-                "@DATADIR@": "{{ clamav['database'] }}"
-            - name: Configure ClamAV /etc/systemd/system/clamav-daemon.service
-              ansible.builtin.replace:
-                path: '/etc/systemd/system/clamav-daemon.service'
-                regexp: '{{ item.key }}'
-                replace: '{{ item.value }}'
-              with_dict:
-                "@DATADIR@": "{{ clamav['database'] }}"
-                "@prefix@": /usr/local
-            - name: Configure ClamAV /etc/systemd/system/clamav-freshclam.service
-              ansible.builtin.replace:
-                path: '/etc/systemd/system/clamav-freshclam.service'
-                regexp: '{{ item.key }}'
-                replace: '{{ item.value }}'
-              with_dict:
-                "@prefix@": /usr/local
-            - name: Enable ClamAV systemd services
-              tags: molecule-notest
-              ansible.builtin.systemd_service:
-                name: '{{ item }}'
-                enabled: true
-                state: started
-                daemon_reload: true
-              with_items:
-                - clamav-freshclam
-                - clamav-daemon
 
     - name: Determine ClamAV sysconfdir
       ansible.builtin.shell: set -o pipefail; {{ clamav_location }}/clamconf | awk '/^Checking configuration files in/{print$5}'
@@ -410,6 +362,61 @@
         name: clamav-clamonacc
         state: stopped
         enabled: false
+
+# This needs to happen only after the ClamAV confs have been created
+- name: ClamAV services
+  # Only for the upstream package
+  when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"] and ansible_facts['architecture'] == "x86_64"
+  become: true
+  tags:
+    - services
+    - molecule-idempotence-notest
+    - clamav
+    - debian
+  block:
+    - name: Download ClamAV systemd services
+      ansible.builtin.get_url:
+        url: "https://raw.githubusercontent.com/Cisco-Talos/clamav/refs/heads/main/{{ item }}.in"
+        dest: /etc/systemd/system/{{ item | basename }}
+        owner: root
+        group: root
+        mode: '0644'
+      with_items:
+        - clamd/clamav-daemon.service
+        - clamd/clamav-daemon.socket
+        - freshclam/clamav-freshclam.service
+    - name: Configure ClamAV /etc/systemd/system/clamav-daemon.socket
+      ansible.builtin.replace:
+        path: '/etc/systemd/system/clamav-daemon.socket'
+        regexp: '{{ item.key }}'
+        replace: '{{ item.value }}'
+      with_dict:
+        "@DATADIR@": "{{ clamav['database'] }}"
+    - name: Configure ClamAV /etc/systemd/system/clamav-daemon.service
+      ansible.builtin.replace:
+        path: '/etc/systemd/system/clamav-daemon.service'
+        regexp: '{{ item.key }}'
+        replace: '{{ item.value }}'
+      with_dict:
+        "@DATADIR@": "{{ clamav['database'] }}"
+        "@prefix@": /usr/local
+    - name: Configure ClamAV /etc/systemd/system/clamav-freshclam.service
+      ansible.builtin.replace:
+        path: '/etc/systemd/system/clamav-freshclam.service'
+        regexp: '{{ item.key }}'
+        replace: '{{ item.value }}'
+      with_dict:
+        "@prefix@": /usr/local
+    - name: Enable ClamAV systemd services
+      tags: molecule-notest
+      ansible.builtin.systemd_service:
+        name: '{{ item }}'
+        enabled: true
+        state: started
+        daemon_reload: true
+      with_items:
+        - clamav-freshclam
+        - clamav-daemon
 
 - name: clamav-unofficial-sigs
   become: true
