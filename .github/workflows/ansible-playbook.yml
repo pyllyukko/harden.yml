@@ -291,6 +291,7 @@ jobs:
           clamscan --version
           ls -l /var/lib/clamav/{main,daily}.c[vl]d
           ls -l /run/clamav/clamd.sock
+          ls -ld /run/clamav
       - name: Run rkhunter
         run: sudo rkhunter --check --skip-keypress || sudo grep 'Warning' /var/log/rkhunter.log
       #- name: Check rkhunter.log for warnings

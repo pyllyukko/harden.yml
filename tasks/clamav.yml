@@ -377,6 +377,24 @@
     - name: Run freshclam
       ansible.builtin.command: /usr/local/bin/freshclam
       changed_when: true
+    - name: ClamAV tmpfiles.d
+      tags: configuration
+      block:
+        - name: mkdir /etc/tmpfiles.d
+          ansible.builtin.file:
+            path: /etc/tmpfiles.d
+            state: directory
+            owner: root
+            group: root
+            mode: '0755'
+        - name: Create /etc/tmpfiles.d/clamav.conf
+          ansible.builtin.copy:
+            dest: /etc/tmpfiles.d/clamav.conf
+            owner: root
+            group: root
+            mode: '0644'
+            content: |
+              d /run/clamav 0755 clamav clamav -
     - name: Download ClamAV systemd services
       ansible.builtin.get_url:
         url: "https://raw.githubusercontent.com/Cisco-Talos/clamav/refs/heads/main/{{ item }}.in"
