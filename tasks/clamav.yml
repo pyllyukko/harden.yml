@@ -6,18 +6,18 @@
   # https://docs.clamav.net/manual/Installing/Docker.html#memory-ram-requirements
   when: ansible_facts['memtotal_mb'] >= 3072
   block:
-    - name: Install ClamAV (Debian) (non-x86_64)
+    - name: Install ClamAV (Debian) (non-x86_64 or aarch64)
       ansible.builtin.apt:
         name: ['clamav', 'clamav-daemon']
         update_cache: true
-      when: (ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali") and ansible_facts['architecture'] != "x86_64"
+      when: (ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali") and ansible_facts['architecture'] not in ["x86_64", "aarch64"]
       tags:
         - packages
         - services
         - debian
 
-    - name: ClamAV Debian x86_64
-      when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"] and ansible_facts['architecture'] == "x86_64"
+    - name: ClamAV Debian x86_64 and aarch64
+      when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"] and ansible_facts['architecture'] in ["x86_64", "aarch64"]
       tags:
         - packages
         - debian
@@ -26,7 +26,7 @@
           tags: check
           ansible.builtin.package_facts:
             manager: apt
-        - name: Uninstall ClamAV (Debian) (x86_64)
+        - name: Uninstall ClamAV (Debian) (x86_64 and aarch64)
           ansible.builtin.apt:
             name: ['clamav', 'clamav-daemon', 'clamav-base', 'clamav-freshclam', 'libclamav11']
             state: absent
@@ -78,9 +78,9 @@
                 group: root
                 mode: '0600'
               vars:
-                latest_package: "assets[?ends_with(name,'.linux.x86_64.deb')].browser_download_url"
+                latest_package: "assets[?ends_with(name,'.linux.{{ ansible_architecture }}.deb')].browser_download_url"
               register: clamav_download
-            - name: Install ClamAV (x86_64)
+            - name: Install ClamAV (x86_64 and aarch64)
               ansible.builtin.apt:
                 deb: "{{ clamav_download.dest }}"
               #notify: Freshclam
@@ -354,7 +354,7 @@
     # https://docs.clamav.net/manual/OnAccess.html
     # This is disabled for now because of "ERROR: ClamInotif: could not watch path '/home/pyllyukko', Invalid argument"
     - name: Stop & disable ClamAV's On-Access service (Debian)
-      when: ansible_facts['distribution'] == "Debian" and ansible_facts['architecture'] != "x86_64"
+      when: ansible_facts['distribution'] == "Debian" and ansible_facts['architecture'] not in ["x86_64", "aarch64"]
       tags:
         - debian
         - services
@@ -366,7 +366,7 @@
 # This needs to happen only after the ClamAV confs have been created
 - name: ClamAV services
   # Only for the upstream package
-  when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"] and ansible_facts['architecture'] == "x86_64"
+  when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"] and ansible_facts['architecture'] in ["x86_64", "aarch64"]
   become: true
   tags:
     - services
