@@ -328,9 +328,8 @@ jobs:
           wget https://raw.githubusercontent.com/rapid7/metasploit-framework/refs/heads/master/data/eicar.com -O /tmp/eicar.com
           ls -l /tmp/eicar.com
           clamscan /tmp/eicar.com | grep '\bFOUND$'
-          # TODO
-          #clamdscan /tmp/eicar.com | grep '\bFOUND$'
-          clamdscan --ping 1 | grep '^PONG$'
+          sudo -u clamav clamdscan /tmp/eicar.com | grep '\bFOUND$'
+          sudo -u clamav clamdscan --ping 1 | grep '^PONG$'
       - name: Test YARA Forge core rules
         run: |
           head -18 /var/lib/clamav/yara-rules-core-stripped.yar
