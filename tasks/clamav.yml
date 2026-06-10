@@ -116,13 +116,13 @@
         - freshclam
         - clamd
       tags: configuration
-    - name: mkdir /var/run/clamav/
+    - name: mkdir {{ clamav.rundir }}
       ansible.builtin.file:
-        path: /var/run/clamav
+        path: '{{ clamav.rundir }}'
         state: directory
         owner: clamav
         group: clamav
-        mode: '0771'
+        mode: '{{ clamav.rundir_mode }}'
     # https://docs.clamav.net/manual/Usage/Configuration.html#clamdconf
     - name: Configure ClamAV
       ansible.builtin.replace:
@@ -374,8 +374,23 @@
     - clamav
     - debian
   block:
-    - name: Run freshclam
+    # The clamav-daemon.service unit has
+    #   ConditionPathExistsGlob=@DATADIR@/main.{c[vl]d,inc}
+    # so systemd silently skips starting the unit if no signature DB exists.
+    # Bootstrap with a one-shot freshclam only when the DB is missing; after
+    # that the clamav-freshclam systemd service handles ongoing updates.
+    - name: Check whether ClamAV main signature DB exists
+      ansible.builtin.find:
+        paths: "{{ clamav.database }}"
+        patterns:
+          - 'main.cvd'
+          - 'main.cld'
+          - 'main.inc'
+      register: clamav_main_db
+      tags: check
+    - name: Run freshclam to bootstrap signature DB
       ansible.builtin.command: /usr/local/bin/freshclam
+      when: clamav_main_db.matched == 0
       changed_when: true
     # Debian does this another way. It has /etc/systemd/system/clamav-daemon.service.d/extend.conf that contains:
     #
@@ -393,13 +408,12 @@
             group: root
             mode: '0755'
         - name: Create /etc/tmpfiles.d/clamav.conf
-          ansible.builtin.copy:
+          ansible.builtin.template:
+            src: clamav.conf.tmpfiles.j2
             dest: /etc/tmpfiles.d/clamav.conf
             owner: root
             group: root
             mode: '0644'
-            content: |
-              d /run/clamav 0755 clamav clamav -
     - name: Download ClamAV systemd services
       ansible.builtin.get_url:
         url: "https://raw.githubusercontent.com/Cisco-Talos/clamav/refs/heads/main/{{ item }}.in"
@@ -428,16 +442,21 @@
         replace: '{{ item.value }}'
       with_dict:
         "@prefix@": /usr/local
+    # Reload systemd manager configuration once, after the unit files have been
+    # downloaded and configured but before enabling/starting them. Pulled out
+    # of the loop below so it does not fire once per item.
+    - name: Reload systemd manager configuration
+      ansible.builtin.systemd_service:
+        daemon_reload: true
     - name: Enable ClamAV systemd services
       tags: molecule-notest
       ansible.builtin.systemd_service:
         name: '{{ item }}'
         enabled: true
         state: started
-        daemon_reload: true
       with_items:
-        - clamav-freshclam
-        - clamav-daemon
+        - clamav-freshclam.service
+        - clamav-daemon.service
 
 - name: clamav-unofficial-sigs
   become: true

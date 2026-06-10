@@ -1,0 +1,6 @@
+# Created by harden.yml -- do not edit.
+#
+# systemd-tmpfiles entry that recreates ClamAV's runtime directory at boot
+# with the ownership and mode clamd expects for its LocalSocket.
+# See systemd-tmpfiles(8) and tmpfiles.d(5).
+d {{ clamav.rundir }} {{ clamav.rundir_mode }} clamav clamav -
