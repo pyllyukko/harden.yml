@@ -185,7 +185,7 @@
           Bytecode: "yes"
           DatabaseMirror: database.clamav.net
           DatabaseOwner: clamav
-          PidFile: /run/clamav/freshclam.pid
+          PidFile: "{{ clamav.rundir }}/freshclam.pid"
           DatabaseDirectory: "{{ clamav['database'] }}"
       tags: configuration
     - name: Copy new ClamAV configurations into place
