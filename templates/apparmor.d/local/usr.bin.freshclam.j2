@@ -3,8 +3,13 @@
 # freshclam, included via `include if exists <local/usr.bin.freshclam>`
 # at the bottom of /etc/apparmor.d/usr.bin.freshclam.
 
+capability chown,
+capability dac_override,
+capability dac_read_search,
+
 {{ clamav_sysconfdir.stdout }}/clamd.conf r,
 {{ clamav_sysconfdir.stdout }}/freshclam.conf r,
+{{ clamav_sysconfdir.stdout }}/certs/clamav.crt r,
 
 {{ clamav.database }}/ rw,
 {{ clamav.database }}/** rw,
