@@ -466,7 +466,7 @@
   tags:
     - clamav
     #- apparmor
-  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu" or ansible_facts['distribution'] == "Slackware"
+  when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu", "Slackware"]
   block:
     - name: Stat apparmor_parser
       ansible.builtin.stat:
