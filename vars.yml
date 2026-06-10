@@ -75,11 +75,12 @@ clamav_location: "{% if (ansible_facts['distribution'] == \"Debian\" or ansible_
 # rundir / rundir_mode are used both for the runtime ansible.builtin.file task
 # and the systemd-tmpfiles.d(5) entry that recreates the directory at boot.
 # Keep them in sync so the dir mode does not flip-flop between playbook runs
-# and reboots. clamd's LocalSocket is created under rundir.
+# and reboots. socket and pid both live under rundir and are derived from it
+# so /run/clamav appears in exactly one place.
 clamav: {
-  'socket': "/run/clamav/clamd.sock",
+  'socket': "{{ clamav.rundir }}/clamd.sock",
   'database': "/var/lib/clamav",
-  'pid': "/run/clamav/clamd.pid",
+  'pid': "{{ clamav.rundir }}/clamd.pid",
   'rundir': "/run/clamav",
   'rundir_mode': "0771"
 }
