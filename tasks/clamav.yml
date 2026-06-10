@@ -461,18 +461,22 @@
         - clamav-freshclam.service
         - clamav-daemon.service
 
+- name: Stat apparmor_parser
+  ansible.builtin.stat:
+    path: /sbin/apparmor_parser
+  register: apparmor_parser_stat
+  tags:
+    - check
+    - clamav
 - name: ClamAV AppArmor upstream extras
   become: true
   tags:
     - clamav
     #- apparmor
-  when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu", "Slackware"]
+  when:
+    - ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu", "Slackware"]
+    - apparmor_parser_stat.stat.exists
   block:
-    - name: Stat apparmor_parser
-      ansible.builtin.stat:
-        path: /sbin/apparmor_parser
-      register: apparmor_parser_stat
-      tags: check
     - name: Download upstream AppArmor profile for clamd
       ansible.builtin.get_url:
         url: "{{ clamav_apparmor.clamd_url }}"
@@ -481,7 +485,6 @@
         group: root
         mode: '0644'
         checksum: "sha256:{{ clamav_apparmor.clamd_sha256 }}"
-      when: apparmor_parser_stat.stat.exists
       register: clamav_apparmor_clamd_dl
     - name: Download upstream AppArmor profile for freshclam
       ansible.builtin.get_url:
@@ -491,7 +494,6 @@
         group: root
         mode: '0644'
         checksum: "sha256:{{ clamav_apparmor.freshclam_sha256 }}"
-      when: apparmor_parser_stat.stat.exists
       register: clamav_apparmor_freshclam_dl
     - name: Ensure tunables/alias.d exists
       ansible.builtin.file:
@@ -500,13 +502,11 @@
         owner: root
         group: root
         mode: '0755'
-      when: apparmor_parser_stat.stat.exists
     - name: Ensure tunables/alias includes alias.d
       ansible.builtin.lineinfile:
         path: /etc/apparmor.d/tunables/alias
         line: include if exists <tunables/alias.d>
         state: present
-      when: apparmor_parser_stat.stat.exists
     - name: Drop ClamAV AppArmor aliases
       ansible.builtin.template:
         src: apparmor.d/tunables/alias.d/clamav.j2
@@ -514,7 +514,6 @@
         owner: root
         group: root
         mode: '0644'
-      when: apparmor_parser_stat.stat.exists
       register: clamav_apparmor_alias
     - name: Ensure local AppArmor overrides dir exists
       ansible.builtin.file:
@@ -523,7 +522,6 @@
         owner: root
         group: root
         mode: '0755'
-      when: apparmor_parser_stat.stat.exists
     - name: Template local override for clamd
       ansible.builtin.template:
         src: apparmor.d/local/usr.sbin.clamd.j2
@@ -531,7 +529,6 @@
         owner: root
         group: root
         mode: '0644'
-      when: apparmor_parser_stat.stat.exists
       register: clamav_apparmor_local_clamd
     - name: Template local override for freshclam
       ansible.builtin.template:
@@ -540,7 +537,6 @@
         owner: root
         group: root
         mode: '0644'
-      when: apparmor_parser_stat.stat.exists
       register: clamav_apparmor_local_freshclam
     - name: Reload ClamAV AppArmor profiles
       ansible.builtin.command:
@@ -550,7 +546,6 @@
           /etc/apparmor.d/usr.bin.freshclam
           /etc/apparmor.d/tunables/alias
       when:
-        - apparmor_parser_stat.stat.exists
         - clamav_apparmor_clamd_dl.changed or clamav_apparmor_freshclam_dl.changed or clamav_apparmor_alias.changed or clamav_apparmor_local_clamd.changed or clamav_apparmor_local_freshclam.changed
       changed_when: true
 
