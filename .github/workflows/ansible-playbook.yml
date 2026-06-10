@@ -286,8 +286,12 @@ jobs:
         run: ansible-playbook harden.yml --tags clamav,rkhunter,chkrootkit --skip-tags slackware
       - name: Show rkhunter.conf diff
         run: sudo diff --color=always /etc/rkhunter.conf.*.$(date +%F)@*:*:*~ /etc/rkhunter.conf || true
-      - name: Show ClamAV version
-        run: clamscan --version
+      - name: Show ClamAV version and other details
+        run: |
+          clamscan --version
+          ls -l /var/lib/clamav/{main,daily}.c[vl]d
+          ls -l /run/clamav/clamd.sock
+          ls -ld /run/clamav
       - name: Run rkhunter
         run: sudo rkhunter --check --skip-keypress || sudo grep 'Warning' /var/log/rkhunter.log
       #- name: Check rkhunter.log for warnings
@@ -322,7 +326,10 @@ jobs:
         run: |
           clamscan --version
           wget https://raw.githubusercontent.com/rapid7/metasploit-framework/refs/heads/master/data/eicar.com -O /tmp/eicar.com
+          ls -l /tmp/eicar.com
           clamscan /tmp/eicar.com | grep '\bFOUND$'
+          sudo -u clamav clamdscan /tmp/eicar.com | grep '\bFOUND$'
+          sudo -u clamav clamdscan --ping 1 | grep '^PONG$'
       - name: Test YARA Forge core rules
         run: |
           head -18 /var/lib/clamav/yara-rules-core-stripped.yar
@@ -358,6 +365,8 @@ jobs:
             /usr/local/etc/clamd.conf
             /usr/local/etc/freshclam.conf
             /var/lib/rkhunter/db/rkhunter_prop_list.dat
+            /etc/systemd/system/clamav-daemon.service
+            /etc/systemd/system/clamav-freshclam.service
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums

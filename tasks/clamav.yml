@@ -6,18 +6,18 @@
   # https://docs.clamav.net/manual/Installing/Docker.html#memory-ram-requirements
   when: ansible_facts['memtotal_mb'] >= 3072
   block:
-    - name: Install ClamAV (Debian) (non-x86_64)
+    - name: Install ClamAV (Debian) (non-x86_64 or aarch64)
       ansible.builtin.apt:
         name: ['clamav', 'clamav-daemon']
         update_cache: true
-      when: (ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali") and ansible_facts['architecture'] != "x86_64"
+      when: (ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali") and ansible_facts['architecture'] not in ["x86_64", "aarch64"]
       tags:
         - packages
         - services
         - debian
 
-    - name: ClamAV Debian x86_64
-      when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"] and ansible_facts['architecture'] == "x86_64"
+    - name: ClamAV Debian x86_64 and aarch64
+      when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"] and ansible_facts['architecture'] in ["x86_64", "aarch64"]
       tags:
         - packages
         - debian
@@ -26,7 +26,7 @@
           tags: check
           ansible.builtin.package_facts:
             manager: apt
-        - name: Uninstall ClamAV (Debian) (x86_64)
+        - name: Uninstall ClamAV (Debian) (x86_64 and aarch64)
           ansible.builtin.apt:
             name: ['clamav', 'clamav-daemon', 'clamav-base', 'clamav-freshclam', 'libclamav11']
             state: absent
@@ -78,12 +78,12 @@
                 group: root
                 mode: '0600'
               vars:
-                latest_package: "assets[?ends_with(name,'.linux.x86_64.deb')].browser_download_url"
+                latest_package: "assets[?ends_with(name,'.linux.{{ ansible_architecture }}.deb')].browser_download_url"
               register: clamav_download
-            - name: Install ClamAV (x86_64)
+            - name: Install ClamAV (x86_64 and aarch64)
               ansible.builtin.apt:
                 deb: "{{ clamav_download.dest }}"
-              notify: Freshclam
+              #notify: Freshclam
 
     - name: Determine ClamAV sysconfdir
       ansible.builtin.shell: set -o pipefail; {{ clamav_location }}/clamconf | awk '/^Checking configuration files in/{print$5}'
@@ -354,7 +354,7 @@
     # https://docs.clamav.net/manual/OnAccess.html
     # This is disabled for now because of "ERROR: ClamInotif: could not watch path '/home/pyllyukko', Invalid argument"
     - name: Stop & disable ClamAV's On-Access service (Debian)
-      when: ansible_facts['distribution'] == "Debian" and ansible_facts['architecture'] != "x86_64"
+      when: ansible_facts['distribution'] == "Debian" and ansible_facts['architecture'] not in ["x86_64", "aarch64"]
       tags:
         - debian
         - services
@@ -366,7 +366,7 @@
 # This needs to happen only after the ClamAV confs have been created
 - name: ClamAV services
   # Only for the upstream package
-  when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"] and ansible_facts['architecture'] == "x86_64"
+  when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"] and ansible_facts['architecture'] in ["x86_64", "aarch64"]
   become: true
   tags:
     - services
@@ -374,6 +374,32 @@
     - clamav
     - debian
   block:
+    - name: Run freshclam
+      ansible.builtin.command: /usr/local/bin/freshclam
+      changed_when: true
+    # Debian does this another way. It has /etc/systemd/system/clamav-daemon.service.d/extend.conf that contains:
+    #
+    # [Service]
+    # ExecStartPre=-/bin/mkdir -p /run/clamav
+    # ExecStartPre=/bin/chown clamav /run/clamav
+    - name: ClamAV tmpfiles.d
+      tags: configuration
+      block:
+        - name: mkdir /etc/tmpfiles.d
+          ansible.builtin.file:
+            path: /etc/tmpfiles.d
+            state: directory
+            owner: root
+            group: root
+            mode: '0755'
+        - name: Create /etc/tmpfiles.d/clamav.conf
+          ansible.builtin.copy:
+            dest: /etc/tmpfiles.d/clamav.conf
+            owner: root
+            group: root
+            mode: '0644'
+            content: |
+              d /run/clamav 0755 clamav clamav -
     - name: Download ClamAV systemd services
       ansible.builtin.get_url:
         url: "https://raw.githubusercontent.com/Cisco-Talos/clamav/refs/heads/main/{{ item }}.in"
@@ -383,15 +409,7 @@
         mode: '0644'
       with_items:
         - clamd/clamav-daemon.service
-        - clamd/clamav-daemon.socket
         - freshclam/clamav-freshclam.service
-    - name: Configure ClamAV /etc/systemd/system/clamav-daemon.socket
-      ansible.builtin.replace:
-        path: '/etc/systemd/system/clamav-daemon.socket'
-        regexp: '{{ item.key }}'
-        replace: '{{ item.value }}'
-      with_dict:
-        "@DATADIR@": "{{ clamav['database'] }}"
     - name: Configure ClamAV /etc/systemd/system/clamav-daemon.service
       ansible.builtin.replace:
         path: '/etc/systemd/system/clamav-daemon.service'
@@ -400,6 +418,9 @@
       with_dict:
         "@DATADIR@": "{{ clamav['database'] }}"
         "@prefix@": /usr/local
+        # The upstream ClamAV package is not linked against systemd, so the systemd socket activation conflicts with clamd
+        '^(Requires=clamav-daemon\.socket)$': '#\g<1>'
+        '^(Also=clamav-daemon\.socket)$': '#\g<1>'
     - name: Configure ClamAV /etc/systemd/system/clamav-freshclam.service
       ansible.builtin.replace:
         path: '/etc/systemd/system/clamav-freshclam.service'

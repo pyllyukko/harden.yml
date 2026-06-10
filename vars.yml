@@ -71,7 +71,7 @@ lynis_location: "{% if ansible_facts['os_family'] == \"RedHat\" or ansible_facts
 chkrootkit_conf_dir: '/etc/chkrootkit'
 cisofy_keyring: /etc/apt/keyrings/cisofy.asc
 hsts_max_age: 600
-clamav_location: "{% if (ansible_facts['distribution'] == \"Debian\" or ansible_facts['distribution'] == \"Kali\" or ansible_facts['distribution'] == \"Ubuntu\") and ansible_facts['architecture'] == \"x86_64\" %}/usr/local/bin{% else %}/usr/bin{% endif %}"
+clamav_location: "{% if (ansible_facts['distribution'] == \"Debian\" or ansible_facts['distribution'] == \"Kali\" or ansible_facts['distribution'] == \"Ubuntu\") and ansible_facts['architecture'] in [\"x86_64\", \"aarch64\"] %}/usr/local/bin{% else %}/usr/bin{% endif %}"
 clamav: {
   'socket': "/run/clamav/clamd.sock",
   'database': "/var/lib/clamav",
