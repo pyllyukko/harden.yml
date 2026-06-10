@@ -548,6 +548,7 @@
           /sbin/apparmor_parser -r
           /etc/apparmor.d/usr.sbin.clamd
           /etc/apparmor.d/usr.bin.freshclam
+          /etc/apparmor.d/tunables/alias
       when:
         - apparmor_parser_stat.stat.exists
         - clamav_apparmor_clamd_dl.changed or clamav_apparmor_freshclam_dl.changed or clamav_apparmor_alias.changed or clamav_apparmor_local_clamd.changed or clamav_apparmor_local_freshclam.changed
