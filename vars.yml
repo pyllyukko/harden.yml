@@ -83,7 +83,7 @@ clamav: {
   'database': "/var/lib/clamav",
   'pid': "{{ clamav_rundir }}/clamd.pid",
   'rundir': "{{ clamav_rundir }}",
-  'rundir_mode': "0771"
+  'rundir_mode': "0710"
 }
 apparmor_upstream_ref: v4.1.7
 clamav_apparmor:
