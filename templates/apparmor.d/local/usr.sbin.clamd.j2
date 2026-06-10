@@ -8,6 +8,10 @@ capability dac_override,
 {{ clamav_sysconfdir.stdout }}/certs/{,clamav.crt} r,
 /usr/local/lib/libclam*.so.* mr,
 
+# cli_gentempfd_with_prefix()
+# https://github.com/Cisco-Talos/clamav/blob/5d1660e829ce9d9e65027e8e8ddab41e3be92ed5/libclamav/others_common.c#L1197
+owner /tmp/clamav-????????????????????????????????.tmp w,
+
 # Configuration file at the actual sysconfdir for this install
 # (/etc/clamav on distro packages, /usr/local/etc on the upstream .deb).
 {{ clamav_sysconfdir.stdout }}/clamd.conf r,
