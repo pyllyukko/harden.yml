@@ -3,6 +3,11 @@
 # clamd, included via `include if exists <local/usr.sbin.clamd>` at the
 # bottom of /etc/apparmor.d/usr.sbin.clamd.
 
+capability dac_override,
+
+{{ clamav_sysconfdir.stdout }}/certs/{,clamav.crt} r,
+/usr/local/lib/libclam*.so.* mr,
+
 # Configuration file at the actual sysconfdir for this install
 # (/etc/clamav on distro packages, /usr/local/etc on the upstream .deb).
 {{ clamav_sysconfdir.stdout }}/clamd.conf r,

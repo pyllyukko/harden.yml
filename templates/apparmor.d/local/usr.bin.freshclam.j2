@@ -9,7 +9,9 @@ capability dac_read_search,
 
 {{ clamav_sysconfdir.stdout }}/clamd.conf r,
 {{ clamav_sysconfdir.stdout }}/freshclam.conf r,
-{{ clamav_sysconfdir.stdout }}/certs/clamav.crt r,
+{{ clamav_sysconfdir.stdout }}/certs/{,clamav.crt} r,
+/usr/local/lib/libclam*.so.* mr,
+/usr/local/lib/libfreshclam.so.* mr,
 
 {{ clamav.database }}/ rw,
 {{ clamav.database }}/** rw,
