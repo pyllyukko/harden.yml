@@ -1,0 +1,21 @@
+# Managed by harden.yml.
+# Site-specific additions to the upstream AppArmor extras profile for
+# clamd, included via `include if exists <local/usr.sbin.clamd>` at the
+# bottom of /etc/apparmor.d/usr.sbin.clamd.
+
+# Configuration file at the actual sysconfdir for this install
+# (/etc/clamav on distro packages, /usr/local/etc on the upstream .deb).
+{{ clamav_sysconfdir.stdout }}/clamd.conf r,
+
+# harden.yml's local socket. The upstream extras profile grants
+# /run/clamav/clamd-socket (SUSE-style); harden.yml uses
+# {{ clamav.socket }} (configurable via vars.yml).
+owner {{ clamav.socket }} rw,
+
+# PidFile (matches the upstream extras profile's default if
+# clamav.pid is /run/clamav/clamd.pid; templated for customisation).
+owner {{ clamav.pid }} w,
+
+# DatabaseDirectory (covered by upstream if /var/lib/clamav).
+{{ clamav.database }}/ r,
+{{ clamav.database }}/** r,

@@ -85,6 +85,11 @@ clamav: {
   'rundir': "{{ clamav_rundir }}",
   'rundir_mode': "0771"
 }
+clamav_apparmor:
+  clamd_url: https://gitlab.com/apparmor/apparmor/-/raw/master/profiles/apparmor/profiles/extras/usr.sbin.clamd
+  clamd_sha256: ad1504b6248955312e30288832c587f37835144aef8e71d147dfad31debd489b
+  freshclam_url: https://gitlab.com/apparmor/apparmor/-/raw/master/profiles/apparmor/profiles/extras/usr.bin.freshclam
+  freshclam_sha256: c449a9d680f0fcb97709c6fcf95e0b627befb8babfdc04ec620952fd4b668fdb
 logind_conf_location: "{% if ansible_facts['distribution'] == \"Slackware\" %}/etc/elogind/logind.conf{% else %}/etc/systemd/logind.conf{% endif %}"
 alert_email: 'root'
 max_auth_tries: 3

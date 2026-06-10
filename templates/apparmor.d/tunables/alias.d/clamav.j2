@@ -1,0 +1,16 @@
+# Managed by harden.yml.
+#
+# Drop-in for /etc/apparmor.d/tunables/alias, picked up via:
+#     include if exists <tunables/alias.d>
+# at the bottom of that file (Debian default; harden.yml also ensures
+# this on Slackware).
+#
+# These aliases redirect the binary attachment paths used by the upstream
+# AppArmor extras profiles for clamd and freshclam to the paths used by
+# the upstream Cisco-Talos .deb (which installs under /usr/local/).
+#
+# `alias <orig> -> <alt>,` makes rules referencing <orig> also match <alt>,
+# and profile attachment respects aliases. So launching /usr/local/sbin/clamd
+# loads the profile defined as `profile clamd /usr/sbin/clamd { ... }`.
+alias /usr/sbin/clamd -> /usr/local/sbin/clamd,
+alias /usr/bin/freshclam -> /usr/local/bin/freshclam,
