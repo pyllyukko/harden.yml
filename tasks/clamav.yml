@@ -377,6 +377,11 @@
     - name: Run freshclam
       ansible.builtin.command: /usr/local/bin/freshclam
       changed_when: true
+    # Debian does this another way. It has /etc/systemd/system/clamav-daemon.service.d/extend.conf that contains:
+    #
+    # [Service]
+    # ExecStartPre=-/bin/mkdir -p /run/clamav
+    # ExecStartPre=/bin/chown clamav /run/clamav
     - name: ClamAV tmpfiles.d
       tags: configuration
       block:
@@ -404,16 +409,7 @@
         mode: '0644'
       with_items:
         - clamd/clamav-daemon.service
-        - clamd/clamav-daemon.socket
         - freshclam/clamav-freshclam.service
-    - name: Configure ClamAV /etc/systemd/system/clamav-daemon.socket
-      ansible.builtin.replace:
-        path: '/etc/systemd/system/clamav-daemon.socket'
-        regexp: '{{ item.key }}'
-        replace: '{{ item.value }}'
-      with_dict:
-        "@DATADIR@": "{{ clamav['database'] }}"
-        '^(ListenStream)=.+$': '\g<1>={{ clamav.socket }}'
     - name: Configure ClamAV /etc/systemd/system/clamav-daemon.service
       ansible.builtin.replace:
         path: '/etc/systemd/system/clamav-daemon.service'
@@ -422,6 +418,9 @@
       with_dict:
         "@DATADIR@": "{{ clamav['database'] }}"
         "@prefix@": /usr/local
+        # The upstream ClamAV package is not linked against systemd, so the systemd socket activation conflicts with clamd
+        '^(Requires=clamav-daemon\.socket)$': '#\g<1>'
+        '^(Also=clamav-daemon\.socket)$': '#\g<1>'
     - name: Configure ClamAV /etc/systemd/system/clamav-freshclam.service
       ansible.builtin.replace:
         path: '/etc/systemd/system/clamav-freshclam.service'

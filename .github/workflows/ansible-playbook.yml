@@ -367,7 +367,6 @@ jobs:
             /usr/local/etc/freshclam.conf
             /var/lib/rkhunter/db/rkhunter_prop_list.dat
             /etc/systemd/system/clamav-daemon.service
-            /etc/systemd/system/clamav-daemon.socket
             /etc/systemd/system/clamav-freshclam.service
       - name: Show changed files with debsums
         run: |
