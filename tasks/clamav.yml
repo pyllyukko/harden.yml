@@ -444,8 +444,11 @@
         "@prefix@": /usr/local
     # Reload systemd manager configuration once, after the unit files have been
     # downloaded and configured but before enabling/starting them. Pulled out
-    # of the loop below so it does not fire once per item.
+    # of the loop below so it does not fire once per item. Tagged molecule-notest
+    # to match the Enable task -- Molecule containers do not run systemd and
+    # have no systemctl binary, so this would otherwise fail there.
     - name: Reload systemd manager configuration
+      tags: molecule-notest
       ansible.builtin.systemd_service:
         daemon_reload: true
     - name: Enable ClamAV systemd services
