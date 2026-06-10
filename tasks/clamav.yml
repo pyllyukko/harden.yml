@@ -465,7 +465,7 @@
   become: true
   tags:
     - clamav
-    - apparmor
+    #- apparmor
   when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu" or ansible_facts['distribution'] == "Slackware"
   block:
     - name: Stat apparmor_parser
