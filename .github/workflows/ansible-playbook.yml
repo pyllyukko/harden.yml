@@ -290,7 +290,7 @@ jobs:
         run: |
           clamscan --version
           ls -l /var/lib/clamav/{main,daily}.c[vl]d
-          ls -l /run/clamav/clamd.sock
+          sudo ls -l /run/clamav/clamd.sock
           ls -ld /run/clamav
       - name: Show AppArmor status
         run: |
