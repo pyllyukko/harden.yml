@@ -292,6 +292,10 @@ jobs:
           ls -l /var/lib/clamav/{main,daily}.c[vl]d
           ls -l /run/clamav/clamd.sock
           ls -ld /run/clamav
+      - name: Show AppArmor status
+        run: |
+          sudo aa-status --enabled
+          sudo aa-status --filter.profiles='\(usr.bin.freshclam\|clamd\)'
       - name: Run rkhunter
         run: sudo rkhunter --check --skip-keypress || sudo grep 'Warning' /var/log/rkhunter.log
       #- name: Check rkhunter.log for warnings
@@ -386,6 +390,10 @@ jobs:
           sudo cp -v /var/log/lynis.log /var/log/lynis.log.old
       - name: Run Ansible playbook for apparmor
         run: ansible-playbook harden.yml --tags apparmor
+      - name: Show AppArmor status
+        run:
+          sudo aa-status --enabled
+          sudo aa-status
       - name: Run Lynis
         run: sudo lynis audit system --skip-plugins --tests-from-group mac_frameworks
       - name: chmod Lynis log
