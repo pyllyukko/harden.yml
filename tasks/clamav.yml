@@ -22,7 +22,7 @@
         - packages
         - debian
       block:
-        - name: Check current version of ClamAV
+        - name: Check currently installed version of ClamAV
           tags: check
           ansible.builtin.package_facts:
             manager: apt
