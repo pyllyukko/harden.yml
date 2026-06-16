@@ -28,7 +28,7 @@
             manager: apt
         - name: Uninstall ClamAV (Debian) (x86_64 and aarch64)
           ansible.builtin.apt:
-            name: ['clamav', 'clamav-daemon', 'clamav-base', 'clamav-freshclam', 'libclamav11']
+            name: ['clamav', 'clamav-daemon', 'clamav-base', 'clamav-freshclam', 'libclamav12', 'clamav-data', 'clamdscan', 'clamav-doc']
             state: absent
             purge: true
           tags:
