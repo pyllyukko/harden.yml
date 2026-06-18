@@ -20,6 +20,10 @@ R = R-md5+sha256
 /home/[^/]+/\.k5login$			f R
 /root/\.ssh/authorized_keys$		f R
 /root/\.k5login$			f R
+/root/\.bash_profile$			f R
+/root/\.bashrc$				f R
+/root/\.profile$			f R
+/root/\.bash_logout$			f R
 
 # Exceptions:
 /etc/resolv\.conf$			f VarFile
@@ -58,9 +62,16 @@ R = R-md5+sha256
 # Polkit
 /usr/share/polkit-1			R
 
+# D-Bus
+/usr/share/dbus-1/system-services	R
+/usr/share/dbus-1/system.d		R
+
 #/var/log/[^/]+-[0-9]+			R
 /var/log/.*-[0-9]{8}(\.gz)?$		R+ANF+ARF
 /var/log/(cron|debug|maillog|messages|secure|spooler|syslog)$	f Log
+/var/log/wtmp$				f OwnerMode
+/var/log/btmp$				f OwnerMode
+/var/log/lastlog$			f OwnerMode
 =/var/					OwnerMode
 
 =/usr/(local/)?				OwnerMode
@@ -72,6 +83,11 @@ R = R-md5+sha256
 /var/lib/rkhunter/db			R
 # RKH_FILEPROP_LIST
 /var/lib/rkhunter/db/rkhunter_prop_list\.dat$	f R-m-c
+/var/lib/pkgtools/packages		R
+/var/lib/pkgtools/scripts		R
+/var/lib/pkgtools/douninst.sh		R
+# /var/lib/pkgtools/setup/tmp/ is volatile, so do NOT descend into setup/
+=/var/lib/pkgtools/setup/		OwnerMode
 =/var/spool/				OwnerMode
 =/var/spool/mail/			OwnerMode
 /var/spool/cron/crontabs		R
