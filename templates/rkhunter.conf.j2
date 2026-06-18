@@ -803,6 +803,7 @@ SCAN_MODE_DEV=THOROUGH
 #
 #ALLOWDEVFILE=/dev/shm/pulse-shm-*
 #ALLOWDEVFILE=/dev/shm/sem.ADBE_*
+ALLOWDEVFILE=/dev/shm/sem.haveged_sem
 {% if ansible_facts['distribution'] == "Debian" %}
 # https://bugs.lttng.org/issues/1143
 ALLOWDEVFILE=/dev/shm/lttng-ust-wait-*
