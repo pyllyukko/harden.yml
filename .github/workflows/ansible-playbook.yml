@@ -292,6 +292,7 @@ jobs:
           ls -l /var/lib/clamav/{main,daily}.c[vl]d
           sudo ls -l /run/clamav/clamd.sock
           ls -ld /run/clamav
+          sudo find / \( -user clamav -o -group clamav \) -ls 2>/dev/null || true
       - name: Show AppArmor status
         run: |
           sudo aa-status --enabled
