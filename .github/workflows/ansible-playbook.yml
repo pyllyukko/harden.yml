@@ -373,6 +373,7 @@ jobs:
             /var/lib/rkhunter/db/rkhunter_prop_list.dat
             /etc/systemd/system/clamav-daemon.service
             /etc/systemd/system/clamav-freshclam.service
+            /var/lib/clamav/yara-rules-core-stripped.yar
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
