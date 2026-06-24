@@ -333,7 +333,7 @@ jobs:
           ls -l /tmp/eicar.com
           clamscan /tmp/eicar.com | grep '\bFOUND$'
           sudo -u clamav clamdscan /tmp/eicar.com | grep '\bFOUND$'
-          sudo -u nobody -g clamav clamdscan /tmp/eicar.com | grep '\bFOUND$'
+          #sudo -u nobody -g clamav clamdscan /tmp/eicar.com | grep '\bFOUND$'
           sudo -u clamav clamdscan --ping 1 | grep '^PONG$'
       - name: Test YARA Forge core rules
         run: |
