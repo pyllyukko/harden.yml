@@ -4,6 +4,7 @@ ca_file=./ca-certificates.crt
 ca_dir="/usr/share/ca-certificates"
 echo "[*] Fetching Slackware's CA package version"
 slackware_ca="$(curl ftp://ftp.slackware.com/pub/slackware/slackware64-15.0/patches/packages/ | gawk '$9 ~ /^ca-certificates-[0-9]{8}-noarch-[0-9]+_slack15\.0\.txz$/{print$9}')"
+exit_code=0
 
 if [ -n "${slackware_ca}" ]
 then
@@ -84,7 +85,11 @@ for host in \
   packagecloud.io
 do
   echo "[*] Testing HTTPS for \`${host}'"
-  openssl s_client -connect "${host}":443 -verify_return_error -CAfile "${ca_file}" -showcerts 0</dev/null || exit 1
+  if ! openssl s_client -connect "${host}":443 -verify_return_error -CAfile "${ca_file}" -showcerts 0</dev/null
+  then
+    echo -e "[\033[1;31m-\033[0m] HTTPS test failed for \`${host}'" 1>&2
+    exit_code=1
+  fi
   echo -n $'\n'
 done
 
@@ -103,8 +108,21 @@ for host in \
   hotmail-com.olc.protection.outlook.com
 do
   echo "[*] Testing SMTP STARTTLS for \`${host}'"
-  openssl s_client -connect "${host}":25 -starttls smtp -verify_return_error -CAfile "${ca_file}" -showcerts 0</dev/null || exit 1
+  if ! openssl s_client -connect "${host}":25 -starttls smtp -verify_return_error -CAfile "${ca_file}" -showcerts 0</dev/null
+  then
+    echo -e "[\033[1;31m-\033[0m] SMTP test failed for \`${host}'" 1>&2
+    exit_code=1
+  fi
   echo -n $'\n'
 done
 
+# Debian location. Slackware has this in /usr/bin/posttls-finger.
+if [ -x /usr/sbin/posttls-finger ]
+then
+  echo "[*] Testing Outlook with posttls-finger"
+  /usr/sbin/posttls-finger -c -F "${ca_file}" outlook.com
+fi
+
 rm -v "${ca_file}"
+
+exit ${exit_code}
