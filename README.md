@@ -50,6 +50,8 @@ For a complete list you can run `ansible-playbook --list-tasks harden.yml`.
     * Configures few defaults to `/etc/NetworkManager/conf.d/`:
         * Sets `dhcp-send-hostname` to `false`
         * Sets `wifi.scan-rand-mac-address` to `true`
+        * Sets `ipv6.ip6-privacy` to `2` (even though IPv6 is disabled above) (see "ip6-privacy" in [IPv6 Settings](https://networkmanager.dev/docs/api/latest/settings-ipv6.html) and [RFC4941](https://www.rfc-editor.org/info/rfc4941/))
+        * Sets `ipv6.addr-gen-mode` to `stable-privacy` (even though IPv6 is disabled above) (see "addr-gen-mode" in [IPv6 Settings](https://networkmanager.dev/docs/api/latest/settings-ipv6.html) and [RFC7217](https://www.rfc-editor.org/info/rfc7217/))
 
 ### :wood: Logging
 

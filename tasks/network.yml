@@ -200,6 +200,7 @@
           ipv4.dhcp-send-hostname=false
           ipv6.dhcp-send-hostname=false
           ipv6.ip6-privacy=2
+          ipv6.addr-gen-mode=stable-privacy
 
           [device-wifi]
           match-device=type:wifi
