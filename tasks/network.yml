@@ -201,6 +201,9 @@
           ipv6.dhcp-send-hostname=false
           ipv6.ip6-privacy=2
           ipv6.addr-gen-mode=stable-privacy
+          # If you want to randomize MAC addresses
+          #wifi.cloned-mac-address=random
+          #ethernet.cloned-mac-address=random
 
           [device-wifi]
           match-device=type:wifi
