@@ -36,8 +36,11 @@
       when: ansible_facts['distribution'] == "Kali"
       ansible.builtin.replace:
         path: /etc/aide/aide.conf.d/10_aide_os-release
-        regexp: '^(printf ''@@define OS_RELEASE_VERSION_CODENAME_%s %s\\n'' )"\$\{_codename_uc\}"( "\$\{_codename_uc\}")$'
-        replace: '\1"${_codename_uc//-/_}"\2'
+        regexp: '{{ item.key }}'
+        replace: '{{ item.value }}'
+      with_dict:
+        - '^(printf ''@@define OS_RELEASE_VERSION_CODENAME_%s %s\\n'' )"\$\{_codename_uc\}"( "\$\{_codename_uc\}")$': '\1"${_codename_uc//-/_}"\2'
+        - '^#!/bin/sh$': '#!/bin/bash'
       tags: configuration
     - name: Exclude /net
       ansible.builtin.copy:
