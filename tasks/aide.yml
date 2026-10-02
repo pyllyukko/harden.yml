@@ -32,6 +32,13 @@
         MAILTO: '{{ alert_email }}'
       tags: configuration
       notify: "Create aide.db"
+    - name: Fix /etc/aide/aide.conf.d/10_aide_os-release (Kali)
+      when: ansible_facts['distribution'] == "Kali"
+      ansible.builtin.replace:
+        path: /etc/aide/aide.conf.d/10_aide_os-release
+        regexp: '^(printf ''@@define OS_RELEASE_VERSION_CODENAME_%s %s\\n'' )"\$\{_codename_uc\}"( "\$\{_codename_uc\}")$'
+        replace: '\1"${_codename_uc//-/_}"\2'
+      tags: configuration
     - name: Exclude /net
       ansible.builtin.copy:
         content: "!/net$\n"
