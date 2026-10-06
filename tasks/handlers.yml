@@ -95,7 +95,7 @@
   register: sshd_validation
   failed_when:
     - sshd_validation.failed
-    - '"error" in sshd_validation.stderr.lower()'
+    #- '"error" in sshd_validation.stderr.lower()'
   changed_when: false
 - name: Restart sshd through systemd
   become: true
