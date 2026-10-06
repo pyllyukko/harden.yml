@@ -22,6 +22,75 @@
     - ssh
     - slackware
     - check
+# SSH daemon and client version checks
+- name: Gather OpenSSH server version
+  tags:
+    - ssh
+    - check
+  block:
+    - name: Query OpenSSH server version
+      ansible.builtin.command:
+        argv:
+          - /usr/sbin/sshd
+          - -V
+      register: openssh_server_version_command
+      changed_when: false
+      check_mode: false
+    - name: Extract OpenSSH server version
+      ansible.builtin.set_fact:
+        openssh_server_version_matches: >-
+          {{
+            (
+              openssh_server_version_command.stdout ~ '\n' ~
+              openssh_server_version_command.stderr
+            ) | regex_findall('OpenSSH_([0-9]+\.[0-9]+)')
+          }}
+    - name: Verify OpenSSH server version was detected
+      ansible.builtin.assert:
+        that:
+          - openssh_server_version_matches | length == 1
+        fail_msg: Could not determine the installed OpenSSH server version.
+    - name: Set OpenSSH server version facts
+      ansible.builtin.set_fact:
+        openssh_server_version: "{{ openssh_server_version_matches[0] }}"
+        openssh_server_version_major: >-
+          {{ openssh_server_version_matches[0].split('.')[0] | int }}
+        openssh_server_version_minor: >-
+          {{ openssh_server_version_matches[0].split('.')[1] | int }}
+- name: Gather OpenSSH client version
+  tags:
+    - ssh
+    - check
+  block:
+    - name: Query OpenSSH client version
+      ansible.builtin.command:
+        argv:
+          - /usr/bin/ssh
+          - -V
+      register: openssh_client_version_command
+      changed_when: false
+      check_mode: false
+    - name: Extract OpenSSH client version
+      ansible.builtin.set_fact:
+        openssh_client_version_matches: >-
+          {{
+            (
+              openssh_client_version_command.stdout ~ '\n' ~
+              openssh_client_version_command.stderr
+            ) | regex_findall('OpenSSH_([0-9]+\.[0-9]+)')
+          }}
+    - name: Verify OpenSSH client version was detected
+      ansible.builtin.assert:
+        that:
+          - openssh_client_version_matches | length == 1
+        fail_msg: Could not determine the installed OpenSSH client version.
+    - name: Set OpenSSH client version facts
+      ansible.builtin.set_fact:
+        openssh_client_version: "{{ openssh_client_version_matches[0] }}"
+        openssh_client_version_major: >-
+          {{ openssh_client_version_matches[0].split('.')[0] | int }}
+        openssh_client_version_minor: >-
+          {{ openssh_client_version_matches[0].split('.')[1] | int }}
 
 # This is used in sshd_config.j2 template(s)
 - name: Stat /etc/krb5.keytab

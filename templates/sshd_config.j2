@@ -9,6 +9,9 @@ HostKeyAlgorithms {{ sshd_config["HostKeyAlgorithms"] }}
 {% if ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu" %}
 GSSAPIKexAlgorithms {{ sshd_config["GSSAPIKexAlgorithms"] }}
 {% endif %}
+{% if openssh_server_version is ansible.builtin.version('10.6', '>=', strict=true) %}
+WarnWeakCrypto yes
+{% endif %}
 
 # Logging
 SyslogFacility AUTH

@@ -15,3 +15,6 @@ Host *
 {% if ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu" %}
   GSSAPIKexAlgorithms {{ sshd_config["GSSAPIKexAlgorithms"] }}
 {% endif %}
+{% if openssh_client_version is ansible.builtin.version('10.1', '>=', strict=true) %}
+  WarnWeakCrypto yes
+{% endif %}
