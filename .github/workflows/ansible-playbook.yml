@@ -675,7 +675,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: lynis-ssh.log
-          path: /var/log/lynis.log
+          path: |
+            /var/log/lynis.log
+            /etc/ssh/sshd_config.d/harden.conf
+            /etc/ssh/ssh_config.d/harden.conf
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
