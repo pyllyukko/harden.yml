@@ -670,7 +670,10 @@ jobs:
         run: |
           bash tests/ssh-audit_client.sh
       - name: chmod Lynis log
-        run: sudo chmod -c 644 /var/log/lynis.log
+        run: |
+          sudo chmod -c 644 /var/log/lynis.log
+          sudo chmod -c o+r /etc/ssh/sshd_config.d/harden.conf
+          sudo chmod -c o+x /etc/ssh/sshd_config.d
       - name: Archive Lynis log
         uses: actions/upload-artifact@v4
         with:
