@@ -27,6 +27,13 @@
   tags:
     - ssh
     - check
+  when: >
+    (
+      ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"] and
+      'openssh-server' in ansible_facts.packages
+    )
+    or
+    (ansible_facts['distribution'] == "Slackware" and rc_sshd.stat.exists)
   block:
     - name: Query OpenSSH server version
       ansible.builtin.command:
