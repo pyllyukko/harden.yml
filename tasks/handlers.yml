@@ -97,6 +97,10 @@
     - sshd_validation.failed
     #- '"error" in sshd_validation.stderr.lower()'
   changed_when: false
+  when: >
+    (ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]) and
+    ansible_facts.services.ssh.state == "running"
+  tags: services
 - name: Restart sshd through systemd
   become: true
   listen: "Restart sshd (Debian)"
