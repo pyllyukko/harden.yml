@@ -7,14 +7,14 @@
 /var/log/sysstat/sar?[0-9]{8}$		f OwnerMode+ANF+ARF
 
 # Linux audit logs
-/var/log/audit/audit\.log$	f Log-growing-s
+/var/log/audit/audit\.log$	f OwnerMode+n+growing+s+X-growing-s
 # Directory itself
 /var/log/audit$			d VarDir
 # Rest of the files
 /var/log/audit/			f OwnerMode+ANF+ARF
 
 # Process accounting
-/var/log/account/pacct$	f Log-growing-s
+/var/log/account/pacct$	f OwnerMode+n+growing+s+X-growing-s
 # Directory itself
 /var/log/account$	d VarDir
 # Rest of the files
