@@ -620,6 +620,10 @@
         etype: group
         permissions: r
         state: present
+      register: result
+      failed_when:
+        - result.failed == true
+        - '"Path not found or not accessible." not in result.msg'
       with_items:
         - /var/log/lastlog
         - /var/log/btmp
