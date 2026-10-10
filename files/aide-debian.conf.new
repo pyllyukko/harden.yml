@@ -7,21 +7,21 @@
 /var/log/sysstat/sar?[0-9]{8}$		f OwnerMode+ANF+ARF
 
 # Linux audit logs
-/var/log/audit/audit\.log$	f OwnerMode+n+growing+s+X-growing-s
+/var/log/audit/audit\.log$	f ActLog
 # Directory itself
 /var/log/audit$			d VarDir
 # Rest of the files
 /var/log/audit/			f OwnerMode+ANF+ARF
 
 # Process accounting
-/var/log/account/pacct$	f OwnerMode+n+growing+s+X-growing-s
+/var/log/account/pacct$	f ActLog
 # Directory itself
 /var/log/account$	d VarDir
 # Rest of the files
-/var/log/account/pacct\.0$			f LowLog
-/var/log/account/pacct\.1\.@@{LOGEXT}$		f LoSerMemberLog
-/var/log/account/pacct\.29\.@@{LOGEXT}$		f HiSerMemberLog
-/var/log/account/pacct\.([2-9]|1[0-9]|2[0-8])\.@@{LOGEXT}$	f SerMemberLog
+/var/log/account/pacct\.0$			f RotLog
+/var/log/account/pacct\.1\.@@{LOGEXT}$		f CompSerLog
+/var/log/account/pacct\.29\.@@{LOGEXT}$		f LastSerLog
+/var/log/account/pacct\.([2-9]|1[0-9]|2[0-8])\.@@{LOGEXT}$	f MidlSerLog
 
 # Misc
 /var/spool/prelude/					OwnerMode+ANF+ARF
@@ -44,28 +44,28 @@
 /var/cache/apt/(pkgcache|srcpkgcache)\.bin$						f VarFile
 /var/lib/apt/periodic/(download-upgradeable|unattended-upgrades|update|upgrade)-stamp$	f VarTime
 /var/log/unattended-upgrades$								d VarDir
-/var/log/unattended-upgrades/unattended-upgrades(-(dpkg|shutdown))?\.log$		f Log
-/var/log/unattended-upgrades/unattended-upgrades(-shutdown)?\.log\.1\.@@{LOGEXT}$	f LoSerMemberLog
-/var/log/unattended-upgrades/unattended-upgrades(-shutdown)?\.log\.[2-5]\.@@{LOGEXT}$	f SerMemberLog
-/var/log/unattended-upgrades/unattended-upgrades(-shutdown)?\.log\.6\.@@{LOGEXT}$	f HiSerMemberLog
+/var/log/unattended-upgrades/unattended-upgrades(-(dpkg|shutdown))?\.log$		f ActLog
+/var/log/unattended-upgrades/unattended-upgrades(-shutdown)?\.log\.1\.@@{LOGEXT}$	f CompSerLog
+/var/log/unattended-upgrades/unattended-upgrades(-shutdown)?\.log\.[2-5]\.@@{LOGEXT}$	f MidlSerLog
+/var/log/unattended-upgrades/unattended-upgrades(-shutdown)?\.log\.6\.@@{LOGEXT}$	f LastSerLog
 
 # MPD
 /var/log/mpd$										d VarDir
-/var/log/mpd/mpd\.log$									f Log
-/var/log/mpd/mpd\.log\.1\.@@{LOGEXT}$							f LoSerMemberLog
-/var/log/mpd/mpd\.log\.[2-6]\.@@{LOGEXT}$						f SerMemberLog
-/var/log/mpd/mpd\.log\.7\.@@{LOGEXT}$							f HiSerMemberLog
+/var/log/mpd/mpd\.log$									f ActLog
+/var/log/mpd/mpd\.log\.1\.@@{LOGEXT}$							f CompSerLog
+/var/log/mpd/mpd\.log\.[2-6]\.@@{LOGEXT}$						f MidlSerLog
+/var/log/mpd/mpd\.log\.7\.@@{LOGEXT}$							f LastSerLog
 /var/lib/mpd$										d VarDir
 !/var/lib/mpd/
 
 # sudo
-/var/log/sudo\.log$									f Log
+/var/log/sudo\.log$									f ActLog
 
 # autolog
-/var/log/autolog\.log$									f Log
-/var/log/autolog\.log\.1\.@@{LOGEXT}$							f LoSerMemberLog
-/var/log/autolog\.log\.[23]\.@@{LOGEXT}$						f SerMemberLog
-/var/log/autolog\.log\.4\.@@{LOGEXT}$							f HiSerMemberLog
+/var/log/autolog\.log$									f ActLog
+/var/log/autolog\.log\.1\.@@{LOGEXT}$							f CompSerLog
+/var/log/autolog\.log\.[23]\.@@{LOGEXT}$						f MidlSerLog
+/var/log/autolog\.log\.4\.@@{LOGEXT}$							f LastSerLog
 
 # Lynis
 /var/log/lynis(-report\.dat|\.log)$							f VarFile
