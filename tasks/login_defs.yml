@@ -201,22 +201,30 @@
     replace: '\g<2>{{ inactive_password_lock }}'
     validate: '/bin/grep "^INACTIVE={{ inactive_password_lock }}$" %s'
 
-- name: Configure /etc/adduser.conf (Debian)
-  become: true
-  ansible.builtin.replace:
-    path: /etc/adduser.conf
-    regexp: '^({{ item.key }}=).*$'
-    replace: '\g<1>{{ item.value }}'
-    validate: '/bin/grep "^{{ item.key }}={{ item.value }}$" %s'
-  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
+- name: /etc/adduser.conf
   tags:
     - configuration
     - debian
     - accounts
-  with_dict:
-    DIR_MODE: "0700"
-    USERGROUPS: "yes"
-    SYS_DIR_MODE: "0700"
+  when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
+  block:
+    - name: Stat /etc/adduser.conf
+      ansible.builtin.stat:
+        path: /etc/adduser.conf
+      register: adduser_stat
+      tags: check
+    - name: Configure /etc/adduser.conf (Debian)
+      become: true
+      ansible.builtin.replace:
+        path: /etc/adduser.conf
+        regexp: '^({{ item.key }}=).*$'
+        replace: '\g<1>{{ item.value }}'
+        validate: '/bin/grep "^{{ item.key }}={{ item.value }}$" %s'
+      when: adduser_stat.stat.exists
+      with_dict:
+        DIR_MODE: "0700"
+        USERGROUPS: "yes"
+        SYS_DIR_MODE: "0700"
 
 # Unfortunately the hash_rounds_min doesn't seem to work
 #- name: Configure libuser.conf
