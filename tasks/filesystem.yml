@@ -658,6 +658,10 @@
         mode: '0660'
         owner: root
         group: utmp
+      register: result
+      failed_when:
+        - result.failed == true
+        - '"file (/var/log/wtmp) is absent, cannot continue" not in result.msg'
     - name: chmod o-r /var/log
       ansible.builtin.file:
         path: /var/log
