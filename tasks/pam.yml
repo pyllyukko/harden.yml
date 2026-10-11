@@ -538,7 +538,9 @@
       notify: cracklib dict
 
 - name: Install libpam-lastlog2 (Debian)
-  when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
+  # TODO: Check when this is available in GH's Ubuntu runner
+  # Not available in Ubuntu 24.04.5 LTS
+  when: ansible_facts['distribution'] in ["Debian", "Kali"]
   become: true
   # Debian doesn't have pam_lastlog.so anymore
   # See:
