@@ -389,7 +389,6 @@
         group: root
         mode: '0644'
       with_items:
-        - lastlog
         # ANSSI-BP-028 R55 - Dedicating temporary directories to users
         - polyinstantiation
         - pwhistory
@@ -537,6 +536,21 @@
         repo: 'https://github.com/cracklib/cracklib.git'
         dest: /usr/local/src/cracklib
       notify: cracklib dict
+
+- name: Install libpam-lastlog2 (Debian)
+  when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
+  become: true
+  # Debian doesn't have pam_lastlog.so anymore
+  # See:
+  # * https://salsa.debian.org/vorlon/pam/-/commit/357a4ddbe9b4b10ebd805d2af3e32f3ead5b8816
+  # * https://salsa.debian.org/vorlon/pam/-/commit/90430edb4707cc11353ac7295c12f04fcf7b168b
+  ansible.builtin.apt:
+    name: libpam-lastlog2
+    update_cache: true
+  tags:
+    - debian
+    - pam
+    - packages
 
 # See https://www.openwall.com/passwdqc/
 - name: passwdqc
