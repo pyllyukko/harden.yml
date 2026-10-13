@@ -269,6 +269,13 @@
           sigs.InterServer.net.HEX.Topline.blacklisted.ip.controller.176.223.165.12.366
           sigs.InterServer.net.HEX.Topline.blacklisted.domain.alemoney.xyz.610
       tags: configuration
+    - name: Copy harden.yml.hdb
+      ansible.builtin.copy:
+        dest: /var/lib/clamav/harden.yml.hdb
+        src: harden.yml.hdb
+        owner: root
+        group: root
+        mode: '0644'
     - name: Download LOLDrivers signatures
       ansible.builtin.get_url:
         url: "https://raw.githubusercontent.com/magicsword-io/LOLDrivers/refs/heads/main/detections/av/LOLDrivers.hdb"
