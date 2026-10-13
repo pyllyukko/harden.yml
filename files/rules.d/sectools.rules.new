@@ -3,3 +3,15 @@
 -w /etc/aide/ -p wa -k sectools
 -w /var/lib/rkhunter/db/ -p wa -k sectools
 -w /etc/rkhunter.conf -p wa -k sectools
+-w /usr/sbin/unhide -p wa -k sectools
+-w /usr/sbin/unhide-linux -p wa -k sectools
+-w /usr/sbin/unhide-posix -p wa -k sectools
+-w /usr/sbin/unhide-tcp -p wa -k sectools
+-w /usr/sbin/unhide_rb -p wa -k sectools
+-w /usr/bin/rkhunter -p wa -k sectools
+-w /usr/bin/sockstat -p wa -k sectools
+-w /usr/bin/readelf -p wa -k sectools
+# Slackware
+-w /sbin/ss -p wa -k sectools
+# Debian
+-w /usr/bin/ss -p wa -k sectools
