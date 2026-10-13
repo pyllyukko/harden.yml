@@ -1,17 +1,17 @@
--w /var/lib/aide/aide.db -p wa -k sectools
--w /etc/aide.conf -p wa -k sectools
--w /etc/aide/ -p wa -k sectools
--w /var/lib/rkhunter/db/ -p wa -k sectools
--w /etc/rkhunter.conf -p wa -k sectools
--w /usr/sbin/unhide -p wa -k sectools
--w /usr/sbin/unhide-linux -p wa -k sectools
--w /usr/sbin/unhide-posix -p wa -k sectools
--w /usr/sbin/unhide-tcp -p wa -k sectools
--w /usr/sbin/unhide_rb -p wa -k sectools
--w /usr/bin/rkhunter -p wa -k sectools
--w /usr/bin/sockstat -p wa -k sectools
--w /usr/bin/readelf -p wa -k sectools
+-a always,exit -F path=/var/lib/aide/aide.db -F perm=wa -k sectools
+-a always,exit -F path=/etc/aide.conf -F perm=wa -k sectools
+-a always,exit -F dir=/etc/aide/ -F perm=wa -k sectools
+-a always,exit -F dir=/var/lib/rkhunter/db/ -F perm=wa -k sectools
+-a always,exit -F path=/etc/rkhunter.conf -F perm=wa -k sectools
+-a always,exit -F path=/usr/sbin/unhide -F perm=wa -k sectools
+-a always,exit -F path=/usr/sbin/unhide-linux -F perm=wa -k sectools
+-a always,exit -F path=/usr/sbin/unhide-posix -F perm=wa -k sectools
+-a always,exit -F path=/usr/sbin/unhide-tcp -F perm=wa -k sectools
+-a always,exit -F path=/usr/sbin/unhide_rb -F perm=wa -k sectools
+-a always,exit -F path=/usr/bin/rkhunter -F perm=wa -k sectools
+-a always,exit -F path=/usr/bin/sockstat -F perm=wa -k sectools
+-a always,exit -F path=/usr/bin/readelf -F perm=wa -k sectools
 # Slackware
--w /sbin/ss -p wa -k sectools
+-a always,exit -F path=/sbin/ss -F perm=wa -k sectools
 # Debian
--w /usr/bin/ss -p wa -k sectools
+-a always,exit -F path=/usr/bin/ss -F perm=wa -k sectools

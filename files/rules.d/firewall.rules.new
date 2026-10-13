@@ -1,19 +1,19 @@
 # Firewall configurations
 -a always,exit -F dir=/etc/iptables/ -F perm=wa -F key=firewall-change
--w /etc/nftables.conf -p wa -k firewall-change
--w /etc/firewalld/ -p wa -k firewall-change
--w /etc/sysconfig/firewalld -p wa -k firewall-change
+-a always,exit -F path=/etc/nftables.conf -F perm=wa -k firewall-change
+-a always,exit -F dir=/etc/firewalld/ -F perm=wa -k firewall-change
+-a always,exit -F path=/etc/sysconfig/firewalld -F perm=wa -k firewall-change
 # Firewall binaries
--w /sbin/iptables -p x -k firewall-change
--w /sbin/ip6tables -p x -k firewall-change
--w /usr/sbin/iptables-save -p x -k firewall-change
--w /usr/sbin/iptables-restore -p x -k firewall-change
--w /usr/sbin/ip6tables-save -p x -k firewall-change
--w /usr/sbin/ip6tables-restore -p x -k firewall-change
--w /bin/firewall-cmd -p x -k firewall-change
--w /usr/sbin/ufw -p x -k firewall-change
--w /usr/sbin/nft -p x -k firewall-change
+-a always,exit -F path=/sbin/iptables -F perm=x -k firewall-change
+-a always,exit -F path=/sbin/ip6tables -F perm=x -k firewall-change
+-a always,exit -F path=/usr/sbin/iptables-save -F perm=x -k firewall-change
+-a always,exit -F path=/usr/sbin/iptables-restore -F perm=x -k firewall-change
+-a always,exit -F path=/usr/sbin/ip6tables-save -F perm=x -k firewall-change
+-a always,exit -F path=/usr/sbin/ip6tables-restore -F perm=x -k firewall-change
+-a always,exit -F path=/bin/firewall-cmd -F perm=x -k firewall-change
+-a always,exit -F path=/usr/sbin/ufw -F perm=x -k firewall-change
+-a always,exit -F path=/usr/sbin/nft -F perm=x -k firewall-change
 # Firewall services
--w /etc/rc.d/rc.firewall -p wa -k firewall-change
--w /lib/systemd/system/nftables.service -p wa -k firewall-change
--w /usr/lib/systemd/system/firewalld.service -p wa -k firewall-change
+-a always,exit -F path=/etc/rc.d/rc.firewall -F perm=wa -k firewall-change
+-a always,exit -F path=/lib/systemd/system/nftables.service -F perm=wa -k firewall-change
+-a always,exit -F path=/usr/lib/systemd/system/firewalld.service -F perm=wa -k firewall-change

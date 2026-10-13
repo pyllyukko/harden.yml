@@ -1,9 +1,9 @@
 # From https://github.com/Neo23x0/auditd/blob/master/audit.rules
--w /bin/nc -p x -k susp_activity
--w /bin/netcat -p x -k susp_activity
--w /usr/bin/ncat -p x -k susp_activity
--w /bin/nc.openbsd -p x -k susp_activity
--w /bin/nc.traditional -p x -k susp_activity
+-a always,exit -F path=/bin/nc -F perm=x -k susp_activity
+-a always,exit -F path=/bin/netcat -F perm=x -k susp_activity
+-a always,exit -F path=/usr/bin/ncat -F perm=x -k susp_activity
+-a always,exit -F path=/bin/nc.openbsd -F perm=x -k susp_activity
+-a always,exit -F path=/bin/nc.traditional -F perm=x -k susp_activity
 # Modified to log only exe=/usr/bin/mkfifo
 # https://www.youtube.com/watch?v=lc1i9h1GyMA
 -a always,exit -F arch=b32 -S mknod -S mknodat -F exe=/usr/bin/mkfifo -k specialfiles

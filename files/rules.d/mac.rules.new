@@ -1,14 +1,14 @@
 # Further additions to STIG MAC rule(s)
 -a always,exit -F dir=/etc/apparmor.d/ -F perm=wa -F key=MAC-policy
--w /etc/apparmor/ -p wa -k MAC-policy
--w /sbin/setenforce -p x -k MAC-policy
--w /sbin/semanage -p x -k MAC-policy
--w /sbin/setsebool -p x -k MAC-policy
--w /sbin/restorecon -p x -k MAC-policy
--w /bin/chcon -p x -k MAC-policy
--w /sbin/genhomedircon -p x -k MAC-policy
--w /sbin/semodule -p x -k MAC-policy
--w /usr/sbin/aa-enforce -p x -k MAC-policy
--w /usr/sbin/aa-disable -p x -k MAC-policy
--w /usr/sbin/aa-complain -p x -k MAC-policy
--w /usr/sbin/aa-audit -p x -k MAC-policy
+-a always,exit -F dir=/etc/apparmor/ -F perm=wa -k MAC-policy
+-a always,exit -F path=/sbin/setenforce -F perm=x -k MAC-policy
+-a always,exit -F path=/sbin/semanage -F perm=x -k MAC-policy
+-a always,exit -F path=/sbin/setsebool -F perm=x -k MAC-policy
+-a always,exit -F path=/sbin/restorecon -F perm=x -k MAC-policy
+-a always,exit -F path=/bin/chcon -F perm=x -k MAC-policy
+-a always,exit -F path=/sbin/genhomedircon -F perm=x -k MAC-policy
+-a always,exit -F path=/sbin/semodule -F perm=x -k MAC-policy
+-a always,exit -F path=/usr/sbin/aa-enforce -F perm=x -k MAC-policy
+-a always,exit -F path=/usr/sbin/aa-disable -F perm=x -k MAC-policy
+-a always,exit -F path=/usr/sbin/aa-complain -F perm=x -k MAC-policy
+-a always,exit -F path=/usr/sbin/aa-audit -F perm=x -k MAC-policy

@@ -1,10 +1,10 @@
 # The following two are in CIS Debian 12 v1.1.0 under "identity" (6.2.3.8)
--w /etc/pam.d/ -p wa -k pam
--w /etc/pam.conf -p wa -k pam
--w /etc/security/ -p wa -k pam
+-a always,exit -F dir=/etc/pam.d/ -F perm=wa -k pam
+-a always,exit -F path=/etc/pam.conf -F perm=wa -k pam
+-a always,exit -F dir=/etc/security/ -F perm=wa -k pam
 # CentOS/RH specific
--w /usr/sbin/authconfig -p x -k pam
--w /etc/sysconfig/authconfig -p wa -k pam
+-a always,exit -F path=/usr/sbin/authconfig -F perm=x -k pam
+-a always,exit -F path=/etc/sysconfig/authconfig -F perm=wa -k pam
 # Debian specific
--w /usr/share/pam-configs/ -p wa -k pam
--w /usr/sbin/pam-auth-update -p x -k pam
+-a always,exit -F dir=/usr/share/pam-configs/ -F perm=wa -k pam
+-a always,exit -F path=/usr/sbin/pam-auth-update -F perm=x -k pam
