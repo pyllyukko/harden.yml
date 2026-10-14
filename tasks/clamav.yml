@@ -373,7 +373,7 @@
 # This needs to happen only after the ClamAV confs have been created
 - name: ClamAV services
   # Only for the upstream package
-  when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"] and ansible_facts['architecture'] in ["x86_64", "aarch64"]
+  when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"] and ansible_facts['architecture'] in ["x86_64", "aarch64"] and ansible_facts['memtotal_mb'] >= 3072
   become: true
   tags:
     - services
