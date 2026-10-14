@@ -222,6 +222,7 @@
         value: "yes"
         create: true
         no_extra_spaces: true
+        mode: '0644'
       with_items:
         - ssh
         - mpd
