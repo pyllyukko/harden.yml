@@ -38,3 +38,4 @@
       notify: Run systemctl daemon-reload
       with_items:
         - udisks2
+        - cron
