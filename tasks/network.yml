@@ -182,12 +182,22 @@
 #   * Loop through all connections of type wifi & ethernet and set:
 #       * ipv6.method
 #       * ignore-auto-routes (https://github.com/leviathansecurity/TunnelVision)
+- name: Check NetworkManager
+  ansible.builtin.service_facts:
+  tags:
+    - network
+    - networkmanager
+    - ipv6
+    - services
+    - check
 - name: NetworkManager
   tags:
     - network
     - networkmanager
     - ipv6
+    - services
   become: true
+  when: ansible_facts['services']['NetworkManager.service']['status'] | default('not-found') != 'not-found'
   block:
     - name: Configure NetworkManager
       ansible.builtin.copy:
