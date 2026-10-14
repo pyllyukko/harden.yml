@@ -425,6 +425,7 @@ Other tags are just metadata for now. You can list all the tags with
     * Only for `SHELLS` `Cmnd_Alias` for now
 * Experimental and limited systemd service hardening (see [services-systemd.yml](tasks/services-systemd.yml))
     * Needs to be enabled with `harden_systemd_services`
+    * See [Fix/improve systemd units reported by "systemd-analyze security" #71](https://github.com/pyllyukko/harden.yml/issues/71)
 
 #### Makefile
 
