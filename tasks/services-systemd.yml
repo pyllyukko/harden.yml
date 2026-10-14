@@ -17,6 +17,7 @@
       with_items:
         - "{{ systemd_services_to_harden }}"
         - udisks2
+        - cron
     # Generic hardening
     - name: Copy generic systemd service hardening
       ansible.builtin.copy:
