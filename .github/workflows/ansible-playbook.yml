@@ -174,7 +174,10 @@ jobs:
       - name: Show changed files with debsums
         run: |
           sudo apt-get install debsums
+          echo '[*] Changed configuration files:'
           sudo debsums -ec | grep -v '^/etc/\(cloud/templates/sources\.list\.ubuntu\.deb822\.tmpl\|firefox/syspref\.js\|containers/registries\.conf\|default/motd-news\|needrestart/needrestart\.conf\|waagent\.conf\)$'
+          echo '[*] Changed files (excluding confs):'
+          sudo debsums -c
       - name: Check systemd units
         run: |
           for i in acct sysstat auditd; do systemctl status ${i}.service; systemctl is-enabled ${i}.service; done

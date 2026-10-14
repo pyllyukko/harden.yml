@@ -186,37 +186,57 @@
 # </Process accounting>
 # systemd IP accounting
 # https://0pointer.net/blog/ip-accounting-and-access-lists-with-systemd.html
-- name: Enable systemd IP accounting in certain services
+- name: IP accounting
   become: true
+  when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
   tags:
     - accounting
     - configuration
     - debian
     - molecule-notest
-  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali" or ansible_facts['distribution'] == "Ubuntu"
-  notify: Run systemctl daemon-reload
-  community.general.ini_file:
-    path: /lib/systemd/system/{{ item }}.service
-    section: Service
-    option: IPAccounting
-    value: "yes"
-    create: false
-    no_extra_spaces: true
-  with_items:
-    - ssh
-    - mpd
-    - collectd
-    - rsyslog
-    - clamav-freshclam
-    - systemd-timesyncd
-    - unattended-upgrades
-    - tor
-    - autofs
-    - ooniprobe-cli
-  register: result
-  failed_when:
-    - result.failed == true
-    - '"service does not exist!" not in result.msg'
+  block:
+    - name: Create conf.d directories for IP accounting
+      ansible.builtin.file:
+        path: '/etc/systemd/system/{{ item }}.service.d'
+        state: directory
+        mode: '0755'
+        owner: root
+        group: root
+      with_items:
+        - ssh
+        - mpd
+        - collectd
+        - rsyslog
+        - clamav-freshclam
+        - systemd-timesyncd
+        - unattended-upgrades
+        - tor
+        - autofs
+        - ooniprobe-cli
+    - name: Enable systemd IP accounting in certain services
+      notify: Run systemctl daemon-reload
+      community.general.ini_file:
+        path: '/etc/systemd/system/{{ item }}.service.d/IPaccounting.conf'
+        section: Service
+        option: IPAccounting
+        value: "yes"
+        create: true
+        no_extra_spaces: true
+      with_items:
+        - ssh
+        - mpd
+        - collectd
+        - rsyslog
+        - clamav-freshclam
+        - systemd-timesyncd
+        - unattended-upgrades
+        - tor
+        - autofs
+        - ooniprobe-cli
+      register: result
+      failed_when:
+        - result.failed == true
+        - '"service does not exist!" not in result.msg'
 - name: Print Lynis score for accounting
   become: true
   tags: accounting
