@@ -11,6 +11,7 @@
 -w /usr/bin/rkhunter -p wa -k sectools
 -w /usr/bin/sockstat -p wa -k sectools
 -w /usr/bin/readelf -p wa -k sectools
+-w /usr/bin/patchelf -p x -k sectools
 # Slackware
 -w /sbin/ss -p wa -k sectools
 # Debian
