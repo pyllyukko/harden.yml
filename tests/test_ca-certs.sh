@@ -46,7 +46,7 @@ EOF
     exit 1
   fi
   echo "[*] Extracting CAs"
-  tar xvf "${slackware_ca}" usr/share/ca-certificates/mozilla
+  tar xvf "${slackware_ca}" usr/share/ca-certificates/mozilla etc/ca-certificates.conf
   ca_dir="./usr/share/ca-certificates"
   echo "[+] Using Slackware's CAs"
 fi
@@ -55,7 +55,6 @@ fi
 # Diff between Slackware's latest CAs and GH Ubuntu runner
 if [ ${#} -eq 1 -a "${1}" = "diff" ]
 then
-  tar xvf "${slackware_ca}" etc/ca-certificates.conf
   diff --color=always /etc/ca-certificates.conf ./etc/ca-certificates.conf
   exit 0
 fi

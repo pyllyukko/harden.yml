@@ -17,6 +17,13 @@ jobs:
         run: sudo apt-get install postfix
       - name: Run test_ca-certs.sh
         run: bash tests/test_ca-certs.sh
+      - name: Archive CA certificates
+        uses: actions/upload-artifact@v4
+        with:
+          name: ca-certificates
+          path: |
+            ./etc/ca-certificates.conf
+            ./usr/share/ca-certificates/mozilla
   crls:
     runs-on: ubuntu-latest
     steps:
