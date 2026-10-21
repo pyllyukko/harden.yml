@@ -51,6 +51,15 @@ EOF
   echo "[+] Using Slackware's CAs"
 fi
 
+# Diff mode
+# Diff between Slackware's latest CAs and GH Ubuntu runner
+if [ ${#} -eq 1 -a "${1}" = "diff" ]
+then
+  tar xvf "${slackware_ca}" etc/ca-certificates.conf
+  diff --color=always /etc/ca-certificates.conf ./etc/ca-certificates.conf
+  exit 0
+fi
+
 while read -r
 do
   if [ ! -f "${ca_dir}/${REPLY}" ]
