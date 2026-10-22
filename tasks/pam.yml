@@ -593,10 +593,10 @@
       when: not stat_passwdqc_pwq.stat.exists
       block:
         # https://github.com/cracklib/cracklib/blob/main/words/README.md
-        - name: Download rockyou.txt.bz2
+        - name: Download rockyou.txt.gz
           ansible.builtin.get_url:
-            url: https://downloads.skullsecurity.org/passwords/rockyou.txt.bz2
-            dest: /usr/share/dict/rockyou.txt.bz2
+            url: https://gitlab.com/kalilinux/packages/wordlists/-/raw/kali/master/rockyou.txt.gz
+            dest: /usr/share/dict/rockyou.txt.gz
             owner: root
             group: root
             mode: '0644'
@@ -605,17 +605,17 @@
             path: /opt/passwdqc
             state: directory
             mode: '0755'
-        - name: Install bzip2 (Debian)
-          when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
-          ansible.builtin.apt:
-            name: bzip2
-            update_cache: true
-            state: present
-          tags:
-            - debian
-            - packages
+        #- name: Install bzip2 (Debian)
+        #  when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
+        #  ansible.builtin.apt:
+        #    name: bzip2
+        #    update_cache: true
+        #    state: present
+        #  tags:
+        #    - debian
+        #    - packages
         - name: Create passwdqc filter to /opt/passwdqc/rockyou.pwq
-          ansible.builtin.shell: set -o pipefail; bzcat /usr/share/dict/rockyou.txt.bz2 | pwqfilter -o /opt/passwdqc/rockyou.pwq --create=14637132 --optimize-fp-rate-at-high-load
+          ansible.builtin.shell: set -o pipefail; zcat /usr/share/dict/rockyou.txt.gz | sed 4245d | pwqfilter -o /opt/passwdqc/rockyou.pwq --create=14637132 --optimize-fp-rate-at-high-load
           args:
             creates: /opt/passwdqc/rockyou.pwq
             executable: /bin/bash
