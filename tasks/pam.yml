@@ -714,3 +714,18 @@
     line: 'account required pam_shells.so'
     backup: true
     insertafter: '^#%PAM-1\.0$'
+
+- name: Add UMASK into /etc/default/login for pam_umask
+  become: true
+  tags:
+    - pam
+    - configuration
+    - umask
+  ansible.builtin.lineinfile:
+    path: /etc/default/login
+    regexp: '^UMASK='
+    line: UMASK=077
+    create: true
+    mode: '0644'
+    owner: root
+    group: root
