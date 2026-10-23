@@ -153,14 +153,25 @@
         allow_url_fopen: 'Off'
         disable_functions: 'system,exec,shell_exec,popen,proc_open,pcntl_exec,passthru,str_rot13'
         enable_dl: 'Off'
+        log_errors: 'On'
+        # https://www.php.net/archive/2026.php#2026-10-21-5
+        # https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w
+        memory_limit: '-1'
+        post_max_size: '8M'
+        upload_max_filesize: '2M'
     - name: Configure php.ini (Session section)
       become: true
       when: stat_result.stat.exists
       community.general.ini_file:
         path: /etc/php.ini
         section: Session
-        option: session.use_strict_mode
-        value: '1'
+        option: '{{ item.key }}'
+        value: '{{ item.value }}'
         owner: root
         group: root
         mode: '0644'
+      with_dict:
+        session.use_strict_mode: '1'
+        # https://www.php.net/archive/2026.php#2026-10-21-5
+        # https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp
+        session.upload_progress.enabled: '0'
