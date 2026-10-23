@@ -745,3 +745,4 @@
   with_items:
     - /usr/share/pam/common-session
     - /usr/share/pam/common-session-noninteractive
+  notify: "Run pam-auth-update"
