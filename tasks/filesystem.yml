@@ -314,7 +314,7 @@
         - slackware
     # This provides setfacl
     - name: Install acl package (Debian)
-      when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Kali"
+      when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
       ansible.builtin.apt:
         name: acl
         state: present
