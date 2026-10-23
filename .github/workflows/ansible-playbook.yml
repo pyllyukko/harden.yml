@@ -938,6 +938,8 @@ jobs:
           echo '[*] sudoers.d/* content:'
           sudo more /etc/sudoers.d/* | cat
           echo -n $'\n'
+          echo '[*] sudo --version:'
+          sudo --version
       # See https://github.com/pyllyukko/harden.yml/blob/master/tests/README.md#sudo
       #- name: Add user runner to sudo group
       #  run: |
