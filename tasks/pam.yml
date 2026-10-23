@@ -729,3 +729,19 @@
     mode: '0644'
     owner: root
     group: root
+
+- name: Add umask=077 into /usr/share/pam/common-session{,-noninteractive}
+  become: true
+  when: ansible_facts['distribution'] in ["Debian", "Kali", "Ubuntu"]
+  tags:
+    - pam
+    - configuration
+    - umask
+  ansible.builtin.replace:
+    path: '{{ item }}'
+    regexp: '^(session\s+optional\s+pam_umask\.so)$'
+    replace: '\g<1> umask=077'
+    backup: true
+  with_items:
+    - /usr/share/pam/common-session
+    - /usr/share/pam/common-session-noninteractive
