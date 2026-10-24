@@ -53,6 +53,7 @@ fi
 
 # Diff mode
 # Diff between Slackware's latest CAs and GH Ubuntu runner
+# shellcheck disable=SC2166
 if [ ${#} -eq 1 -a "${1}" = "diff" ]
 then
   diff --color=always /etc/ca-certificates.conf ./etc/ca-certificates.conf
