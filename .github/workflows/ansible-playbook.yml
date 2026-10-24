@@ -143,6 +143,7 @@ jobs:
       - name: Check umask (post-harden)
         run: |
           sudo -u runner /bin/bash -c umask
+          sudo su - runner -c 'umask'
           sudo -u runner /bin/bash -c umask | grep '^00[07]7$'
   accounting:
     runs-on: ubuntu-latest
