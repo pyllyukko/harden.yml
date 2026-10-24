@@ -70,8 +70,10 @@ jobs:
         run: |
           echo '[*] umask:'
           umask
-          echo '[*] sudo umask:'
-          sudo -u runner /bin/bash -c umask
+          echo '[*] sudo -l umask:'
+          sudo -l -u runner /bin/bash -c umask
+          echo '[*] sudo bash -lc:'
+          sudo -u runner /bin/bash -lc umask
       - name: Show hashing algorithms
         run: |
           sudo getent shadow | grep -o '^[^$]\+\$[^$]\+\$'
@@ -142,9 +144,14 @@ jobs:
           sudo debsums -ec | grep -v '^/etc/\(cloud/templates/sources\.list\.ubuntu\.deb822\.tmpl\|firefox/syspref\.js\|containers/registries\.conf\|default/motd-news\|needrestart/needrestart\.conf\|waagent\.conf\)$'
       - name: Check umask (post-harden)
         run: |
-          sudo -u runner /bin/bash -c umask
+          echo '[*] sudo -l:'
+          sudo -l -u runner /bin/bash -c umask
+          echo '[*] sudo su -:'
           sudo su - runner -c 'umask'
-          sudo -u runner /bin/bash -c umask | grep '^00[07]7$'
+          echo '[*] sudo bash -lc:'
+          sudo -u runner /bin/bash -lc umask
+          echo '[*] sudo -l | grep:'
+          sudo -l -u runner /bin/bash -c umask | grep '^00[07]7$'
   accounting:
     runs-on: ubuntu-latest
     steps:
