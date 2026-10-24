@@ -70,8 +70,8 @@ jobs:
         run: |
           echo '[*] umask:'
           umask
-          echo '[*] sudo -l umask:'
-          sudo -l -u runner /bin/bash -c umask
+          echo '[*] sudo -i umask:'
+          sudo -i -u runner /bin/bash -c umask
           echo '[*] sudo bash -lc:'
           sudo -u runner /bin/bash -lc umask
       - name: Show hashing algorithms
@@ -151,7 +151,7 @@ jobs:
           echo '[*] sudo bash -lc:'
           sudo -u runner /bin/bash -lc umask
           echo '[*] sudo -l | grep:'
-          sudo -l -u runner /bin/bash -c umask | grep '^00[07]7$'
+          sudo -i -u runner /bin/bash -c umask | grep '^00[07]7$'
   accounting:
     runs-on: ubuntu-latest
     steps:
